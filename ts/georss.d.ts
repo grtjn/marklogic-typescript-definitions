@@ -19,22 +19,22 @@ declare module GeoRSS {
   interface georss {
 
     /** Create a cts:point value from a GeoRSS point element. **/
-    point(point: element(georss:point)):  cts:point ;
+    point(point: number): number;
 
     /** Create a cts:circle value from a radius and GeoRSS point element. **/
-    circle(radius: xs:double, center: element(georss:point)):  cts:circle ;
+    circle(radius: double, center: number): circle ;
 
     /** Create a cts:linestring value from a GeoRSS line element. **/
-    linestring(linestring: element(georss:line)):  cts:linestring ;
+    linestring(linestring: line)): linestring ;
 
     /** Create a cts:polygon value from a sequence of GeoRSS point elements or a GeoRSS polygon element. **/
-    polygon(polygonOrPoints: element()): cts:polygon;
+    polygon(polygonOrPoints: element()): polygon;
 
     /** Create a cts:complex-polygon value from a GeoRSS "Polygon" element. Given that GeoRSS doesn't have interior polygons, the complex-polygon returned is equivalent to the polygon returned by polygon as far as queries are concerned. **/
-    complexPolygon(complexPolygon: node()):  cts:complex-polygon ;
+    complexPolygon(complexPolygon: node()): complex-polygon ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: cts:region, options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQuery(regions: region, options?: string, weight?: double): query ;
 
 
   }

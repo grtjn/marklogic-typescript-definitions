@@ -13,7 +13,7 @@ declare module Zip {
     zipManifest(zipfile: binary()): Array;
 
     /** Get a named file from a zip document. Unzips and returns the file in memory as a document node (for XML and JSON formats), a text node (for text formats), or a binary node (for binary). The format is determined either by the mimetype from the file name or by the format option. **/
-    zipGet(zipfile: binary(), name: xs:string, options?: (element()|map:map)): node();
+    zipGet(zipfile: binary(), name: string, options?: map)): node();
 
     /** Create a zip file from a list of nodes. **/
     zipCreate(manifest: node(), manifest: Array|Node, nodes: node(), nodes: Array|ValueIterator): binary();
@@ -22,7 +22,7 @@ declare module Zip {
     gzip(node: node()): binary();
 
     /** Get a node from a gzip node. Gunzips and returns the file in memory as a document node (for XML and JSON formats), a text node (for text formats), or a binary node (for binary formats). The format is determined by the format option. **/
-    gunzip(gzipnode: binary(), options: (element()|map:map)): node();
+    gunzip(gzipnode: binary(), options: map)): node();
 
 
   }

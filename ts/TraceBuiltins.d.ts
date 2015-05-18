@@ -18,7 +18,7 @@ declare module TraceBuiltins {
   interface fn {
 
     /** Return the input $value unchanged and, if $label is the name of an enabled server event, emit that server event to the server log file (ErrorLog.txt) with $value as its data. **/
-    trace(value: item(), label: xs:string): item();
+    trace(value: item(), label: string): item();
 
 
   }

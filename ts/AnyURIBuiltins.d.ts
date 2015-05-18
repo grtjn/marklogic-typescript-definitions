@@ -13,13 +13,13 @@ declare module AnyURIBuiltins {
   interface fn {
 
     /** Resolves a relative URI against an absolute URI. If $base is specified, the URI is resolved relative to that base. If $base is not specified, the base is set to the base-uri property from the static context, if the property exists; if it does not exist, an error is thrown. **/
-    resolveUri(relative: xs:string, base?: xs:string): xs:anyURI;
+    resolveUri(relative: string, base?: string): anyURI;
 
     /** Resolves a relative URI against an absolute URI. If $base is specified, the URI is resolved relative to that base. If $base is not specified, the base is set to the base-uri property from the static context, if the property exists; if it does not exist, an error is thrown. **/
-    resolveUri(relative: xs:string, base?: xs:string): xs:anyURI;
+    resolveUri(relative: string, base?: string): anyURI;
 
     /** Resolves a relative URI against an absolute URI. If $base is specified, the URI is resolved relative to that base. If $base is not specified, the base is set to the base-uri property from the static context, if the property exists; if it does not exist, an error is thrown. This XQuery function backs up the SPARQL IRI() function. **/
-    resolveIri(relative: xs:string, base?: xs:string): sem:iri;
+    resolveIri(relative: string, base?: string): iri;
 
 
   }

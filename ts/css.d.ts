@@ -22,10 +22,10 @@ declare module CSSModule {
   interface css {
 
     /** Fetch the CSS for the given document, be it embedded or linked. Limitation: doesn't account for @import directives in the CSS; assumes the linked CSS is in the database. **/
-    get(doc: xs:string):  xs:string ;
+    get(doc: string): string ;
 
     /** Convert CSS text to an equivalent XML representation that is more suitable for analysis. **/
-    convert(css: xs:string, options: element()):  element(css:styles) ;
+    convert(css: string, options: element()): styles) ;
 
 
   }

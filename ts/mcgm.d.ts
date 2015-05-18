@@ -19,19 +19,19 @@ declare module MCGM {
   interface mcgm {
 
     /** Create a cts:point value from a MCGM Dot element. **/
-    point(point: element(Dot)):  cts:point ;
+    point(point: element(Dot)): number;
 
     /** Create a cts:circle value from a radius and MCGM Dot element. **/
-    circle(radius: xs:double, center: element(Dot)):  cts:circle ;
+    circle(radius: double, center: element(Dot)): circle ;
 
     /** Construct a cts:polygon value from a sequence of MCGM Dot elements. **/
-    polygon(vertices: element(Dot)):  cts:polygon ;
+    polygon(vertices: element(Dot)): polygon ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: cts:region, options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQuery(regions: region, options?: string, weight?: double): query ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromElements(regions: element(Dot), options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQueryFromElements(regions: element(Dot), options?: string, weight?: double): query ;
 
 
   }

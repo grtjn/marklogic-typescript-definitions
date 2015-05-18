@@ -19,31 +19,31 @@ declare module KML {
   interface kml {
 
     /** Create a cts:point value from a KML Point or Location element. **/
-    point(point: element()):  cts:point ;
+    point(point: element()): number;
 
     /** Create a cts:box value from a KML LatLongBox element. **/
-    box(envelope: element(kml:LatLongBox)):  cts:box ;
+    box(envelope: number): box ;
 
     /** Create a cts:circle value from a radius and KML Point or Location element. **/
-    circle(radius: xs:double, center: element()):  cts:circle ;
+    circle(radius: double, center: element()): circle ;
 
     /** Create a cts:linestring value from a KML LineString element. **/
-    linestring(linestring: element(kml:LineString)):  cts:linestring ;
+    linestring(linestring: LineString)): linestring ;
 
     /** Create a cts:polygon value from a KML polygon or a sequence of KML Point or Location elements. **/
-    polygon(polygonOrPoints: element()):  cts:polygon ;
+    polygon(polygonOrPoints: element()): polygon ;
 
     /** Create a sequence of cts:polygon values from a KML Polygon element. The returned polygons represent the interior polygons, if any. **/
-    interiorPolygon(points: element(kml:Polygon)):  cts:polygon ;
+    interiorPolygon(points: Polygon)): polygon ;
 
     /** Create a cts:complex-polygon value from a KML Polygon element. The polygon returned represents the combination of the exterior polygon and the interior polygons. **/
-    complexPolygon(complexPolygon: node()):  cts:complex-polygon ;
+    complexPolygon(complexPolygon: node()): complex-polygon ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: cts:region, options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQuery(regions: region, options?: string, weight?: double): query ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromElements(regions: element(), options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQueryFromElements(regions: element(), options?: string, weight?: double): query ;
 
 
   }

@@ -20,37 +20,37 @@ declare module CPFModule {
   interface cpf {
 
     /** Concludes the action successfully, advancing the state as defined by the transition. The action must call this method to indicate completion of successful processing, passing the external variables $cpf:document-uri and $cpf:transition as parameters. If the document does not exist, do nothing. Side effects: Advances the document state to the transition's on-success state, if any, and marks the document as processed in the current state. **/
-    success(docid: xs:string, transition: element(, p:transition), overrideState: xs:anyURI):  empty-sequence() ;
+    success(docid: string, transition: transition), overrideState: anyURI):  empty-sequence() ;
 
     /** Concludes the state action in failure, advancing the state as defined by the state transition. The state action must call this method to indicate failure, passing the external variables $cpf:document-uri, $cpf:transition, and $cpf:exception as parameters. If the document does not exist, do nothing. Side effects: Advances the document state to the transition's on-failure state, if any, and marks the document as processed in the current state. **/
-    failure(docid: xs:string, transition: element(, p:transition), exception: node(), overrideState: xs:anyURI):  empty-sequence() ;
+    failure(docid: string, transition: transition), exception: node(), overrideState: anyURI):  empty-sequence() ;
 
     /** Verify that the current transition is the correct one for the document. If a document is touched from multiple threads certain race conditions may apply that will cause the lookup of the transition to end up out of sync with the transition action when it is actually executed. In this case the action should do nothing; not even call cpf:success or cpf:failure. Some other CPF thread has already done the work on this document. **/
-    checkTransition(docid: xs:string, transition: element(, p:transition)):  xs:boolean ;
+    checkTransition(docid: string, transition: transition)): boolean ;
 
     /** Determine the document's current state, if any. **/
-    documentGetState(doc: xs:string):  xs:anyURI ;
+    documentGetState(doc: string): anyURI ;
 
     /** Set the document's state to the given state. **/
-    documentSetState(doc: xs:string, state: xs:anyURI):  empty-sequence() ;
+    documentSetState(doc: string, state: anyURI):  empty-sequence() ;
 
     /** Determine the document's current processing status, if any. The status will be one of "created", "updated", "deleted", "active", or "done". **/
-    documentGetProcessingStatus(doc: xs:string):  xs:string;
+    documentGetProcessingStatus(doc: string): string;
 
     /** Set the document's processing status to the given value. **/
-    documentSetProcessingStatus(doc: xs:string, processingStatus: xs:string):  empty-sequence() ;
+    documentSetProcessingStatus(doc: string, processingStatus: string):  empty-sequence() ;
 
     /** Determine the date and time of the last update to the document's content, if any. **/
-    documentGetLastUpdated(doc: xs:string):  xs:dateTime;
+    documentGetLastUpdated(doc: string): dateTime;
 
     /** Set the date and time of the document's last update. **/
-    documentSetLastUpdated(doc: xs:string, lastUpdated: xs:dateTime):  empty-sequence() ;
+    documentSetLastUpdated(doc: string, lastUpdated: dateTime):  empty-sequence() ;
 
     /** Fetch a trace of the error that caused the document's processing to fail, if any. **/
-    documentGetError(doc: xs:string):  node() ;
+    documentGetError(doc: string):  node() ;
 
     /** Set the document's error trace to the given value. **/
-    documentSetError(doc: xs:string, error: node()):  empty-sequence() ;
+    documentSetError(doc: string, error: node()):  empty-sequence() ;
 
 
   }

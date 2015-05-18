@@ -64,8 +64,9 @@ let $definition := xdmp:xslt-eval(
       <xsl:choose>
         <xsl:when test="$type = 'empty-sequence()'">void</xsl:when>
         <xsl:when test="$type = 'item()'">any</xsl:when>
+        <xsl:when test="matches($type, 'int|long', 'i')">number</xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="translate(replace($type, '^([^:]+: )?(.+)$', '$2'), '?+*', '')"/>
+          <xsl:value-of select="translate(replace($type, '^([^:]+:)?(.+)$', '$2'), '?+*', '')"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:function>

@@ -22,7 +22,7 @@ declare module ExcelModule {
   interface excel {
 
     /** Clean up any conversion artifacts or other infelicities, putting each sheet into its own div element. **/
-    clean(uri: xs:string, doc: node()):  node() ;
+    clean(uri: string, doc: node()):  node() ;
 
 
   }

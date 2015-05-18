@@ -16,7 +16,7 @@ declare module Extensions {
     toJson(item: item()): document-node();
 
     /** Returns a string representing a JSON serialization of a given item sequence. **/
-    toJsonString(item: item()): xs:string;
+    toJsonString(item: item()): string;
 
     /** Atomizes a JSON node, returning a JSON value. **/
     fromJson(arg: node()): item();
@@ -25,7 +25,7 @@ declare module Extensions {
     fromJSON(arg: node()): item();
 
     /** Parses a string as JSON, returning an item sequence. **/
-    fromJsonString(arg: xs:string): item();
+    fromJsonString(arg: string): item();
 
 
   }

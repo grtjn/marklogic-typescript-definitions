@@ -18,37 +18,37 @@ declare module GeoJSON {
   interface geojson {
 
     /** Create a cts:point value from a GeoJSON "Point" type geometry object. **/
-    point(point: object-node()):  cts:point ;
+    point(point: object-node()): number;
 
     /** Create a set of cts:point values from a GeoJSON "MultiPoint" type geometry object. **/
-    multiPoint(multiPoint: object-node()):  cts:point ;
+    multiPoint(multiPoint: object-node()): number;
 
     /** Create a cts:box value from GeoJSON bbox property. **/
-    box(box: object-node()):  cts:box ;
+    box(box: object-node()): box ;
 
     /** Create a cts:circle value from a radius and a GeoJSON "Point" type geometry object. **/
-    circle(radius: xs:double, center: object-node()):  cts:circle ;
+    circle(radius: double, center: object-node()): circle ;
 
     /** Create a cts:linestring value from a GeoJSON "LineString" type geometry object. **/
-    linestring(linestring: object-node()):  cts:linestring ;
+    linestring(linestring: object-node()): linestring ;
 
     /** Create a set of cts:linestring values from a GeoJSON "MultiLineString" type geometry object. **/
-    multiLinestring(multiLinestring: object-node()):  cts:linestring ;
+    multiLinestring(multiLinestring: object-node()): linestring ;
 
     /** Create a cts:polygon value from a GeoJSON "Polygon" type geometry object or a sequence of GeoJSON "Point" type geometry objects. **/
-    polygon(polygonOrPoints: object-node()):  cts:polygon ;
+    polygon(polygonOrPoints: object-node()): polygon ;
 
     /** Create a sequence of cts:polygon values from a GeoJSON "Polygon" type geometry object. The returned polygons represent the interior polygons, if any. **/
-    interiorPolygon(polygon: object-node()):  cts:polygon ;
+    interiorPolygon(polygon: object-node()): polygon ;
 
     /** Create a cts:complex-polygon value from a GeoJSON "Polygon" type geometry object. The polygon returned represents the combination of the exterior polygon and the interior polygons. **/
-    complexPolygon(complexPolygon: node()):  cts:complex-polygon ;
+    complexPolygon(complexPolygon: node()): complex-polygon ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: cts:region, options?: xs:string, weight?: xs:double): cts:query;
+    geospatialQuery(regions: region, options?: string, weight?: double): query;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromNodes(regions: node(), options?: xs:string, weight?: xs:double):  cts:query ;
+    geospatialQueryFromNodes(regions: node(), options?: string, weight?: double): query ;
 
 
   }

@@ -11,13 +11,13 @@ declare module OfficeConvert {
   interface xdmp {
 
     /** Converts a Microsoft Word document to XHTML. Returns several nodes, including a parts node, the converted document xml node, and any other document parts (for example, css files and images). The first node is the parts node, which contains a manefest of all of the parts generated as result of the conversion. Does not convert Microsoft Office 2007 and later documents. **/
-    wordConvert(doc: node(), filename: xs:string, options?: (element()|map:map)): node();
+    wordConvert(doc: node(), filename: string, options?: map)): node();
 
     /** Converts a Microsoft Excel document to XHTML. Returns several nodes, including a parts node, the converted document xml node, and any other document parts (for example, css files and images). The first node is the parts node, which contains a manefest of all of the parts generated as result of the conversion. Does not convert Microsoft Office 2007 and later documents. **/
-    excelConvert(doc: node(), filename: xs:string, options?: (element()|map:map)): node();
+    excelConvert(doc: node(), filename: string, options?: map)): node();
 
     /** Converts a Microsoft Powerpoint document to XHTML. Returns several nodes, including a parts node, the converted document xml node, and any other document parts (for example, css files and images). The first node is the parts node, which contains a manefest of all of the parts generated as result of the conversion. Does not convert Microsoft Office 2007 and later documents. **/
-    powerpointConvert(doc: node(), filename: xs:string, options?: (element()|map:map)): node();
+    powerpointConvert(doc: node(), filename: string, options?: map)): node();
 
 
   }

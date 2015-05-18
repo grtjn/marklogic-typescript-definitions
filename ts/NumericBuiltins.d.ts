@@ -25,7 +25,7 @@ declare module NumericBuiltins {
     round(arg: numeric): numeric;
 
     /** The value returned is the nearest (that is, numerically closest) numeric to $arg that is a multiple of ten to the power of minus $precision. If two such values are equally near (e.g. if the fractional part in $arg is exactly .500...), returns the one whose least significant digit is even. If type of $arg is one of the four numeric types xs:float, xs:double, xs:decimal or xs:integer the type of the result is the same as the type of $arg. If the type of $arg is a type derived from one of the numeric types, the result is an instance of the base numeric type. If no precision is specified, the result produces is the same as with $precision=0. For arguments of type xs:float and xs:double, if the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned. If the argument is less than zero, but greater than or equal o -0.5, then negative zero is returned. If $arg is of type xs:float or xs:double, rounding occurs on the value of the mantissa computed with exponent = 0. For detailed type semantics, see Section 7.2.3 The fn:abs, fn:ceiling, fn:floor, fn:round, and fn:round-half-to-even functions[FS]. **/
-    roundHalfToEven(arg: numeric, precision?: xs:integer): numeric;
+    roundHalfToEven(arg: numeric, precision?: number): numeric;
 
 
   }

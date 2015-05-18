@@ -25,7 +25,7 @@ declare module PDFModule {
     clean(doc: node(), toc: element()):  node() ;
 
     /** Fetch the linked TOC, if any. **/
-    getToc(uri: xs:string):  element() ;
+    getToc(uri: string):  element() ;
 
     /** Clean and normalize the TOC produced by raw conversion. **/
     makeToc(toc: element()):  element() ;

@@ -22,7 +22,7 @@ declare module MSWordModule {
   interface msword {
 
     /** Clean up any conversion artifacts or other infelicities. **/
-    clean(uri: xs:string, doc: node()): node();
+    clean(uri: string, doc: node()): node();
 
 
   }

@@ -8,25 +8,25 @@ declare module SearchBuiltins {
   interface  {
 
     /** Creates a index-based ordering clause, for use as an option to cts:search. **/
-    indexOrder(index: cts:reference, options?: xs:string): cts:order;
+    indexOrder(index: reference, options?: string): order;
 
     /** Creates a score-based ordering clause, for use as an option to cts:search. **/
-    scoreOrder(options?: xs:string): cts:order;
+    scoreOrder(options?: string): order;
 
     /** Creates a fitness-based ordering clause, for use as an option to cts:search. **/
-    fitnessOrder(options?: xs:string): cts:order;
+    fitnessOrder(options?: string): order;
 
     /** Creates a confidence-based ordering clause, for use as an option to cts:search. **/
-    confidenceOrder(options?: xs:string): cts:order;
+    confidenceOrder(options?: string): order;
 
     /** Creates a quality-based ordering clause, for use as an option to cts:search. **/
-    qualityOrder(options?: xs:string): cts:order;
+    qualityOrder(options?: string): order;
 
     /** Creates a document-based ordering clause, for use as an option to cts:search. **/
-    documentOrder(options?: xs:string): cts:order;
+    documentOrder(options?: string): order;
 
     /** Specifies that results should be unordered, for use with cts:search. **/
-    unordered(): cts:order;
+    unordered(): order;
 
 
   }

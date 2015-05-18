@@ -31,7 +31,7 @@ declare module SchemaBuiltins {
     annotations(arg?: schema-component()): element();
 
     /** Returns the name of the schema component, if any. The context item is used if no argument is given. **/
-    name(arg?: schema-component()): xs:QName;
+    name(arg?: schema-component()): QName;
 
     /** Returns the particles of the schema component, if any. The context item is used if no argument is given. **/
     particles(arg?: schema-component()): schema-particle();
@@ -43,10 +43,10 @@ declare module SchemaBuiltins {
     functionReturnType(arg?: function()): schema-type();
 
     /** Returns the declared parameter type of a specific parameter of the function item as a schema component. **/
-    functionParameterType(arg?: function(), param?: xs:integer): schema-type();
+    functionParameterType(arg?: function(), param?: number): schema-type();
 
     /** Returns the type with the given name, if any, as a schema component. If there is no such type, an undefined type error is raised. **/
-    typeNamed(arg: xs:QName): schema-type();
+    typeNamed(arg: QName): schema-type();
 
     /** Returns the facets of the component, if any. Only simple types have facets. The context item is used if no argument is given. **/
     facets(arg?: schema-component()): schema-facet();
@@ -55,13 +55,13 @@ declare module SchemaBuiltins {
     schema(arg?: any): schema-root();
 
     /** Returns the named property of the schema component. The context item is used for the second argument if it is not given. Properties include: nameSame as sc:name typeSame as sc:type complex-typeSame as sc:complex-type simple-typeSame as sc:simple-type element-declSame as sc:element-decl attribute-declSame as sc:attribute-decl schemaSame as sc:schema annotationsSame as sc:annotations facetsSame as sc:facets attributesSame as sc:attributes particlesSame as sc:particles attribute-groupsThe attribute groups of the schema model-groupsThe model groups of the schema notationsThe notations of the schema typesThe types of the schema elementsThe element declarations of the schema attribute-wildcardThe attribute wildcard on the type or in the attribute group identity-constraintsThe identity constraints on the element declaration or schema scopeThe scope of the element or attribute declaration fixedThe fixed value of the element or attribute declaration or whether a facet is fixed defaultThe default value of the element or attribute declaration substitution-groupThe element declaration serving as the substitution group head of the element declaration nillableWhether the element declaration is declared as nillable abstractWhether the element declaration or type is declared as abstract block-extensionWhether the element declaration or complex type is declared as blocking extensions block-restrictionWhether the element declaration or complex type is declared as blocking restrictions block-substitutionWhether the element declaration is declared as blocking substitutions final-extensionWhether the element declaration or complex type is declared as final for extensions final-restrictionWhether the element declaration or complex type is declared as final for restrictions varietyThe variety of the simple type (atomic, list, or union) baseThe base type of the type primitiveThe primitive type of the simple type item-typeThe item type of the list simple type member-typesThe member types of the union simple type orderedThe ordering of the simple type numericWhether the simple type is numeric finiteWhether the simple type is finite boundedWhether the simple type is bounded final-listWhether the simple type is declared as final for lists final-unionWhether the simple type is declared as final for unions final-restrictionWhether the simple type is declared as final for restrictions derivation-methodThe derivation method of the complex type (extension, restriction) content-typeThe kind of content type of the complex type (empty, simple, element-only, mixed) min-occursThe declared minimum occurrences of the particle max-occursThe declared maximum occurrences of the particle process-contentsWhat processing is declared for the wildcard (strict, lax, skip) namespacesWhat namespaces the wildcard references valueThe value of the facet categoryThe kind of identity constraint (key, unique, keyref) referenced-keyThe key referenced by the keyref selectorThe selector path in the identity constraint fieldsThe field paths in the identity constraint systemThe notation's system identifier publicThe notation's public identifier versionThe schema's version schema-locationThe schema's location **/
-    componentProperty(propname: xs:string, arg?: schema-component()): item();
+    componentProperty(propname: string, arg?: schema-component()): item();
 
     /** Get a schema object as a value based on its namespace and schema location hint. **/
-    schemaFromPath(namespace: xs:string, location?: xs:string): schema-root();
+    schemaFromPath(namespace: string, location?: string): schema-root();
 
     /** Returns the canonical schema component path of the component. See http://www.w3.org/TR/xmlschema-ref/ for the definition of this path. The context item is used if no argument is given. **/
-    canonicalPath(arg?: schema-component()): xs:string;
+    canonicalPath(arg?: schema-component()): string;
 
 
   }

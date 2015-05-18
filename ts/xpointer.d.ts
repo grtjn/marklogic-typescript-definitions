@@ -18,19 +18,19 @@ declare module XPointerModule {
   interface xp {
 
     /** This function.... **/
-    parseXpointer(xpointer: xs:string): element(xp:part);
+    parseXpointer(xpointer: string): part);
 
     /** This function.... **/
-    pathFromElementScheme(part: xs:string): xs:string;
+    pathFromElementScheme(part: string): string;
 
     /** This function.... **/
-    altPathFromElementScheme(part: xs:string): xs:string;
+    altPathFromElementScheme(part: string): string;
 
     /** This function.... **/
-    doDereference(context: node(), path: xs:string, nsBindings: xs:string): node();
+    doDereference(context: node(), path: string, nsBindings: string): node();
 
     /** This function resolves an XPointer in the context of a particular node. **/
-    dereference(context: node(), xpointer: xs:string): node();
+    dereference(context: node(), xpointer: string): node();
 
 
   }

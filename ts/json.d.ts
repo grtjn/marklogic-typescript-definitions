@@ -38,22 +38,22 @@ declare module JSON {
   interface json {
 
     /** This function creates a configuration object for a specified strategy. **/
-    config(strategy: xs:string): map:map;
+    config(strategy: string): map;
 
     /** This function checks a json configuration object and returns a report. **/
-    checkConfig(config?: map:map): element(json:report);
+    checkConfig(config?: map): report);
 
     /** This function transforms an XML document to JSON using the default ("basic") strategy if none is supplied. **/
-    transformToJson(node: node(), config?: map:map): xs:string;
+    transformToJson(node: node(), config?: map): string;
 
     /** This function transforms an XML document to JSON and returns an object. **/
-    transformToJsonObject(node: node(), config?: map:map): any;
+    transformToJsonObject(node: node(), config?: map): any;
 
     /** This function transforms an XML document to JSON and returns an xml element. **/
-    transformToJsonXml(node: node(), config?: map:map): element();
+    transformToJsonXml(node: node(), config?: map): element();
 
     /** This function transforms a JSON document to XML using the default ("basic") strategy. **/
-    transformFromJson(json: any, config?: map:map): item();
+    transformFromJson(json: any, config?: map): item();
 
 
   }

@@ -22,7 +22,7 @@ declare module PowerpointModule {
   interface ppt {
 
     /** Clean up any conversion artifacts or other infelicities, putting each slide into its own div element. **/
-    clean(uri: xs:string, doc: node()): node();
+    clean(uri: string, doc: node()): node();
 
 
   }

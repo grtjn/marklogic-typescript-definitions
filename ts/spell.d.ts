@@ -30,19 +30,19 @@ declare module SpellingModule {
   interface spell {
 
     /** Add the words from the file specified in $path to the dictionary at $uri. If a document exists with the specified URI, it is replaced with this one. Note that words that are 64 characters or greater will never be returned as suggestions from spell:suggest or spell:suggest-detailed. **/
-    load(path: xs:string, uri: xs:string):  empty-sequence() ;
+    load(path: string, uri: string):  empty-sequence() ;
 
     /** Load the words in $dict into the dictionary at $uri. If there is no document at $uri a new one will be created. If there is a document at $uri it will be overwritten. **/
-    insert(uri: xs:string, dict: element(spell:dictionary)):  empty-sequence() ;
+    insert(uri: string, dict: dictionary)):  empty-sequence() ;
 
     /** Add the word $word to the dictionary at $uri. If the word is already in the dictionary (case-sensitive), then this function throws an exception. **/
-    addWord(uri: xs:string, word: xs:string):  empty-sequence() ;
+    addWord(uri: string, word: string):  empty-sequence() ;
 
     /** Remove the word $word from the dictionary at $uri. **/
-    removeWord(uri: xs:string, word: xs:string):  empty-sequence() ;
+    removeWord(uri: string, word: string):  empty-sequence() ;
 
     /** Creates a dictionary node from a sequence of words. Use spell:load to load the dictionary node into the database as a dictionary. **/
-    makeDictionary(words: xs:string): element(spell:dictionary);
+    makeDictionary(words: string): dictionary);
 
 
   }

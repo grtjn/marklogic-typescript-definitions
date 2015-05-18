@@ -15,7 +15,7 @@ declare module ClustererBuiltins {
   interface cts {
 
     /** Produces a set of clusters from a sequence an array of nodes. The nodes can be any set of nodes, and are typically the result of a cts:search cts.search operation. **/
-    cluster(nodes: node(), nodes: Array, options?: (element()|map:map)): Object;
+    cluster(nodes: node(), nodes: Array, options?: map)): Object;
 
 
   }

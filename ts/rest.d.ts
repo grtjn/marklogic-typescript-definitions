@@ -36,25 +36,25 @@ declare module restModule {
   interface rest {
 
     /** This function is used in the URL rewriter to map the incoming request to an endpoint. By default, if you supply only options, all aspects of the request environment are used for rewriting. If you supply specific criteria, the filter is less strict, allowing the same options block to be used for simple url-based rewriting as well as request processing. **/
-    rewrite(options: element(rest:options), matchCriteria: xs:string): xs:string;
+    rewrite(options: options), matchCriteria: string): string;
 
     /** This function formats the specified error structure. **/
     reportError(error: element()): element();
 
     /** This function validates the specified options node. Validation includes both schema validation and some additional rule-based validation. An empty sequence indicates valid options and any problems are reported via rest:report elements. **/
-    checkOptions(options: element(rest:options)): element(rest:report);
+    checkOptions(options: options)): report);
 
     /** This function extracts all of the query parameters and returns them in a map. This does not include the parameters that would be derived from matching the URI string. No error checking or type conversion is performed by this function. The parameters returned by this function are all strings, as they are not type checked. **/
-    getRawQueryParams(): map:map;
+    getRawQueryParams(): map;
 
     /** This function returns the request element in the options node that matches the specified URI. If you only specify options parameter, all criteria in the request environment are considered. If you supply specific criteria, the filter is less strict, allowing the same options block to be used for simple url-based rewriting as well as request processing. **/
-    matchingRequest(options: element(rest:options), matchCriteria: xs:string): element(rest:request);
+    matchingRequest(options: options), matchCriteria: string): request);
 
     /** This function is used in the endpoint main module to parse the incoming request against the options. It returns a map that contains all of the parameters as typed values. Processing the request also checks all of the associated conditions and will raise an error if any condition is not met. If the request is processed successfully, then all of the conditions have been met and the returned map contains all of the parameters. If not, an error occurs. **/
-    processRequest(request: element(rest:request)): map:map;
+    processRequest(request: request)): map;
 
     /** This function takes a request element and returns a report of the problems found. If this function does not return an empty sequence, you have made a mistake and the library will not perform reliably. **/
-    checkRequest(options: element(rest:request)): element(rest:report);
+    checkRequest(options: request)): report);
 
 
   }

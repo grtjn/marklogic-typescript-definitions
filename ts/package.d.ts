@@ -27,13 +27,13 @@ declare module OOXML Zip {
   interface ooxml {
 
     /** This function returns the list of files in the zip package. **/
-    packageUris(package: node()): xs:string;
+    packageUris(package: node()): string;
 
     /** This function returns the documents within the zip package. Typically, the parts are returned as document nodes. They are returned in the order the package uris are returned, which is the manifest order. **/
     packageParts(package: node()): node();
 
     /** This function inserts one document in the database for each part at the specified URI. If a directory is given, then all parts are inserted into documents in that directory, with the rest of the URI determined by the $uris specified (typically from the manifest of a zip file or Office document). **/
-    packagePartsInsert(directory: xs:string, packageUris: xs:string, packageParts: node(), permissions?: item(), collections?: xs:string, quality?: xs:int, forestIds?: xs:unsignedLong): void;
+    packagePartsInsert(directory: string, packageUris: string, packageParts: node(), permissions?: item(), collections?: string, quality?: number, forestIds?: number): void;
 
 
   }

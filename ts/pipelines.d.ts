@@ -22,40 +22,40 @@ declare module PipelinesModule {
   interface p {
 
     /** Insert a fully constructed content processing pipeline, returning its unique ID. If a pipeline with the same name already exists in the database, it is replaced. **/
-    insert(pipelineNode: node()):  xs:unsignedLong ;
+    insert(pipelineNode: node()): number;
 
     /** Create a new content processing pipeline. **/
-    create(name: xs:string, description: xs:string, successAction: element(p:action), failureAction: element(p:action), statusTransitions: element(p:status-transition), stateTransitions: element(p:state-transition)):  xs:unsignedLong ;
+    create(name: string, description: string, successAction: action), failureAction: action), statusTransitions: status-transition), stateTransitions: state-transition)): number;
 
     /** Remove the named pipeline. An error is raised if no such pipeline exists. **/
-    remove(pipelineName: xs:string):  empty-sequence() ;
+    remove(pipelineName: string):  empty-sequence() ;
 
     /** Find a particular pipeline. **/
-    get(pipelineName: xs:string):  element(p:pipeline) ;
+    get(pipelineName: string): pipeline) ;
 
     /** Find a particular pipeline. **/
-    getById(pipelineId: xs:unsignedLong):  element(p:pipeline) ;
+    getById(pipelineId: number): pipeline) ;
 
     /** Return the name of the collection in which pipelines are stored. **/
-    collection(): xs:string;
+    collection(): string;
 
     /** Return all the pipelines. **/
-    pipelines():  element(p:pipeline) ;
+    pipelines(): pipeline) ;
 
     /** Construct a new state transition element. **/
-    stateTransition(state: xs:anyURI, description: xs:string, onSuccess: xs:anyURI, onFailure: xs:anyURI, priority: xs:unsignedLong, defaultAction: element(p:action), rules: element(p:execute)):  element(p:state-transition) ;
+    stateTransition(state: anyURI, description: string, onSuccess: anyURI, onFailure: anyURI, priority: number, defaultAction: action), rules: execute)): state-transition) ;
 
     /** Construct a new status transition element. **/
-    statusTransition(status: xs:string, description: xs:string, onSuccess: xs:anyURI, onFailure: xs:anyURI, priority: xs:unsignedLong, defaultAction: element(p:action), rules: element(p:execute)):  element(p:status-transition) ;
+    statusTransition(status: string, description: string, onSuccess: anyURI, onFailure: anyURI, priority: number, defaultAction: action), rules: execute)): status-transition) ;
 
     /** Construct a execute element. **/
-    execute(condition: element(p:condition), action: element(p:action), description: xs:string):  element(p:execute) ;
+    execute(condition: condition), action: action), description: string): execute) ;
 
     /** Construct a condition element. **/
-    condition(module: xs:string, description: xs:string, options: element()):  element(p:condition) ;
+    condition(module: string, description: string, options: element()): condition) ;
 
     /** Construct an action element. **/
-    action(module: xs:string, description: xs:string, options: element()):  element(p:action) ;
+    action(module: string, description: string, options: element()): action) ;
 
 
   }

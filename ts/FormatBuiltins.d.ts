@@ -13,31 +13,31 @@ declare module FormatBuiltins {
   interface fn {
 
     /** Returns a formatted dateTime value based on the picture argument. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
-    formatDateTime(value: xs:dateTime, picture: xs:string, language?: xs:string, calendar?: xs:string, country?: xs:string): xs:string;
+    formatDateTime(value: dateTime, picture: string, language?: string, calendar?: string, country?: string): string;
 
     /** Returns a formatted date value based on the picture argument. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
-    formatDate(value: xs:date, picture: xs:string, language?: xs:string, calendar?: xs:string, country?: xs:string): xs:string;
+    formatDate(value: date, picture: string, language?: string, calendar?: string, country?: string): string;
 
     /** Returns a formatted time value based on the picture argument. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
-    formatTime(value: xs:time, picture: xs:string, language?: xs:string, calendar?: xs:string, country?: xs:string): xs:string;
+    formatTime(value: time, picture: string, language?: string, calendar?: string, country?: string): string;
 
     /** Parses a string containing date, time or dateTime using the supplied picture argument and returns a dateTime value. While this function is closely related to other XSLT functions, it is available in XSLT as well as in all XQuery dialects and in Server-Side JavaScript. **/
-    parseDateTime(picture: xs:string, value: xs:string, language?: xs:string, calendar?: xs:string, country?: xs:string): xs:dateTime;
+    parseDateTime(picture: string, value: string, language?: string, calendar?: string, country?: string): dateTime;
 
     /** Parses a string containing date, time or dateTime using the supplied picture argument and returns a dateTime value. While this function is closely related to other XSLT functions, it is available in XSLT as well as in all XQuery dialects and in Server-Side JavaScript. **/
-    parseYymmdd(picture: xs:string, value: xs:string, language?: xs:string, calendar?: xs:string, country?: xs:string): xs:dateTime;
+    parseYymmdd(picture: string, value: string, language?: string, calendar?: string, country?: string): dateTime;
 
     /** Returns a formatted string representation of value argument based on the supplied picture. An optional decimal format name may also be supplied for interpretation of the picture string. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
-    formatNumber(value: xs:double, picture: xs:string, decimalFormatName?: xs:string): xs:string;
+    formatNumber(value: double, picture: string, decimalFormatName?: string): string;
 
     /** Returns a formatted number value based on the picture argument. The difference between this function and the W3C standards fn:format-number function is that this function imitates the XSLT xsl:number instruction, which has richer formatting options than the fn:format-number function. This function can be used for spelled-out and ordinal numbering in many languages. This function is available in XSLT as well as in all dialects of XQuery and Server-Side JavaScript. **/
-    formatNumber(value: xs:numeric, picture?: xs:string, language?: xs:string, letterValue?: xs:string, ordchar?: xs:string, zeroPadding?: xs:string, groupingSeparator?: xs:string, groupingSize?: xs:integer): xs:string;
+    formatNumber(value: numeric, picture?: string, language?: string, letterValue?: string, ordchar?: string, zeroPadding?: string, groupingSeparator?: string, groupingSize?: number): string;
 
     /** Returns month name, calculated from the localized value of $arg. If $arg is the empty sequence, returns the empty sequence. **/
-    monthNameFromDate(arg: xs:date): xs:string;
+    monthNameFromDate(arg: date): string;
 
     /** Returns an xs:string representing the dayname value in the localized value of $arg. If $arg is the empty sequence, returns the empty sequence. **/
-    daynameFromDate(arg: xs:date): xs:string;
+    daynameFromDate(arg: date): string;
 
 
   }

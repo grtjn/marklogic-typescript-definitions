@@ -41,121 +41,121 @@ declare module ViewsModule {
   interface view {
 
     /** This function creates a new relational schema in the Schema database. The schema id is returned. Every SQL deployment must include a default schema, called "main," as shown in the example below. **/
-    schemaCreate(schemaName: xs:string, permissions: item()): xs:unsignedLong;
+    schemaCreate(schemaName: string, permissions: item()): number;
 
     /** This function removes the specified schema. Removing a schema removes all the views that are part of that schema. **/
-    schemaRemove(schemaName: xs:string): void;
+    schemaRemove(schemaName: string): void;
 
     /** This function returns the named schema specification document. **/
-    schemaGet(schemaName: xs:string): element(view:schema);
+    schemaGet(schemaName: string): schema);
 
     /** This function sets permissions on the specified schema specification. Any existing permissions for the schema and removed. **/
-    schemaSetPermissions(schemaName: xs:string, permissions: item()): void;
+    schemaSetPermissions(schemaName: string, permissions: item()): void;
 
     /** This function adds permissions to the specified schema specification. **/
-    schemaAddPermissions(schemaName: xs:string, permissions: item()): void;
+    schemaAddPermissions(schemaName: string, permissions: item()): void;
 
     /** This function removes permissions from the specified schema specification. **/
-    schemaRemovePermissions(schemaName: xs:string, permissions: item()): void;
+    schemaRemovePermissions(schemaName: string, permissions: item()): void;
 
     /** This function creates a new view in the specified schema specification. The id of the view is returned. The view is checked for validity. Prior to executing this function, you must create a range index for each column in your view. For details on element range indexes, see Range Indexes and Lexicons in the Administrator's Guide. **/
-    create(schemaName: xs:string, name: xs:string, scope: element(,view:view-scope), columns: element(view:column), fields: element(view:field), permissions: item()): xs:unsignedLong;
+    create(schemaName: string, name: string, scope: view-scope), columns: column), fields: field), permissions: item()): number;
 
     /** This function returns the named view from the named schema specification. **/
-    get(schemaName: xs:string, viewName: xs:string): element(view:view);
+    get(schemaName: string, viewName: string): view);
 
     /** This function returns the view with the specified id. **/
-    getById(viewId: xs:unsignedLong): element(view:view);
+    getById(viewId: number): view);
 
     /** This function removes the named view from the named schema specification. **/
-    remove(schemaName: xs:string, viewName: xs:string): void;
+    remove(schemaName: string, viewName: string): void;
 
     /** This function renames the named view in the named schema specification. **/
-    setName(schemaName: xs:string, viewName: xs:string, newName: xs:string): void;
+    setName(schemaName: string, viewName: string, newName: string): void;
 
     /** This function sets the ordered flag on the view. The ordered flag can only be used if all the range indexes referenced as columns have positions. **/
-    setOrdered(schemaName: xs:string, viewName: xs:string, ordered: xs:boolean): void;
+    setOrdered(schemaName: string, viewName: string, ordered: boolean): void;
 
     /** This function returns the ordered flag setting from the named view in the named schema specification. **/
-    getOrdered(schemaName: xs:string, viewName: xs:string): xs:boolean;
+    getOrdered(schemaName: string, viewName: string): boolean;
 
     /** This function sets the scope of the named view in the named schema specification. **/
-    setViewScope(schemaName: xs:string, viewName: xs:string, scope: element(,view:view-scope)): void;
+    setViewScope(schemaName: string, viewName: string, scope: view-scope)): void;
 
     /** This function sets the permissions for the named view in the named schema specification. Any existing permissions for the view and removed. **/
-    setPermissions(schemaName: xs:string, viewName: xs:string, permissions: item()): void;
+    setPermissions(schemaName: string, viewName: string, permissions: item()): void;
 
     /** This function adds permissions to those already set for the named view in the named schema specification. **/
-    addPermissions(schemaName: xs:string, viewName: xs:string, permissions: item()): void;
+    addPermissions(schemaName: string, viewName: string, permissions: item()): void;
 
     /** This function removes permissions from those set for the named view in the named schema specification. **/
-    removePermissions(schemaName: xs:string, viewName: xs:string, permissions: item()): void;
+    removePermissions(schemaName: string, viewName: string, permissions: item()): void;
 
     /** This function replaces the current set of column specifications on the named view in the named schema with a new set of columns. **/
-    setColumns(schemaName: xs:string, viewName: xs:string, columns: element(view:column)): void;
+    setColumns(schemaName: string, viewName: string, columns: column)): void;
 
     /** This function adds column specifications to the current set of column specifications on the named view in the named schema. **/
-    addColumn(schemaName: xs:string, viewName: xs:string, column: element(view:column)): void;
+    addColumn(schemaName: string, viewName: string, column: column)): void;
 
     /** This function removes a column specification from the named view in the named schema. **/
-    removeColumn(schemaName: xs:string, viewName: xs:string, columnName: xs:string): void;
+    removeColumn(schemaName: string, viewName: string, columnName: string): void;
 
     /** This function returns the sequence of column specifications set in the named view in the named schema. **/
-    columns(schemaName: xs:string, viewName: xs:string): element(view:column);
+    columns(schemaName: string, viewName: string): column);
 
     /** This function returns the named column specification set in the named view in the named schema. **/
-    getColumn(schemaName: xs:string, viewName: xs:string, columnName: xs:string): element(view:column);
+    getColumn(schemaName: string, viewName: string, columnName: string): column);
 
     /** This function returns all of the schema specifications. **/
-    schemas(): element(view:schema);
+    schemas(): schema);
 
     /** This function returns all of the view specifications in the named schema. **/
-    views(schemaName: xs:string): element(view:view);
+    views(schemaName: string): view);
 
     /** This function constructs a new element-style view scope specification. For details on view scoping, see Defining View Scope in the SQL Data Modeling Guide. **/
-    elementViewScope(localname: xs:QName): element(, view:view-scope);
+    elementViewScope(localname: QName): view-scope);
 
     /** This function constructs a new collection-style view scope specification. For details on view scoping, see Defining View Scope in the SQL Data Modeling Guide. **/
-    collectionViewScope(collection: xs:string): element(, view:view-scope);
+    collectionViewScope(collection: string): view-scope);
 
     /** This function constructs a new column specification. **/
-    column(name: xs:string, rangeIndex: cts:reference): element(view:column);
+    column(name: string, rangeIndex: reference): column);
 
     /** This function return the URI of the protected collection holding all the views. **/
-    collection(): xs:string;
+    collection(): string;
 
     /** This function returns the scope of the named view in the named schema. **/
-    getViewScope(schemaName: xs:string, viewName: xs:string): element(, view:view-scope);
+    getViewScope(schemaName: string, viewName: string): view-scope);
 
     /** This function removes the view with the specified id. **/
-    removeById(viewId: xs:unsignedLong): void;
+    removeById(viewId: number): void;
 
     /** This function returns the permissions set on the specified schema. **/
-    schemaGetPermissions(schemaName: xs:string): element(sec:permission);
+    schemaGetPermissions(schemaName: string): permission);
 
     /** This function returns the permissions set on the specified view. **/
-    getPermissions(schemaName: xs:string, viewName: xs:string): element(sec:permission);
+    getPermissions(schemaName: string, viewName: string): permission);
 
     /** This function sets the specified fields on the specified view. Any existing fields are replaced or removed. **/
-    setFields(schemaName: xs:string, viewName: xs:string, fields: element(view:field)): void;
+    setFields(schemaName: string, viewName: string, fields: field)): void;
 
     /** This function adds a field to the named view. **/
-    addField(schemaName: xs:string, viewName: xs:string, field: element(view:field)): void;
+    addField(schemaName: string, viewName: string, field: field)): void;
 
     /** This function removes a field from the named view. **/
-    removeField(schemaName: xs:string, viewName: xs:string, fieldName: xs:string): void;
+    removeField(schemaName: string, viewName: string, fieldName: string): void;
 
     /** This function returns the fields set on the named view. **/
-    fields(schemaName: xs:string, viewName: xs:string): element(view:field);
+    fields(schemaName: string, viewName: string): field);
 
     /** This function returns the element specification for the named field. **/
-    getField(schemaName: xs:string, viewName: xs:string, fieldName: xs:string): element(view:field);
+    getField(schemaName: string, viewName: string, fieldName: string): field);
 
     /** This function generates a binding map suitable for use with cts:parse from the named view. **/
-    getBindings(schemaName: xs:string, viewName: xs:string): map:map;
+    getBindings(schemaName: string, viewName: string): map;
 
     /** This function constructs a new element-style field specification for the named field. **/
-    field(name: xs:string): element(view:field);
+    field(name: string): field);
 
 
   }

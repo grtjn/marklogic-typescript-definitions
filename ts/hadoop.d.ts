@@ -22,7 +22,7 @@ declare module HadoopModule {
   interface hadoop {
 
     /** This function returns (forest_id, record_count, host_name) tuples usable with the MarkLogic Connector for Hadoop to generate input splits in advanced input mode. **/
-    getSplits(nsbindings: xs:string, docSelector: xs:string, query: xs:string): item();
+    getSplits(nsbindings: string, docSelector: string, query: string): item();
 
 
   }

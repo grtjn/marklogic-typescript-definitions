@@ -16,7 +16,7 @@ declare module ExsltBuiltins {
     nodeSet(value: item()): node();
 
     /** Returns a string that contains the type-name of the object passed as the argument. **/
-    objectType(value: item()): xs:string;
+    objectType(value: item()): string;
 
 
   }

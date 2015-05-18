@@ -24,22 +24,22 @@ declare module LinksModule {
   interface lnk {
 
     /** Create a link between the two given documents with the given role labels and strength. An error is raised if either of the documents involved does not exist or if the link would be invalid for some reason. This function will replace any existing link between those two documents with the new link. **/
-    create(from: xs:string, to: xs:string, role: xs:string, revRole: xs:string, strength: xs:string):  empty-sequence() ;
+    create(from: string, to: string, role: string, revRole: string, strength: string):  empty-sequence() ;
 
     /** Insert the given link. An error is raised if either of the documents involved does not exist or if the link is invalid in some way. This function will replace any existing link between those two documents. **/
-    insert(link: element(lnk:link)):  empty-sequence() ;
+    insert(link: link)):  empty-sequence() ;
 
     /** Remove the link between the two given documents and return the removed link. An error is raised if no such link exists. **/
-    remove(from: xs:string, to: xs:string):  element(lnk:link) ;
+    remove(from: string, to: string): link) ;
 
     /** Find and return the link between the two documents, if any. This function will check the properties of link and raise an error if they are inconsistent or incomplete in some way. **/
-    get(from: xs:string, to: xs:string):  element(lnk:link) ;
+    get(from: string, to: string): link) ;
 
     /** Find and return all the links from the given document to some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    from(from: xs:string):  element(lnk:link) ;
+    from(from: string): link) ;
 
     /** Find and return all the links to the given document from some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    to(to: xs:string):  element(lnk:link) ;
+    to(to: string): link) ;
 
 
   }
