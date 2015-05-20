@@ -8,9 +8,13 @@
     "typescript",
     "marklogic"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-tsc": "^0.9.5",
+    "yargs": "^3.9.1",
+    "request": "^2.55.0",
+    "through2": "^0.6.5"
   },
   "engine": "node >= 0.4.1",
   "scripts": {
