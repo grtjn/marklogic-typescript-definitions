@@ -1,32 +1,36 @@
 // Type definitions for SearchBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/OrderSpecification.xml
+// Definitions: 
 
 /****/
 
 declare module SearchBuiltins {
 
-  interface  {
+  interface xdmp {
+
+
+  }
+  interface cts {
 
     /** Creates a index-based ordering clause, for use as an option to cts:search. **/
-    indexOrder(index: reference, options?: string): order;
+    indexOrder(index: Object, options?: String): Object;
 
     /** Creates a score-based ordering clause, for use as an option to cts:search. **/
-    scoreOrder(options?: string): order;
+    scoreOrder(options?: String): Object;
 
     /** Creates a fitness-based ordering clause, for use as an option to cts:search. **/
-    fitnessOrder(options?: string): order;
+    fitnessOrder(options?: String): Object;
 
     /** Creates a confidence-based ordering clause, for use as an option to cts:search. **/
-    confidenceOrder(options?: string): order;
+    confidenceOrder(options?: String): Object;
 
     /** Creates a quality-based ordering clause, for use as an option to cts:search. **/
-    qualityOrder(options?: string): order;
+    qualityOrder(options?: String): Object;
 
     /** Creates a document-based ordering clause, for use as an option to cts:search. **/
-    documentOrder(options?: string): order;
+    documentOrder(options?: String): Object;
 
     /** Specifies that results should be unordered, for use with cts:search. **/
-    unordered(): order;
+    unordered(): Object;
 
 
   }

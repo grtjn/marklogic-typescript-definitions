@@ -1,5 +1,5 @@
 // Type definitions for GeoJSON
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/geojson.xml
+// Definitions: 
 
 /**
 The GeoJSON module provides support for geospatial queries using GeoJSON. 
@@ -18,37 +18,37 @@ declare module GeoJSON {
   interface geojson {
 
     /** Create a cts:point value from a GeoJSON "Point" type geometry object. **/
-    point(point: object-node()): number;
+    point(point: Object): Object;
 
     /** Create a set of cts:point values from a GeoJSON "MultiPoint" type geometry object. **/
-    multiPoint(multiPoint: object-node()): number;
+    multiPoint(multiPoint: Object): Object;
 
     /** Create a cts:box value from GeoJSON bbox property. **/
-    box(box: object-node()): box ;
+    box(box: Object): Object;
 
     /** Create a cts:circle value from a radius and a GeoJSON "Point" type geometry object. **/
-    circle(radius: double, center: object-node()): circle ;
+    circle(radius: Number, center: Object): Object;
 
     /** Create a cts:linestring value from a GeoJSON "LineString" type geometry object. **/
-    linestring(linestring: object-node()): linestring ;
+    linestring(linestring: Object): Object;
 
     /** Create a set of cts:linestring values from a GeoJSON "MultiLineString" type geometry object. **/
-    multiLinestring(multiLinestring: object-node()): linestring ;
+    multiLinestring(multiLinestring: Object): Object;
 
     /** Create a cts:polygon value from a GeoJSON "Polygon" type geometry object or a sequence of GeoJSON "Point" type geometry objects. **/
-    polygon(polygonOrPoints: object-node()): polygon ;
+    polygon(polygonOrPoints: Object): Object;
 
     /** Create a sequence of cts:polygon values from a GeoJSON "Polygon" type geometry object. The returned polygons represent the interior polygons, if any. **/
-    interiorPolygon(polygon: object-node()): polygon ;
+    interiorPolygon(polygon: Object): Object;
 
     /** Create a cts:complex-polygon value from a GeoJSON "Polygon" type geometry object. The polygon returned represents the combination of the exterior polygon and the interior polygons. **/
-    complexPolygon(complexPolygon: node()): complex-polygon ;
+    complexPolygon(complexPolygon: Node): Object;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: region, options?: string, weight?: double): query;
+    geospatialQuery(regions: Object, options?: String, weight?: Number): Object;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromNodes(regions: node(), options?: string, weight?: double): query ;
+    geospatialQueryFromNodes(regions: Node, options?: String, weight?: Number): Object;
 
 
   }

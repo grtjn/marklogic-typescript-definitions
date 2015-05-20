@@ -1,5 +1,5 @@
 // Type definitions for CustomeDictionaryModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/custom-dictionary.xml
+// Definitions: 
 
 /**
   The custom dictionary functions are designed to help you manage dictionaries
@@ -54,16 +54,16 @@ declare module CustomeDictionaryModule {
   interface cdict {
 
     /** Return the ISO language codes for all licensed languages. **/
-    getLanguages(): string;
+    getLanguages(): String;
 
     /** Delete the custom dictionary for $lang, an ISO language code for a licensed language. Returns an empty sequence. Raises an XDMP-LANG error if $lang is not a licensed language. **/
-    dictionaryDelete(lang: string): void;
+    dictionaryDelete(lang: String): void;
 
     /** If $lang matches a licensed language with a custom dictionary, the custom dictionary from the local host is returned. The dictionary will have an xml:lang attribute for the language. If there is no custom dictionary for that language, an empty sequence is returned. Raises an XDMP-LANG error if $lang is not a licensed language. **/
-    dictionaryRead(lang: string): dictionary);
+    dictionaryRead(lang: String): Node;
 
     /** $lang is an ISO language code. $dict is the custom dictionary. If $lang matches a licensed language and $dict validates, the custom dictionary is installed on the cluster. Returns an empty sequence. Raises an XDMP-LANG error if $lang is not a licensed language. Raises validation errors if the dictionary fails to validate. **/
-    dictionaryWrite(lang: string, dict: dictionary)): void;
+    dictionaryWrite(lang: String, dict: Node): void;
 
 
   }

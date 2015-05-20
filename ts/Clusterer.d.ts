@@ -1,5 +1,5 @@
 // Type definitions for ClustererBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/Clusterer.xml
+// Definitions: 
 
 /**
 The clusterer built-in functions perform dynamic clustering of nodes.
@@ -15,7 +15,7 @@ declare module ClustererBuiltins {
   interface cts {
 
     /** Produces a set of clusters from a sequence an array of nodes. The nodes can be any set of nodes, and are typically the result of a cts:search cts.search operation. **/
-    cluster(nodes: node(), nodes: Array, options?: map)): Object;
+    cluster(nodes: Object, options?: Object): Object;
 
 
   }

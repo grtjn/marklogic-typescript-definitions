@@ -1,5 +1,5 @@
 // Type definitions for SpellingModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/spell.xml
+// Definitions: 
 
 /**
   The spelling functions are designed to help you manage dictionary 
@@ -30,19 +30,19 @@ declare module SpellingModule {
   interface spell {
 
     /** Add the words from the file specified in $path to the dictionary at $uri. If a document exists with the specified URI, it is replaced with this one. Note that words that are 64 characters or greater will never be returned as suggestions from spell:suggest or spell:suggest-detailed. **/
-    load(path: string, uri: string):  empty-sequence() ;
+    load(path: String, uri: String):  empty-sequence() ;
 
     /** Load the words in $dict into the dictionary at $uri. If there is no document at $uri a new one will be created. If there is a document at $uri it will be overwritten. **/
-    insert(uri: string, dict: dictionary)):  empty-sequence() ;
+    insert(uri: String, dict: Dictionary)):  empty-sequence() ;
 
     /** Add the word $word to the dictionary at $uri. If the word is already in the dictionary (case-sensitive), then this function throws an exception. **/
-    addWord(uri: string, word: string):  empty-sequence() ;
+    addWord(uri: String, word: String):  empty-sequence() ;
 
     /** Remove the word $word from the dictionary at $uri. **/
-    removeWord(uri: string, word: string):  empty-sequence() ;
+    removeWord(uri: String, word: String):  empty-sequence() ;
 
     /** Creates a dictionary node from a sequence of words. Use spell:load to load the dictionary node into the database as a dictionary. **/
-    makeDictionary(words: string): dictionary);
+    makeDictionary(words: String): Dictionary);
 
 
   }

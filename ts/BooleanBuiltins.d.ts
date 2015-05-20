@@ -1,5 +1,5 @@
 // Type definitions for BooleanBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/BooleanBuiltins.xml
+// Definitions: 
 
 /**
 The boolean built-in functions are XQuery functions to manipulate xs:boolean
@@ -14,13 +14,13 @@ declare module BooleanBuiltins {
   interface fn {
 
     /** Returns the xs:boolean value true. Equivalent to xs:boolean("1"). **/
-    true(): boolean;
+    true(): Object;
 
     /** Returns the xs:boolean value false. Equivalent to xs:boolean("0"). **/
-    false(): boolean;
+    false(): Object;
 
     /** Returns true if the effective boolean value is false, and false if the effective boolean value is true. The $arg parameter is first reduced to an effective boolean value by applying the fn:boolean function. **/
-    not(arg: item()): boolean;
+    not(arg: String): Object;
 
 
   }

@@ -1,5 +1,5 @@
 // Type definitions for PipelinesModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/pipelines.xml
+// Definitions: 
 
 /**
 The pipelines module is installed as part of the Content Processing
@@ -22,40 +22,40 @@ declare module PipelinesModule {
   interface p {
 
     /** Insert a fully constructed content processing pipeline, returning its unique ID. If a pipeline with the same name already exists in the database, it is replaced. **/
-    insert(pipelineNode: node()): number;
+    insert(pipelineNode: Node): UnsignedLong ;
 
     /** Create a new content processing pipeline. **/
-    create(name: string, description: string, successAction: action), failureAction: action), statusTransitions: status-transition), stateTransitions: state-transition)): number;
+    create(name: String, description: String, successAction: Action), failureAction: Action), statusTransitions: Status-transition), stateTransitions: State-transition)): UnsignedLong ;
 
     /** Remove the named pipeline. An error is raised if no such pipeline exists. **/
-    remove(pipelineName: string):  empty-sequence() ;
+    remove(pipelineName: String):  empty-sequence() ;
 
     /** Find a particular pipeline. **/
-    get(pipelineName: string): pipeline) ;
+    get(pipelineName: String): Pipeline) ;
 
     /** Find a particular pipeline. **/
-    getById(pipelineId: number): pipeline) ;
+    getById(pipelineId: String): Pipeline) ;
 
     /** Return the name of the collection in which pipelines are stored. **/
-    collection(): string;
+    collection(): String;
 
     /** Return all the pipelines. **/
-    pipelines(): pipeline) ;
+    pipelines(): Pipeline)* ;
 
     /** Construct a new state transition element. **/
-    stateTransition(state: anyURI, description: string, onSuccess: anyURI, onFailure: anyURI, priority: number, defaultAction: action), rules: execute)): state-transition) ;
+    stateTransition(state: String, description: String, onSuccess: String, onFailure: String, priority: String, defaultAction: Action), rules: Execute)): State-transition) ;
 
     /** Construct a new status transition element. **/
-    statusTransition(status: string, description: string, onSuccess: anyURI, onFailure: anyURI, priority: number, defaultAction: action), rules: execute)): status-transition) ;
+    statusTransition(status: String, description: String, onSuccess: String, onFailure: String, priority: String, defaultAction: Action), rules: Execute)): Status-transition) ;
 
     /** Construct a execute element. **/
-    execute(condition: condition), action: action), description: string): execute) ;
+    execute(condition: Condition), action: Action), description: String): Execute) ;
 
     /** Construct a condition element. **/
-    condition(module: string, description: string, options: element()): condition) ;
+    condition(module: String, description: String, options: Node): Condition) ;
 
     /** Construct an action element. **/
-    action(module: string, description: string, options: element()): action) ;
+    action(module: String, description: String, options: Node): Action) ;
 
 
   }

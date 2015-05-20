@@ -1,5 +1,5 @@
 // Type definitions for ProfileBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/Profile.xml
+// Definitions: 
 
 /**
 Implements a library of functions which allow developers to profile
@@ -20,36 +20,6 @@ predefined in the server.
 declare module ProfileBuiltins {
 
   interface prof {
-
-    /** Enable profiling for this request. Profiling may be enabled or disabled as often as you like. Enabling while a request is enabled has no effect. If profiling is not allowed for the App Server, this function does nothing. Note that profiling does not cross eval/invoke boundaries. If the request being profiled calls xdmp:eval or xdmp:invoke, the individual expressions in that code will not be profiled. The overall time taken by the called code will appear as a single call in the caller's profiling report. **/
-    enable(requestId: number): void;
-
-    /** Disable profiling for this request. Profiling may be enabled or disabled as often as you like. Disabling does not clear accumulated profiling statistics. Disabling while disabled has no effect. If profiling is not allowed for the App Server, this function does nothing. **/
-    disable(requestId: number): void;
-
-    /** Clear any accumulated profiling statistics for the requests. If profiling has never been started for the request, nothing is done. If profiling is not allowed for the App Server, this function does nothing. **/
-    reset(requestId: number): void;
-
-    /** Return a prof:report node containing the current state of profiling statistics for the given request. If profiling has never been enabled for the request, the empty sequence is returned. If profiling is not allowed for the App Server, this function returns an empty sequence. **/
-    report(requestId: number): report);
-
-    /** Returns the value of the Profile Allow setting for the App Server or Task Server upon which the target request is running. This function is useful to determine if subsequent calls to profiling functions will be effective. **/
-    allowed(requestId: number): boolean;
-
-    /** Evaluate a string as an XQuery for profiling. A prof:report node will be prepended to any output produced by evaluating the string. If profiling is not allowed for the App Server, this function will throw a PROF-PROFILEALLOW exception. Note that profiling does not cross eval/invoke boundaries. If the request being profiled calls xdmp:eval or xdmp:invoke, the individual expressions in that code will not be profiled. The overall time taken by the called code will appear as a single call in the caller's profiling report. **/
-    eval(xquery: string, vars?: item(), options?: map)): item();
-
-    /** Profiles and returns the result of evaluating a module at the given path. Any result produced by the evaluation will be prepended with a prof:report node containing timing and count information about the evaluation. If profiling is not allowed for the App Server, this function will throw a PROF-PROFILEALLOW exception. Note that profiling does not cross eval/invoke boundaries. If the request being profiled calls xdmp:eval or xdmp:invoke, the individual expressions in that code will not be profiled. The overall time taken by the called code will appear as a single call in the caller's profiling report. **/
-    invoke(path: string, vars?: item(), options?: map)): item();
-
-    /** Evaluate an expression in the context of the current evaluating statement and return the profiling report for its evaluation. This differs from prof:eval in that prof:value preserves all of the context from the calling query, so you do not need to re-define namespaces, variables, and so on. Although the expression retains the context from the calling query, it is evaluated in its own transaction. **/
-    value(expr: string): item();
-
-    /** Evaluate a string as an XSLT stylesheet for profiling. A prof:report node will be prepended to any output produced by evaluating the string. If profiling is not allowed for the App Server, this function will throw a PROF-PROFILEALLOW exception. Note that profiling does not cross eval/invoke boundaries. If the request being profiled calls xdmp:eval or xdmp:invoke, the individual expressions in that code will not be profiled. The overall time taken by the called code will appear as a single call in the caller's profiling report. **/
-    xsltEval(stylesheet: node(), input?: node(), params?: map, options?: map)): item();
-
-    /** Profiles and returns the result of evaluating an XSLT stylesheet at the given path. Any result produced by the evaluation will be prepended with a prof:report node containing timing and count information about the evaluation. If profiling is not allowed for the App Server, this function will throw a PROF-PROFILEALLOW exception. Note that profiling does not cross eval/invoke boundaries. If the request being profiled calls xdmp:eval or xdmp:invoke, the individual expressions in that code will not be profiled. The overall time taken by the called code will appear as a single call in the caller's profiling report. **/
-    xsltInvoke(path: string, input?: node(), params?: map, options?: map)): item();
 
 
   }

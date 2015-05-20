@@ -1,5 +1,5 @@
 // Type definitions for PDFModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/pdf.xml
+// Definitions: 
 
 /**
 The PDF module is part of the conversion processing pipeline.
@@ -22,16 +22,16 @@ declare module PDFModule {
   interface pdf {
 
     /** Clean up any conversion artifacts or other infelicities. **/
-    clean(doc: node(), toc: element()):  node() ;
+    clean(doc: Node, toc: Node):  node()? ;
 
     /** Fetch the linked TOC, if any. **/
-    getToc(uri: string):  element() ;
+    getToc(uri: String):  element()? ;
 
     /** Clean and normalize the TOC produced by raw conversion. **/
-    makeToc(toc: element()):  element() ;
+    makeToc(toc: Node):  element()? ;
 
     /** Locate TOC anchors and make them properly refer to headers at the appropriate level. Returned the transformed document. **/
-    insertTocHeaders(doc: node(), toc: element()):  node() ;
+    insertTocHeaders(doc: Node, toc: Node):  node()? ;
 
 
   }

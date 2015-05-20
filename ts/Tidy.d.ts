@@ -1,5 +1,5 @@
 // Type definitions for Tidy
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/Tidy.xml
+// Definitions: 
 
 /**
    The conversion functions are built-in to the server and support
@@ -17,7 +17,7 @@ declare module Tidy {
   interface xdmp {
 
     /** Run tidy on the specified html document to convert the document to well-formed and clean XHTML. Returns two nodes: the first is a status node indicating any errors or warning from tidy, and the second is an html node containing the cleaned xhtml. **/
-    tidy(doc: string, options?: map)): node();
+    tidy(doc: String, options?: Object): Node;
 
 
   }

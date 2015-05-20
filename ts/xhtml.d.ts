@@ -1,5 +1,5 @@
 // Type definitions for XHTMLModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/xhtml.xml
+// Definitions: 
 
 /**
 The XHTML module is part of the conversion processing pipeline.
@@ -21,13 +21,13 @@ declare module XHTMLModule {
   interface xhtml {
 
     /** Clean up the XHTML: pruning empty spans, consolidating adjacent spans, etc. **/
-    clean(doc: node()):  node() ;
+    clean(doc: Node):  node()? ;
 
     /** Turn an XHTML with flat structure into one with div structure based on the header elements. **/
-    restructure(doc: node()):  node() ;
+    restructure(doc: Node):  node()? ;
 
     /** Infer numbered or bulleted lists and insert appropriate markup. Restructuring first is highly recommended to improve both accuracy and performance. This function also assumes that indentation styling is already present on the paragraphs in the original input. **/
-    addLists(doc: node()):  node() ;
+    addLists(doc: Node):  node()? ;
 
 
   }

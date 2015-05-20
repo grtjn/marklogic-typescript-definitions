@@ -1,5 +1,5 @@
 // Type definitions for XPointerModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/xpointer.xml
+// Definitions: 
 
 /**
 		This is the XPointer module, which is used with the 
@@ -18,19 +18,19 @@ declare module XPointerModule {
   interface xp {
 
     /** This function.... **/
-    parseXpointer(xpointer: string): part);
+    parseXpointer(xpointer: String): Part);
 
     /** This function.... **/
-    pathFromElementScheme(part: string): string;
+    pathFromElementScheme(part: String): String;
 
     /** This function.... **/
-    altPathFromElementScheme(part: string): string;
+    altPathFromElementScheme(part: String): String;
 
     /** This function.... **/
-    doDereference(context: node(), path: string, nsBindings: string): node();
+    doDereference(context: Node, path: String, nsBindings: String): Node;
 
     /** This function resolves an XPointer in the context of a particular node. **/
-    dereference(context: node(), xpointer: string): node();
+    dereference(context: Node, xpointer: String): Node;
 
 
   }

@@ -1,5 +1,5 @@
 // Type definitions for OOXML
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/word-processing-ml.xml
+// Definitions: 
 
 /**
       The WordProcessingML function module is installed as the following 
@@ -21,7 +21,7 @@ declare module OOXML {
   interface ooxml {
 
     /** This function updates document or paragraph node(s) (from a Word 2007 document) so that all similar runs are merged, retaining formatting, and removing text split across elements. **/
-    runsMerge(nodes: node()): node();
+    runsMerge(nodes: Node): Node;
 
 
   }

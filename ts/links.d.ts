@@ -1,5 +1,5 @@
 // Type definitions for LinksModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/links.xml
+// Definitions: 
 
 /**
 The links module is installed as part of the Content Processing Framework.
@@ -24,22 +24,22 @@ declare module LinksModule {
   interface lnk {
 
     /** Create a link between the two given documents with the given role labels and strength. An error is raised if either of the documents involved does not exist or if the link would be invalid for some reason. This function will replace any existing link between those two documents with the new link. **/
-    create(from: string, to: string, role: string, revRole: string, strength: string):  empty-sequence() ;
+    create(from: String, to: String, role: String, revRole: String, strength: String):  empty-sequence() ;
 
     /** Insert the given link. An error is raised if either of the documents involved does not exist or if the link is invalid in some way. This function will replace any existing link between those two documents. **/
-    insert(link: link)):  empty-sequence() ;
+    insert(link: Link)):  empty-sequence() ;
 
     /** Remove the link between the two given documents and return the removed link. An error is raised if no such link exists. **/
-    remove(from: string, to: string): link) ;
+    remove(from: String, to: String): Link) ;
 
     /** Find and return the link between the two documents, if any. This function will check the properties of link and raise an error if they are inconsistent or incomplete in some way. **/
-    get(from: string, to: string): link) ;
+    get(from: String, to: String): Link)? ;
 
     /** Find and return all the links from the given document to some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    from(from: string): link) ;
+    from(from: String): Link)* ;
 
     /** Find and return all the links to the given document from some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    to(to: string): link) ;
+    to(to: String): Link)* ;
 
 
   }

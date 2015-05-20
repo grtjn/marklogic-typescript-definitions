@@ -1,5 +1,5 @@
 // Type definitions for Extensions
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/JSONBuiltins.xml
+// Definitions: 
 
 /**
  The JSON built-in functions serialize XQuery items to JSON and
@@ -13,19 +13,16 @@ declare module Extensions {
   interface xdmp {
 
     /** Constructs a JSON document. **/
-    toJson(item: item()): document-node();
+    toJson(item: String): Node;
 
     /** Returns a string representing a JSON serialization of a given item sequence. **/
-    toJsonString(item: item()): string;
+    toJsonString(item: String): String;
 
     /** Atomizes a JSON node, returning a JSON value. **/
-    fromJson(arg: node()): item();
-
-    /** Atomizes a JSON node, returning a JSON value. **/
-    fromJSON(arg: node()): item();
+    fromJSON(arg: Node): String;
 
     /** Parses a string as JSON, returning an item sequence. **/
-    fromJsonString(arg: string): item();
+    fromJsonString(arg: String): String;
 
 
   }

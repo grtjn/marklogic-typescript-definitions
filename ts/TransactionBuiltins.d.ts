@@ -1,5 +1,5 @@
 // Type definitions for TransactionBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/TransactionBuiltins.xml
+// Definitions: 
 
 /**
   Use these XQuery functions for manipulating transactions. You will
@@ -16,19 +16,19 @@ declare module TransactionBuiltins {
   interface xdmp {
 
     /** Retrieve the transaction mode for the current session. Returns one of "auto", "update", "update-auto-commit", or "query". **/
-    getTransactionMode(): string;
+    getTransactionMode(): String;
 
     /** Set the transaction mode for the current session. Calling this function has no effect on existing transactions. **/
-    setTransactionMode(value: string): void;
+    setTransactionMode(value: String): void;
 
     /** Returns the transaction ID for the current transaction, or transaction IDs for all transactions with the given name. **/
-    transaction(txnName?: string, hostId?: number): number;
+    transaction(txnName?: String, hostId?: String): String;
 
     /** Set the name of a local or remote transaction. **/
-    setTransactionName(name: string, hostId?: number, txnId?: number): void;
+    setTransactionName(name: String, hostId?: String, txnId?: String): void;
 
     /** Set the transaction time limit for a local or remote transaction. Defaults to the configured request timeout. **/
-    setTransactionTimeLimit(timeLimit: number, hostId?: number, txnId?: number): void;
+    setTransactionTimeLimit(timeLimit: Number, hostId?: String, txnId?: String): void;
 
     /** Commit the current transaction to the database. **/
     commit(): void;
@@ -37,16 +37,16 @@ declare module TransactionBuiltins {
     rollback(): void;
 
     /** Explicitly commit a transaction running on a named host. **/
-    transactionCommit(hostId: number, txnId: number): void;
+    transactionCommit(hostId: String, txnId: String): void;
 
     /** Explicitly roll back a transaction running on a named host. **/
-    transactionRollback(hostId: number, txnId: number): void;
+    transactionRollback(hostId: String, txnId: String): void;
 
     /** Completes (commits or rolls back) a prepared XA transaction. **/
-    xaComplete(forestID: number, txnId: number, commit: boolean, remember: boolean): void;
+    xaComplete(forestID: String, txnId: String, commit: Object, remember: Object): void;
 
     /** Forgets a remembered completed XA transaction. **/
-    xaForget(forestID: number, txnId: number): void;
+    xaForget(forestID: String, txnId: String): void;
 
 
   }

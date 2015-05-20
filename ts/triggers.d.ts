@@ -1,5 +1,5 @@
 // Type definitions for TriggersModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/triggers.xml
+// Definitions: 
 
 /**
     The triggers function module is installed as the following file:
@@ -28,124 +28,124 @@ declare module TriggersModule {
   interface trgr {
 
     /** Creates a new trigger in the context database. Returns the trigger ID of the created trigger. **/
-    createTrigger(triggerName: string, description: string, event: element(), module: module), enabled: boolean, permissions: item(), recursive?: boolean, taskPriority?: string): number;
+    createTrigger(triggerName: String, description: String, event: Node, module: Module), enabled: Boolean, permissions: String, recursive?: Boolean, taskPriority?: String): String;
 
     /** Changes the name of a trigger. **/
-    triggerSetName(triggerName: string, newTriggerName: string): void;
+    triggerSetName(triggerName: String, newTriggerName: String): void;
 
     /** Sets the description of the named trigger. **/
-    triggerSetDescription(triggerName: string, description: string): void;
+    triggerSetDescription(triggerName: String, description: String): void;
 
     /** Enables the named trigger. **/
-    triggerEnable(triggerName: string): void;
+    triggerEnable(triggerName: String): void;
 
     /** Disables the named trigger. **/
-    triggerDisable(triggerName: string): void;
+    triggerDisable(triggerName: String): void;
 
     /** Sets or replaces the action module associated with the named trigger. **/
-    triggerSetModule(triggerName: string, module: module)): void;
+    triggerSetModule(triggerName: String, module: Module)): void;
 
     /** Assigns a triggering event to the named trigger. **/
-    triggerSetEvent(triggerName: string, event: element()): void;
+    triggerSetEvent(triggerName: String, event: Node): void;
 
     /** Sets the permissions that determine which roles are permitted to modify the named trigger. **/
-    triggerSetPermissions(triggerName: string, permissions: item()): void;
+    triggerSetPermissions(triggerName: String, permissions: String): void;
 
     /** Returns the permissions for the named trigger. **/
-    triggerGetPermissions(triggerName: string): permission);
+    triggerGetPermissions(triggerName: String): Permission);
 
     /** Adds permissions to the set of permissions on the named trigger. **/
-    triggerAddPermissions(triggerName: string, permissions: item()): void;
+    triggerAddPermissions(triggerName: String, permissions: String): void;
 
     /** Removes a set of permissions from the set of permissions on the named trigger. **/
-    triggerRemovePermissions(triggerName: string, permissions: item()): void;
+    triggerRemovePermissions(triggerName: String, permissions: String): void;
 
     /** Returns the XML representation of a trigger with the given name. **/
-    getTrigger(triggerName: string): trigger);
+    getTrigger(triggerName: String): Trigger);
 
     /** Returns the XML representation of the trigger with the given trigger id. **/
-    getTriggerById(triggerId: number): trigger);
+    getTriggerById(triggerId: String): Trigger);
 
     /** Returns the XML representation of a trigger module which can be used as the module parameter of trgr:create-trigger. **/
-    triggerModule(databaseId: number, root: string, path: string): module);
+    triggerModule(databaseId: String, root: String, path: String): Module);
 
     /** Returns the XML representation of a triggering eventa, usable as the event parameter of trgr:create-trigger. **/
-    triggerDataEvent(scope: element(), content: element(), when: when)): data-event);
+    triggerDataEvent(scope: Node, content: Node, when: When)): Data-event);
 
     /** Returns the XML representation of a database coming online event, usable as the event parameter of trgr:create-trigger. **/
-    triggerDatabaseOnlineEvent(userName: string): database-online-event);
+    triggerDatabaseOnlineEvent(userName: String): Database-online-event);
 
     /** Returns the XML representation of a document scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    documentScope(uri: string): document-scope);
+    documentScope(uri: String): Document-scope);
 
     /** Returns the XML representation of a collection scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    collectionScope(uri: string): collection-scope);
+    collectionScope(uri: String): Collection-scope);
 
     /** Returns the XML representation of a directory scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    directoryScope(uri: string, depth: string): directory-scope);
+    directoryScope(uri: String, depth: String): Directory-scope);
 
     /** Returns the XML representation of a document part of a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    documentContent(updateKind: string): document-content);
+    documentContent(updateKind: String): Document-content);
 
     /** Returns the XML representation of an all-properties part to a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    anyPropertyContent(): any-property-content);
+    anyPropertyContent(): Any-property-content);
 
     /** Returns the XML representation of a property part to a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    propertyContent(propertyName: QName): property-content);
+    propertyContent(propertyName: QName): Property-content);
 
     /** Returns the XML representation of a pre-commit trigger timing. **/
-    preCommit(): when);
+    preCommit(): When);
 
     /** Returns the XML representation of a post-commit trigger timing. **/
-    postCommit(): when);
+    postCommit(): When);
 
     /** Removes the named trigger. **/
-    removeTrigger(triggerName: string): void;
+    removeTrigger(triggerName: String): void;
 
     /** Sets the recursive setting of the identified trigger. When the recursive setting is true, the trigger will trigger itself for recursive changes to the same document. **/
-    triggerSetRecursive(triggerName: string, recursive: boolean): void;
+    triggerSetRecursive(triggerName: String, recursive: Boolean): void;
 
     /** Sets the task priority setting of the identified trigger. The task priority is only applicable to post-commit triggers. **/
-    triggerSetTaskPriority(triggerName: string, taskPriority: string): void;
+    triggerSetTaskPriority(triggerName: String, taskPriority: String): void;
 
     /** This function changes the trigger definitions of each trigger definition in the database that has the database ID $old-db and replaces each database ID with $new-db. This is useful after restoring a triggers database to a different cluster that has different database IDs than the one from which it was backed up. **/
-    triggersChangeModulesDatabase(oldDb: number, newDb: number): void;
+    triggersChangeModulesDatabase(oldDb: String, newDb: String): void;
 
     /** This function.... **/
-    anyCustomPropertyContent(): any-custom-property-content);
+    anyCustomPropertyContent(): Any-custom-property-content);
 
     /** This function.... **/
-    validateTriggerName(triggerName: string): empty();
+    validateTriggerName(triggerName: String): Empty();
 
     /** This function.... **/
-    validateDataEvent(event: data-event)): empty();
+    validateDataEvent(event: Data-event)): Empty();
 
     /** This function.... **/
-    validateScope(): element());
+    validateScope(): Element());
 
     /** This function.... **/
-    validateContent(): element());
+    validateContent(): Element());
 
     /** This function.... **/
-    validateWhen(): element());
+    validateWhen(): Element());
 
     /** This function.... **/
-    validateDatabaseOnlineEvent(databaseOnlineEvent: database-online-event)): empty();
+    validateDatabaseOnlineEvent(databaseOnlineEvent: Database-online-event)): Empty();
 
     /** This function.... **/
-    validateModule(module: module)): empty();
+    validateModule(module: Module)): Empty();
 
     /** This function.... **/
-    triggersUri(): string;
+    triggersUri(): String;
 
     /** This function.... **/
-    getUniqueTriggerId(): number;
+    getUniqueTriggerId(): String;
 
     /** This function.... **/
-    triggersCollection(): string;
+    triggersCollection(): String;
 
     /** This function.... **/
-    triggersNamespace(): string;
+    triggersNamespace(): String;
 
 
   }

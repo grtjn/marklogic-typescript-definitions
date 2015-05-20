@@ -1,5 +1,5 @@
 // Type definitions for semantics-lib
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/semantics-stub.xml
+// Definitions: 
 
 /**
 		The semantics library module documentation is with the rest of

@@ -1,5 +1,5 @@
 // Type definitions for DomainsModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/domains.xml
+// Definitions: 
 
 /**
 The domains module is installed as part of the Content Processing Framework.
@@ -20,73 +20,73 @@ declare module DomainsModule {
   interface dom {
 
     /** Create a new content processing domain, along with the triggers that perform work in that domain. **/
-    create(name: string, description: string, scope: domain-scope), context: evaluation-context), pipelines: number, permissions: item()): number;
+    create(name: String, description: String, scope: Node, context: Node, pipelines: String, permissions: String): Object;
 
     /** Remove the domain and any associated triggers. An error is raised if no such domain exists. **/
-    remove(domainName: string):  empty-sequence() ;
+    remove(domainName: String): Object;
 
     /** Find a particular domain. **/
-    get(domainName: string): domain) ;
+    get(domainName: String): Object;
 
     /** Set the name of the domain to something else. An error is raised if a domain with the new name already exists or if the domain cannot be found. **/
-    setName(domainName: string, newName: string):  empty-sequence() ;
+    setName(domainName: String, newName: String): Object;
 
     /** Set the description of the domain. An error is raised if the domain cannot be found. **/
-    setDescription(domainName: string, description: string):  empty-sequence() ;
+    setDescription(domainName: String, description: String): Object;
 
     /** Set the scope of the domain. An error is raised if the domain cannot be found. If the domain already has triggers associated with it, the triggers will be modified to act on the new scope as well. **/
-    setDomainScope(domainName: string, scope: domain-scope)):  empty-sequence() ;
+    setDomainScope(domainName: String, scope: Node): Object;
 
     /** Set the evaluation context of the domain. An error is raised if the domain cannot be found. If the domain already has triggers associated with it, the triggers will be modified to act in the new evaluation context. **/
-    setEvaluationContext(domainName: string, context: evaluation-context)):  empty-sequence() ;
+    setEvaluationContext(domainName: String, context: Node): Object;
 
     /** Set the permissions of the domain. An error is raised if the domain cannot be found. If the triggers associated with the domain will be modified also. **/
-    setPermissions(domainName: string, permissions: item()):  empty-sequence() ;
+    setPermissions(domainName: String, permissions: String): Object;
 
     /** Add permissions to the domain. An error is raised if the domain cannot be found. The triggers associated with the domain will be modified also. **/
-    addPermissions(domainName: string, permissions: item()):  empty-sequence() ;
+    addPermissions(domainName: String, permissions: String): Object;
 
     /** Remove permissions to the domain. An error is raised if the domain cannot be found. The triggers associated with the domain will be modified also. **/
-    removePermissions(domainName: string, permissions: item()):  empty-sequence() ;
+    removePermissions(domainName: String, permissions: String): Object;
 
     /** Add another pipeline to the set of pipelines bound to the domain. An error is raised if the domain cannot be found or the pipeline does not exist. **/
-    addPipeline(domainName: string, pipelineId: number):  empty-sequence() ;
+    addPipeline(domainName: String, pipelineId: String): Object;
 
     /** Bind a new set of pipelines to the domain. An error is raised if the domain cannot be found or any of the pipelines does not exist. If the domain already has pipelines associated with it, those existing pipelines will not be deleted; only the association will be broken. **/
-    setPipelines(domainName: string, pipelines: number):  empty-sequence() ;
+    setPipelines(domainName: String, pipelines: String): Object;
 
     /** Remove the association between a pipeline and the domain. An error is raised if the domain cannot be found. Only the association between the domain and the pipeline will be broken: the existing pipeline will not be deleted and may still be active in other domains. **/
-    removePipeline(domainName: string, pipelineId: number):  empty-sequence() ;
+    removePipeline(domainName: String, pipelineId: String): Object;
 
     /** Return the name of the collection in which domains are stored. **/
-    collection(): string ;
+    collection(): Object;
 
     /** Return all the domains. **/
-    domains(): domain) ;
+    domains(): Object;
 
     /** Create a domain scope element. **/
-    domainScope(documentScope: string, uri: string, depth: string): domain-scope) ;
+    domainScope(documentScope: String, uri: String, depth: String): Object;
 
     /** Create an evaluation context element. **/
-    evaluationContext(database: number, root: string): evaluation-context) ;
+    evaluationContext(database: String, root: String): Object;
 
     /** Set a new context for the CPF configuration. This will ripple down to the restart trigger as well. **/
-    configurationSetEvaluationContext(context: evaluation-context)): void;
+    configurationSetEvaluationContext(context: Node): void;
 
     /** Set a new restart user for the CPF configuration. This will ripple down to the restart trigger as well. **/
-    configurationSetRestartUser(restartUser: string): void;
+    configurationSetRestartUser(restartUser: String): void;
 
     /** Set a new default domain for the CPF configuration. **/
-    configurationSetDefaultDomain(domainId: number): void;
+    configurationSetDefaultDomain(domainId: String): void;
 
     /** Set new permissions for the CPF configuration. This will ripple down to the restart trigger as well. **/
-    configurationSetPermissions(permissions: item()): void;
+    configurationSetPermissions(permissions: String): void;
 
     /** Create a new CPF configuration. **/
-    configurationCreate(restartUser: string, evaluationContext: evaluation-context), defaultDomain: number, permissions: permission)): number;
+    configurationCreate(restartUser: String, evaluationContext: Node, defaultDomain: String, permissions: Node): String;
 
     /** Returns the CPF configuration. **/
-    configurationGet(): configuration);
+    configurationGet(): Node;
 
 
   }

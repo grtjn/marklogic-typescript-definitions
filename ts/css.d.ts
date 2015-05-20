@@ -1,5 +1,5 @@
 // Type definitions for CSSModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/css.xml
+// Definitions: 
 
 /**
 The CSS module is part of the conversion processing pipeline.
@@ -22,10 +22,10 @@ declare module CSSModule {
   interface css {
 
     /** Fetch the CSS for the given document, be it embedded or linked. Limitation: doesn't account for @import directives in the CSS; assumes the linked CSS is in the database. **/
-    get(doc: string): string ;
+    get(doc: String): Object;
 
     /** Convert CSS text to an equivalent XML representation that is more suitable for analysis. **/
-    convert(css: string, options: element()): styles) ;
+    convert(css: String, options: Node): Object;
 
 
   }

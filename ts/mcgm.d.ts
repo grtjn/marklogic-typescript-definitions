@@ -1,5 +1,5 @@
 // Type definitions for MCGM
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/mcgm.xml
+// Definitions: 
 
 /**
 The MCGM module provides support for geospatial queries using MetaCarta
@@ -19,19 +19,19 @@ declare module MCGM {
   interface mcgm {
 
     /** Create a cts:point value from a MCGM Dot element. **/
-    point(point: element(Dot)): number;
+    point(point: Element(Dot)): Point ;
 
     /** Create a cts:circle value from a radius and MCGM Dot element. **/
-    circle(radius: double, center: element(Dot)): circle ;
+    circle(radius: Number, center: Element(Dot)): Circle ;
 
     /** Construct a cts:polygon value from a sequence of MCGM Dot elements. **/
-    polygon(vertices: element(Dot)): polygon ;
+    polygon(vertices: Element(Dot)): Polygon ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: region, options?: string, weight?: double): query ;
+    geospatialQuery(regions: Region, options?: String, weight?: Number): Query ;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromElements(regions: element(Dot), options?: string, weight?: double): query ;
+    geospatialQueryFromElements(regions: Element(Dot), options?: String, weight?: Number): Query ;
 
 
   }

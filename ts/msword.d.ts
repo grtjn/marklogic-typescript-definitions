@@ -1,5 +1,5 @@
 // Type definitions for MSWordModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/msword.xml
+// Definitions: 
 
 /**
 The MSWord module is part of the conversion processing pipeline.
@@ -22,7 +22,7 @@ declare module MSWordModule {
   interface msword {
 
     /** Clean up any conversion artifacts or other infelicities. **/
-    clean(uri: string, doc: node()): node();
+    clean(uri: String, doc: Node): Node;
 
 
   }

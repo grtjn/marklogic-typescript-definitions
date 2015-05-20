@@ -1,5 +1,5 @@
 // Type definitions for PowerpointModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/powerpoint.xml
+// Definitions: 
 
 /**
 The Powerpoint module is part of the conversion processing pipeline.
@@ -22,7 +22,7 @@ declare module PowerpointModule {
   interface ppt {
 
     /** Clean up any conversion artifacts or other infelicities, putting each slide into its own div element. **/
-    clean(uri: string, doc: node()): node();
+    clean(uri: String, doc: Node): Node;
 
 
   }

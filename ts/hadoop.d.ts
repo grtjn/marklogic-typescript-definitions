@@ -1,5 +1,5 @@
 // Type definitions for HadoopModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/hadoop.xml
+// Definitions: 
 
 /**
     This module provides helper functions for creating advanced mode
@@ -22,7 +22,7 @@ declare module HadoopModule {
   interface hadoop {
 
     /** This function returns (forest_id, record_count, host_name) tuples usable with the MarkLogic Connector for Hadoop to generate input splits in advanced input mode. **/
-    getSplits(nsbindings: string, docSelector: string, query: string): item();
+    getSplits(nsbindings: String, docSelector: String, query: String): String;
 
 
   }

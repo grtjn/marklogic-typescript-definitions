@@ -1,5 +1,5 @@
 // Type definitions for InfoDevModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/infodev.xml
+// Definitions: 
 
 /**
 The Information Studio Developer API module contains functions that allow you to 
@@ -26,58 +26,58 @@ declare module InfoDevModule {
   interface infodev {
 
     /** [DEPRECATED] This function checks the options node to ensure that the structure and values are correct. It returns a sequence of report elements. An empty sequence indicates that the options node is correct. **/
-    checkOptions(options: options)): report);
+    checkOptions(options: Options)): Report);
 
     /** [DEPRECATED] This function generates a ticket and stores it in the specified database. It returns the id of the generated ticket. **/
-    ticketCreate(annotation: annotation), database: string, policyName: string, policyDeltas: options)): string;
+    ticketCreate(annotation: Annotation), database: String, policyName: String, policyDeltas: Options)): String;
 
     /** [DEPRECATED] This function adds annotation to the specified ticket. **/
-    ticketAddAnnotation(ticketId: string, annotation: annotation)): void;
+    ticketAddAnnotation(ticketId: String, annotation: Annotation)): void;
 
     /** [DEPRECATED] This function returns the status of the specified ticket. **/
-    ticketGetStatus(ticketId: string): string;
+    ticketGetStatus(ticketId: String): String;
 
     /** [DEPRECATED] This function sets the status of the specified ticket. **/
-    ticketSetStatus(ticketId: string, status: string): void;
+    ticketSetStatus(ticketId: String, status: String): void;
 
     /** [DEPRECATED] This function sets the number of documents to load into the database. **/
-    ticketSetTotalDocuments(ticketId: string, totalDocuments: number): void;
+    ticketSetTotalDocuments(ticketId: String, totalDocuments: Number): void;
 
     /** [DEPRECATED] This function adds and sets the value of a total-transactions element in the specified ticket. **/
-    ticketSetTotalTransactions(ticketId: string, totalTransactions: number): void;
+    ticketSetTotalTransactions(ticketId: String, totalTransactions: Number): void;
 
     /** [DEPRECATED] This function returns a string representing a matching pattern to be applied to file paths on ingest. **/
-    fileFilter(policyName: string, policyDeltas: options)): string;
+    fileFilter(policyName: String, policyDeltas: Options)): String;
 
     /** [DEPRECATED] This function resolves the transaction size parameter based on stored policy and runtime options and returns an integer that represents the maximum number of documents to handled in a single transaction. **/
-    transactionSize(policyName: string, policyDeltas: options)): number;
+    transactionSize(policyName: String, policyDeltas: Options)): Number;
 
     /** [DEPRECATED] This function provides configuration-aware error handling. If the error is to be logged, a infodev:error element is logged to the App-Services database, including document source-location, error code, and other information necessary to find and fix the error. Must be used within a try-catch block. **/
-    handleError(ticketId: string, context: string, error: error), annotation?: annotation), errorLogLevel?: string): void;
+    handleError(ticketId: String, context: String, error: Error), annotation?: Annotation), errorLogLevel?: String): void;
 
     /** [DEPRECATED] This function writes log information into a ticket's progress file that is written to the App-Services database. **/
-    logProgress(ticketId: string, annotation: annotation), documentsProcessed?: number, transactionsCompleted?: number, errorLogLevel?: string): void;
+    logProgress(ticketId: String, annotation: Annotation), documentsProcessed?: NonNegativeInteger, transactionsCompleted?: NonNegativeInteger, errorLogLevel?: String): void;
 
     /** [DEPRECATED] This function ingests a single document into the database specified in the ticket, according to the rules defined by the named policy and user-supplied options. **/
-    ingest(document: node(), path: string, ticketId: string, policyDeltas?: options), properties?: element()): string;
+    ingest(document: Node, path: String, ticketId: String, policyDeltas?: Options), properties?: Node): String;
 
     /** [DEPRECATED] This function returns an options node in the xdmp:document-get namespace that is ready to pass into xdmp:document-get, including default-namespace, repair, format, default-language, encoding if they are defined by policy or options. **/
-    collectorOptions(policyName: string, policyDeltas: options)): options);
+    collectorOptions(policyName: String, policyDeltas: Options)): Options);
 
     /** [DEPRECATED] This function temporarily resets the specified deltas on the named policy, while leaving the policy itself unchanged. **/
-    effectivePolicy(policyName: string, policyDeltas: options)): options);
+    effectivePolicy(policyName: String, policyDeltas: Options)): Options);
 
     /** [DEPRECATED] This function can be used along with the infodev:ingest function to build custom load operations. This function recurses the specified filesystem directory and uses the policy deltas from the specified ticket to determine which files to select for ingestion. The specified process function can be written to modify the content of files before calling the infodev:ingest function to load them into the database. **/
-    filesystemWalk(dirPath: string, ticketId: string, function: function, policyDeltas: options), context?: item()): void;
+    filesystemWalk(dirPath: String, ticketId: String, function: Object, policyDeltas: Options), context?: String): void;
 
     /** [DEPRECATED] This function ingests a batch of documents in a single invoked transaction. The batch of documents is contained in $document-map. Ingestion is done using a function named by the $function parameter. **/
-    transaction(documentMap: map, ticketId: string, function: function, policyDeltas: options), transactionIndex: number, context: item(), errorLogLevel?: string): void;
+    transaction(documentMap: Object, ticketId: String, function: Object, policyDeltas: Options), transactionIndex: Number, context: String, errorLogLevel?: String): void;
 
     /** [DEPRECATED] This is a convenience function that wraps xdmp:document-get. The document specified in $source-location is bundled with other documents into a transaction, and ingested. This function is similar to infodev:ingest, only it takes care of handling the infostudio options. **/
-    getFile(sourceLocation: string, ticketId: string, policyDeltas: options)): node();
+    getFile(sourceLocation: String, ticketId: String, policyDeltas: Options)): Node;
 
     /** [DEPRECATED] This function gets the specified binary file from the filesystem. **/
-    getExternalBinaryFile(sourceLocation: string): node();
+    getExternalBinaryFile(sourceLocation: String): Node;
 
 
   }

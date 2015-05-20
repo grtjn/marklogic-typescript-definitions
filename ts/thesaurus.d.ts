@@ -1,5 +1,5 @@
 // Type definitions for ThesaurusModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/thesaurus.xml
+// Definitions: 
 
 /**
   The thesaurus functions are designed to help you manage thesaurus 
@@ -20,34 +20,34 @@ declare module ThesaurusModule {
   interface thsr {
 
     /** Load the file specified in $path to the thesaurus at $uri. Exisiting documents at $uri are overwritten. **/
-    load(path: string, uri: string):  empty-sequence() ;
+    load(path: String, uri: String):  empty-sequence() ;
 
     /** Load the entries in $thsr into the thesaurus at $uri. If there is no document at $uri a new one will be created. If there is a document at $uri it will be overwritten. **/
-    insert(uri: string, thsr: thesaurus)):  empty-sequence() ;
+    insert(uri: String, thsr: Thesaurus)):  empty-sequence() ;
 
     /** Adds the entry $entry to the thesaurus at $uri. **/
-    setEntry(uri: string, entry: entry)):  empty-sequence() ;
+    setEntry(uri: String, entry: Entry)):  empty-sequence() ;
 
     /** Removes all entries with term $term from the thesaurus document(s) at $uri. **/
-    removeTerm(uri: string, term: string):  empty-sequence() ;
+    removeTerm(uri: String, term: String):  empty-sequence() ;
 
     /** Removes all entries that exactly match $entry from the thesaurus documents(s) at $uri. **/
-    removeEntry(uri: string, entry: entry)):  empty-sequence() ;
+    removeEntry(uri: String, entry: Entry)):  empty-sequence() ;
 
     /** Adds a synonym to the specified thesaurus entry. **/
-    addSynonym(entry: entry), synonym: synonym)):  empty-sequence() ;
+    addSynonym(entry: Entry), synonym: Synonym)):  empty-sequence() ;
 
     /** Removes synonym $synonym from thesaurus entry $entry. **/
-    removeSynonym(entry: entry), synonym: synonym)):  empty-sequence() ;
+    removeSynonym(entry: Entry), synonym: Synonym)):  empty-sequence() ;
 
     /** Returns all entries for term $term in the thesaurus document(s) at $uri. **/
-    lookup(uri: string, term: string): entry);
+    lookup(uri: String, term: String): Entry);
 
     /** Returns a sequence of all entries that are found by looking up terms in the query and/or subqueries of $query in the thesaurus document(s) at $uri. **/
-    queryLookup(uri: string, query: query): entry);
+    queryLookup(uri: String, query: Query): Entry);
 
     /** Returns a query that searches for all the query strings specified in $query and their synonyms as found in $entries. **/
-    expand(query: query, entries: entry), newWeight: double, minWeight: double, filter: node()): query ;
+    expand(query: Query, entries: Entry), newWeight: Number, minWeight: Number, filter: Node): Query ;
 
 
   }

@@ -1,5 +1,5 @@
 // Type definitions for JSON
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/json.xml
+// Definitions: 
 
 /**
 		This is the JSON module used for customized tranformation 
@@ -38,22 +38,22 @@ declare module JSON {
   interface json {
 
     /** This function creates a configuration object for a specified strategy. **/
-    config(strategy: string): map;
+    config(strategy: String): Object;
 
     /** This function checks a json configuration object and returns a report. **/
-    checkConfig(config?: map): report);
+    checkConfig(config?: Object): Report);
 
     /** This function transforms an XML document to JSON using the default ("basic") strategy if none is supplied. **/
-    transformToJson(node: node(), config?: map): string;
+    transformToJson(node: Node, config?: Object): String;
 
     /** This function transforms an XML document to JSON and returns an object. **/
-    transformToJsonObject(node: node(), config?: map): any;
+    transformToJsonObject(node: Node, config?: Object): String;
 
     /** This function transforms an XML document to JSON and returns an xml element. **/
-    transformToJsonXml(node: node(), config?: map): element();
+    transformToJsonXml(node: Node, config?: Object): Node;
 
     /** This function transforms a JSON document to XML using the default ("basic") strategy. **/
-    transformFromJson(json: any, config?: map): item();
+    transformFromJson(json: String, config?: Object): String;
 
 
   }

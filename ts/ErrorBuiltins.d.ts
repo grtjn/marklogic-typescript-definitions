@@ -1,5 +1,5 @@
 // Type definitions for ErrorBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/ErrorBuiltins.xml
+// Definitions: 
 
 /**
 The error built-in functions are XQuery functions defined for reporting
@@ -18,7 +18,7 @@ declare module ErrorBuiltins {
   interface fn {
 
     /** [1.0 and 1.0-ml only, 0.9-ml has a different signature] Throw the given error. When an error is thrown, the XQuery program execution is stopped. For detailed semantics, see http://www.w3.org/TR/xpath-functions/#func-error. **/
-    error(error?: QName, description?: string, data?: item()): void;
+    error(error?: Object, description?: String, data?: String): void;
 
 
   }

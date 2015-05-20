@@ -1,5 +1,5 @@
 // Type definitions for XIncludeModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/xinclude.xml
+// Definitions: 
 
 /**
 		This is the XInclude module, which is used with the 
@@ -19,13 +19,13 @@ declare module XIncludeModule {
   interface xinc {
 
     /** This function performs a single level expansion of a single XInclude reference. XInclude references in the referenced node will not be expanded. **/
-    linkExpand(context: node(), ref: include)): node();
+    linkExpand(context: Node, ref: Include)): Node;
 
     /** This function recursively examines the node for XInclude references and expands them, following the rules of the XInclude specification. The result is a node in which all the XInclude references have been resolved, or an error if there were unresolvable references with no fallback specifications. **/
-    nodeExpand(node: node()): node();
+    nodeExpand(node: Node): Node;
 
     /** This function returns a list of all the distinct URIs of documents referenced (either directly or indirectly) in the expansion of the node. **/
-    linkReferences(node: node()): string;
+    linkReferences(node: Node): String;
 
 
   }

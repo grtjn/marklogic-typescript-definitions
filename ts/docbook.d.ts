@@ -1,5 +1,5 @@
 // Type definitions for DocBookModule
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/docbook.xml
+// Definitions: 
 
 /**
 The DocBook conversion module is part of the conversion processing pipeline.
@@ -22,7 +22,7 @@ declare module DocBookModule {
   interface dbk {
 
     /** Convert XHTML to DocBook lite vocabulary, if possible. The section structuring depends on the presence of div elements with mlsection markers, as produced by xhtml:restructure. **/
-    convert(doc: node(), options: element()):  node() ;
+    convert(doc: Node, options: Node): Object;
 
 
   }

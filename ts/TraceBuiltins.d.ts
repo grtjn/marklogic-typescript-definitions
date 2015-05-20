@@ -1,5 +1,5 @@
 // Type definitions for TraceBuiltins
-// Definitions: /Users/gjosten/Projects/github-grtjn/marklogic-typescript-definitions/xml/TraceBuiltins.xml
+// Definitions: 
 
 /**
 The error and trace built-in functions are XQuery functions defined for 
@@ -18,7 +18,7 @@ declare module TraceBuiltins {
   interface fn {
 
     /** Return the input $value unchanged and, if $label is the name of an enabled server event, emit that server event to the server log file (ErrorLog.txt) with $value as its data. **/
-    trace(value: item(), label: string): item();
+    trace(value: String, label: String): String;
 
 
   }
