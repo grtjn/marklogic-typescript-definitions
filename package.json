@@ -8,13 +8,12 @@
     "typescript",
     "marklogic"
   ],
-  "dependencies": {},
-  "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-tsc": "^0.9.5",
-    "yargs": "^3.9.1",
-    "request": "^2.55.0",
-    "through2": "^0.6.5"
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-tsc": "^1.1.1",
+    "request": "^2.62.0",
+    "through2": "^2.0.0",
+    "yargs": "^3.25.0"
   },
   "engine": "node >= 0.4.1",
   "scripts": {
@@ -24,7 +23,7 @@
     "type": "git",
     "url": "https://github.com/grtjn/marklogic-typescript-definitions"
   },
-  "license": "Apache v2",
+  "license": "Apache-v2.0",
   "bugs": {
     "url": "https://github.com/grtjn/marklogic-typescript-definitions/issues"
   },
