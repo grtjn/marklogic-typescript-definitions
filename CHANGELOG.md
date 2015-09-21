@@ -19,6 +19,7 @@
 
 - Add a Contributing.md [\#9](https://github.com/grtjn/marklogic-typescript-definitions/issues/9)
 - Describe how to use this in editors/IDEs [\#7](https://github.com/grtjn/marklogic-typescript-definitions/issues/7)
+- Publish to npm [\#6](https://github.com/grtjn/marklogic-typescript-definitions/issues/6)
 - Document where to get the XML input [\#2](https://github.com/grtjn/marklogic-typescript-definitions/issues/2)
 
 
