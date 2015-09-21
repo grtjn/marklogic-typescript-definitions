@@ -54,26 +54,32 @@ gulp.task('generate', function(){
         sendImmediately: false
       }
     }, function(err, httpResponse, body) {
-      // get rid of multipart response wrapping
-      body = body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
-      
-      if (err || httpResponse.statusCode !== 200) {
-        console.log('FAILED!');
-        console.log(body);
-        //console.log(escapedXml);
-      } else {
-        fs.writeFile(outFile, body, onError);
+      //console.log(body);
+      try {
+        // get rid of multipart response wrapping
+        body = body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
+        
+        if (err || httpResponse.statusCode !== 200) {
+          console.log('FAILED!');
+          console.log(body);
+          //console.log(escapedXml);
+        } else {
+          fs.writeFile(outFile, body, onError);
+        }
+        
+        cb(null, file);
+      } catch (e) {
+        console.log(e);
       }
     });
-  
-    cb(null, file);
   }));
 });
 
-gulp.task('validate', function(){
+gulp.task('validate', ['generate'], function(){
   gulp.src(['ts/**/*.ts'])
-  .pipe(typescript());
+  .pipe(typescript({emitError: false}))
+  ;
 });
 
 // Default Task
-gulp.task('default', ['generate', 'validate']);
+gulp.task('default', ['validate']);
