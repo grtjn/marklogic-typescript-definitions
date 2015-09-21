@@ -17,10 +17,7 @@ The profile functions use the prof: namespace prefix, which is
 predefined in the server.
 **/
 
-declare module ProfileBuiltins {
+interface profFunctions {
 
-  interface prof {
-
-
-  }
 }
+declare var prof:profFunctions

@@ -12,13 +12,10 @@
    Microsoft Office 2007 docx format).
 **/
 
-declare module Tidy {
-
-  interface xdmp {
+interface xdmpFunctions {
 
     /** Run tidy on the specified html document to convert the document to well-formed and clean XHTML. Returns two nodes: the first is a status node indicating any errors or warning from tidy, and the second is an html node containing the cleaned xhtml. **/
-    tidy(doc: String, options?: Object): Node;
+  tidy(doc: string, options?: Object): Node;
 
-
-  }
 }
+declare var xdmp:xdmpFunctions

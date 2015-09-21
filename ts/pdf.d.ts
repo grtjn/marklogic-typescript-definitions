@@ -17,22 +17,19 @@ The library namespace prefix pdf is not predefined in
 the server.
 **/
 
-declare module PDFModule {
-
-  interface pdf {
+interface pdfFunctions {
 
     /** Clean up any conversion artifacts or other infelicities. **/
-    clean(doc: Node, toc: Node):  node()? ;
+  clean(doc: Node, toc: Node): Object;
 
     /** Fetch the linked TOC, if any. **/
-    getToc(uri: String):  element()? ;
+  getToc(uri: string): Object;
 
     /** Clean and normalize the TOC produced by raw conversion. **/
-    makeToc(toc: Node):  element()? ;
+  makeToc(toc: Node): Object;
 
     /** Locate TOC anchors and make them properly refer to headers at the appropriate level. Returned the transformed document. **/
-    insertTocHeaders(doc: Node, toc: Node):  node()? ;
+  insertTocHeaders(doc: Node, toc: Node): Object;
 
-
-  }
 }
+declare var pdf:pdfFunctions

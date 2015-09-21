@@ -22,19 +22,16 @@ import module namespace ooxml="http://marklogic.com/openxml"
     
   **/
 
-declare module OOXML Zip {
-
-  interface ooxml {
+interface ooxmlFunctions {
 
     /** This function returns the list of files in the zip package. **/
-    packageUris(package: Node): String;
+  packageUris(package: Node): string;
 
     /** This function returns the documents within the zip package. Typically, the parts are returned as document nodes. They are returned in the order the package uris are returned, which is the manifest order. **/
-    packageParts(package: Node): Node;
+  packageParts(package: Node): Node;
 
     /** This function inserts one document in the database for each part at the specified URI. If a directory is given, then all parts are inserted into documents in that directory, with the rest of the URI determined by the $uris specified (typically from the manifest of a zip file or Office document). **/
-    packagePartsInsert(directory: String, packageUris: String, packageParts: Node, permissions?: String, collections?: String, quality?: Int, forestIds?: String): void;
+  packagePartsInsert(directory: string, packageUris: string, packageParts: Node, permissions?: string, collections?: string, quality?: Object, forestIds?: string): void;
 
-
-  }
 }
+declare var ooxml:ooxmlFunctions

@@ -28,82 +28,79 @@ import module namespace pkg = "http://marklogic.com/manage/package"
   
 **/
 
-declare module Packaging {
-
-  interface pkg {
+interface pkgFunctions {
 
     /** Create an empty configuration for use with other packaging functions. **/
-    create(pkgname: String, pkgbody?: Node): void;
+  create(pkgname: string, pkgbody?: Node): void;
 
     /** Checks to see if the named package exists. Returns true if the package exists and false if the package does not exist. **/
-    exists(pkgname: String): Boolean;
+  exists(pkgname: string): Object;
 
     /** Returns the list of packages. **/
-    getPackageList(start?: String, pageLength?: String): Package-list);
+  getPackageList(start?: string, pageLength?: string): Node;
 
     /** Checks to see if the named package can be installed. Returns true if the package is installable and false if the package is not installable. **/
-    installable(pkgname: String): Boolean;
+  installable(pkgname: string): Object;
 
     /** Install the named package. **/
-    install(pkgname: String): Install($pkgname);
+  install(pkgname: string): Object;
 
     /** Test a package for consistency. Returns true if the package is valid and false if the package is not valid. **/
-    valid(pkgname: String): Boolean;
+  valid(pkgname: string): Object;
 
     /** Check a package for errors and, if there are errors, return a description of the errors as err:configuration-error elements. If no errors are detected, an empty sequence is returned. **/
-    errors(pkgname: String): Configuration-error);
+  errors(pkgname: string): Node;
 
     /** Revert configuration settings to those prior to a particular package installation. **/
-    revert(ticketId: String): Revert($ticket);
+  revert(ticketId: string): Object;
 
     /** Returns the configuration (in XML) of the named database. **/
-    databaseConfiguration(database: String): Package-database);
+  databaseConfiguration(database: string): Node;
 
     /** Adds a database configuration to the named package. **/
-    putDatabase(pkgname: String, dbxml: Package-database)): void;
+  putDatabase(pkgname: string, dbxml: Node): void;
 
     /** Returns the configuration of the named database from the named package. **/
-    getDatabase(pkgname: String, database: String): Package-database);
+  getDatabase(pkgname: string, database: string): Node;
 
     /** Removes the configuration of the named database from the named package. **/
-    removeDatabase(pkgname: String, database: String): void;
+  removeDatabase(pkgname: string, database: string): void;
 
     /** Returns the names of the databases that have configurations in the named package. **/
-    getDatabaseList(pkgname: String, start?: String, pageLength?: String): Database-list);
+  getDatabaseList(pkgname: string, start?: string, pageLength?: string): Node;
 
     /** Returns the configuration (in XML) of the named app server, located in the named group. **/
-    serverConfiguration(group: String, server: String, includeModules?: Boolean): Node;
+  serverConfiguration(group: string, server: string, includeModules?: Object): Node;
 
     /** Adds an app server configuration to the named package. **/
-    putServer(pkgname: String, srvxml: Node): void;
+  putServer(pkgname: string, srvxml: Node): void;
 
     /** Returns the configuration of the named app server from the named package. **/
-    getServer(pkgname: String, group: String, server: String): Node;
+  getServer(pkgname: string, group: string, server: string): Node;
 
     /** Removes the configuration of the named app server from the named package. **/
-    removeServer(pkgname: String, group: String, server: String): void;
+  removeServer(pkgname: string, group: string, server: string): void;
 
     /** Returns the names of the app servers that have configurations in the named package. **/
-    getServerList(pkgname: String, start?: String, pageLength?: String): Server-list);
+  getServerList(pkgname: string, start?: string, pageLength?: string): Node;
 
     /** Returns the contents of the named package. By default, the package is returned in ZIP format. **/
-    getPackage(pkgname: String, mimetype?: String): String;
+  getPackage(pkgname: string, mimetype?: string): string;
 
     /** Deletes the named package. **/
-    delete(pkgname: String): void;
+  delete_(pkgname: string): void;
 
     /** Determines the differences between the configuration in the package and the current configuration of the MarkLogic server on which the function is executed. **/
-    differences(pkgname: String, onlyDiffs?: Boolean): Package-diff);
+  differences(pkgname: string, onlyDiffs?: Object): Node;
 
     /** Puts the content of the modules database used by the named app server into the named package. **/
-    putModules(pkgname: String, group: String, server: String): void;
+  putModules(pkgname: string, group: string, server: string): void;
 
     /** Returns the modules data for the named app server from the named package. **/
-    getModules(pkgname: String, group: String, server: String): Node;
+  getModules(pkgname: string, group: string, server: string): Node;
 
     /** Removes the modules data for the named app server from the named package. **/
-    removeModules(pkgname: String, group: String, server: String): void;
+  removeModules(pkgname: string, group: string, server: string): void;
 
-
-  }
 }
+declare var pkg:pkgFunctions

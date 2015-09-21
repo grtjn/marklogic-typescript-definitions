@@ -3,10 +3,7 @@
 
 /****/
 
-declare module  {
+interface xdmpFunctions {
 
-  interface xdmp {
-
-
-  }
 }
+declare var xdmp:xdmpFunctions

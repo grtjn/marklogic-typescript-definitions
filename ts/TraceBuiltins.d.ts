@@ -13,13 +13,10 @@ prefix, which is predefined in the server.  Also, the fn
 prefix is the default prefix for function calls if none is specified.
 **/
 
-declare module TraceBuiltins {
-
-  interface fn {
+interface fnFunctions {
 
     /** Return the input $value unchanged and, if $label is the name of an enabled server event, emit that server event to the server log file (ErrorLog.txt) with $value as its data. **/
-    trace(value: String, label: String): String;
+  trace(value: string, label: string): string;
 
-
-  }
 }
+declare var fn:fnFunctions

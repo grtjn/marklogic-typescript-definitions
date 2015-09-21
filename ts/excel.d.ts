@@ -17,13 +17,10 @@ The library namespace prefix excel is not predefined in
 the server.
 **/
 
-declare module ExcelModule {
-
-  interface excel {
+interface excelFunctions {
 
     /** Clean up any conversion artifacts or other infelicities, putting each sheet into its own div element. **/
-    clean(uri: String, doc: Node): Object;
+  clean(uri: string, doc: Node): Object;
 
-
-  }
 }
+declare var excel:excelFunctions

@@ -16,19 +16,16 @@ The library namespace prefix xhtml is not predefined in
 the server.
 **/
 
-declare module XHTMLModule {
-
-  interface xhtml {
+interface xhtmlFunctions {
 
     /** Clean up the XHTML: pruning empty spans, consolidating adjacent spans, etc. **/
-    clean(doc: Node):  node()? ;
+  clean(doc: Node): Object;
 
     /** Turn an XHTML with flat structure into one with div structure based on the header elements. **/
-    restructure(doc: Node):  node()? ;
+  restructure(doc: Node): Object;
 
     /** Infer numbered or bulleted lists and insert appropriate markup. Restructuring first is highly recommended to improve both accuracy and performance. This function also assumes that indentation styling is already present on the paragraphs in the original input. **/
-    addLists(doc: Node):  node()? ;
+  addLists(doc: Node): Object;
 
-
-  }
 }
+declare var xhtml:xhtmlFunctions

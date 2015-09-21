@@ -25,25 +25,22 @@
   
   **/
 
-declare module SpellingModule {
-
-  interface spell {
+interface spellFunctions {
 
     /** Add the words from the file specified in $path to the dictionary at $uri. If a document exists with the specified URI, it is replaced with this one. Note that words that are 64 characters or greater will never be returned as suggestions from spell:suggest or spell:suggest-detailed. **/
-    load(path: String, uri: String):  empty-sequence() ;
+  load(path: string, uri: string): Object;
 
     /** Load the words in $dict into the dictionary at $uri. If there is no document at $uri a new one will be created. If there is a document at $uri it will be overwritten. **/
-    insert(uri: String, dict: Dictionary)):  empty-sequence() ;
+  insert(uri: string, dict: Node): Object;
 
     /** Add the word $word to the dictionary at $uri. If the word is already in the dictionary (case-sensitive), then this function throws an exception. **/
-    addWord(uri: String, word: String):  empty-sequence() ;
+  addWord(uri: string, word: string): Object;
 
     /** Remove the word $word from the dictionary at $uri. **/
-    removeWord(uri: String, word: String):  empty-sequence() ;
+  removeWord(uri: string, word: string): Object;
 
     /** Creates a dictionary node from a sequence of words. Use spell:load to load the dictionary node into the database as a dictionary. **/
-    makeDictionary(words: String): Dictionary);
+  makeDictionary(words: string): Node;
 
-
-  }
 }
+declare var spell:spellFunctions

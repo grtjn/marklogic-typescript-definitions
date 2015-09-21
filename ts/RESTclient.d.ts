@@ -138,10 +138,7 @@ context. For details, see
  Managing Transactions in the REST Application Developer's Guide.
 **/
 
-declare module RESTclient {
+interface restClientFunctions {
 
-  interface restClient {
-
-
-  }
 }
+declare var restClient:restClientFunctions

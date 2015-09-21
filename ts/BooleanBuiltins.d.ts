@@ -9,19 +9,16 @@ XQuery 1.0
 and XPath 2.0 Functions and Operators.
 **/
 
-declare module BooleanBuiltins {
-
-  interface fn {
+interface fnFunctions {
 
     /** Returns the xs:boolean value true. Equivalent to xs:boolean("1"). **/
-    true(): Object;
+  true(): Object;
 
     /** Returns the xs:boolean value false. Equivalent to xs:boolean("0"). **/
-    false(): Object;
+  false(): Object;
 
     /** Returns true if the effective boolean value is false, and false if the effective boolean value is true. The $arg parameter is first reduced to an effective boolean value by applying the fn:boolean function. **/
-    not(arg: String): Object;
+  not(arg: string): Object;
 
-
-  }
 }
+declare var fn:fnFunctions

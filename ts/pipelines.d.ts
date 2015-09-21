@@ -17,46 +17,43 @@ the server.
 These functions should be executed in the context of the triggers database.
 **/
 
-declare module PipelinesModule {
-
-  interface p {
+interface pFunctions {
 
     /** Insert a fully constructed content processing pipeline, returning its unique ID. If a pipeline with the same name already exists in the database, it is replaced. **/
-    insert(pipelineNode: Node): UnsignedLong ;
+  insert(pipelineNode: Node): Object;
 
     /** Create a new content processing pipeline. **/
-    create(name: String, description: String, successAction: Action), failureAction: Action), statusTransitions: Status-transition), stateTransitions: State-transition)): UnsignedLong ;
+  create(name: string, description: string, successAction: Node, failureAction: Node, statusTransitions: Node, stateTransitions: Node): Object;
 
     /** Remove the named pipeline. An error is raised if no such pipeline exists. **/
-    remove(pipelineName: String):  empty-sequence() ;
+  remove(pipelineName: string): Object;
 
     /** Find a particular pipeline. **/
-    get(pipelineName: String): Pipeline) ;
+  get(pipelineName: string): Object;
 
     /** Find a particular pipeline. **/
-    getById(pipelineId: String): Pipeline) ;
+  getById(pipelineId: string): Object;
 
     /** Return the name of the collection in which pipelines are stored. **/
-    collection(): String;
+  collection(): string;
 
     /** Return all the pipelines. **/
-    pipelines(): Pipeline)* ;
+  pipelines(): Object;
 
     /** Construct a new state transition element. **/
-    stateTransition(state: String, description: String, onSuccess: String, onFailure: String, priority: String, defaultAction: Action), rules: Execute)): State-transition) ;
+  stateTransition(state: string, description: string, onSuccess: string, onFailure: string, priority: string, defaultAction: Node, rules: Node): Object;
 
     /** Construct a new status transition element. **/
-    statusTransition(status: String, description: String, onSuccess: String, onFailure: String, priority: String, defaultAction: Action), rules: Execute)): Status-transition) ;
+  statusTransition(status: string, description: string, onSuccess: string, onFailure: string, priority: string, defaultAction: Node, rules: Node): Object;
 
     /** Construct a execute element. **/
-    execute(condition: Condition), action: Action), description: String): Execute) ;
+  execute(condition: Node, action: Node, description: string): Object;
 
     /** Construct a condition element. **/
-    condition(module: String, description: String, options: Node): Condition) ;
+  condition(module: string, description: string, options: Node): Object;
 
     /** Construct an action element. **/
-    action(module: String, description: String, options: Node): Action) ;
+  action(module: string, description: string, options: Node): Object;
 
-
-  }
 }
+declare var p:pFunctions

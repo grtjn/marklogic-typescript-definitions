@@ -33,28 +33,25 @@ import module namespace json = "http://marklogic.com/xdmp/json"
 		    smaller subset of XML document structures.
 	**/
 
-declare module JSON {
-
-  interface json {
+interface jsonFunctions {
 
     /** This function creates a configuration object for a specified strategy. **/
-    config(strategy: String): Object;
+  config(strategy: string): Object;
 
     /** This function checks a json configuration object and returns a report. **/
-    checkConfig(config?: Object): Report);
+  checkConfig(config?: Object): Node;
 
     /** This function transforms an XML document to JSON using the default ("basic") strategy if none is supplied. **/
-    transformToJson(node: Node, config?: Object): String;
+  transformToJson(node: Node, config?: Object): string;
 
     /** This function transforms an XML document to JSON and returns an object. **/
-    transformToJsonObject(node: Node, config?: Object): String;
+  transformToJsonObject(node: Node, config?: Object): string;
 
     /** This function transforms an XML document to JSON and returns an xml element. **/
-    transformToJsonXml(node: Node, config?: Object): Node;
+  transformToJsonXml(node: Node, config?: Object): Node;
 
     /** This function transforms a JSON document to XML using the default ("basic") strategy. **/
-    transformFromJson(json: String, config?: Object): String;
+  transformFromJson(json: string, config?: Object): string;
 
-
-  }
 }
+declare var json:jsonFunctions

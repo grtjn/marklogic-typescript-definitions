@@ -19,28 +19,25 @@ The library namespace prefix lnk is not predefined in
 the server.
 **/
 
-declare module LinksModule {
-
-  interface lnk {
+interface lnkFunctions {
 
     /** Create a link between the two given documents with the given role labels and strength. An error is raised if either of the documents involved does not exist or if the link would be invalid for some reason. This function will replace any existing link between those two documents with the new link. **/
-    create(from: String, to: String, role: String, revRole: String, strength: String):  empty-sequence() ;
+  create(from: string, to: string, role: string, revRole: string, strength: string): Object;
 
     /** Insert the given link. An error is raised if either of the documents involved does not exist or if the link is invalid in some way. This function will replace any existing link between those two documents. **/
-    insert(link: Link)):  empty-sequence() ;
+  insert(link: Node): Object;
 
     /** Remove the link between the two given documents and return the removed link. An error is raised if no such link exists. **/
-    remove(from: String, to: String): Link) ;
+  remove(from: string, to: string): Object;
 
     /** Find and return the link between the two documents, if any. This function will check the properties of link and raise an error if they are inconsistent or incomplete in some way. **/
-    get(from: String, to: String): Link)? ;
+  get(from: string, to: string): Object;
 
     /** Find and return all the links from the given document to some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    from(from: String): Link)* ;
+  from(from: string): Object;
 
     /** Find and return all the links to the given document from some other. This function will check the properties of the link and raise an error if they are inconsistent or incomplete in some way. **/
-    to(to: String): Link)* ;
+  to(to: string): Object;
 
-
-  }
 }
+declare var lnk:lnkFunctions

@@ -8,22 +8,19 @@
  data from JavaScript to other programming environments. 
  **/
 
-declare module Extensions {
-
-  interface xdmp {
+interface xdmpFunctions {
 
     /** Constructs a JSON document. **/
-    toJson(item: String): Node;
+  toJson(item: string): Node;
 
     /** Returns a string representing a JSON serialization of a given item sequence. **/
-    toJsonString(item: String): String;
+  toJsonString(item: string): string;
 
     /** Atomizes a JSON node, returning a JSON value. **/
-    fromJSON(arg: Node): String;
+  fromJSON(arg: Node): string;
 
     /** Parses a string as JSON, returning an item sequence. **/
-    fromJsonString(arg: String): String;
+  fromJsonString(arg: string): string;
 
-
-  }
 }
+declare var xdmp:xdmpFunctions

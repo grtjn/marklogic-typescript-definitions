@@ -16,13 +16,10 @@ import module namespace ooxml="http://marklogic.com/openxml"
     The WordProcessingML functions are used with the Word 2007 documents.
   **/
 
-declare module OOXML {
-
-  interface ooxml {
+interface ooxmlFunctions {
 
     /** This function updates document or paragraph node(s) (from a Word 2007 document) so that all similar runs are merged, retaining formatting, and removing text split across elements. **/
-    runsMerge(nodes: Node): Node;
+  runsMerge(nodes: Node): Node;
 
-
-  }
 }
+declare var ooxml:ooxmlFunctions

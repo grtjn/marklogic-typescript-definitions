@@ -23,43 +23,40 @@ import module namespace temporal="http://marklogic.com/xdmp/temporal"
           at "/MarkLogic/temporal.xqy";
   **/
 
-declare module TemporalModule {
-
-  interface temporal {
+interface temporalFunctions {
 
     /** This function constructs an axis definition based on the existing range indexes that can be added to a collection in subsequent API calls. The axis definition is stored in the schema database. For details on how to create an axis, see Create System and Valid Axes in the Temporal Developer's Guide A TEMPORAL-NONDATETIME exception is thrown if range index scalar type is not dateTime. A TEMPORAL-DUPAXIS exception is thrown if the axis already exists. **/
-    axisCreate(axisName: String, startRangeIndex: Reference, endRangeIndex: Reference): String;
+  axisCreate(axisName: string, startRangeIndex: Object, endRangeIndex: Object): string;
 
     /** This function removes an axis definition from the schema database. A TEMPORAL-AXISINUSE exception is thrown if the named axis is referred to by a collection. **/
-    axisRemove(axisName: String): void;
+  axisRemove(axisName: string): void;
 
     /** This function returns all the axis names defined in the schema databases. **/
-    axes(): String;
+  axes(): string;
 
     /** This function constructs a named and protected temporal collection in the schema database with the specified system and valid axes. This function assumes that the system and valid axes already exist. The temporal collection is stored in the Security database. A TEMPORAL-DUPCOLLECTION exception is thrown if the collection already exists. For details on how to create a collection, see Create a Temporal Collection in the Temporal Developer's Guide **/
-    collectionCreate(collectionName: String, systemAxis: String, validAxis: String, options?: String): String;
+  collectionCreate(collectionName: string, systemAxis: string, validAxis: string, options?: string): string;
 
     /** This function removes the named temporal collection from the Security database. **/
-    collectionRemove(collectionName: String): void;
+  collectionRemove(collectionName: string): void;
 
     /** This function returns the name of either the system or valid axis in the named temporal collection. A TEMPORAL-COLLECTIONNOTFOUND exception is thrown if the collection does not exist. A TEMPORAL-INVALIDAXIS if axis is not "system" or "valid." **/
-    collectionGetAxis(temporalCollection: String, axis: String): String;
+  collectionGetAxis(temporalCollection: string, axis: string): string;
 
     /** This function returns all of the temporal collection names in the schema database. **/
-    collections(): String;
+  collections(): string;
 
     /** This function returns the range index used to define the start of the period by the named axis. A TEMPORAL-AXISNOTFOUND exception is thrown if the axis does not exist. **/
-    axisGetStart(axisName: String): Reference;
+  axisGetStart(axisName: string): Object;
 
     /** This function returns the range index used to define the end of the period by the named axis. A TEMPORAL-AXISNOTFOUND exception is thrown if the axis does not exist. **/
-    axisGetEnd(axisName: String): Reference;
+  axisGetEnd(axisName: string): Object;
 
     /** This function returns the options set on the temporal collection. **/
-    collectionGetOptions(temporalCollection: String): String;
+  collectionGetOptions(temporalCollection: string): string;
 
     /** This function sets the options on the temporal collection. **/
-    collectionSetOptions(temporalCollection: String, options: String): void;
+  collectionSetOptions(temporalCollection: string, options: string): void;
 
-
-  }
 }
+declare var temporal:temporalFunctions

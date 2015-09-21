@@ -8,64 +8,7 @@ App Server and database configurations.
 	
 **/
 
-declare module Management {
+interface manageFunctions {
 
-  interface manage {
-
-    /** This resource address returns a list of packages exported for this cluster. **/
-    /manage/v2/packages(start: String, pageLength: String, format: String): ;
-
-    /** This resource address creates a new package and returns the URI of the created package. **/
-    /manage/v2/packages(pkgname: String, format: String): ;
-
-    /** This resource address tests for an existing package, named pkgname. 200 OK is returned if the package exists. Otherwise 404 Not Found is returned. **/
-    /manage/v2/packages/{pkgname}(): ;
-
-    /** This resource address returns the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}(view: String, filename: String, format: String): ;
-
-    /** This resource address allows you to add a packaged configuration to the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}(format: String): ;
-
-    /** This resource address deletes the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}(): ;
-
-    /** This resource address returns a list of the databases in the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/databases(start: String, pageLength: String, format: String): ;
-
-    /** This resource address tests to see if the named database (name) is in the named package (pkgname). 200 OK is returned if the named database is in the package. Otherwise 404 Not Found is returned. **/
-    /manage/v2/packages/{pkgname}/databases/{name}(): ;
-
-    /** This resource address returns configuration for the named database (name) in the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/databases/{name}(format: String): ;
-
-    /** This resource address adds a database configuration to the named package (pkgname). The name of the database in the payload body is ignored and name is used as the name. **/
-    /manage/v2/packages/{pkgname}/databases/{name}(format: String): ;
-
-    /** This resource address deletes the named database (name) from the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/databases/{name}(): ;
-
-    /** This resource address returns a list of the servers in the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/servers(start: String, pageLength: String, format: String): ;
-
-    /** This resource address tests to see if the named server (name) is in the named package (pkgname). 200 OK is returned if the named server is in the package. Otherwise 404 Not Found is returned. **/
-    /manage/v2/packages/{pkgname}/servers/{name}(groupId={groupId}: String): ;
-
-    /** This resource address returns configuration for the named server (name) in the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/servers/{name}(groupId={groupId}: String, format: String, modules: String): ;
-
-    /** This resource address adds a server configuration to the named package (pkgname). The name of the server in the payload body is ignored and name is used as the name. **/
-    /manage/v2/packages/{pkgname}/servers/{name}(groupId={groupId}: String, format: String, modules: String): ;
-
-    /** This resource address deletes the named server (name) from the named package (pkgname). **/
-    /manage/v2/packages/{pkgname}/servers/{name}(groupId={groupId}: String, modules: String): ;
-
-    /** This resource address installs the named package (pkgname). The URI of the ticket is returned that provides the status of the install operation, along with the details of the installed resources. You can view this ticket by entering the URI in a browser. **/
-    /manage/v2/packages/{pkgname}/install(format: String): ;
-
-    /** This resource address reverts to the configuration that existed before installing the package associated with the specified ticket (ticketnumber). The ticketnumber is in the ticket URI returned by the install operation. Reverting an installed package does not remove any imported forests. **/
-    /manage/v2/tickets/{ticketnumber}/revert(): ;
-
-
-  }
 }
+declare var manage:manageFunctions

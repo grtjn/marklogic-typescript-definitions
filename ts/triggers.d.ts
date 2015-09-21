@@ -23,130 +23,127 @@
     Spawn Actions" in the Application Developer's Guide.
   **/
 
-declare module TriggersModule {
-
-  interface trgr {
+interface trgrFunctions {
 
     /** Creates a new trigger in the context database. Returns the trigger ID of the created trigger. **/
-    createTrigger(triggerName: String, description: String, event: Node, module: Module), enabled: Boolean, permissions: String, recursive?: Boolean, taskPriority?: String): String;
+  createTrigger(triggerName: string, description: string, event: Node, module: Node, enabled: Object, permissions: string, recursive?: Object, taskPriority?: string): string;
 
     /** Changes the name of a trigger. **/
-    triggerSetName(triggerName: String, newTriggerName: String): void;
+  triggerSetName(triggerName: string, newTriggerName: string): void;
 
     /** Sets the description of the named trigger. **/
-    triggerSetDescription(triggerName: String, description: String): void;
+  triggerSetDescription(triggerName: string, description: string): void;
 
     /** Enables the named trigger. **/
-    triggerEnable(triggerName: String): void;
+  triggerEnable(triggerName: string): void;
 
     /** Disables the named trigger. **/
-    triggerDisable(triggerName: String): void;
+  triggerDisable(triggerName: string): void;
 
     /** Sets or replaces the action module associated with the named trigger. **/
-    triggerSetModule(triggerName: String, module: Module)): void;
+  triggerSetModule(triggerName: string, module: Node): void;
 
     /** Assigns a triggering event to the named trigger. **/
-    triggerSetEvent(triggerName: String, event: Node): void;
+  triggerSetEvent(triggerName: string, event: Node): void;
 
     /** Sets the permissions that determine which roles are permitted to modify the named trigger. **/
-    triggerSetPermissions(triggerName: String, permissions: String): void;
+  triggerSetPermissions(triggerName: string, permissions: string): void;
 
     /** Returns the permissions for the named trigger. **/
-    triggerGetPermissions(triggerName: String): Permission);
+  triggerGetPermissions(triggerName: string): Node;
 
     /** Adds permissions to the set of permissions on the named trigger. **/
-    triggerAddPermissions(triggerName: String, permissions: String): void;
+  triggerAddPermissions(triggerName: string, permissions: string): void;
 
     /** Removes a set of permissions from the set of permissions on the named trigger. **/
-    triggerRemovePermissions(triggerName: String, permissions: String): void;
+  triggerRemovePermissions(triggerName: string, permissions: string): void;
 
     /** Returns the XML representation of a trigger with the given name. **/
-    getTrigger(triggerName: String): Trigger);
+  getTrigger(triggerName: string): Node;
 
     /** Returns the XML representation of the trigger with the given trigger id. **/
-    getTriggerById(triggerId: String): Trigger);
+  getTriggerById(triggerId: string): Node;
 
     /** Returns the XML representation of a trigger module which can be used as the module parameter of trgr:create-trigger. **/
-    triggerModule(databaseId: String, root: String, path: String): Module);
+  triggerModule(databaseId: string, root: string, path: string): Node;
 
     /** Returns the XML representation of a triggering eventa, usable as the event parameter of trgr:create-trigger. **/
-    triggerDataEvent(scope: Node, content: Node, when: When)): Data-event);
+  triggerDataEvent(scope: Node, content: Node, when: Node): Node;
 
     /** Returns the XML representation of a database coming online event, usable as the event parameter of trgr:create-trigger. **/
-    triggerDatabaseOnlineEvent(userName: String): Database-online-event);
+  triggerDatabaseOnlineEvent(userName: string): Node;
 
     /** Returns the XML representation of a document scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    documentScope(uri: String): Document-scope);
+  documentScope(uri: string): Node;
 
     /** Returns the XML representation of a collection scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    collectionScope(uri: String): Collection-scope);
+  collectionScope(uri: string): Node;
 
     /** Returns the XML representation of a directory scope, usable as the scope parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    directoryScope(uri: String, depth: String): Directory-scope);
+  directoryScope(uri: string, depth: string): Node;
 
     /** Returns the XML representation of a document part of a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    documentContent(updateKind: String): Document-content);
+  documentContent(updateKind: string): Node;
 
     /** Returns the XML representation of an all-properties part to a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    anyPropertyContent(): Any-property-content);
+  anyPropertyContent(): Node;
 
     /** Returns the XML representation of a property part to a triggering event, usable as the content parameter of a trigger event constructor such as trgr:trigger-data-event. **/
-    propertyContent(propertyName: QName): Property-content);
+  propertyContent(propertyName: Object): Node;
 
     /** Returns the XML representation of a pre-commit trigger timing. **/
-    preCommit(): When);
+  preCommit(): Node;
 
     /** Returns the XML representation of a post-commit trigger timing. **/
-    postCommit(): When);
+  postCommit(): Node;
 
     /** Removes the named trigger. **/
-    removeTrigger(triggerName: String): void;
+  removeTrigger(triggerName: string): void;
 
     /** Sets the recursive setting of the identified trigger. When the recursive setting is true, the trigger will trigger itself for recursive changes to the same document. **/
-    triggerSetRecursive(triggerName: String, recursive: Boolean): void;
+  triggerSetRecursive(triggerName: string, recursive: Object): void;
 
     /** Sets the task priority setting of the identified trigger. The task priority is only applicable to post-commit triggers. **/
-    triggerSetTaskPriority(triggerName: String, taskPriority: String): void;
+  triggerSetTaskPriority(triggerName: string, taskPriority: string): void;
 
     /** This function changes the trigger definitions of each trigger definition in the database that has the database ID $old-db and replaces each database ID with $new-db. This is useful after restoring a triggers database to a different cluster that has different database IDs than the one from which it was backed up. **/
-    triggersChangeModulesDatabase(oldDb: String, newDb: String): void;
+  triggersChangeModulesDatabase(oldDb: string, newDb: string): void;
 
     /** This function.... **/
-    anyCustomPropertyContent(): Any-custom-property-content);
+  anyCustomPropertyContent(): Node;
 
     /** This function.... **/
-    validateTriggerName(triggerName: String): Empty();
+  validateTriggerName(triggerName: string): Object;
 
     /** This function.... **/
-    validateDataEvent(event: Data-event)): Empty();
+  validateDataEvent(event: Node): Object;
 
     /** This function.... **/
-    validateScope(): Element());
+  validateScope(): Object;
 
     /** This function.... **/
-    validateContent(): Element());
+  validateContent(): Object;
 
     /** This function.... **/
-    validateWhen(): Element());
+  validateWhen(): Object;
 
     /** This function.... **/
-    validateDatabaseOnlineEvent(databaseOnlineEvent: Database-online-event)): Empty();
+  validateDatabaseOnlineEvent(databaseOnlineEvent: Node): Object;
 
     /** This function.... **/
-    validateModule(module: Module)): Empty();
+  validateModule(module: Node): Object;
 
     /** This function.... **/
-    triggersUri(): String;
+  triggersUri(): string;
 
     /** This function.... **/
-    getUniqueTriggerId(): String;
+  getUniqueTriggerId(): string;
 
     /** This function.... **/
-    triggersCollection(): String;
+  triggersCollection(): string;
 
     /** This function.... **/
-    triggersNamespace(): String;
+  triggersNamespace(): string;
 
-
-  }
 }
+declare var trgr:trgrFunctions

@@ -14,7 +14,7 @@ let $xml := xdmp:unquote($xml)
 let $definition := xdmp:xslt-eval(
   <xsl:stylesheet version="2.0" exclude-result-prefixes="#all" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" xmlns:local="local">
     
-    <xsl:output indent="yes" omit-xml-declaration="yes"/>
+    <xsl:output method="text" indent="yes" omit-xml-declaration="yes"/>
     
     <xsl:template match="@*|node()" mode="#all">
       <xsl:copy>
@@ -23,15 +23,20 @@ let $definition := xdmp:xslt-eval(
     </xsl:template>
     
     <xsl:template match="apidoc:function" mode="#all">
+      <xsl:param name="use-function-keyword" select="false()"/>
       <xsl:text>    /** </xsl:text>
       <xsl:value-of select="normalize-space(apidoc:summary[not(@class) or @class = 'javascript'])"/>
       <xsl:text> **/&#10;</xsl:text>
       
-      <xsl:text>&#32;&#32;&#32;&#32;</xsl:text>
+      <xsl:text>&#32;&#32;</xsl:text>
+      <xsl:if test="$use-function-keyword">
+        <xsl:text>function </xsl:text>
+      </xsl:if>
       <xsl:value-of select="local:fixName(@name)"/>
       <xsl:text>(</xsl:text>
       <xsl:for-each select="apidoc:params/apidoc:param[not(@class) or @class = 'javascript']">
         <xsl:value-of select="local:fixName(@name)"/>
+        <xsl:if test="preceding-sibling::apidoc:param[not(@class) or @class = 'javascript'][@name = current()/@name]">2</xsl:if>
         <xsl:if test="string(@optional) = 'true'">?</xsl:if>
         <xsl:text>: </xsl:text>
         <xsl:value-of select="local:fixType(@type)"/>
@@ -52,22 +57,39 @@ let $definition := xdmp:xslt-eval(
       <xsl:value-of select="apidoc:module/apidoc:summary[not(@class) or @class = 'javascript']"/>
       <xsl:text>**/&#10;&#10;</xsl:text>
       
-      <xsl:text>declare module </xsl:text>
-      <xsl:value-of select="apidoc:module/@name"/>
-      <xsl:text> {{&#10;&#10;</xsl:text>
-      
         <xsl:for-each select="distinct-values(((apidoc:module/@lib, 'xdmp')[1], //apidoc:function[empty(@http-verb)]/@lib))">
           <xsl:variable name="lib" select="."/>
-          <xsl:text>  interface </xsl:text>
-          <xsl:value-of select="local:fixName($lib)"/>
-          <xsl:text> {{&#10;&#10;</xsl:text>
-      
-          <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']"/>
-
-          <xsl:text>&#10;  }}&#10;</xsl:text>
+          <xsl:variable name="name" select="local:fixName($lib)"/> 
+         
+          <xsl:choose>
+          <xsl:when test="$name = 'alert'">
+            <xsl:text>declare module </xsl:text>
+            <xsl:value-of select="$name"/>
+            <xsl:text> {{&#10;&#10;</xsl:text>
+        
+            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']">
+              <xsl:with-param name="use-function-keyword" select="true()"/>
+            </xsl:apply-templates>
+  
+            <xsl:text>}}&#10;</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>interface </xsl:text>
+            <xsl:value-of select="$name"/>
+            <xsl:text>Functions {{&#10;&#10;</xsl:text>
+        
+            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']"/>
+  
+            <xsl:text>}}&#10;</xsl:text>
+            
+            <xsl:text>declare var </xsl:text>
+            <xsl:value-of select="$name"/>
+            <xsl:text>:</xsl:text>
+            <xsl:value-of select="$name"/>
+            <xsl:text>Functions&#10;</xsl:text>
+          </xsl:otherwise>
+          </xsl:choose>
         </xsl:for-each>
-      
-      <xsl:text>}}&#10;</xsl:text>
     </xsl:template>
     
     <xsl:function name="local:fixType">
@@ -79,13 +101,13 @@ let $definition := xdmp:xslt-eval(
       <xsl:choose>
         <xsl:when test="$type = ('binary()', 'document-node()', 'element()', 'node()')">Node</xsl:when>
         <xsl:when test="$type = 'empty-sequence()'">void</xsl:when>
-        <xsl:when test="$type = ('item()', 'xs:anyURI', 'xs:string', 'xs:time', 'xs:unsignedLong', '(cts:order|xs:string)')">String</xsl:when>
-        <xsl:when test="$type = 'json:array'">Array</xsl:when>
+        <xsl:when test="$type = ('String', 'item()', 'xs:anyURI', 'xs:string', 'xs:time', 'xs:unsignedLong', '(cts:order|xs:string)')">string</xsl:when>
+        <xsl:when test="$type = 'json:array'">Array&lt;any&gt;</xsl:when>
         <xsl:when test="$type = ('json:object', 'map:map', '(element()|map:map)', 'xdmp:function')">Object</xsl:when>
         <xsl:when test="$type = ('function()', 'function(*)')">() => any</xsl:when>
         <xsl:when test="$type = 'xs:dateTime'">Date</xsl:when>
-        <xsl:when test="$type = ('xs:decimal', 'xs:double', 'xs:float', 'xs:integer', 'xs:long', 'xs:positiveInteger', 'xs:unsignedInt')">Number</xsl:when>
-        <xsl:when test="matches($type, '^(schema-)?element\([^)]+\)$')">Node</xsl:when>
+        <xsl:when test="$type = ('Int', 'xs:decimal', 'xs:double', 'xs:float', 'xs:integer', 'xs:long', 'xs:positiveInteger', 'xs:unsignedInt')">number</xsl:when>
+        <xsl:when test="matches($type, '^(schema-)?[Ee]lement\([^)]+\)$')">Node</xsl:when>
         <!-- generic fallback -->
         <xsl:otherwise>
           <!--xsl:variable name="local-name" select="replace($type, '^([^:]+:)?(.+)$', '$2')"/>
@@ -101,8 +123,13 @@ let $definition := xdmp:xslt-eval(
       <xsl:choose>
         <xsl:when test="$name = 'default'">defaultVal</xsl:when>
         <xsl:when test="$name = 'function'">functionArg</xsl:when>
+        <xsl:when test="$name = 'in'">input</xsl:when>
+        <xsl:when test="$name = 'else'">else_</xsl:when>
+        <xsl:when test="$name = 'new'">new_</xsl:when>
+        <xsl:when test="$name = 'class'">class_</xsl:when>
+        <xsl:when test="$name = 'delete'">delete_</xsl:when>
         <xsl:otherwise>
-          <xsl:analyze-string select="$name" regex="-([a-zA-Z])">
+          <xsl:analyze-string select="replace($name, ' ', '_')" regex="-([a-zA-Z])">
 
             <xsl:matching-substring>
               <xsl:value-of select="upper-case(regex-group(1))"/>

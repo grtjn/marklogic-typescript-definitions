@@ -25,133 +25,130 @@
     not predefined in the server.
     **/
 
-declare module PKIModule {
-
-  interface pki {
+interface pkiFunctions {
 
     /** This function creates a new X.509 certificate request template. Each time a new certificate request is generated, a new public/private key pair is generated. A new random ID is generated and returned as part of the element. This ID is used for identifying this template and its related key pairs and certificates. The returned element must be separately inserted into the database with pki:insert-template. **/
-    createTemplate(name: String, description: String, keyType: String, keyOptions: Node, csr: Req)): Template);
+  createTemplate(name: string, description: string, keyType: string, keyOptions: Node, csr: Node): Node;
 
     /** This function inserts the specified certificate request template into the Security database and returns the certificate template id. **/
-    insertTemplate(template: Template)): String;
+  insertTemplate(template: Node): string;
 
     /** This function removes the specified certificate from the Security database. **/
-    deleteCertificate(certificateId: String): void;
+  deleteCertificate(certificateId: string): void;
 
     /** This function removes the specified certificate request template from the Security database. **/
-    deleteTemplate(templateId: String): void;
+  deleteTemplate(templateId: string): void;
 
     /** This function returns the id of the specified certificate template. **/
-    templateGetId(template: Template)): String;
+  templateGetId(template: Node): string;
 
     /** This function returns the name of the specified certificate template. **/
-    templateGetName(template: Template)): String;
+  templateGetName(template: Node): string;
 
     /** This function changes the name of the specified certificate template and returns the XML containing the change. Use pki:insert-template to save the change to the Security database. **/
-    templateSetName(template: Template), name: String): Template);
+  templateSetName(template: Node, name: string): Node;
 
     /** This function returns the description of the specified certificate template. **/
-    templateGetDescription(template: Template)): String;
+  templateGetDescription(template: Node): string;
 
     /** This function changes the description of the specified certificate template and returns the XML containing the change. Use pki:insert-template to save the change to the Security database. **/
-    templateSetDescription(template: Template), description: String): Template);
+  templateSetDescription(template: Node, description: string): Node;
 
     /** This function returns the key type for the specified certificate template. **/
-    templateGetKeyType(template: Template)): String;
+  templateGetKeyType(template: Node): string;
 
     /** This function changes the key type for the specified certificate template and returns the XML containing the change. Use pki:insert-template to save the change to the Security database. **/
-    templateSetKeyType(template: Template), keyType: String): Template);
+  templateSetKeyType(template: Node, keyType: string): Node;
 
     /** This function returns the version number for the specified certificate template. **/
-    templateGetVersion(template: Template)): String;
+  templateGetVersion(template: Node): string;
 
     /** This function returns all of the template key options set in the specified certificate template. **/
-    templateGetKeyOptions(template: Template)): Key-options);
+  templateGetKeyOptions(template: Node): Node;
 
     /** This function sets the options for generating new keys in the specified certificate template. The returned element must be separately inserted into the database with pki:insert-template. **/
-    templateSetKeyOptions(template: Template), keyOptions: Key-options)): Template);
+  templateSetKeyOptions(template: Node, keyOptions: Node): Node;
 
     /** This function returns the request portion of the certificate template. **/
-    templateGetRequest(template: Template)): Req);
+  templateGetRequest(template: Node): Node;
 
     /** This function sets the request portion for the specified certificate template. Use pki:insert-template to save the change to the Security database. **/
-    templateSetRequest(template: Template), req: Req)): Template);
+  templateSetRequest(template: Node, req: Node): Node;
 
     /** This function returns the ids for all of the certificate templates. **/
-    getTemplateIds(): String;
+  getTemplateIds(): string;
 
     /** This function returns the certificate template for the specified id. **/
-    getTemplate(templateId: String): Template);
+  getTemplate(templateId: string): Node;
 
     /** This function generates a PEM encoded X.509 certificate request from the template for the specified id. If $dns-name or $ip-addr are specified, those values will override any values specified in the template. A new public/private key pair is generated for the request and inserted as a temporary document in the database. When the signed certificate is inserted later, it is matched up against this document and any previously in use private key / certificate is replaced with the new one. The Admin UI will only set common-name, and leave both dns-name and ip-addr unspecified. Control over these values is provided only for power users to use through custom administration scripts. **/
-    generateCertificateRequest(templateId: String, commonName: String, dnsName: String, ipAddr: String): String;
+  generateCertificateRequest(templateId: string, commonName: string, dnsName: string, ipAddr: string): string;
 
     /** This function returns any pending certificate requests for the specified template. The pending requests are returned as PEM encoded strings. **/
-    getPendingCertificateRequestsPem(templateId: String): String;
+  getPendingCertificateRequestsPem(templateId: string): string;
 
     /** This function returns any pending certificate requests for the specified template. The pending requests are returned as XML. **/
-    getPendingCertificateRequestsXml(templateId: String): Req);
+  getPendingCertificateRequestsXml(templateId: string): Node;
 
     /** This function inserts one or more PEM-encoded signed certificates into the database. The signed certificates are matched up against previously generated certificate requests and any previous certificate is replaced. If there is no matching certifcate request for the specified certificate, the certificate is not inserted into the database. **/
-    insertSignedCertificates(certs: String): void;
+  insertSignedCertificates(certs: string): void;
 
     /** This function inserts PEM-encoded certificates into the database without checking for a matching certificate request. This allows you to insert temporary certificates and those from new Certificate Authorities. **/
-    insertTrustedCertificates(certs: String): String;
+  insertTrustedCertificates(certs: string): string;
 
     /** This function returns the ids of all of the trusted certificates in the Security database. **/
-    getTrustedCertificateIds(): String;
+  getTrustedCertificateIds(): string;
 
     /** This function returns the certificate for the specified template and host. The certificate data is returned in both PEM-encoded and XML formats. The common name must be specified. The DNS name and IP address are optional. **/
-    getCertificate(templateId: String, commonName: String, dnsName: String, ipAddr: String): Certificate);
+  getCertificate(templateId: string, commonName: string, dnsName: string, ipAddr: string): Node;
 
     /** This function inserts externally generated certificate into the database. This certificate can be used for certificate template specified by template-id. The common name of the certificate can be started with a wildcard "*" so that the certificate can be used for multiple hosts. **/
-    insertHostCertificate(templateId: String, certs: String, pkey: String): void;
+  insertHostCertificate(templateId: string, certs: string, pkey: string): void;
 
     /** This function returns true if the certificate specified by the template id and host combination are not signed by a trusted certificate authority. Otherwise, false is returned. The common name must be specified. The DNS name and IP address are optional. **/
-    needCertificate(templateId: String, commonName: String, dnsName: String, ipAddr: String): Boolean;
+  needCertificate(templateId: string, commonName: string, dnsName: string, ipAddr: string): Object;
 
     /** This function returns any pending certificate requests for the specified template id and host combination. The certificate request data is return in both PEM-encoded and XML formats. The common name must be specified. The DNS name and IP address are optional. **/
-    getPendingCertificateRequest(templateId: String, commonName: String, dnsName: String, ipAddr: String): Request);
+  getPendingCertificateRequest(templateId: string, commonName: string, dnsName: string, ipAddr: string): Node;
 
     /** This function generates a new key pair and temporary certificate from the specified certificate template. If a temporary certificate already exists for the template, this function does nothing. If $dns-name or $ip-addr are specified, those portions of the template are replaced with the specified values. The certificate is inserted into the database. This is used to ensure that secure app servers are initially usable while waiting for signed certificates. **/
-    generateTemporaryCertificateIfNecessary(templateId: String, validFor: Number, commonName: String, dnsName: String, ipAddr: String): void;
+  generateTemporaryCertificateIfNecessary(templateId: string, validFor: number, commonName: string, dnsName: string, ipAddr: string): void;
 
     /** This function generates a new key pair and temporary certificate from the specified certificate template. If $dns-name or $ip-addr are specified, those portions of the template are replaced with the specified values. The certificate is inserted into the database. This is used to ensure that secure app servers are initially usable while waiting for signed certificates. **/
-    generateTemporaryCertificate(templateId: String, validFor: Number, commonName: String, dnsName: String, ipAddr: String): void;
+  generateTemporaryCertificate(templateId: string, validFor: number, commonName: string, dnsName: string, ipAddr: string): void;
 
     /** This function returns true if the certificate is temporary. Otherwise, it returns false. **/
-    isTemporary(cert: Certificate)): Boolean;
+  isTemporary(cert: Node): Object;
 
     /** This function returns the XML representation of the certificate for the specified id and common host name combination. **/
-    getCertificateXml(templateId: String, hostname: String): Cert);
+  getCertificateXml(templateId: string, hostname: string): Node;
 
     /** This function returns all of the certificates for the specified certificate template in XML format. **/
-    getCertificatesForTemplateXml(templateId: String): Cert);
+  getCertificatesForTemplateXml(templateId: string): Node;
 
     /** This function returns the PEM encoded certificate for the specified certificate template and common name combination. **/
-    getCertificatePem(templateId: String, hostname: String): String;
+  getCertificatePem(templateId: string, hostname: string): string;
 
     /** This function returns the certificate template with the specified name. **/
-    getTemplateByName(templateName: String): Template);
+  getTemplateByName(templateName: string): Node;
 
     /** This function returns the certificate authority for the specified certificate template. **/
-    getTemplateCertificateAuthority(templateId: String): Certificate);
+  getTemplateCertificateAuthority(templateId: string): Node;
 
     /** This function creates a common temporary certificate authority to sign all the certificates for the specified certificate template. **/
-    generateTemplateCertificateAuthority(templateId: String, validFor: Number): void;
+  generateTemplateCertificateAuthority(templateId: string, validFor: number): void;
 
     /** This function returns the certificate data for the specified certificates. **/
-    getCertificates(certId: String): Certificate);
+  getCertificates(certId: string): Node;
 
     /** This function returns all of the certificates for the specified certificate template. **/
-    getCertificatesForTemplate(templateId: String): Certificate);
+  getCertificatesForTemplate(templateId: string): Node;
 
     /** This function checks whether a certificate template is in use by an App Server. Returns true if the template is in use. Otherwise false is returned. **/
-    templateInUse(templateId: String): Boolean;
+  templateInUse(templateId: string): Object;
 
     /** This function inserts a PEM- or DER-encoded Certificate Revocation List (CRL) into the security database. A CRL is a list of certificate serial numbers that have been revoked, and the revocation date of each. The CRL is signed by the Certificate Authority to verify its accuracy. The CRL contains two dates, one indicating when it was published and the other indicating when it will next be published. This is useful in determining whether a newer CRL should be fetched. Certificate Authorities typically allow the CRL to be downloaded via HTTP. The document URL in the database is derived from the URL passed in to the function, so Inserting a newer CRL retrieved from the same URL will replace the previous one in the database. **/
-    insertCertificateRevocationList(url: String, crl: String): void;
+  insertCertificateRevocationList(url: string, crl: string): void;
 
-
-  }
 }
+declare var pki:pkiFunctions

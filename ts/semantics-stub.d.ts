@@ -6,13 +6,10 @@
 		the semantic functions.  
 	**/
 
-declare module semantics-lib {
-
-  interface sem {
+interface semFunctions {
 
     /**  **/
-    (): ;
+  (): Object;
 
-
-  }
 }
+declare var sem:semFunctions

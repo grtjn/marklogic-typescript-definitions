@@ -8,14 +8,11 @@ They are defined at
 EXSLT Extensions.
 **/
 
-declare module ExsltBuiltins {
+interface fnFunctions {
 
-  interface fn {
-
-
-  }
-  interface exsl {
-
-
-  }
 }
+declare var fn:fnFunctions
+interface exslFunctions {
+
+}
+declare var exsl:exslFunctions

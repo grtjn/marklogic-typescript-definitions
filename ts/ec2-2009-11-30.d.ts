@@ -21,202 +21,199 @@ MarkLogic recommends enabling the URI Lexicon when using
    especially when the database grows to a large number of documents.
 **/
 
-declare module EC2Module {
-
-  interface ec2 {
+interface ec2Functions {
 
     /** This function calls the Amazon DescribeImages function. **/
-    describeImages(accessKey: String, secretKey: String, ec2Region: String, imageIds?: String, executableBy?: String, owners?: String): Node;
+  describeImages(accessKey: string, secretKey: string, ec2Region: string, imageIds?: string, executableBy?: string, owners?: string): Node;
 
     /** This function calls the Amazon DescribeAvailabilityZones function. **/
-    describeAvailabilityZones(accessKey: String, secretKey: String, ec2Region: String, zoneName?: String): Node;
+  describeAvailabilityZones(accessKey: string, secretKey: string, ec2Region: string, zoneName?: string): Node;
 
     /** This function calls the Amazon DescribeRegions function. **/
-    describeRegions(accessKey: String, secretKey: String, ec2Region: String, regionNames?: String): Node;
+  describeRegions(accessKey: string, secretKey: string, ec2Region: string, regionNames?: string): Node;
 
     /** This function calls the Amazon AttachVolume function. **/
-    attachVolume(accessKey: String, secretKey: String, ec2Region: String, volumeId: String, instanceId: String, device: String): Node;
+  attachVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, instanceId: string, device: string): Node;
 
     /** This function calls the Amazon CreateSnapshot function. **/
-    createSnapshot(accessKey: String, secretKey: String, ec2Region: String, volumeId: String, description?: String): Node;
+  createSnapshot(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, description?: string): Node;
 
     /** This function calls the Amazon CreateVolume function without a SnapshotId parameter. **/
-    createVolume(accessKey: String, secretKey: String, ec2Region: String, availabilityZone: String, size: Number): Node;
+  createVolume(accessKey: string, secretKey: string, ec2Region: string, availabilityZone: string, size: number): Node;
 
     /** This function calls the Amazon CreateVolume function with a $snapshot-id parameter. **/
-    createVolumeFromSnapshot(accessKey: String, secretKey: String, ec2Region: String, availabilityZone: String, snapshotId: String, size?: Number): Node;
+  createVolumeFromSnapshot(accessKey: string, secretKey: string, ec2Region: string, availabilityZone: string, snapshotId: string, size?: number): Node;
 
     /** This function calls the Amazon DeleteSnapshot function. **/
-    deleteSnapshot(accessKey: String, secretKey: String, ec2Region: String, snapshotId: String): Node;
+  deleteSnapshot(accessKey: string, secretKey: string, ec2Region: string, snapshotId: string): Node;
 
     /** This function calls the Amazon DeleteVolume function. **/
-    deleteVolume(accessKey: String, secretKey: String, ec2Region: String, volumeId: String): Node;
+  deleteVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string): Node;
 
     /** This function calls the Amazon DescribeSnapshotAttribute function and passes createVolumePermission as the Attribute parameter. **/
-    describeSnapshotCreateVolumePermission(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String): Node;
+  describeSnapshotCreateVolumePermission(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string): Node;
 
     /** This function calls the Amazon DescribeSnapshots function. **/
-    describeSnapshots(accessKey: String, secretKey: String, ec2Region: String, snapshotIds?: String, owners?: String, restorableBys?: String): Node;
+  describeSnapshots(accessKey: string, secretKey: string, ec2Region: string, snapshotIds?: string, owners?: string, restorableBys?: string): Node;
 
     /** This function calls the Amazon DescribeVolumes function. **/
-    describeVolumes(accessKey: String, secretKey: String, ec2Region: String, volumeIds?: String): Node;
+  describeVolumes(accessKey: string, secretKey: string, ec2Region: string, volumeIds?: string): Node;
 
     /** This function calls the Amazon DetachVolume function. **/
-    detachVolume(accessKey: String, secretKey: String, ec2Region: String, volumeId: String, instanceId?: String, device?: String, force?: Object): Node;
+  detachVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, instanceId?: string, device?: string, force?: Object): Node;
 
     /** This function calls the Amazon ModifySnapshotAttribute function and passes the IDs of the users to be given permission to create the snapshot. This function sets add as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
-    addSnapshotCreateVolumePermissionUsers(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String, userIds: String): Node;
+  addSnapshotCreateVolumePermissionUsers(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string, userIds: string): Node;
 
     /** This function calls the Amazon ModifySnapshotAttribute function and passes the names of the groups to be given permission to create the snapshot. This function sets add as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
-    addSnapshotCreateVolumePermissionGroups(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String, userGroups: String): Node;
+  addSnapshotCreateVolumePermissionGroups(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string, userGroups: string): Node;
 
     /** This function calls the Amazon ModifySnapshotAttribute function and passes the IDs of the users to be denied permission to create the snapshot. This function sets remove as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
-    removeSnapshotCreateVolumePermissionUsers(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String, userIds: String): Node;
+  removeSnapshotCreateVolumePermissionUsers(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string, userIds: string): Node;
 
     /** This function calls the Amazon ModifySnapshotAttribute function and passes the names of the groups to be denied permission to create the snapshot. This function sets remove as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
-    removeSnapshotCreateVolumePermissionGroups(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String, userGroups: String): Node;
+  removeSnapshotCreateVolumePermissionGroups(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string, userGroups: string): Node;
 
     /** This function calls the Amazon ResetSnapshotAttribute function. **/
-    resetSnapshotCreateVolumePermission(accessKey: String, secretKey: String, ec2Region: String, snapshotIds: String): Node;
+  resetSnapshotCreateVolumePermission(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: string): Node;
 
     /** This function calls the Amazon AllocateAddress function. **/
-    allocateAddress(accessKey: String, secretKey: String, ec2Region: String): Node;
+  allocateAddress(accessKey: string, secretKey: string, ec2Region: string): Node;
 
     /** This function calls the Amazon AssociateAddress function. **/
-    associateAddress(accessKey: String, secretKey: String, ec2Region: String, publicIp: String, instanceId: String): Node;
+  associateAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string, instanceId: string): Node;
 
     /** This function calls the Amazon DescribeAddresses function. **/
-    describeAddresses(accessKey: String, secretKey: String, ec2Region: String, publicIps?: String): Node;
+  describeAddresses(accessKey: string, secretKey: string, ec2Region: string, publicIps?: string): Node;
 
     /** This function calls the Amazon DisassociateAddress function. **/
-    disassociateAddress(accessKey: String, secretKey: String, ec2Region: String, publicIp: String): Node;
+  disassociateAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string): Node;
 
     /** This function calls the Amazon ReleaseAddress function. **/
-    releaseAddress(accessKey: String, secretKey: String, ec2Region: String, publicIp: String): Node;
+  releaseAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string): Node;
 
     /** This function calls the Amazon GetConsoleOutput function. **/
-    getConsoleOutput(accessKey: String, secretKey: String, ec2Region: String, instanceId: String): Node;
+  getConsoleOutput(accessKey: string, secretKey: string, ec2Region: string, instanceId: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes blockDeviceMapping as the Attribute parameter. **/
-    describeInstanceBlockDeviceMapping(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceBlockDeviceMapping(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes disableApiTermination as the Attribute parameter. **/
-    describeInstanceDisableApiTermination(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceDisableApiTermination(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes instanceInitiatedShutdownBehavior as the Attribute parameter. **/
-    describeInstanceInitiatedShutdownBehavior(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceInitiatedShutdownBehavior(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes kernel as the Attribute parameter. **/
-    describeInstanceKernel(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
-    describeInstanceRamdisk(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes rootDeviceName as the Attribute parameter. **/
-    describeInstanceRootDeviceName(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceRootDeviceName(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes instanceType as the Attribute parameter. **/
-    describeInstanceType(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceType(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstanceAttribute function and passes userData as the Attribute parameter. **/
-    describeInstanceUserData(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  describeInstanceUserData(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon DescribeInstances function. **/
-    describeInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds?: String): Node;
+  describeInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds?: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes blockDeviceMapping as the Attribute parameter. **/
-    modifyInstanceBlockDeviceMapping(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceBlockDeviceMapping(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes disableApiTermination as the Attribute parameter. **/
-    modifyInstanceDisableApiTermination(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: Object): Node;
+  modifyInstanceDisableApiTermination(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: Object): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes instanceInitiatedShutdownBehavior as the Attribute parameter. **/
-    modifyInstanceInitiatedShutdownBehavior(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceInitiatedShutdownBehavior(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes kernel as the Attribute parameter. **/
-    modifyInstanceKernel(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
-    modifyInstanceRamdisk(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes rootDeviceName as the Attribute parameter. **/
-    modifyInstanceRootDeviceName(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceRootDeviceName(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes instanceType as the Attribute parameter. **/
-    modifyInstanceType(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceType(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon ModifyInstanceAttribute function and passes userData as the Attribute parameter. **/
-    modifyInstanceUserData(accessKey: String, secretKey: String, ec2Region: String, instanceId: String, value: String): Node;
+  modifyInstanceUserData(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): Node;
 
     /** This function calls the Amazon RebootInstances function. **/
-    rebootInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  rebootInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon ResetInstanceAttribute function and passes kernel as the Attribute parameter. **/
-    resetInstanceKernel(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  resetInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon ResetInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
-    resetInstanceRamdisk(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  resetInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon RunInstances function. **/
-    runInstances(accessKey: String, secretKey: String, ec2Region: String, imageId: String, minCount: Number, maxCount: Number, instanceType: String, keyPair: String, securityGroup: String, instanceOptions: String): Node;
+  runInstances(accessKey: string, secretKey: string, ec2Region: string, imageId: string, minCount: number, maxCount: number, instanceType: string, keyPair: string, securityGroup: string, instanceOptions: string): Node;
 
     /** This function calls the Amazon StartInstances function. **/
-    startInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  startInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon StopInstances function. **/
-    stopInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String, force: Object): Node;
+  stopInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string, force: Object): Node;
 
     /** This function calls the Amazon TerminateInstances function. **/
-    terminateInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  terminateInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon CreateKeyPair function. **/
-    createKeyPair(accessKey: String, secretKey: String, ec2Region: String, keyName: String): Node;
+  createKeyPair(accessKey: string, secretKey: string, ec2Region: string, keyName: string): Node;
 
     /** This function calls the Amazon DeleteKeyPair function. **/
-    deleteKeyPair(accessKey: String, secretKey: String, ec2Region: String, keyName: String): Node;
+  deleteKeyPair(accessKey: string, secretKey: string, ec2Region: string, keyName: string): Node;
 
     /** This function calls the Amazon DescribeKeyPairs function. **/
-    describeKeyPairs(accessKey: String, secretKey: String, ec2Region: String, keyNames?: String): Node;
+  describeKeyPairs(accessKey: string, secretKey: string, ec2Region: string, keyNames?: string): Node;
 
     /** This function calls the Amazon MonitorInstances function. **/
-    monitorInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  monitorInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon UnmonitorInstances function. **/
-    unmonitorInstances(accessKey: String, secretKey: String, ec2Region: String, instanceIds: String): Node;
+  unmonitorInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): Node;
 
     /** This function calls the Amazon AuthorizeSecurityGroupIngress function. **/
-    authorizeGroupIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, sourceGroupOwnerId: String, sourceGroupName: String): Node;
+  authorizeGroupIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, sourceGroupOwnerId: string, sourceGroupName: string): Node;
 
     /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes icmp as the IpPermissions.n.IpProtocol parameter. **/
-    authorizeIcmpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, icmpType: Number, icmpCode: Number, cidrIp: String): Node;
+  authorizeIcmpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, icmpType: number, icmpCode: number, cidrIp: string): Node;
 
     /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes tcp as the IpPermissions.n.IpProtocol parameter. **/
-    authorizeTcpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, portRange: Number, cidrIp: String): Node;
+  authorizeTcpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: number, cidrIp: string): Node;
 
     /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes udp as the IpPermissions.n.IpProtocol parameter. **/
-    authorizeUdpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, portRange: Number, cidrIp: String): Node;
+  authorizeUdpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: number, cidrIp: string): Node;
 
     /** This function calls the Amazon CreateSecurityGroup function. **/
-    createSecurityGroup(accessKey: String, secretKey: String, ec2Region: String, groupName: String, groupDescription: String): Node;
+  createSecurityGroup(accessKey: string, secretKey: string, ec2Region: string, groupName: string, groupDescription: string): Node;
 
     /** This function calls the Amazon DeleteSecurityGroup function. **/
-    deleteSecurityGroup(accessKey: String, secretKey: String, ec2Region: String, groupName: String): Node;
+  deleteSecurityGroup(accessKey: string, secretKey: string, ec2Region: string, groupName: string): Node;
 
     /** This function calls the Amazon DescribeSecurityGroups function. **/
-    describeSecurityGroups(accessKey: String, secretKey: String, ec2Region: String, groupNames?: String): Node;
+  describeSecurityGroups(accessKey: string, secretKey: string, ec2Region: string, groupNames?: string): Node;
 
     /** This function calls the Amazon RevokeSecurityGroupIngress function and sets the UserId and GroupName parameters. **/
-    revokeGroupIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, sourceGroupOwnerId: String, sourceGroupName: String): Node;
+  revokeGroupIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, sourceGroupOwnerId: string, sourceGroupName: string): Node;
 
     /** This function calls the Amazon RevokeSecurityGroupIngress function, passes icmp as the IpProtocol parameter, and sets the FromPort, ToPort, and CidrIp parameters. **/
-    revokeIcmpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, icmpType: Number, icmpCode: Number, cidrIp: String): Node;
+  revokeIcmpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, icmpType: number, icmpCode: number, cidrIp: string): Node;
 
     /** This function calls the Amazon RevokeSecurityGroupIngress function, passes tcp as the IpProtocol parameter. **/
-    revokeTcpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, portRange: Number, cidrIp: String): Node;
+  revokeTcpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: number, cidrIp: string): Node;
 
     /** This function calls the Amazon RevokeSecurityGroupIngress function, passes udp as the IpProtocol parameter. **/
-    revokeUdpIngress(accessKey: String, secretKey: String, ec2Region: String, groupName: String, portRange: Number, cidrIp: String): Node;
+  revokeUdpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: number, cidrIp: string): Node;
 
-
-  }
 }
+declare var ec2:ec2Functions

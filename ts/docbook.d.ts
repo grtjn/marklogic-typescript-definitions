@@ -17,13 +17,10 @@ The library namespace prefix dbk is not predefined in
 the server.
 **/
 
-declare module DocBookModule {
-
-  interface dbk {
+interface dbkFunctions {
 
     /** Convert XHTML to DocBook lite vocabulary, if possible. The section structuring depends on the presence of div elements with mlsection markers, as produced by xhtml:restructure. **/
-    convert(doc: Node, options: Node): Object;
+  convert(doc: Node, options: Node): Object;
 
-
-  }
 }
+declare var dbk:dbkFunctions

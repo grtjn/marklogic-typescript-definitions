@@ -17,13 +17,10 @@ import module namespace hadoop="http://marklogic.com/xdmp/hadoop"
 	    at "/MarkLogic/hadoop.xqy";
   **/
 
-declare module HadoopModule {
-
-  interface hadoop {
+interface hadoopFunctions {
 
     /** This function returns (forest_id, record_count, host_name) tuples usable with the MarkLogic Connector for Hadoop to generate input splits in advanced input mode. **/
-    getSplits(nsbindings: String, docSelector: String, query: String): String;
+  getSplits(nsbindings: string, docSelector: string, query: string): string;
 
-
-  }
 }
+declare var hadoop:hadoopFunctions

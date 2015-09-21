@@ -14,25 +14,22 @@ The library namespace prefix mcgm is not predefined
 in the server.
 **/
 
-declare module MCGM {
-
-  interface mcgm {
+interface mcgmFunctions {
 
     /** Create a cts:point value from a MCGM Dot element. **/
-    point(point: Element(Dot)): Point ;
+  point(point: Node): Object;
 
     /** Create a cts:circle value from a radius and MCGM Dot element. **/
-    circle(radius: Number, center: Element(Dot)): Circle ;
+  circle(radius: number, center: Node): Object;
 
     /** Construct a cts:polygon value from a sequence of MCGM Dot elements. **/
-    polygon(vertices: Element(Dot)): Polygon ;
+  polygon(vertices: Node): Object;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQuery(regions: Region, options?: String, weight?: Number): Query ;
+  geospatialQuery(regions: Object, options?: string, weight?: number): Object;
 
     /** Returns a cts:query matching points within given regions. **/
-    geospatialQueryFromElements(regions: Element(Dot), options?: String, weight?: Number): Query ;
+  geospatialQueryFromElements(regions: Node, options?: string, weight?: number): Object;
 
-
-  }
 }
+declare var mcgm:mcgmFunctions

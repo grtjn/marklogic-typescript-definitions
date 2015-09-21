@@ -3,22 +3,19 @@
 
 /****/
 
-declare module StringBuiltins {
-
-  interface fn {
+interface fnFunctions {
 
     /** Returns true if the specified $input matches the specified $pattern, otherwise returns false. **/
-    matches(input: String, pattern: String, flags?: String): Object;
+  matches(input: string, pattern: string, flags?: string): Object;
 
     /** Returns a string constructed by replacing the specified $pattern on the $input string with the specified $replacement string. **/
-    replace(input: String, pattern: String, replacement: String, flags?: String): String;
+  replace(input: string, pattern: string, replacement: string, flags?: string): string;
 
     /** The result of the function is a new element node whose string value is the original string, but which contains markup to show which parts of the input match the regular expression. **/
-    analyzeString(in: String, regex: String, flags?: String): Node;
+  analyzeString(input: string, regex: string, flags?: string): Node;
 
     /** Returns a sequence of strings contructed by breaking the specified input into substrings separated by the specified $pattern. The specified $pattern is not returned as part of the returned items. **/
-    tokenize(input: String, pattern: String, flags?: String): String;
+  tokenize(input: string, pattern: string, flags?: string): string;
 
-
-  }
 }
+declare var fn:fnFunctions

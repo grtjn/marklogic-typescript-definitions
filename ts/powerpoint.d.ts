@@ -17,13 +17,10 @@ The library namespace prefix ppt is not predefined in
 the server.
 **/
 
-declare module PowerpointModule {
-
-  interface ppt {
+interface pptFunctions {
 
     /** Clean up any conversion artifacts or other infelicities, putting each slide into its own div element. **/
-    clean(uri: String, doc: Node): Node;
+  clean(uri: string, doc: Node): Node;
 
-
-  }
 }
+declare var ppt:pptFunctions

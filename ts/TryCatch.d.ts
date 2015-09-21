@@ -3,13 +3,10 @@
 
 /****/
 
-declare module Extensions {
-
-  interface xdmp {
+interface xdmpFunctions {
 
     /** Within the catch section of a try-catch expression, re-throw the currently caught error. **/
-    rethrow(): void;
+  rethrow(): void;
 
-
-  }
 }
+declare var xdmp:xdmpFunctions

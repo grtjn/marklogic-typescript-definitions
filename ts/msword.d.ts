@@ -17,13 +17,10 @@ The library namespace prefix msword is not predefined
 in the server.
 **/
 
-declare module MSWordModule {
-
-  interface msword {
+interface mswordFunctions {
 
     /** Clean up any conversion artifacts or other infelicities. **/
-    clean(uri: String, doc: Node): Node;
+  clean(uri: string, doc: Node): Node;
 
-
-  }
 }
+declare var msword:mswordFunctions

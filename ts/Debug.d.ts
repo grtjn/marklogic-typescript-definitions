@@ -11,10 +11,7 @@ debug function library is not a debugger, but provides server-side support
 to build an application that can debug queries against MarkLogic Server.
 **/
 
-declare module DebugBuiltins {
+interface dbgFunctions {
 
-  interface dbg {
-
-
-  }
 }
+declare var dbg:dbgFunctions

@@ -17,16 +17,13 @@ The library namespace prefix css is not predefined in
 the server.
 **/
 
-declare module CSSModule {
-
-  interface css {
+interface cssFunctions {
 
     /** Fetch the CSS for the given document, be it embedded or linked. Limitation: doesn't account for @import directives in the CSS; assumes the linked CSS is in the database. **/
-    get(doc: String): Object;
+  get(doc: string): Object;
 
     /** Convert CSS text to an equivalent XML representation that is more suitable for analysis. **/
-    convert(css: String, options: Node): Object;
+  convert(css: string, options: Node): Object;
 
-
-  }
 }
+declare var css:cssFunctions

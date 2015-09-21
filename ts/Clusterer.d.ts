@@ -10,13 +10,10 @@ under the directory in which MarkLogic Server is installed.
 
 **/
 
-declare module ClustererBuiltins {
-
-  interface cts {
+interface ctsFunctions {
 
     /** Produces a set of clusters from a sequence an array of nodes. The nodes can be any set of nodes, and are typically the result of a cts:search cts.search operation. **/
-    cluster(nodes: Object, options?: Object): Object;
+  cluster(nodes: Object, options?: Object): Object;
 
-
-  }
 }
+declare var cts:ctsFunctions

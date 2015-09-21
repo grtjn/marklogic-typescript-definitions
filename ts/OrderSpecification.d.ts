@@ -3,35 +3,32 @@
 
 /****/
 
-declare module SearchBuiltins {
+interface xdmpFunctions {
 
-  interface xdmp {
-
-
-  }
-  interface cts {
+}
+declare var xdmp:xdmpFunctions
+interface ctsFunctions {
 
     /** Creates a index-based ordering clause, for use as an option to cts:search. **/
-    indexOrder(index: Object, options?: String): Object;
+  indexOrder(index: Object, options?: string): Object;
 
     /** Creates a score-based ordering clause, for use as an option to cts:search. **/
-    scoreOrder(options?: String): Object;
+  scoreOrder(options?: string): Object;
 
     /** Creates a fitness-based ordering clause, for use as an option to cts:search. **/
-    fitnessOrder(options?: String): Object;
+  fitnessOrder(options?: string): Object;
 
     /** Creates a confidence-based ordering clause, for use as an option to cts:search. **/
-    confidenceOrder(options?: String): Object;
+  confidenceOrder(options?: string): Object;
 
     /** Creates a quality-based ordering clause, for use as an option to cts:search. **/
-    qualityOrder(options?: String): Object;
+  qualityOrder(options?: string): Object;
 
     /** Creates a document-based ordering clause, for use as an option to cts:search. **/
-    documentOrder(options?: String): Object;
+  documentOrder(options?: string): Object;
 
     /** Specifies that results should be unordered, for use with cts:search. **/
-    unordered(): Object;
+  unordered(): Object;
 
-
-  }
 }
+declare var cts:ctsFunctions

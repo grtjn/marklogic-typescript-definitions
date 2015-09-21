@@ -6,13 +6,14 @@
 		the temporal functions.  
 	**/
 
-declare module temporal-lib {
+interface semFunctions {
 
-  interface sem {
+}
+declare var sem:semFunctions
+interface temporalFunctions {
 
     /**  **/
-    (): ;
+  (): Object;
 
-
-  }
 }
+declare var temporal:temporalFunctions

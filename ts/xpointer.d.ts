@@ -13,25 +13,22 @@ The library namespace prefix xp is not predefined
 in the server.
 	**/
 
-declare module XPointerModule {
-
-  interface xp {
+interface xpFunctions {
 
     /** This function.... **/
-    parseXpointer(xpointer: String): Part);
+  parseXpointer(xpointer: string): Node;
 
     /** This function.... **/
-    pathFromElementScheme(part: String): String;
+  pathFromElementScheme(part: string): string;
 
     /** This function.... **/
-    altPathFromElementScheme(part: String): String;
+  altPathFromElementScheme(part: string): string;
 
     /** This function.... **/
-    doDereference(context: Node, path: String, nsBindings: String): Node;
+  doDereference(context: Node, path: string, nsBindings: string): Node;
 
     /** This function resolves an XPointer in the context of a particular node. **/
-    dereference(context: Node, xpointer: String): Node;
+  dereference(context: Node, xpointer: string): Node;
 
-
-  }
 }
+declare var xp:xpFunctions
