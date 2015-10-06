@@ -15,13 +15,13 @@ interface xdmpFunctions {
   securityAssert(privileges: string, kind: string): void;
 
     /** Tests whether the current user has at least one of a given set of privileges. Returns true if they do, false otherwise. **/
-  hasPrivilege(privileges: string, kind: string): Object;
+  hasPrivilege(privileges: string, kind: string): boolean;
 
     /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. **/
-  userRoles(name: string, extSecId?: string, secDbFirst?: Object): string;
+  userRoles(name: string, extSecId?: string, secDbFirst?: boolean): string;
 
     /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. **/
-  useridRoles(userId: string, extSecId?: string, secDbFirst?: Object): string;
+  useridRoles(userId: string, extSecId?: string, secDbFirst?: boolean): string;
 
     /** Returns the set of all roles inherited by a given role, including roles directly assigned to the role and roles inherited from other roles. **/
   roleRoles(name: string): string;
@@ -33,13 +33,19 @@ interface xdmpFunctions {
   ampRoles(namespaceUri: string, localname: string, documentUri: string, databaseId: string): string;
 
     /** Returns the collections to which a given document belongs. **/
-  documentGetCollections(uri: string): Object;
+  documentGetCollections(uri: string): String[];
+
+    /** Returns any collections for the node's document in the database. If the specified node does not come from a document in a database, then xdmp:node-collections returns an empty sequence. **/
+  nodeCollections(node: MLNode<any>): String[];
 
     /** Returns the permissions to a given document. **/
-  documentGetPermissions(uri: string, format?: string): Object;
+  documentGetPermissions(uri: string, format?: string): Object[];
+
+    /** Returns the permissions to a node's document. **/
+  nodePermissions(node: MLNode<any>, format?: string): Object[];
 
     /** Returns the permissions any new document would get if the current user were to insert a document without specifying the default permissions. **/
-  defaultPermissions(uri?: string, format?: string): Object;
+  defaultPermissions(uri?: string, format?: string): Object[];
 
     /** Returns the collections any new document would get if the current user were to insert a document without specifying the collections. **/
   defaultCollections(uri?: string): string;
@@ -60,7 +66,7 @@ interface xdmpFunctions {
   permission(role: string, capability: string, format?: string): Object;
 
     /** Returns the user ID for the specified user name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the user ID from the security database configured for the database in which the App Server evaluates against. **/
-  user(user: string, extSecId?: string, secDbFirst?: Object): string;
+  user(user: string, extSecId?: string, secDbFirst?: boolean): string;
 
     /** Returns the role ID for the specified role name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the role ID from the security database configured for the database in which the App Server evaluates against. **/
   role(role: string): string;

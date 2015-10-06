@@ -14,7 +14,7 @@ interface fnFunctions {
   formatDateTime(value: Date, picture: string, language?: string, calendar?: string, country?: string): string;
 
     /** Returns a formatted date value based on the picture argument. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
-  formatDate(value: Object, picture: string, language?: string, calendar?: string, country?: string): string;
+  formatDate(value: Date, picture: string, language?: string, calendar?: string, country?: string): string;
 
     /** Returns a formatted time value based on the picture argument. This is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and Server-Side JavaScript. **/
   formatTime(value: string, picture: string, language?: string, calendar?: string, country?: string): string;
@@ -33,13 +33,13 @@ interface xdmpFunctions {
   parseYymmdd(picture: string, value: string, language?: string, calendar?: string, country?: string): Date;
 
     /** Returns a formatted number value based on the picture argument. The difference between this function and the W3C standards fn:format-number function is that this function imitates the XSLT xsl:number instruction, which has richer formatting options than the fn:format-number function. This function can be used for spelled-out and ordinal numbering in many languages. This function is available in XSLT as well as in all dialects of XQuery and Server-Side JavaScript. **/
-  formatNumber(value: Object, picture?: string, language?: string, letterValue?: string, ordchar?: string, zeroPadding?: string, groupingSeparator?: string, groupingSize?: number): string;
+  formatNumber(value: number, picture?: string, language?: string, letterValue?: string, ordchar?: string, zeroPadding?: string, groupingSeparator?: string, groupingSize?: number): string;
 
     /** Returns month name, calculated from the localized value of $arg. If $arg is the empty sequence, returns the empty sequence. **/
-  monthNameFromDate(arg: Object): string;
+  monthNameFromDate(arg: Date): string;
 
     /** Returns an xs:string representing the dayname value in the localized value of $arg. If $arg is the empty sequence, returns the empty sequence. **/
-  daynameFromDate(arg: Object): string;
+  daynameFromDate(arg: Date): string;
 
 }
 declare var xdmp:xdmpFunctions

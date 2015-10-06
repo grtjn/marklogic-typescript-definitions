@@ -12,17 +12,17 @@
 
 interface xdmpFunctions {
 
-    /** Converts plaintext into URL-encoded string. **/
-  urlEncode(plaintext: string, noSpacePlus?: Object): string;
+    /** Converts plaintext into URL-encoded string. To decode the string, use xdmp:url-decodexdmp.urlDecode. There is also a W3C function that does a slightly different url encoding: fn:encode-for-urifn:encode-for-uri. **/
+  urlEncode(plaintext: string, noSpacePlus?: boolean): string;
 
-    /** Converts URL-encoded string to plaintext. **/
+    /** Converts URL-encoded string to plaintext. This decodes the string created with xdmp:url-encodexdmp.urlEncode. **/
   urlDecode(encoded: string): string;
 
     /** Logs in a user on an application server that is using application-level authentication and sends a session cookie containing the session ID to the user's browser. Returns true on success, false on failure. If the user calling this function has the xdmp:login privilege, this function can be called without a password or with the empty sequence as the password. In this case, login will succeed if the specified user exists. Therefore, use the xdmp:login privilege carefully, as any user with that privilege will be able to execute code that uses the xdmp:login function to log in as any user. Note that only HTTP App Servers allow application-level authentication, and therefore this function only works on an HTTP App Server; it always returns false against an XDBC server. **/
-  login(name: string, password?: string, setSession?: Object, roleNames?: string): Object;
+  login(name: string, password?: string, setSession?: boolean, roleNames?: string): boolean;
 
     /** This function is used for kerberos GSS authentication in application level authentication. **/
-  gssServerNegotiate(inputToken: string): Node;
+  gssServerNegotiate(inputToken: string): Object;
 
     /** Logs the current user out of the session on the server. The result is that the current user is set to the default user defined in application-level authentication. The session remains on the server until it expires. **/
   logout(): void;
@@ -115,7 +115,7 @@ interface xdmpFunctions {
   addResponseHeader(name: string, value: string): void;
 
     /** Returns true if a given URI refers to a file which exists on the current application server. Only returns true if the modules on the App Server is set to file system; always returns false if you are using a database for your modules. false Returns false if the file does not exist. Returns the empty sequence if the URI is the empty sequence. **/
-  uriIsFile(uri: string): Object;
+  uriIsFile(uri: string): boolean;
 
     /** Returns as a string the internet address of the client from which the HTTP server request is issued. Returns the empty sequence if it is not called from an HTTP server. **/
   getRequestClientAddress(): string;

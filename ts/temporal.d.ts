@@ -26,7 +26,7 @@ import module namespace temporal="http://marklogic.com/xdmp/temporal"
 interface temporalFunctions {
 
     /** This function constructs an axis definition based on the existing range indexes that can be added to a collection in subsequent API calls. The axis definition is stored in the schema database. For details on how to create an axis, see Create System and Valid Axes in the Temporal Developer's Guide A TEMPORAL-NONDATETIME exception is thrown if range index scalar type is not dateTime. A TEMPORAL-DUPAXIS exception is thrown if the axis already exists. **/
-  axisCreate(axisName: string, startRangeIndex: Object, endRangeIndex: Object): string;
+  axisCreate(axisName: string, startRangeIndex: cts.Reference, endRangeIndex: cts.Reference): string;
 
     /** This function removes an axis definition from the schema database. A TEMPORAL-AXISINUSE exception is thrown if the named axis is referred to by a collection. **/
   axisRemove(axisName: string): void;
@@ -47,10 +47,10 @@ interface temporalFunctions {
   collections(): string;
 
     /** This function returns the range index used to define the start of the period by the named axis. A TEMPORAL-AXISNOTFOUND exception is thrown if the axis does not exist. **/
-  axisGetStart(axisName: string): Object;
+  axisGetStart(axisName: string): cts.Reference;
 
     /** This function returns the range index used to define the end of the period by the named axis. A TEMPORAL-AXISNOTFOUND exception is thrown if the axis does not exist. **/
-  axisGetEnd(axisName: string): Object;
+  axisGetEnd(axisName: string): cts.Reference;
 
     /** This function returns the options set on the temporal collection. **/
   collectionGetOptions(temporalCollection: string): string;

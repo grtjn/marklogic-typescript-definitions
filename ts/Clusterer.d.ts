@@ -13,7 +13,7 @@ under the directory in which MarkLogic Server is installed.
 interface ctsFunctions {
 
     /** Produces a set of clusters from a sequence an array of nodes. The nodes can be any set of nodes, and are typically the result of a cts:search cts.search operation. **/
-  cluster(nodes: Object, options?: Object): Object;
+  cluster(nodes: Array<any>, options?: MLNode<any>|{[key:string]:any}): Object;
 
 }
 declare var cts:ctsFunctions

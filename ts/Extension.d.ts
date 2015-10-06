@@ -52,7 +52,7 @@ interface xdmpFunctions {
   architecture(): string;
 
     /** Returns a string whose value corresponds to the path of the node. **/
-  path(node: Node, includeDocument?: Object): string;
+  path(node: MLNode<any>, includeDocument?: boolean): string;
 
     /** Returns a string representing the description of a given item sequence. If you take the output of the xdmp:describe function and evaluate it as an XQuery program, it returns the item(s) input to the function. **/
   describe(item: string, maxSequenceLength?: number, maxItemLength?: number): string;
@@ -121,10 +121,10 @@ interface xdmpFunctions {
   triggersDatabase(databaseId?: string): string;
 
     /** Returns the unevaluated serialized representation of the input parameter as a string. **/
-  quote(arg: string, options?: Object): string;
+  quote(arg: string, options?: MLNode<any>|{[key:string]:any}): string;
 
     /** Parses a string as XML, returning one or more document nodes. **/
-  unquote(arg: string, defaultNamespace?: string, options?: string): Node;
+  unquote(arg: string, defaultNamespace?: string, options?: string): DocumentNode<any>;
 
     /** Logs a message to the log file <install_dir>/Logs/ErrorLog.txt. The log message is sent as soon as this function is called, even if the program from which it is called has not completed. **/
   log(msg: string, level?: string): void;
@@ -136,19 +136,19 @@ interface xdmpFunctions {
   queryMeters(): Object;
 
     /** Returns the elapsed time since the start of processing of this query. Gives the same information as the elapsed-time element of the xdmp:query-meters output, but has less overhead than calling xdmp:query-meters. **/
-  elapsedTime(): Object;
+  elapsedTime(): string;
 
     /** Enables or disables tracing of this query. When query tracing is enabled, "info" level messages are logged detailing the search optimizations performed. **/
-  queryTrace(enabled: Object): void;
+  queryTrace(enabled: boolean): void;
 
     /** Returns the list of path namespaces for the given database id. **/
-  databasePathNamespaces(dbid?: string): Object;
+  databasePathNamespaces(dbid?: string): Array<any>;
 
     /** Returns the document-uri property of the parameter or its ancestor. **/
-  nodeUri(node: Node): string;
+  nodeUri(node: MLNode<any>): string;
 
     /** Returns the database id where the parameter is stored. If the specified node does not come from a document in a database, then xdmp:node-database returns an empty list. **/
-  nodeDatabase(node: Node): string;
+  nodeDatabase(node: MLNode<any>): string;
 
     /** Returns the current MarkLogic product edition. **/
   productEdition(): string;
@@ -157,10 +157,10 @@ interface xdmpFunctions {
   productEnvironment(): string;
 
     /** Returns the locks for one or more documents or directories. Returns the locks for all documents and directories in the database if no parameter is given. **/
-  documentLocks(uri?: string): Node;
+  documentLocks(uri?: string): DocumentNode<any>;
 
     /** Returns a sequence of properties documents, one for each of the specified documents that has a corresponding properties document. If no documents are specified, returns a sequence of properties documents for all documents in the database that have a corresponding properties document. **/
-  documentProperties(uri?: string): Node;
+  documentProperties(uri?: string): DocumentNode<any>;
 
     /** Returns the quality of the specified document if the document exists. Otherwise, returns the empty sequence. **/
   documentGetQuality(uri: string): number;
@@ -178,7 +178,7 @@ interface xdmpFunctions {
   database(name?: string): string;
 
     /** Returns a sequence of forest IDs in the specified database. **/
-  databaseForests(databaseId: string, includeReplicas?: Object): string;
+  databaseForests(databaseId: string, includeReplicas?: boolean): string;
 
     /** Returns the forest ID for each specified forest or for each forest's replica if the forest is currently experiencing a local disk failover. **/
   forestOpenReplica(forestIDs: string): string;
@@ -190,7 +190,7 @@ interface xdmpFunctions {
   databaseName(databaseId: string): string;
 
     /** Tests if a database is a replica of a foreign database. **/
-  databaseIsReplica(databaseId: string): Object;
+  databaseIsReplica(databaseId: string): boolean;
 
     /** Returns the most recent commit timestamp for which a query on the database will not block waiting for transactions to commit or journal frames to arrive from a foreign master. **/
   databaseNonblockingTimestamp(databaseId: string): string;
@@ -217,22 +217,22 @@ interface xdmpFunctions {
   forestDatabases(forest: string): string;
 
     /** Returns the document in the file specified by $location. **/
-  documentGet(location: string, options?: Object): Node;
+  documentGet(location: string, options?: MLNode<any>|{[key:string]:any}): MLNode<any>;
 
     /** Returns the documents from the database in a directory. Note that these are database documents, not from the filesystem; if you want documents from a filesystem directory, use xdmp:filesystem-directoryxdmp.filesystemDirectory instead. **/
-  directory(uri: string, depth?: string): Node;
+  directory(uri: string, depth?: string): DocumentNode<any>;
 
     /** Returns a sequence of properties documents, one for each document in the specified directory that has a corresponding properties document. **/
-  directoryProperties(uri: string, depth?: string): Node;
+  directoryProperties(uri: string, depth?: string): DocumentNode<any>;
 
     /** Returns a sequence of properties documents, one for each document in the specified collection(s) that has a corresponding properties document. **/
-  collectionProperties(uri?: string): Node;
+  collectionProperties(uri?: string): DocumentNode<any>;
 
     /** Returns locks of documents in a directory. **/
-  directoryLocks(uri: string, depth?: string): Node;
+  directoryLocks(uri: string, depth?: string): DocumentNode<any>;
 
     /** Returns locks of documents in a collection. **/
-  collectionLocks(uri?: string): Node;
+  collectionLocks(uri?: string): DocumentNode<any>;
 
     /** Returns the content type of the given URI as matched in the mimetypes configuration. xdmp:content-type continues to work too. **/
   uriContentType(uri: string): string;
@@ -241,28 +241,28 @@ interface xdmpFunctions {
   uriFormat(uri: string): string;
 
     /** Returns the property values for a document's property. Throws XDMP-DOCNOTFOUND if there is no document at the specifed URI. **/
-  documentGetProperties(uri: string, property: Object): Node;
+  documentGetProperties(uri: string, property: xs.QName): MLNode<any>;
 
     /** Returns whether a given action on the specified document URI would succeed. **/
-  access(uri: string, action: string): Object;
+  access(uri: string, action: string): boolean;
 
     /** Sends the http GET method to the specified URI. Returns the http response as well as whatever information is identified by the specified URI (for example, an html document). **/
-  httpGet(uri: string, options?: Object): string;
+  httpGet(uri: string, options?: MLNode<any>|{[key:string]:any}): string;
 
     /** Sends the http HEAD method to the specified URI. Returns the http response header for the specified URI. **/
-  httpHead(uri: string, options?: Object): string;
+  httpHead(uri: string, options?: MLNode<any>|{[key:string]:any}): string;
 
     /** Sends the http OPTIONS method to the specified URI. Returns the http response for the specified URI. **/
-  httpOptions(uri: string, options?: Object): string;
+  httpOptions(uri: string, options?: MLNode<any>|{[key:string]:any}): string;
 
     /** Sends an http DELETE request to the http server specified in the URI to delete the specified resource. The server should respond if the request is to be completed, but a response is not guaranteed. Also, even if the server does respond, it does not guarantee that the request has been or will be completed. **/
-  httpDelete(uri: string, options?: Object): string;
+  httpDelete(uri: string, options?: MLNode<any>|{[key:string]:any}): string;
 
     /** Sends the http POST request to the server. **/
-  httpPost(uri: string, options?: Object, data?: Node): string;
+  httpPost(uri: string, options?: MLNode<any>|{[key:string]:any}, data?: MLNode<any>): string;
 
     /** Sends an HTTP PUT request to an HTTP server. The HTTP server should return a response, which will differ depending on the action the HTTP server takes for the PUT. **/
-  httpPut(uri: string, options?: Object, data?: Node): string;
+  httpPut(uri: string, options?: MLNode<any>|{[key:string]:any}, data?: MLNode<any>): string;
 
     /** Converts plaintext into base64-encoded string. **/
   base64Encode(plaintext: string): string;
@@ -271,25 +271,25 @@ interface xdmpFunctions {
   base64Decode(encoded: string): string;
 
     /** Returns a binary node made up of a subset of the given binary node. **/
-  subbinary(source: Node, startingLocation: number, length?: number): Node;
+  subbinary(source: MLNode<any>, startingLocation: number, length?: number): MLNode<any>;
 
     /** Returns an external binary node. **/
-  externalBinary(path: string, startingLocation?: number, length?: number): Node;
+  externalBinary(path: string, startingLocation?: number, length?: number): MLNode<any>;
 
     /** Returns the size of the data, in bytes, represented by a binary node. **/
-  binarySize(source?: Node): string;
+  binarySize(source?: MLNode<any>): string;
 
     /** Test whether or not a binary node represents an external binary. **/
-  binaryIsExternal(source: Node): Object;
+  binaryIsExternal(source: MLNode<any>): boolean;
 
     /** Check whether a binary node is a small binary. **/
-  binaryIsSmall(source: Node): Object;
+  binaryIsSmall(source: MLNode<any>): boolean;
 
     /** Check whether a binary node is a large binary. **/
-  binaryIsLarge(source: Node): Object;
+  binaryIsLarge(source: MLNode<any>): boolean;
 
     /** Return the path to the external file associated with an external binary document. **/
-  externalBinaryPath(source: Node): string;
+  externalBinaryPath(source: MLNode<any>): string;
 
     /** Signal a trace event. If trace events are activated and the event is enabled, the trace event is logged. **/
   trace(name: string, value: string): void;
@@ -346,40 +346,40 @@ interface xdmpFunctions {
   collationCanonicalUri(collationUri: string): string;
 
     /** Returns the array values as a ValueIterator. **/
-  arrayValues(Array: Array<any>, flatten?: Object): Object;
+  arrayValues(Array: Array<any>, flatten?: Boolean): ValueIterator<any>;
 
     /** Delays for a specific amount of time. **/
   sleep(msec: number): void;
 
     /** Returns the schema-defined content-type of an element ("empty", "simple", "element-only", or "mixed"). **/
-  elementContentType(element: Node): string;
+  elementContentType(element: MLNode<any>): string;
 
     /** Returns a well-formatted XQuery module. **/
   prettyPrint(xquery: string): string;
 
     /** Construct a context-independent string from a QName. This string is of the form "{namespaceURI}localname" and is suitable for use as a map key. **/
-  keyFromQName(name: Object): string;
+  keyFromQName(name: xs.QName): string;
 
     /** Construct a QName from a string of the form "{namespaceURI}localname". This function is useful for constructing Clark notation parameters for the xdmp:xslt-eval and xdmp:xslt-invoke functions. **/
-  QNameFromKey(key: string): Object;
+  QNameFromKey(key: string): xs.QName;
 
     /** Create a multipart encoding of the specified node. The returned binary node can be passed to xdmp:http-post. The manifest is modeled after the manifest that is passed to zip:create, with the headers element being the same as is described for xdmp:http-get allowing users to add arbitrary headers to each part. If a content-type header is not specified for a part, it will be determined if possible from the content. There should be one part element for each node in the content sequence. Each part also has an optional options node to control how xml or text will be serialized. The two options are the same as for xdmp:save. <parts> <part> <headers> <Content-Type>image/jpeg</Content-Type> <headers> <options> <output-encoding>...</output-encoding> <output-sgml-character-entities>...</output-sgml-character-entities> </options> </part> </parts> **/
-  multipartEncode(separator: string, manifest: Node, content: Node): Node;
+  multipartEncode(separator: string, manifest: MLNode<any>, content: MLNode<any>): MLNode<any>;
 
     /** Extract the parts from a multipart encoding. The first item in the sequence is a manifest, and the remaining items are the decoded parts. An attempt will be made to determine the type of content based on headers such as the part's content-type. If possible, an element will be returned, falling back to an xs:string, and finally binary(). The options control how the parts are unpacked, and are similar to xdmp:zip-get - default-namespace, repair, format, default-language, and encoding. The options apply to all parts, so specifying a format of binary will cause all parts to be returned as binary, and specifying text will cause all parts to be returned as xs:string if possible, falling back to binary() if necessary. This is useful if different parts need different options, in which case the resulting strings can each be passed to xdmp:unquote() with appropriate options. **/
-  multipartDecode(separator: string, data: Node, options?: Node): Node;
+  multipartDecode(separator: string, data: MLNode<any>, options?: MLNode<any>): MLNode<any>;
 
     /** Analyzes binary, text, or XML data and suggests possible pairs of encoding and language, with a confidence score for each pair. Scores of 10 and above are high confidence recommendations. The results are given in order of decreasing score. Accuracy may be poor for short documents. **/
-  encodingLanguageDetect(document: Node): Object;
+  encodingLanguageDetect(document: MLNode<any>): Array<any>;
 
     /** Converts an encoded byte sequence, passed in as a binary node, from the specified encoding to a unicode string. **/
-  binaryDecode(encoded: Node, encodingName: string): string;
+  binaryDecode(encoded: MLNode<any>, encodingName: string): string;
 
     /** Returns a sequence of forest IDs in the specified host. **/
   hostForests(ID: string): string;
 
     /** Returns an element containing a summary of validation errors in a node. **/
-  validate(node: Node, mode?: string, typeName?: Object): Node;
+  validate(node: MLNode<any>, mode?: string, typeName?: xs.QName): MLNode<any>;
 
     /** Converts a 64 bit timestamp value to an xs:dateTime. **/
   timestampToWallclock(timestamp: string): Date;
@@ -391,23 +391,23 @@ interface xdmpFunctions {
   configurationTimestamp(name?: string): string;
 
     /** Returns ldap search result. The function returns a ValueIterator containing objects, where each object is an ldap attribute with its value. **/
-  ldapSearch(query: string, options?: Object): Object;
+  ldapSearch(query: string, options?: MLNode<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Returns an ldap entry. **/
-  ldapLookup(DN: string, options?: Object): Object;
+  ldapLookup(DN: string, options?: MLNode<any>|{[key:string]:any}): ValueIterator<any>;
 
 }
 declare var xdmp:xdmpFunctions
 interface ctsFunctions {
 
     /** Returns true if any fragment is selected by the search, false if no fragments are selected. This can be used as a fast existence check. **/
-  exists(query: Object, options?: string, qualityWeight?: number, forestIds?: string): Object;
+  exists(query: cts.Query, options?: cts.Order|string, qualityWeight?: number, forestIds?: string): Boolean;
 
     /** Returns the number of fragments selected by a search. This can be used as a fast estimate of the number results. **/
-  estimate(query: Object, options?: string, qualityWeight?: number, forestIds?: string, maximum?: number): number;
+  estimate(query: cts.Query, options?: cts.Order|string, qualityWeight?: number, forestIds?: string, maximum?: number): number;
 
     /** Returns an XML element recording information about how the given search will be processed by the index. The information is a structured representation of the information provided in the error log when query trace is enabled. The query will be processed up to the point of getting an estimate of the number of fragments returned by the index. **/
-  plan(query: Object, options?: string, qualityWeight?: number, forestIds?: string, maximum?: number): Object;
+  plan(query: cts.Query, options?: cts.Order|string, qualityWeight?: number, forestIds?: string, maximum?: number): Array<any>;
 
 }
 declare var cts:ctsFunctions
@@ -418,7 +418,7 @@ declare var map:mapFunctions
 interface semFunctions {
 
     /** Creates a sem:binding object, which is a sub-type of json:object (and map:map). **/
-  binding(map?: Node): Object;
+  binding(map?: MLNode<any>): sem.Binding;
 
 }
 declare var sem:semFunctions

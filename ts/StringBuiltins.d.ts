@@ -24,22 +24,22 @@ interface fnFunctions {
   compare(comparand1: string, comparand2: string, collation?: string): number;
 
     /** Returns true if the specified parameters are the same Unicode code point, otherwise returns false. The codepoints are compared according to the Unicode code point collation (http://www.w3.org/2005/xpath-functions/collation/codepoint). If either argument is the empty sequence, the result is the empty sequence. **/
-  codepointEqual(comparand1: string, comparand2: string): Object;
+  codepointEqual(comparand1: string, comparand2: string): boolean;
 
     /** Returns the xs:string that is the concatenation of the values of the specified parameters. Accepts two or more xs:anyAtomicType arguments and casts them to xs:string. If any of the parameters is the empty sequence, the parameter is treated as the zero-length string. **/
-  concat(parameter1: Object, parameterN?: Object): string;
+  concat(parameter1: any, ...parameterN: any[]): string;
 
     /** Returns an xs:string created by concatenating the members of the $parameter1 sequence using $parameter2 as a separator. If the value of $arg2 is the zero-length string, then the members of $parameter1 are concatenated without a separator. If the value of $parameter1 is the empty sequence, the zero-length string is returned. **/
   stringJoin(parameter1: string, parameter2: string): string;
 
     /** Returns true if the first parameter starts with the string from the second parameter, otherwise returns false. **/
-  startsWith(parameter1: string, parameter2: string, collation?: string): Object;
+  startsWith(parameter1: string, parameter2: string, collation?: string): boolean;
 
     /** Returns true if the first parameter ends with the string from the second parameter, otherwise returns false. **/
-  endsWith(parameter1: string, parameter2: string, collation?: string): Object;
+  endsWith(parameter1: string, parameter2: string, collation?: string): boolean;
 
     /** Returns true if the first parameter contains the string from the second parameter, otherwise returns false. **/
-  contains(parameter1: string, parameter2: string, collation?: string): Object;
+  contains(parameter1: string, parameter2: string, collation?: string): boolean;
 
     /** Returns a substring starting from the $startingLoc and continuing for $length characters. **/
   substring(sourceString: string, startingLoc: number, length?: number): string;

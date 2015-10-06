@@ -15,7 +15,7 @@
 interface xdmpFunctions {
 
     /** Run tidy on the specified html document to convert the document to well-formed and clean XHTML. Returns two nodes: the first is a status node indicating any errors or warning from tidy, and the second is an html node containing the cleaned xhtml. **/
-  tidy(doc: string, options?: Object): Node;
+  tidy(doc: string, options?: MLNode<any>|{[key:string]:any}): MLNode<any>;
 
 }
 declare var xdmp:xdmpFunctions

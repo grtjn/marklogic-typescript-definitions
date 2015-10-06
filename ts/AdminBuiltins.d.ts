@@ -21,16 +21,16 @@ interface xdmpFunctions {
   forestRollback(forestIDs: string, timestamp: string): void;
 
     /** Validates that the specified list of forests can be backed up to the backup data directory. Optionally verifies that the list of forests can enable journal archiving to the journal archive directory with the specified lag limit. Returns a database backup set node. **/
-  databaseBackupValidate(forestIDs: string, pathname: string, includeReplicas?: Object, journalArchiving?: Object, journalArchivePath?: string, lagLimit?: string): Object;
+  databaseBackupValidate(forestIDs: string, pathname: string, includeReplicas?: boolean, journalArchiving?: boolean, journalArchivePath?: string, lagLimit?: string): Object;
 
     /** Validates that the specified list of forests can be backed up to the backup data directory. Optionally verifies that the list of forests can enable journal archiving to the journal archive directory with the specified lag limit. Returns a database backup set node. **/
-  databaseIncrementalBackupValidate(forestIDs: string, pathname: string, includeReplicas?: Object, incrementalDir?: string, journalArchiving?: Object, journalArchivePath?: string, lagLimit?: string): Object;
+  databaseIncrementalBackupValidate(forestIDs: string, pathname: string, includeReplicas?: boolean, incrementalDir?: string, journalArchiving?: boolean, journalArchivePath?: string, lagLimit?: string): Object;
 
     /** Starts an asynchronous backup of the specified list of forests to the backup data directory. Optionally starts journal archiving of the specified list of forests to the specified journal archive directory. Returns a job ID that uniquely identifies the backup task. **/
-  databaseBackup(forestIDs: string, pathname: string, journalArchiving?: Object, journalArchivePath?: string, lagLimit?: string): string;
+  databaseBackup(forestIDs: string, pathname: string, journalArchiving?: boolean, journalArchivePath?: string, lagLimit?: string): string;
 
     /** Starts an asynchronous incremental backup of the specified list of forests to the backup data directory. Optionally starts journal archiving of the specified list of forests to the specified journal archive directory. Returns a job ID that uniquely identifies the backup task. **/
-  databaseIncrementalBackup(forestIDs: string, pathname: string, incrementalDir?: string, journalArchiving?: Object, journalArchivePath?: string, lagLimit?: string): string;
+  databaseIncrementalBackup(forestIDs: string, pathname: string, incrementalDir?: string, journalArchiving?: boolean, journalArchivePath?: string, lagLimit?: string): string;
 
     /** Starts journal archiving to the specified list of forests. **/
   startJournalArchiving(forestIDs: string, journalArchivePath: string, lagLimit?: string): void;
@@ -38,26 +38,26 @@ interface xdmpFunctions {
     /** Stops journal archiving to the specified list of forests. **/
   stopJournalArchiving(forestIDs: string): void;
 
-    /** Checks the status of the outstanding backup job with the specified job ID. Returns a database backup status as a JSON node defined in the job-status.xsd schema. **/
-  databaseBackupStatus(jobid: string, hostid?: string): Object;
+    /** Checks the status of the outstanding backup job with the specified job ID. Returns a database backup status as a JSON node defined in the job-status.xsd schema. If you don't specify a job ID for the first parameter, status for all currently running backup jobs will be returned. **/
+  databaseBackupStatus(jobid: string, hostid?: string): ObjectNode;
 
     /** Checks the status of the specified forests for any outstanding backup jobs. Returns the specified forests portion a database backup status as a JSON node defined in the job-status.xsd schema. **/
-  forestBackupStatus(forestid: string): Object;
+  forestBackupStatus(forestid: string): ObjectNode;
 
     /** Cancels an outstanding backup job with the specified job ID, returning true if the cancel operation is successful, false if the cancel operation is not successful. The xdmp:database-backup-cancel function must be run on the host in which the backup was initiated. **/
-  databaseBackupCancel(jobid: string): Object;
+  databaseBackupCancel(jobid: string): boolean;
 
     /** Validates that the specified list of forests can be restored from the backup data directory. Returns a database restore set node. **/
-  databaseRestoreValidate(forestIDs: string, pathname: string, restoreToTime?: Date, includeReplicas?: Object, journalArchiving?: Object, journalArchivePath?: string, incrementalBackup?: Object, incrementalBackupPath?: string): Object;
+  databaseRestoreValidate(forestIDs: string, pathname: string, restoreToTime?: Date, includeReplicas?: boolean, journalArchiving?: boolean, journalArchivePath?: string, incrementalBackup?: boolean, incrementalBackupPath?: string): Object;
 
     /** Starts an asynchronous restore of the specified list of forests from the backup data directory. Returns a job ID that uniquely identifies the restore task. **/
-  databaseRestore(forestIDs: string, pathname: string, restoreToTime?: Date, journalArchiving?: Object, journalArchivePath?: string, incrementalBackup?: Object, incrementalBackupPath?: string): string;
+  databaseRestore(forestIDs: string, pathname: string, restoreToTime?: Date, journalArchiving?: boolean, journalArchivePath?: string, incrementalBackup?: boolean, incrementalBackupPath?: string): string;
 
-    /** Checks the status of the outstanding restore job with the specified job ID. Returns a database restore status node JSON node. **/
-  databaseRestoreStatus(jobid: string): Object;
+    /** Checks the status of the outstanding restore job with the specified job ID. Returns a database restore status node Object. **/
+  databaseRestoreStatus(jobid: string): Array<any>;
 
     /** Cancels an outstanding restore job with the specified job ID, returning true if the cancel operation is successful, false if the cancel operation is not successful. **/
-  databaseRestoreCancel(jobid: string): Object;
+  databaseRestoreCancel(jobid: string): boolean;
 
     /** Shutdown servers on hosts. **/
   shutdown(hostIDs: string, reason: string): void;
@@ -66,7 +66,7 @@ interface xdmpFunctions {
   restart(hostIDs: string, reason: string): void;
 
     /** Performs a directory listing of the given file pathname. **/
-  filesystemDirectory(pathname: string): Object;
+  filesystemDirectory(pathname: string): Array<any>;
 
     /** Creates the directory specified by pathname. Returns the empty sequence upon success. **/
   filesystemDirectoryCreate(pathname: string, options?: Object): void;
@@ -81,10 +81,10 @@ interface xdmpFunctions {
   filesystemFileLength(pathname: string): string;
 
     /** Return true if a file exists on a host; otherwise false. **/
-  filesystemFileExists(pathname: string, host?: string): Object;
+  filesystemFileExists(pathname: string, host?: string): boolean;
 
     /** Returns true if a value is castable. This is similar to the "castable as" XQuery predicate, except that the type is determined at runtime. **/
-  castableAs(namespaceUri: string, localName: string, item: string): Object;
+  castableAs(namespaceUri: string, localName: string, item: string): boolean;
 
     /** Cancel the merge with the specified merge ID on a forest with the specified forest ID. **/
   mergeCancel(forestID: string, mergeID: string): void;

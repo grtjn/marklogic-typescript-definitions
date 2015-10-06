@@ -13,7 +13,7 @@ declare var ssl:sslFunctions
 interface xdmpFunctions {
 
     /** Returns the XML representation of the specified X.509 certificate. **/
-  x509CertificateExtract(cert: string): Node;
+  x509CertificateExtract(cert: string): Object;
 
     /** Calculates the md5 hash of the given argument. **/
   md5(data: string, encoding?: string): string;

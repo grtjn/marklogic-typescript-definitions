@@ -14,13 +14,13 @@ interface fnFunctions {
   currentDateTime(): Date;
 
     /** Returns xs:date(fn:current-dateTime()). This is an xs:date (with timezone) that is current at some time during the evaluation of a query or transformation in which fn:current-date() is executed. This function is *stable*. The precise instant during the query or transformation represented by the value of fn:current-date() is *implementation dependent*. **/
-  currentDate(): Object;
+  currentDate(): Date;
 
     /** Returns xs:time(fn:current-dateTime()). This is an xs:time (with timezone) that is current at some time during the evaluation of a query or transformation in which fn:current-time() is executed. This function is *stable*. The precise instant during the query or transformation represented by the value of fn:current-time() is *implementation dependent*. **/
   currentTime(): string;
 
     /** Returns the value of the implicit timezone property from the dynamic context. Components of the dynamic context are discussed in Section C.2 Dynamic Context Components[XP]. **/
-  implicitTimezone(): Object;
+  implicitTimezone(): string;
 
     /** Returns the value of the default collation property from the static context. Components of the static context are discussed in Section C.1 Static Context Components[XP]. The default collation property can never be undefined. If it is not explicitly defined, a system defined default codepoint is used. In the 1.0 XQuery dialect, if this is not provided, the Unicode code point collation (http://www.w3.org/2005/xpath-functions/collation/codepoint) is used. In the 1.0-ml and 0.9-ml XQuery dialects, the MarkLogic-defined codepoint URI is used (http://marklogic.com/collation/codepoint). **/
   defaultCollation(): string;

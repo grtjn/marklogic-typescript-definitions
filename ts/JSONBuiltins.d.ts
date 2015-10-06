@@ -11,13 +11,13 @@
 interface xdmpFunctions {
 
     /** Constructs a JSON document. **/
-  toJson(item: string): Node;
+  toJson(item: string): DocumentNode<any>;
 
     /** Returns a string representing a JSON serialization of a given item sequence. **/
   toJsonString(item: string): string;
 
     /** Atomizes a JSON node, returning a JSON value. **/
-  fromJSON(arg: Node): string;
+  fromJSON(arg: MLNode<any>): string;
 
     /** Parses a string as JSON, returning an item sequence. **/
   fromJsonString(arg: string): string;

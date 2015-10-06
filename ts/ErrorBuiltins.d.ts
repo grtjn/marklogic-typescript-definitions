@@ -16,7 +16,7 @@ prefix is the default prefix for function calls if none is specified.
 interface fnFunctions {
 
     /** [1.0 and 1.0-ml only, 0.9-ml has a different signature] Throw the given error. When an error is thrown, the XQuery program execution is stopped. For detailed semantics, see http://www.w3.org/TR/xpath-functions/#func-error. **/
-  error(error?: Object, description?: string, data?: string): void;
+  error(error?: xs.QName, description?: string, data?: string): void;
 
 }
 declare var fn:fnFunctions

@@ -41,7 +41,7 @@ interface xdmpFunctions {
   transactionRollback(hostId: string, txnId: string): void;
 
     /** Completes (commits or rolls back) a prepared XA transaction. **/
-  xaComplete(forestID: string, txnId: string, commit: Object, remember: Object): void;
+  xaComplete(forestID: string, txnId: string, commit: boolean, remember: boolean): void;
 
     /** Forgets a remembered completed XA transaction. **/
   xaForget(forestID: string, txnId: string): void;

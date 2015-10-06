@@ -17,30 +17,30 @@ var onError = function(err) {
 };
 
 var options = {
-  mlHost: argv['ml-host'] || 'ml8-ml1',
+  mlHost: argv['ml-host'] || 'localhost',
   mlPort: argv['ml-port'] || '8000',
   mlUser: argv['ml-user'] || 'admin',
-  mlPass: argv['ml-pass'] || 'admin'
+  mlPass: argv['ml-pass'] || 'passw0rd'
 };
 
 
 gulp.task('generate', function(){
   var query;
-  
+
   fs.readFile('qconsole/generate-definitions.xqy', null, function(err, data) {
     query = data.toString();
   });
-  
+
   return gulp.src(['xml/**/*.xml'])
   .pipe(through.obj(function (file, enc, cb) {
-  
+
     console.log(file.path);
-  
+
     var outFile = file.path.replace('/xml/', '/ts/').replace('.xml', '.d.ts');
-  
+
     var xml = file.contents.toString();
     var escapedXml = xml.replace(/\\/gm, '\\\\').replace(/"/gm, '\\"').replace(/(\n\r|\r\n|\n|\r)/gm, '\\n').replace(/\t/gm, '\\t');
-    
+
     request({
       method: 'POST',
       url: 'http://' + options.mlHost + ':' + options.mlPort + '/v1/eval',
@@ -58,7 +58,7 @@ gulp.task('generate', function(){
       try {
         // get rid of multipart response wrapping
         body = body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
-        
+
         if (err || httpResponse.statusCode !== 200) {
           console.log('FAILED!');
           console.log(body);
@@ -66,7 +66,7 @@ gulp.task('generate', function(){
         } else {
           fs.writeFile(outFile, body, onError);
         }
-        
+
         cb(null, file);
       } catch (e) {
         console.log(e);
@@ -77,8 +77,7 @@ gulp.task('generate', function(){
 
 gulp.task('validate', ['generate'], function(){
   gulp.src(['ts/**/*.ts'])
-  .pipe(typescript({emitError: false}))
-  ;
+  .pipe(typescript({emitError: false}));
 });
 
 // Default Task
