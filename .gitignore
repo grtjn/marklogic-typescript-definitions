@@ -1,3 +1,6 @@
 node_modules/
 xml/
 update_changelog.sh
+.tmp
+.DS_Store
+npm-debug.log
