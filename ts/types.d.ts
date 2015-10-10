@@ -120,6 +120,10 @@ declare enum NodeType {
   OBJECT_NODE = 18
 }
 
+declare type MLNodeOrObject<T> = MLNode<T> | {[property:string]:any}
+declare type MLNodeAndObject<T> = MLNode<T> & T
+declare type MLArray<T> = T|Array<T>|ValueIterator<T>
+
 declare abstract class MLNode<T> {
   /**
    * A String representing the base URI of the node.

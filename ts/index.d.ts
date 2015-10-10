@@ -1,9 +1,2 @@
-declare var cts: ctsFunctions;
-declare var fn: fnFunctions;
-declare var math: mathFunctions;
-declare var rdf: rdfFunctions;
-declare var sc: scFunctions;
-declare var sem: semFunctions;
-declare var spell: spellFunctions;
-declare var temporal: temporalFunctions;
-declare var xdmp: xdmpFunctions;
+///<reference path="./functions.d.ts" />
+///<reference path="./types.d.ts" />

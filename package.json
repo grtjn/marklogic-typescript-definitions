@@ -1,15 +1,15 @@
 {
   "name": "marklogic-typescript-definitions",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "TypeScript Definition files for MarkLogic built-in functions",
   "author": "Geert Josten <geert.josten@gmail.com>",
   "contributors": [
-    { "name" : "Christy Haragan",
+    {
+      "name": "Christy Haragan",
       "email": "christy.haragan.github@gmail.com",
       "url": "https://github.com/christyharagan"
     }
   ],
-  "typings": "./ts/index.d.ts",
   "keywords": [
     "typescript",
     "marklogic"
@@ -19,6 +19,7 @@
     "gulp-tsc": "^1.1.1",
     "request": "^2.62.0",
     "through2": "^2.0.0",
+    "vinyl": "^1.0.0",
     "yargs": "^3.25.0"
   },
   "engine": "node >= 0.4.1",

@@ -9,6 +9,8 @@ var fs = require('fs');
 var request = require('request');
 var through = require('through2');
 var typescript = require('gulp-tsc');
+var concat = require('gulp-concat');
+var File = require('vinyl');
 
 var onError = function(err) {
   if (err) {
@@ -23,21 +25,17 @@ var options = {
   mlPass: argv['ml-pass'] || 'passw0rd'
 };
 
+var createAddHeader = function(){
+  return through.obj(function(file){
+    file.contents = new Buffer('///<reference path="./types.d.ts" />\n' + file.contents.toString())
+    this.push(file)
+  })
+}
 
-gulp.task('generate', function(){
-  var query;
+var createProcessXML = function(){
+  var query = fs.readFileSync('qconsole/generate-definitions.xqy').toString();
 
-  fs.readFile('qconsole/generate-definitions.xqy', null, function(err, data) {
-    query = data.toString();
-  });
-
-  return gulp.src(['xml/**/*.xml'])
-  .pipe(through.obj(function (file, enc, cb) {
-
-    console.log(file.path);
-
-    var outFile = file.path.replace('/xml/', '/ts/').replace('.xml', '.d.ts');
-
+  return through.obj(function (file, enc, cb) {
     var xml = file.contents.toString();
     var escapedXml = xml.replace(/\\/gm, '\\\\').replace(/"/gm, '\\"').replace(/(\n\r|\r\n|\n|\r)/gm, '\\n').replace(/\t/gm, '\\t');
 
@@ -54,25 +52,33 @@ gulp.task('generate', function(){
         sendImmediately: false
       }
     }, function(err, httpResponse, body) {
-      //console.log(body);
       try {
         // get rid of multipart response wrapping
         body = body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
 
         if (err || httpResponse.statusCode !== 200) {
-          console.log('FAILED!');
-          console.log(body);
-          //console.log(escapedXml);
+          console.log(file.path)
+          cb(new Error(body))
         } else {
-          fs.writeFile(outFile, body, onError);
+          cb(null, new File({
+            base: file.base,
+            path: file.path.replace('/xml/', '/ts/').replace('.xml', '.d.ts'),
+            contents: new Buffer(body)
+          }));
         }
-
-        cb(null, file);
       } catch (e) {
         console.log(e);
       }
     });
-  }));
+  });
+}
+
+gulp.task('generate', function(){
+  return gulp.src(['xml/**/*.xml'])
+    .pipe(createProcessXML())
+    .pipe(concat('functions.d.ts'))
+    .pipe(createAddHeader())
+    .pipe(gulp.dest('./ts/'));
 });
 
 gulp.task('validate', ['generate'], function(){
