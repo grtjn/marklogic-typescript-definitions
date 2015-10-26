@@ -18,10 +18,10 @@ interface fnFunctions {
   nilled(arg: MLNodeOrObject<any>): boolean;
 
     /** Returns the value of $arg represented as an xs:string. If no argument is supplied, this function returns the string value of the context item (.). **/
-  string(arg?: MLNodeOrObject<any>): string;
+  string(arg?: any): string;
 
     /** Takes a sequence of items and returns a sequence of atomic values. The fn:data function returns the sequence of atomic values produced by applying the following rules to each item in $arg: If the item is an atomic value, it is returned.If the item is a node: If the node does not have a typed value an error is raised [err:FOTY0012].Otherwise, fn:data returns the typed value of the node as defined by the accessor function dm:typed-value in Section 5.15 typed-value Accessor[DM]. **/
-  data(arg: MLArray<MLNodeOrObject<any>>): ValueIterator<any>;
+  data(arg: MLArray<any>): ValueIterator<any>;
 
     /** Returns the value of the base-uri property for the specified node. If the node is part of a document and does not have a base-uri attribute explicitly set, fn:base-uri typically returns the URI of the document in which the node resides. **/
   baseUri(arg?: MLNodeOrObject<any>): string;
@@ -37,7 +37,7 @@ interface xdmpFunctions {
   nodeKind(node: MLNodeOrObject<any>): string;
 
     /** Returns true if a value could be atomized without error. If no argument is supplied, this function checks whether the context item can be atomized without error. **/
-  atomizable(item?: MLNodeOrObject<any>): boolean;
+  atomizable(item?: any): boolean;
 
 }
 declare var xdmp:xdmpFunctions
@@ -128,7 +128,7 @@ interface xdmpFunctions {
   filesystemFileExists(pathname: string, host?: number): boolean;
 
     /** Returns true if a value is castable. This is similar to the "castable as" XQuery predicate, except that the type is determined at runtime. **/
-  castableAs(namespaceUri: string, localName: string, item: MLNodeOrObject<any>): boolean;
+  castableAs(namespaceUri: string, localName: string, item: any): boolean;
 
     /** Cancel the merge with the specified merge ID on a forest with the specified forest ID. **/
   mergeCancel(forestID: number, mergeID: number): void;
@@ -280,19 +280,19 @@ interface xdmpFunctions {
   getSessionFieldNames(): ValueIterator<string>;
 
     /** Returns the value of a named session field from the session created by the xdmp:login function. **/
-  getSessionField(name: string, defaultVal?: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  getSessionField(name: string, defaultVal?: MLArray<any>): ValueIterator<any>;
 
     /** Sets the value of a named session field for the session created by the xdmp:login function. **/
-  setSessionField(name: string, value: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  setSessionField(name: string, value: MLArray<any>): ValueIterator<any>;
 
     /** Returns a sequence of the server field names. **/
   getServerFieldNames(): ValueIterator<string>;
 
     /** Returns the value of a named server field. A server field is created with xdmp:set-server-field and stores a name/value pair in memory. The server field is available on the App Server in which it is set on the host in which the App Server runs, via xdmp:get-server-field; a server field that is set on one App Server is not available on other App Servers on that host or on the same App Server running on another host. Server fields are commonly used with the system Plugin Framework. **/
-  getServerField(name: string, defaultVal?: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  getServerField(name: string, defaultVal?: MLArray<any>): ValueIterator<any>;
 
     /** Sets the value of a named server field. A server field is created with xdmp:set-server-field and stores a name/value pair in memory. The server field is available on the App Server in which it is set on the host in which the App Server runs, via xdmp:get-server-field; a server field that is set on one App Server is not available on other App Servers on that host or on the same App Server running on another host. **/
-  setServerField(name: string, value: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  setServerField(name: string, value: MLArray<any>): ValueIterator<any>;
 
     /** Sets the privilege of a named server field. **/
   setServerFieldPrivilege(name: string, privilege: string): void;
@@ -304,7 +304,7 @@ interface xdmpFunctions {
   setResponseCode(code: number, message: string): void;
 
     /** Returns two nodes, the first containing the HTTP response code and the second containing the HTTP response message. **/
-  getResponseCode(): ValueIterator<MLNode<any>>;
+  getResponseCode(): ValueIterator<any>;
 
     /** Sets the response content-type. **/
   setResponseContentType(name: string): void;
@@ -362,7 +362,7 @@ interface fnFunctions {
   false(): boolean;
 
     /** Returns true if the effective boolean value is false, and false if the effective boolean value is true. The $arg parameter is first reduced to an effective boolean value by applying the fn:boolean function. **/
-  not(arg: MLArray<MLNodeOrObject<any>>): boolean;
+  not(arg: MLArray<any>): boolean;
 
 }
 declare var fn:fnFunctions
@@ -591,7 +591,7 @@ prefix is the default prefix for function calls if none is specified.
 interface fnFunctions {
 
     /** [1.0 and 1.0-ml only, 0.9-ml has a different signature] Throw the given error. When an error is thrown, the XQuery program execution is stopped. For detailed semantics, see http://www.w3.org/TR/xpath-functions/#func-error. **/
-  error(error?: xs.QName, description?: string, data?: MLArray<MLNodeOrObject<any>>): void;
+  error(error?: xs.QName, description?: string, data?: MLArray<any>): void;
 
 }
 declare var fn:fnFunctions
@@ -604,16 +604,16 @@ declare var fn:fnFunctions
 interface xdmpFunctions {
 
     /** Returns the result of evaluating a string as a Javascript program. **/
-  eval(javascript: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  eval(javascript: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Returns the result of evaluating a string as an XQuery module. For details, see the XQuery function xdmp:eval. **/
-  xqueryEval(xquery: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  xqueryEval(xquery: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Returns the result of evaluating a module at the given path. **/
-  invoke(path: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  invoke(path: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Returns the result of evaluating a function value. **/
-  invokeFunction(jsFunc: () => any, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  invokeFunction(jsFunc: () => any, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Executes an XSLT stylesheet against a node. **/
   xsltInvoke(path: string, input?: MLNodeOrObject<any>, params?: {[key:string]:any}, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
@@ -622,7 +622,7 @@ interface xdmpFunctions {
   xsltEval(stylesheet: MLNodeOrObject<any>, input?: MLNodeOrObject<any>, params?: {[key:string]:any}, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Place the specified module on the task queue for evaluation. **/
-  spawn(path: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  spawn(path: string, vars?: Object, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
 }
 declare var xdmp:xdmpFunctions
@@ -703,7 +703,7 @@ interface xdmpFunctions {
   path(node: MLNodeOrObject<any>, includeDocument?: boolean): string;
 
     /** Returns a string representing the description of a given item sequence. If you take the output of the xdmp:describe function and evaluate it as an XQuery program, it returns the item(s) input to the function. **/
-  describe(item: MLArray<MLNodeOrObject<any>>, maxSequenceLength?: number, maxItemLength?: number): string;
+  describe(item: MLArray<any>, maxSequenceLength?: number, maxItemLength?: number): string;
 
     /** Returns the 32-bit hash of a string. **/
   hash32(string: string): number;
@@ -769,13 +769,13 @@ interface xdmpFunctions {
   triggersDatabase(databaseId?: number): number;
 
     /** Returns the unevaluated serialized representation of the input parameter as a string. **/
-  quote(arg: MLArray<MLNodeOrObject<any>>, options?: MLNodeOrObject<any>|{[key:string]:any}): string;
+  quote(arg: MLArray<any>, options?: MLNodeOrObject<any>|{[key:string]:any}): string;
 
     /** Parses a string as XML, returning one or more document nodes. **/
   unquote(arg: string, defaultNamespace?: string, options?: MLArray<string>): ValueIterator<any>;
 
     /** Logs a message to the log file <install_dir>/Logs/ErrorLog.txt. The log message is sent as soon as this function is called, even if the program from which it is called has not completed. **/
-  log(msg: MLArray<MLNodeOrObject<any>>, level?: string): void;
+  log(msg: MLArray<any>, level?: string): void;
 
     /** Retrieves the current server log level. **/
   logLevel(): string;
@@ -895,22 +895,22 @@ interface xdmpFunctions {
   access(uri: string, action: string): boolean;
 
     /** Sends the http GET method to the specified URI. Returns the http response as well as whatever information is identified by the specified URI (for example, an html document). **/
-  httpGet(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  httpGet(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Sends the http HEAD method to the specified URI. Returns the http response header for the specified URI. **/
-  httpHead(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  httpHead(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Sends the http OPTIONS method to the specified URI. Returns the http response for the specified URI. **/
-  httpOptions(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  httpOptions(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Sends an http DELETE request to the http server specified in the URI to delete the specified resource. The server should respond if the request is to be completed, but a response is not guaranteed. Also, even if the server does respond, it does not guarantee that the request has been or will be completed. **/
-  httpDelete(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<MLNode<any>>;
+  httpDelete(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Sends the http POST request to the server. **/
-  httpPost(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}, data?: MLNodeOrObject<any>): ValueIterator<MLNode<any>>;
+  httpPost(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}, data?: MLNodeOrObject<any>): ValueIterator<any>;
 
     /** Sends an HTTP PUT request to an HTTP server. The HTTP server should return a response, which will differ depending on the action the HTTP server takes for the PUT. **/
-  httpPut(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}, data?: MLNodeOrObject<any>): ValueIterator<MLNode<any>>;
+  httpPut(uri: string, options?: MLNodeOrObject<any>|{[key:string]:any}, data?: MLNodeOrObject<any>): ValueIterator<any>;
 
     /** Converts plaintext into base64-encoded string. **/
   base64Encode(plaintext: string): string;
@@ -940,7 +940,7 @@ interface xdmpFunctions {
   externalBinaryPath(source: MLNode<any>): string;
 
     /** Signal a trace event. If trace events are activated and the event is enabled, the trace event is logged. **/
-  trace(name: string, value: MLArray<MLNodeOrObject<any>>): void;
+  trace(name: string, value: MLArray<any>): void;
 
     /** Returns the ID of the host named in the parameter. Returns the ID of the current host if no parameter is specified. **/
   host(name?: string): number;
@@ -1156,7 +1156,7 @@ interface xdmpFunctions {
   functionArg(functionArg: xs.QName, modulePath?: string): () => any;
 
     /** Applies an xdmp:function with the given parameters. **/
-  apply(functionArg: () => any, params1ToN?: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  apply(functionArg: () => any, params1ToN?: MLArray<any>): ValueIterator<any>;
 
 }
 declare var xdmp:xdmpFunctions
@@ -1166,10 +1166,10 @@ interface fnFunctions {
   functionLookup(name: xs.QName, arity: number): () => any;
 
     /** Returns the first item in a sequence. For more details, see XPath 3.0 Functions and Operators. **/
-  head(seq: MLArray<MLNodeOrObject<any>>, arg: ValueIterator<any>): ValueIterator<MLNode<any>>;
+  head(seq: MLArray<any>, arg: ValueIterator<any>): ValueIterator<any>;
 
     /** Returns all but the first item in a sequence. For more details, see XPath 3.0 Functions and Operators. **/
-  tail(seq: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  tail(seq: MLArray<any>): ValueIterator<any>;
 
 }
 declare var fn:fnFunctions
@@ -1579,16 +1579,16 @@ declare var cts:ctsFunctions
 interface xdmpFunctions {
 
     /** Constructs a JSON document. **/
-  toJson(item: MLArray<MLNodeOrObject<any>>): DocumentNode<any>;
+  toJson(item: MLArray<any>): DocumentNode<any>;
 
     /** Returns a string representing a JSON serialization of a given item sequence. **/
-  toJsonString(item: MLArray<MLNodeOrObject<any>>): string;
+  toJsonString(item: MLArray<any>): string;
 
     /** Atomizes a JSON node, returning a JSON value. **/
-  fromJSON(arg: MLNodeOrObject<any>): ValueIterator<MLNode<any>>;
+  fromJSON(arg: MLNodeOrObject<any>): ValueIterator<any>;
 
     /** Parses a string as JSON, returning an item sequence. **/
-  fromJsonString(arg: string): ValueIterator<MLNode<any>>;
+  fromJsonString(arg: string): ValueIterator<any>;
 
 }
 declare var xdmp:xdmpFunctions
@@ -2063,10 +2063,10 @@ interface semFunctions {
   graphGetPermissions(graph: sem.Iri, format?: string): Object[];
 
     /** The IF function form evaluates the first argument, interprets it as a effective boolean value, then returns the value of expression2 if the EBV is true, otherwise it returns the value of expression3. Only one of expression2 and expression3 is evaluated. If evaluating the first argument raises an error, then an error is raised for the evaluation of the IF expression. This XQuery function backs up the SPARQL IF() functional form. **/
-  if(condition: boolean, then: MLArray<MLNodeOrObject<any>>, else_: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  if(condition: boolean, then: MLArray<any>, else_: MLArray<any>): ValueIterator<any>;
 
     /** Returns the value of the first argument that evaluates without error. This XQuery function backs up the SPARQL COALESCE() functional form. **/
-  coalesce(parameter1: MLArray<MLNodeOrObject<any>>, ...parameterN: MLArray<MLNodeOrObject<any>>[]): ValueIterator<MLNode<any>>;
+  coalesce(parameter1: MLArray<any>, ...parameterN: MLArray<any>[]): ValueIterator<any>;
 
     /** Returns the timezone of an xs:dateTime value as a string. This XQuery function backs up the SPARQL TZ() function. **/
   timezoneString(value: Date): string;
@@ -2078,7 +2078,7 @@ interface semFunctions {
   uuid(): sem.Iri;
 
     /** Creates a triple object, which represents an RDF triple containing atomic values representing the subject, predicate, object, and optionally graph identifier (graph IRI). **/
-  triple(subject_or_node: MLNodeOrObject<any>, predicate?: any, object?: any, graph?: sem.Iri): sem.Triple;
+  triple(subject_or_node: any, predicate?: any, object?: any, graph?: sem.Iri): sem.Triple;
 
     /** Returns the subject from a sem:triple value. **/
   tripleSubject(triple: sem.Triple): any;
@@ -2125,7 +2125,7 @@ declare var xdmp:xdmpFunctions
 interface semFunctions {
 
     /** Executes a SPARQL query against the database. SPARQL "SELECT" queries return a solution as a sequence of map objects in the form of a table, where each map represents a set of bindings that satisfies the query. SPARQL "CONSTRUCT" queries return triples as a sequence of sem:triple values in an RDF graph. SPARQL "DESCRIBE" queries return a sequence of sem:triple values as an RDF graph that describes the resources found by the query. SPARQL "ASK" queries return a single xs:boolean value (true or false) indicating whether a query pattern matches in the dataset. **/
-  sparql(sparql: string, bindings?: {[key:string]:any}, options?: MLArray<string>, store?: MLArray<sem.Store>): ValueIterator<MLNode<any>>;
+  sparql(sparql: string, bindings?: {[key:string]:any}, options?: MLArray<string>, store?: MLArray<sem.Store>): ValueIterator<any>;
 
     /** Executes a SPARQL Update operation against the database. Graph Update - addition and removal of triples from some graphs within the Graph Store. Graph Management - creating and deletion of graphs within the Graph Store, as well as convenient shortcuts for graph update operations often used during graph management (to add, move, and copy graphs). **/
   sparqlUpdate(sparql: string, bindings?: {[key:string]:any}, options?: MLArray<string>, store?: MLArray<sem.Store>, defaultPermissions?: Object[]): void;
@@ -2147,7 +2147,7 @@ declare var sem:semFunctions
 interface xdmpFunctions {
 
     /** Executes an ad hoc SQL query. This function is for testing your SQL views when data modeling; it is not intended to be used directly in applications. **/
-  sql(sql: string, options?: MLArray<string>): ValueIterator<MLNode<any>>;
+  sql(sql: string, options?: MLArray<string>): ValueIterator<any>;
 
 }
 declare var xdmp:xdmpFunctions
@@ -2170,31 +2170,31 @@ interface xdmpFunctions {
   x509CertificateExtract(cert: string): Object;
 
     /** Calculates the md5 hash of the given argument. **/
-  md5(data: MLNodeOrObject<any>, encoding?: string): string;
+  md5(data: any, encoding?: string): string;
 
     /** Calculates the Hash-based Message Authentication Code (HMAC) using the md5 hash function of the given secret key and message arguments. **/
-  hmacMd5(secretkey: MLNodeOrObject<any>, message: MLNodeOrObject<any>, encoding?: string): string;
+  hmacMd5(secretkey: any, message: any, encoding?: string): string;
 
     /** Calculates the SHA1 hash of the given argument. **/
-  sha1(data: MLNodeOrObject<any>, encoding?: string): string;
+  sha1(data: any, encoding?: string): string;
 
     /** Calculates the Hash-based Message Authentication Code (HMAC) using the SHA1 hash function of the given secret key and message arguments. **/
-  hmacSha1(secretkey: MLNodeOrObject<any>, message: MLNodeOrObject<any>, encoding?: string): string;
+  hmacSha1(secretkey: any, message: any, encoding?: string): string;
 
     /** Calculates the SHA256 hash of the given argument. **/
-  sha256(data: MLNodeOrObject<any>, encoding?: string): string;
+  sha256(data: any, encoding?: string): string;
 
     /** Calculates the Hash-based Message Authentication Code (HMAC) using the SHA256 hash function of the given secret key and message arguments. **/
-  hmacSha256(secretkey: MLNodeOrObject<any>, message: MLNodeOrObject<any>, encoding?: string): string;
+  hmacSha256(secretkey: any, message: any, encoding?: string): string;
 
     /** Calculates the SHA384 hash of the given argument. **/
-  sha384(data: MLNodeOrObject<any>, encoding?: string): string;
+  sha384(data: any, encoding?: string): string;
 
     /** Calculates the SHA512 hash of the given argument. **/
-  sha512(data: MLNodeOrObject<any>, encoding?: string): string;
+  sha512(data: any, encoding?: string): string;
 
     /** Calculates the Hash-based Message Authentication Code (HMAC) using the SHA512 hash function of the given secret key and message arguments. **/
-  hmacSha512(secretkey: MLNodeOrObject<any>, message: MLNodeOrObject<any>, encoding?: string): string;
+  hmacSha512(secretkey: any, message: any, encoding?: string): string;
 
 }
 declare var xdmp:xdmpFunctions
@@ -2209,22 +2209,22 @@ The schema component built-in functions.
 interface scFunctions {
 
     /** Returns the type of item, as a schema component, if any. If the item has no type, the empty sequence is returned. The context item is used if no argument is given. If the item is a document node, the result is the type of its root element.If the item is an element node, the result is the type of its element declaration.If the item is an attribute node, the result is the type of its attribute declaration.If the item is a schema component, the result is the associated type schema component.If the item is an atomic value, the result is the type of that atomic value.In other cases, the result is the empty sequence. **/
-  type(arg?: MLNodeOrObject<any>): SchemaType;
+  type(arg?: any): SchemaType;
 
     /** Returns the simple type of item, as a schema component, if any. If the item has a complex type rather than a simple type, the empty sequence is returned. The context item is used if no argument is given. If the item is a document node, the result is the simple type of its root element.If the item is an element node, the result is the simple type of its element declaration.If the item is an attribute node, the result is the simple type of its attribute declaration.If the item is a schema component, the result is the associated simple type schema component.If the item is an atomic value, the result is the simple type of that atomic value.In other cases, the result is the empty sequence. **/
-  simpleType(arg?: MLNodeOrObject<any>): SimpleType;
+  simpleType(arg?: any): SimpleType;
 
     /** Returns the complex type of item, as a schema component, if any. If the item has a simple type rather than a complex type, the empty sequence is returned. The context item is used if no argument is given. If the item is a document node, the result is the complex type of its root element.If the item is an element node, the result is the complex type of its element declaration.If the item is a schema component, the result is the associated complex type schema component.In other cases, the result is the empty sequence. **/
-  complexType(arg?: MLNodeOrObject<any>): ComplexType;
+  complexType(arg?: any): ComplexType;
 
     /** Apply a type to an item to construct a typed instance of that type. If the type is a simple type this amounts to casting. If the type is a complex type this amounts to validating as that type. **/
-  typeApply(type: SchemaType, arg: MLNodeOrObject<any>): ValueIterator<MLNode<any>>;
+  typeApply(type: SchemaType, arg: any): ValueIterator<any>;
 
     /** Returns the element declaration of item, as a schema component, if any. If the item has no element declaration, the empty sequence is returned. The context item is used if no argument is given. If the item is a document node, the result is the element declaration of its root element.If the item is an element node, the result is of its element declaration.In other cases, the result is the empty sequence. **/
-  elementDecl(arg?: MLNodeOrObject<any>): ElementDecl;
+  elementDecl(arg?: any): ElementDecl;
 
     /** Returns the attribute declaration of item, as a schema component, if any. If the item has no attribute declaration, the empty sequence is returned. The context item is used if no argument is given. If the item is an attribute node, the result is of its attribute declaration.In other cases, the result is the empty sequence. **/
-  attributeDecl(arg?: MLNodeOrObject<any>): AttributeDecl;
+  attributeDecl(arg?: any): AttributeDecl;
 
     /** Returns the schema annotations of the component, if any. The context item is used if no argument is given. Annotations will only be returned for schemas that have preservation of them enabled with the "xdmp-annotations" processing instruction. The annotations returned will only include the appinfo children of the annotations unless the schema has the "all" parameter set in the "xdmp-annotations" processing instruction. **/
   annotations(arg?: SchemaComponent): ValueIterator<any>;
@@ -2251,10 +2251,10 @@ interface scFunctions {
   facets(arg?: SchemaComponent): ValueIterator<SchemaFacet>;
 
     /** Returns the root schema of the item. The context item is used if no argument is given. If the item is a document node, the result is the schema of its root element.If the item is an element node, the result is the schema of its element declaration.If the item is an attribute node, the result is the schema of its attribute declaration.If the item is a schema component, the result is the containing schema.If the item is an atomic value, the result is the schema containing the type of that atomic value.In other cases, the result is the empty sequence. **/
-  schema(arg?: MLNodeOrObject<any>): SchemaRoot;
+  schema(arg?: any): SchemaRoot;
 
     /** Returns the named property of the schema component. The context item is used for the second argument if it is not given. Properties include: nameSame as sc:name typeSame as sc:type complex-typeSame as sc:complex-type simple-typeSame as sc:simple-type element-declSame as sc:element-decl attribute-declSame as sc:attribute-decl schemaSame as sc:schema annotationsSame as sc:annotations facetsSame as sc:facets attributesSame as sc:attributes particlesSame as sc:particles attribute-groupsThe attribute groups of the schema model-groupsThe model groups of the schema notationsThe notations of the schema typesThe types of the schema elementsThe element declarations of the schema attribute-wildcardThe attribute wildcard on the type or in the attribute group identity-constraintsThe identity constraints on the element declaration or schema scopeThe scope of the element or attribute declaration fixedThe fixed value of the element or attribute declaration or whether a facet is fixed defaultThe default value of the element or attribute declaration substitution-groupThe element declaration serving as the substitution group head of the element declaration nillableWhether the element declaration is declared as nillable abstractWhether the element declaration or type is declared as abstract block-extensionWhether the element declaration or complex type is declared as blocking extensions block-restrictionWhether the element declaration or complex type is declared as blocking restrictions block-substitutionWhether the element declaration is declared as blocking substitutions final-extensionWhether the element declaration or complex type is declared as final for extensions final-restrictionWhether the element declaration or complex type is declared as final for restrictions varietyThe variety of the simple type (atomic, list, or union) baseThe base type of the type primitiveThe primitive type of the simple type item-typeThe item type of the list simple type member-typesThe member types of the union simple type orderedThe ordering of the simple type numericWhether the simple type is numeric finiteWhether the simple type is finite boundedWhether the simple type is bounded final-listWhether the simple type is declared as final for lists final-unionWhether the simple type is declared as final for unions final-restrictionWhether the simple type is declared as final for restrictions derivation-methodThe derivation method of the complex type (extension, restriction) content-typeThe kind of content type of the complex type (empty, simple, element-only, mixed) min-occursThe declared minimum occurrences of the particle max-occursThe declared maximum occurrences of the particle process-contentsWhat processing is declared for the wildcard (strict, lax, skip) namespacesWhat namespaces the wildcard references valueThe value of the facet categoryThe kind of identity constraint (key, unique, keyref) referenced-keyThe key referenced by the keyref selectorThe selector path in the identity constraint fieldsThe field paths in the identity constraint systemThe notation's system identifier publicThe notation's public identifier versionThe schema's version schema-locationThe schema's location **/
-  componentProperty(propname: string, arg?: SchemaComponent): ValueIterator<MLNode<any>>;
+  componentProperty(propname: string, arg?: SchemaComponent): ValueIterator<any>;
 
     /** Get a schema object as a value based on its namespace and schema location hint. **/
   schemaFromPath(namespace: string, location?: string): SchemaRoot;
@@ -2696,7 +2696,7 @@ interface ctsFunctions {
   similarQueryWeight(query: cts.SimilarQuery): number;
 
     /** Returns true if any of a sequence of values matches a query. **/
-  contains(nodes: MLArray<MLNodeOrObject<any>>, query: cts.Query): boolean;
+  contains(nodes: MLArray<any>, query: cts.Query): boolean;
 
     /** Returns a relevance-ordered sequence of nodes specified by a given query. **/
   search(query: cts.Query, options?: MLArray<cts.Order>|MLArray<string>, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<any>;
@@ -2882,7 +2882,7 @@ interface ctsFunctions {
   valueTuples(rangeIndexes: MLArray<cts.Reference>, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<Array<any>>;
 
     /** Executes a user-defined extension aggregate function against a value lexicon or n-way co-occurence of multiple value lexicons. Value lexicons are implemented using range indexes; consequently this function requires a range index for each lexicon specified in the function. If a specified range index does not exist an error is raised. If the "ordered" or "proximity=" option is specified, the range index must have range value positions set to true, otherwise an error is raised. **/
-  aggregate(nativePlugin: string, aggregateName: string, rangeIndexes: MLArray<cts.Reference>, argument?: MLArray<MLNodeOrObject<any>>, options?: MLArray<string>, query?: cts.Query, forestIds?: MLArray<number>): ValueIterator<MLNode<any>>;
+  aggregate(nativePlugin: string, aggregateName: string, rangeIndexes: MLArray<cts.Reference>, argument?: MLArray<any>, options?: MLArray<string>, query?: cts.Query, forestIds?: MLArray<number>): ValueIterator<any>;
 
     /** Returns the count of a value lexicon. This function works like cts:count except it performs the counting in parallel in all data nodes then aggregates the values. It generally performs better than cts:count, especially on large clusters. **/
   countAggregate(rangeIndex: cts.Reference, options?: MLArray<string>, query?: cts.Query, forestIds?: MLArray<number>): number;
@@ -2936,7 +2936,7 @@ interface ctsFunctions {
   fieldValueRanges(fieldNames: MLArray<string>, bounds?: MLArray<any>, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<MLNode<any>>;
 
     /** Returns an integer representing the number of times in which a particular value occurs in a value lexicon lookup (for example, cts:element-values). When using the fragment-frequency lexicon option, cts:frequency returns the number of fragments in which the lexicon value occurs. When using the item-frequency lexicon option, cts:frequency returns the total number of times in which the lexicon value occurs in each item. **/
-  frequency(value: MLNodeOrObject<any>): number;
+  frequency(value: any): number;
 
     /** Returns values from the URI lexicon. This function requires the uri-lexicon database configuration parameter to be enabled. If the uri-lexicon database-configuration parameter is not enabled, an exception is thrown. **/
   uris(start?: string, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<string>;
@@ -3120,43 +3120,43 @@ interface fnFunctions {
   indexOf(seqParam: MLArray<any>, srchParam: any, collationLiteral?: string): ValueIterator<number>;
 
     /** If the value of $arg is the empty sequence, the function returns true; otherwise, the function returns false. **/
-  empty(arg: MLArray<MLNodeOrObject<any>>): boolean;
+  empty(arg: MLArray<any>): boolean;
 
     /** If the value of $arg is not the empty sequence, the function returns true; otherwise, the function returns false. **/
-  exists(arg: MLArray<MLNodeOrObject<any>>): boolean;
+  exists(arg: MLArray<any>): boolean;
 
     /** Returns the sequence that results from removing from $arg all but one of a set of values that are eq to one other. Values that cannot be compared, i.e. the eq operator is not defined for their types, are considered to be distinct. Values of type xs:untypedAtomic are compared as if they were of type xs:string. The order in which the sequence of values is returned is implementation dependent. The static type of the result is a sequence of prime types as defined in Section 7.2.7 The fn:distinct-values function[FS]. The collation used by the invocation of this function is determined according to the rules in 7.3.1 Collations. The collation is used when string comparison is required. If $arg is the empty sequence, the empty sequence is returned. For xs:float and xs:double values, positive zero is equal to negative zero and, although NaN does not equal itself, if $arg contains multiple NaN values a single NaN is returned. If xs:dateTime, xs:date or xs:time values do not have a timezone, they are considered to have the implicit timezone provided by the dynamic context for the purpose of comparison. Note that xs:dateTime, xs:date or xs:time values can compare equal even if their timezones are different. Which value of a set of values that compare equal is returned is implementation dependent. **/
   distinctValues(arg: ValueIterator<any>, collation?: string): ValueIterator<any>;
 
     /** Returns a new sequence constructed from the value of $target with the value of $inserts inserted at the position specified by the value of $position. (The value of $target is not affected by the sequence construction.) If $target is the empty sequence, $inserts is returned. If $inserts is the empty sequence, $target is returned. The value returned by the function consists of all items of $target whose index is less than $position, followed by all items of $inserts, followed by the remaining elements of $target, in that sequence. If $position is less than one (1), the first position, the effective value of $position is one (1). If $position is greater than the number of items in $target, then the effective value of $position is equal to the number of items in $target plus 1. For detailed semantics see, Section 7.2.15 The fn:insert-before function[FS]. **/
-  insertBefore(target: MLArray<MLNodeOrObject<any>>, position: number, inserts: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  insertBefore(target: MLArray<any>, position: number, inserts: MLArray<any>): ValueIterator<any>;
 
     /** Returns a new sequence constructed from the value of $target with the item at the position specified by the value of $position removed. If $position is less than 1 or greater than the number of items in $target, $target is returned. Otherwise, the value returned by the function consists of all items of $target whose index is less than $position, followed by all items of $target whose index is greater than $position. If $target is the empty sequence, the empty sequence is returned. For detailed type semantics, see Section 7.2.11 The fn:remove function[FS]. **/
-  remove(target: MLArray<MLNodeOrObject<any>>, position: number): ValueIterator<MLNode<any>>;
+  remove(target: MLArray<any>, position: number): ValueIterator<any>;
 
     /** Reverses the order of items in a sequence. If $arg is the empty sequence, the empty sequence is returned. For detailed type semantics, see Section 7.2.12 The fn:reverse function[FS]. **/
-  reverse(target: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  reverse(target: MLArray<any>): ValueIterator<any>;
 
     /** Returns the contiguous sequence of items in the value of $sourceSeq beginning at the position indicated by the value of $startingLoc and continuing for the number of items indicated by the value of $length. In the two-argument case, returns: $sourceSeq[fn:round($startingLoc) le $p] In the three-argument case, returns: $sourceSeq[fn:round($startingLoc) le $p and $p lt fn:round($startingLoc) + fn:round($length)] Notes: If $sourceSeq is the empty sequence, the empty sequence is returned. If $startingLoc is zero or negative, the subsequence includes items from the beginning of the $sourceSeq. If $length is not specified, the subsequence includes items to the end of $sourceSeq. If $length is greater than the number of items in the value of $sourceSeq following $startingLoc, the subsequence includes items to the end of $sourceSeq. The first item of a sequence is located at position 1, not position 0. For detailed type semantics, see Section 7.2.13 The fn:subsequence functionFS. The reason the function accepts arguments of type xs:double is that many computations on untyped data return an xs:double result; and the reason for the rounding rules is to compensate for any imprecision in these floating-point computations. **/
-  subsequence(sourceSeq: ValueIterator<any>, startingLoc: number, length?: number): ValueIterator<MLNode<any>>;
+  subsequence(sourceSeq: ValueIterator<any>, startingLoc: number, length?: number): ValueIterator<any>;
 
     /** Returns the items of $sourceSeq in an implementation dependent order. Note: Query optimizers may be able to do a better job if the order of the output sequence is not specified. For example, when retrieving prices from a purchase order, if an index exists on prices, it may be more efficient to return the prices in index order rather than in document order. **/
-  unordered(sourceSeq: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  unordered(sourceSeq: MLArray<any>): ValueIterator<any>;
 
     /** Returns $arg if it contains zero or one items. Otherwise, raises an error [err:FORG0003]. For detailed type semantics, see Section 7.2.16 The fn:zero-or-one, fn:one-or-more, and fn:exactly-one functions[FS]. **/
-  zeroOrOne(arg: MLArray<MLNodeOrObject<any>>): MLNode<any>;
+  zeroOrOne(arg: MLArray<any>): any;
 
     /** Returns $arg if it contains one or more items. Otherwise, raises an error [err:FORG0004]. For detailed type semantics, see Section 7.2.16 The fn:zero-or-one, fn:one-or-more, and fn:exactly-one functions[FS]. **/
-  oneOrMore(arg: MLArray<MLNodeOrObject<any>>): ValueIterator<MLNode<any>>;
+  oneOrMore(arg: MLArray<any>): ValueIterator<any>;
 
     /** Returns $arg if it contains exactly one item. Otherwise, raises an error [err:FORG0005]. For detailed type semantics, see Section 7.2.16 The fn:zero-or-one, fn:one-or-more, and fn:exactly-one functions[FS]. **/
-  exactlyOne(arg: MLArray<MLNodeOrObject<any>>): MLNode<any>;
+  exactlyOne(arg: MLArray<any>): any;
 
     /** This function assesses whether two sequences are deep-equal to each other. To be deep-equal, they must contain items that are pairwise deep-equal; and for two items to be deep-equal, they must either be atomic values that compare equal, or nodes of the same kind, with the same name, whose children are deep-equal. This is defined in more detail below. The $collation argument identifies a collation which is used at all levels of recursion when strings are compared (but not when names are compared), according to the rules in 7.3.1 Collations. If the two sequences are both empty, the function returns true. If the two sequences are of different lengths, the function returns false. If the two sequences are of the same length, the function returns true if and only if every item in the sequence $parameter1 is deep-equal to the item at the same position in the sequence $parameter2. The rules for deciding whether two items are deep-equal follow. Call the two items $i1 and $i2 respectively. If $i1 and $i2 are both atomic values, they are deep-equal if and only if ($i1 eq $i2) is true. Or if both values are NaN. If the eq operator is not defined for $i1 and $i2, the function returns false. If one of the pair $i1 or $i2 is an atomic value and the other is a node, the function returns false. If $i1 and $i2 are both nodes, they are compared as described below: If the two nodes are of different kinds, the result is false. If the two nodes are both document nodes then they are deep-equal if and only if the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). If the two nodes are both element nodes then they are deep-equal if and only if all of the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the two nodes are both annotated as having simple content or both nodes are annotated as having complex content.the two nodes have the same number of attributes, and for every attribute $a1 in $i1/@* there exists an attribute $a2 in $i2/@* such that $a1 and $a2 are deep-equal. One of the following conditions holds: Both element nodes have a type annotation that is simple content, and the typed value of $i1 is deep-equal to the typed value of $i2. Both element nodes have a type annotation that is complex content with elementOnly content, and each child element of $i1 is deep-equal to the corresponding child element of $i2. Both element nodes have a type annotation that is complex content with mixed content, and the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). Both element nodes have a type annotation that is complex content with empty content. If the two nodes are both attribute nodes then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the typed value of $i1 is deep-equal to the typed value of $i2. If the two nodes are both processing instruction nodes or namespace bindings, then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)). the string value of $i1 is equal to the string value of $i2. If the two nodes are both text nodes or comment nodes, then they are deep-equal if and only if their string-values are equal. Notes: The two nodes are not required to have the same type annotation, and they are not required to have the same in-scope namespaces. They may also differ in their parent, their base URI, and the values returned by the is-id and is-idrefs accesors (see Section 5.5 is-id Accessor[DM] and Section 5.6 is-idrefs Accessor[DM]). The order of children is significant, but the order of attributes is insignificant. The following note applies to the Jan 2007 XQuery specification, but not to the May 2003 XQuery specification: The contents of comments and processing instructions are significant only if these nodes appear directly as items in the two sequences being compared. The content of a comment or processing instruction that appears as a descendant of an item in one of the sequences being compared does not affect the result. However, the presence of a comment or processing instruction, if it causes a text node to be split into two text nodes, may affect the result. The result of fn:deep-equal(1, current-dateTime()) is false; it does not raise an error. **/
-  deepEqual(parameter1: MLArray<MLNodeOrObject<any>>, parameter2: MLArray<MLNodeOrObject<any>>, collation?: string): boolean;
+  deepEqual(parameter1: MLArray<any>, parameter2: MLArray<any>, collation?: string): boolean;
 
     /** Returns the number of items in the value of $arg. Returns 0 if $arg is the empty sequence. **/
-  count(arg: MLArray<MLNodeOrObject<any>>, maximum?: number): number;
+  count(arg: MLArray<any>, maximum?: number): number;
 
     /** Returns the average of the values in the input sequence $arg, that is, the sum of the values divided by the number of values. If $arg is the empty sequence, the empty sequence is returned. If $arg contains values of type xs:untypedAtomic they are cast to xs:double. Duration values must either all be xs:yearMonthDuration values or must all be xs:dayTimeDuration values. For numeric values, the numeric promotion rules defined in 6.2 Operators on Numeric Values are used to promote all values to a single common type. After these operations, $arg must contain items of a single type, which must be one of the four numeric types,xs:yearMonthDuration or xs:dayTimeDuration or one if its subtypes. If the above conditions are not met, then a type error is raised [err:FORG0006]. Otherwise, returns the average of the values computed as sum($arg) div count($arg). For detailed type semantics, see Section 7.2.10 The fn:min, fn:max, fn:avg, and fn:sum functions[FS]. **/
   avg(arg: ValueIterator<any>|Array<any>): any;
@@ -3417,7 +3417,7 @@ prefix is the default prefix for function calls if none is specified.
 interface fnFunctions {
 
     /** Return the input $value unchanged and, if $label is the name of an enabled server event, emit that server event to the server log file (ErrorLog.txt) with $value as its data. **/
-  trace(value: MLArray<MLNodeOrObject<any>>, label: string): ValueIterator<MLNode<any>>;
+  trace(value: MLArray<any>, label: string): ValueIterator<any>;
 
 }
 declare var fn:fnFunctions
@@ -3566,7 +3566,7 @@ interface xdmpFunctions {
   merging(): ValueIterator<number>;
 
     /** Acquire a lock on a document or directory for an extended amount of time. Locks restrict updates to a document or directory to the user who acquires the lock. **/
-  lockAcquire(uri: string, scope?: string, depth?: string, owner?: MLArray<MLNodeOrObject<any>>, timeout?: number): void;
+  lockAcquire(uri: string, scope?: string, depth?: string, owner?: MLArray<any>, timeout?: number): void;
 
     /** Unlock a document or directory. Releases the lock created with xdmp:lock-acquire. **/
   lockRelease(uri: string): void;
@@ -3999,10 +3999,10 @@ the server.
 interface semFunctions {
 
     /** This function returns parsed sem:triple objects from a text format or XML. **/
-  rdfParse(input: MLNodeOrObject<any>, options?: MLArray<string>): ValueIterator<sem.Triple>;
+  rdfParse(input: any, options?: MLArray<string>): ValueIterator<sem.Triple>;
 
     /** This function returns a string or json or XML serialization of the provided triples. **/
-  rdfSerialize(triples: MLArray<sem.Triple>, options?: MLArray<string>): MLNode<any>;
+  rdfSerialize(triples: MLArray<sem.Triple>, options?: MLArray<string>): any;
 
     /** This function returns sem:triples from a specified location. **/
   rdfGet(location: string, options?: MLArray<string>, httpOpts?: MLNodeOrObject<any>): ValueIterator<sem.Triple>;
@@ -4011,7 +4011,7 @@ interface semFunctions {
   rdfInsert(triples: sem.Triple|ValueIterator<any>|Array<any>, options?: MLArray<string>, permissions?: Object[], collections?: MLArray<string>, quality?: number, forestIds?: MLArray<number>): ValueIterator<string>;
 
     /** This function inserts an RDF document from a specified location into the designated database. It also creates the graph metadata for the graph specified by the "graph=URI" or "override-graph=URI" option. This is an update function that returns the document URIs of inserted documents. **/
-  rdfLoad(location: string, options?: MLArray<string>, httpOpts?: MLNodeOrObject<any>, permissions?: MLArray<MLNodeOrObject<any>>, collections?: MLArray<string>, quality?: number, forestIds?: MLArray<number>): ValueIterator<string>;
+  rdfLoad(location: string, options?: MLArray<string>, httpOpts?: MLNodeOrObject<any>, permissions?: MLArray<any>, collections?: MLArray<string>, quality?: number, forestIds?: MLArray<number>): ValueIterator<string>;
 
     /** This function returns database nodes backing given triples. Any given cts:triple may be backed by zero, one, or multiple database nodes. **/
   databaseNodes(triples: MLArray<sem.Triple>, options?: MLArray<string>, query?: cts.Query): ValueIterator<any>;
@@ -4020,13 +4020,13 @@ interface semFunctions {
   graph(graphname: sem.Iri): ValueIterator<sem.Triple>;
 
     /** This function inserts triples into a named graph, creating the graph if necessary. It also creates the graph metadata for the graph specified by the "graphname" option. This is an update function that returns document IDs. **/
-  graphInsert(graphname: sem.Iri, triples: MLArray<sem.Triple>, permissions?: MLArray<MLNodeOrObject<any>>, collections?: MLArray<string>, quality?: number, forestIds?: MLArray<number>): ValueIterator<string>;
+  graphInsert(graphname: sem.Iri, triples: MLArray<sem.Triple>, permissions?: MLArray<any>, collections?: MLArray<string>, quality?: number, forestIds?: MLArray<number>): ValueIterator<string>;
 
     /** This function deletes a named graph, and its graph document containing metadata, from the database. This is an update function that deletes documents with a root element of sem:triples. All other documents are not affected. **/
   graphDelete(graphname: sem.Iri): void;
 
     /** This function implements the W3C SPARQL Query Results format. Any value sequence returned by sem:sparql can be passed into this function. The result will be the W3C SPARQL Results format, in either XML or JSON format. **/
-  queryResultsSerialize(results: MLArray<MLNodeOrObject<any>>, options?: MLArray<string>): ValueIterator<MLNode<any>>;
+  queryResultsSerialize(results: MLArray<any>, options?: MLArray<string>): ValueIterator<any>;
 
     /** This function expands a CURIE (Compact URI) into a sem:iri object. This raises SEM-UNKNOWNPREFIX if no mapping is available. For more information about the default prefixes, see sem:prefixes. **/
   curieExpand(curie: string, mapping?: {[key:string]:any}): sem.Iri;
@@ -4038,7 +4038,7 @@ interface semFunctions {
   prefixes(prefixdef: string, includeCommon?: boolean): {[key:string]:any};
 
     /** This function returns a function that builds triples from CURIE and blank node syntax. The resulting function takes three string arguments, representing subject, predicate, and object respectively, which returns a sem:triple object using the graph and prefix mappings passed in to the call to sem:rdf-builder. Blank nodes specified with a leading underscore (_) will be assigned blank node identifiers, and will maintain that identity across multiple invocations; for example, "_:person1" will refer to the same node as a later invocation that also mentions "_:person1". In the predicate position, the special value of "a" will be interpreted as the same as "rdf:type". **/
-  rdfBuilder(prefixes?: {[key:string]:any}, graph?: sem.Iri): (p1:MLNodeOrObject<any>,p2:MLNodeOrObject<any>,p3:MLNodeOrObject<any>)=>sem.Triple;
+  rdfBuilder(prefixes?: {[key:string]:any}, graph?: sem.Iri): (p1:any,p2:any,p3:any)=>sem.Triple;
 
     /** This function implements the Concise Bounded Definition (CBD) specification to describe one or more nodes in the graph. **/
   describe(iris: MLArray<sem.Iri>): ValueIterator<sem.Triple>;
@@ -4047,7 +4047,7 @@ interface semFunctions {
   transitiveClosure(seeds: MLArray<sem.Iri>, predicates: MLArray<sem.Iri>, limit: number): ValueIterator<sem.Iri>;
 
     /** This function executes a SPARQL SELECT query using passed-in bindings participating as a starting point for the query. **/
-  sparqlValues(sparql: string, values: MLArray<{[key:string]:any}>, options?: MLArray<string>, store?: MLArray<MLNodeOrObject<any>>): ValueIterator<{[key:string]:any}>;
+  sparqlValues(sparql: string, values: MLArray<{[key:string]:any}>, options?: MLArray<string>, store?: MLArray<any>): ValueIterator<{[key:string]:any}>;
 
     /** This is a constructor function that takes a string and constructs an item of type sem:iri sem.iri from it. **/
   iri(stringIri: string): sem.Iri;

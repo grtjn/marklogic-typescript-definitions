@@ -1,6 +1,6 @@
 {
   "name": "marklogic-typescript-definitions",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "TypeScript Definition files for MarkLogic built-in functions",
   "author": "Geert Josten <geert.josten@gmail.com>",
   "contributors": [
