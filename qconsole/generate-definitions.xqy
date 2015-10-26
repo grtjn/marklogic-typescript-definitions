@@ -16,11 +16,15 @@ let $definition := xdmp:xslt-eval(
 
     <xsl:template match="apidoc:function" mode="#all">
       <xsl:param name="use-function-keyword" select="false()"/>
+      <xsl:param name="use-declare-keyword" select="false()"/>
       <xsl:text>    /** </xsl:text>
       <xsl:value-of select="normalize-space(apidoc:summary[not(@class) or @class = 'javascript'])"/>
       <xsl:text> **/&#10;</xsl:text>
 
       <xsl:text>&#32;&#32;</xsl:text>
+      <xsl:if test="$use-declare-keyword">
+        <xsl:text>declare </xsl:text>
+      </xsl:if>
       <xsl:if test="$use-function-keyword">
         <xsl:text>function </xsl:text>
       </xsl:if>
@@ -54,9 +58,15 @@ let $definition := xdmp:xslt-eval(
 
         <xsl:for-each select="distinct-values(((apidoc:module/@lib, 'xdmp')[1], //apidoc:function[empty(@http-verb)]/@lib))">
           <xsl:variable name="lib" select="."/>
-          <xsl:variable name="name" select="local:fixName($lib)"/>
+          <xsl:variable name="name" select="string-join(local:fixName($lib), '')"/>
 
           <xsl:choose>
+          <xsl:when test="$name = 'GlobalObject'">
+            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']">
+              <xsl:with-param name="use-function-keyword" select="true()"/>
+              <xsl:with-param name="use-declare-keyword" select="true()"/>
+            </xsl:apply-templates>
+          </xsl:when>
           <xsl:when test="$name = 'alert'">
             <xsl:text>declare module </xsl:text>
             <xsl:value-of select="$name"/>

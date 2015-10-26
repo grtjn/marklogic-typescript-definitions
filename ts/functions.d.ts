@@ -1,6 +1,6 @@
 ///<reference path="./types.d.ts" />
 // Type definitions for AccessorBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The accessor built-in functions are XQuery functions to access node properties.
@@ -43,7 +43,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AdminBuiltins
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -152,7 +152,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for OfficeConvert
-// Definitions:
+// Definitions: 
 
 /**
   Includes the Microsoft Office convert functions using the AntennaHouse
@@ -174,7 +174,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AnyURIBuiltins
-// Definitions:
+// Definitions: 
 
 /**
   The anyURI built-in function is the XQuery function that applies
@@ -206,7 +206,7 @@ interface semFunctions {
 declare var sem:semFunctions
 
 // Type definitions for AppServerBuiltins
-// Definitions:
+// Definitions: 
 
 /**
   The application server built-in functions are XQuery functions for many
@@ -343,7 +343,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for BooleanBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The boolean built-in functions are XQuery functions to manipulate xs:boolean
@@ -368,7 +368,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for ClassifierBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The classifier built-in functions perform automatic classification of
@@ -395,7 +395,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for ClustererBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The clusterer built-in functions perform dynamic clustering of nodes.
@@ -415,7 +415,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for ContextBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The context built-in functions are XQuery functions defined to obtain information from the dynamic context.
@@ -448,7 +448,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Crypt
-// Definitions:
+// Definitions: 
 
 /**
 Builtin functions relating to cryptography.
@@ -466,7 +466,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for DurationDateTimeBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The duration, date, and time built-in functions are XQuery functions
@@ -574,14 +574,14 @@ interface sqlFunctions {
 declare var sql:sqlFunctions
 
 // Type definitions for ErrorBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The error built-in functions are XQuery functions defined for reporting
 errors.
 They are defined in
-XQuery 1.0
-and XPath 2.0 Functions and Operators.
+XQuery 1.0 
+and XPath 2.0 Functions and Operators. 
 
 The error built-in functions use the fn namespace
 prefix, which is predefined in the server.  Also, the fn
@@ -597,7 +597,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Eval
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -628,7 +628,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for ExsltBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 EXSLT extension functions are extensions to XSLT spec as a community initiative.
@@ -647,38 +647,38 @@ interface exslFunctions {
 declare var exsl:exslFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /**
    The extension built-in functions are miscellaneous extensions to the
    XQuery core library, including functions for evaluating
    strings as XQuery expressions and functions to get information about
    documents in the database.
-
+  
    The function values functions allow you to pass a function value
    as a parameter to another function.  You can also pass in the location
    of the implementation of a function, allowing the caller to
    specify a different version of a function to use in the context of
    making that function.
-
+  
  The MarkLogic Server extension functions are XQuery extensions that
  return MarkLogic Server-specific information, such as the version of
- MarkLogic Server, the IDs of the hosts in the cluster, and so on.
-
+ MarkLogic Server, the IDs of the hosts in the cluster, and so on. 
+  
  The extension functions provide miscellaneous extensions to XQuery.
-
+  
  The HTTP functions allow you to make various HTTP calls from
  within your XQuery program.
-
+  
  The search extension functions complement the Search Built-in functions.
-
+  
  The XML extension functions provide XML functionality such as
  parsing a string as XML.
-
+  
  The XQuery Context functions are XQuery extensions that allow
  you to start a new query context, manipulate the current context, or
  get information about the current context.
-
+  
  The Documents, Directories, Properties, and Locks functions are XQuery built-in
  extension functions that get information from documents, directories,
  properties, and locks from MarkLogic Server.  All of these are stored
@@ -1076,7 +1076,7 @@ interface jsonFunctions {
 declare var json:jsonFunctions
 
 // Type definitions for FormatBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The format-date, format-time, format-dateTime and format-number built-in functions are XSLT functions that operate on date-, time-, dateTime-, number-related values.
@@ -1122,7 +1122,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for FunctionBuiltins
-// Definitions:
+// Definitions: 
 
 /**
   The Higher-Order built-in functions are XQuery functions to support
@@ -1175,7 +1175,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for GeospatialBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The geospatial built-in functions are XQuery functions defined to operate on
@@ -1509,7 +1509,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for DocumentFilter
-// Definitions:
+// Definitions: 
 
 /**
   Includes the document filtering functions using the ISYS
@@ -1525,7 +1525,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for PDFConvert
-// Definitions:
+// Definitions: 
 
 /**
   Includes the PDF convert functions using the Iceni technology.
@@ -1540,10 +1540,10 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for JavaScriptBuiltins
-// Definitions:
+// Definitions: 
 
 /**
-  The JavaScript Global Object functions are MarkLogic-specific JavaScript
+  The JavaScript Global Object functions are MarkLogic-specific JavaScript 
   functions that extend the Global Object.  These functions are available
   in the Global space, without any prefixing.
 **/
@@ -1552,16 +1552,12 @@ interface xdmpFunctions {
 
 }
 declare var xdmp:xdmpFunctions
-interface GlobalObjectFunctions {
-
     /** Declares the statement to be an update. A JavaScript statement is executed as a query unless declareUpdate() is called at the beginning of the statement. Calling declareUpdate with an options argument where explicitCommit property is set to true starts a multi-statement transaction and requires an explicit commit or rollback to complete the transaction. If the options argument is omitted, or the property explicitCommit property is set to false, an update is automatically committed. XDMP-OWNTXN is thrown if the request is in an open transaction. **/
-  declareUpdate(options?: Object): void;
+  declare function declareUpdate(options?: Object): void;
 
     /** Imports a module at the specified location, and returns a JavaScript object. **/
-  require(location: string): Object;
+  declare function require(location: string): Object;
 
-}
-declare var GlobalObject:GlobalObjectFunctions
 interface ctsFunctions {
 
     /** Returns the document stored in the database at the specified URI. To retrieve multiple documents stored at multiple URIs, use fn.doc instead. **/
@@ -1571,13 +1567,13 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /**
  The JSON built-in functions serialize XQuery items to JSON and
  read a JSON string and create XQuery items from it.  JSON (JavaScript
  Object Notation) is a data-interchange format popular mechanism for passing
- data from JavaScript to other programming environments.
+ data from JavaScript to other programming environments. 
  **/
 
 interface xdmpFunctions {
@@ -1598,7 +1594,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for LastLogin
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -1611,7 +1607,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for MathBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The math built-in functions.
@@ -1768,7 +1764,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for NodeBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The node built-in functions are XQuery functions defined to operate on nodes.
@@ -1804,7 +1800,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for NumericBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The numeric built-in functions are XQuery functions defined to operate on
@@ -1834,7 +1830,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for SearchBuiltins
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -1869,7 +1865,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for PeriodBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The format-date, format-time, format-dateTime and format-number built-in functions are XSLT functions that operate on date-, time-, dateTime-, number-related values.
@@ -1915,7 +1911,7 @@ interface temporalFunctions {
 declare var temporal:temporalFunctions
 
 // Type definitions for QNameBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 These built-in functions are XQuery functions defined to operate on
@@ -1951,7 +1947,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for StringBuiltins
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -1973,7 +1969,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -1986,7 +1982,7 @@ interface semFunctions {
 declare var sem:semFunctions
 
 // Type definitions for SMTPClient
-// Definitions:
+// Definitions: 
 
 /**
 Implements the send function.
@@ -2001,7 +1997,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /**
   The rdf functions are built-in functions to construct and use
@@ -2122,7 +2118,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -2144,7 +2140,7 @@ interface semFunctions {
 declare var sem:semFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -2157,7 +2153,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SSL
-// Definitions:
+// Definitions: 
 
 /**
    The SSL built-in functions are miscellaneous extensions to the
@@ -2204,7 +2200,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SchemaBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The schema component built-in functions.
@@ -2270,7 +2266,7 @@ interface scFunctions {
 declare var sc:scFunctions
 
 // Type definitions for SearchBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The search built-in functions are XQuery functions used to perform text
@@ -2296,7 +2292,7 @@ cts:query
 Constructors section.
 
 
-
+ 
 The cts:query constructor functions allow you to build
 arbitrarily complex cts:query specifications. Each
 cts:query constructor function has corresponding accessor
@@ -2307,13 +2303,13 @@ cts:registered-query function, which
 provides a mechanism to precompute and store in the cache unfiltered
 cts:query result primitives.
 
-
+ 
 MarkLogic Server allows you to create lexicons, which are lists
 of unique words or values, either throughout an entire database (words only)
 or within named elements or attributes (words or values). Also, you can
 define lexicons that allow quick access to the document and collection
 URIs in the database, and you can create word lexicons on named
-fields.
+fields. 
 A word lexicon stores all of the unique, case-sensitive,
 diacritic-sensitive words, either in a database, in an element
 defined by a QName, or in an attribute defined by a QName. A
@@ -2328,14 +2324,14 @@ A URI lexicon stores the URIs of the documents in a database, and a
 collection lexicon stores the URIs of all collections
 in a database.
 This section describes the lexicon APIs.
-
+ 
 MarkLogic Server allows you to create geospatial lexicons, which
-are lists of unique values of geospatial data.
+are lists of unique values of geospatial data. 
  A geospatial lexicon returns geospatial values from the geospatial
 index. The geospatial index is required for using the geospatial lexicon
 functions.
 This section describes the geospatial lexicon APIs.
-
+ 
 MarkLogic Server provides aggregate math functions that make use of value lexicons
 to calculate results. The math lexicon functions differ from the math functions in the
 math: namespace in that math lexicon functions take frequency into
@@ -3018,7 +3014,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for SecurityBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The security built-in functions are XQuery functions to perform many
@@ -3106,7 +3102,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SequenceBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 These built-in functions are XQuery functions defined to operate on
@@ -3202,7 +3198,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for SearchBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The spelling correction built-in functions are used with dictionary documents
@@ -3242,7 +3238,7 @@ interface spellFunctions {
 declare var spell:spellFunctions
 
 // Type definitions for StatusBuiltins
-// Definitions:
+// Definitions: 
 
 /**
   The Server Monitoring built-in functions include functions that provide
@@ -3284,7 +3280,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for StringBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The string built-in functions are XQuery functions defined to operate on
@@ -3382,7 +3378,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Tidy
-// Definitions:
+// Definitions: 
 
 /**
    The conversion functions are built-in to the server and support
@@ -3404,14 +3400,14 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for TraceBuiltins
-// Definitions:
+// Definitions: 
 
 /**
-The error and trace built-in functions are XQuery functions defined for
+The error and trace built-in functions are XQuery functions defined for 
 throwing errors from XQuery programs and debug tracing.
 They are defined in
-XQuery 1.0
-and XPath 2.0 Functions and Operators.
+XQuery 1.0 
+and XPath 2.0 Functions and Operators. 
 
 The error and trace built-in functions use the fn namespace
 prefix, which is predefined in the server.  Also, the fn
@@ -3427,7 +3423,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for TransactionBuiltins
-// Definitions:
+// Definitions: 
 
 /**
   Use these XQuery functions for manipulating transactions. You will
@@ -3436,7 +3432,7 @@ declare var fn:fnFunctions
      discussion of multi-statement transactions, see "Understanding
      Transactions in MarkLogic Server" in the Application Developer's
      Guide
-
+  
 **/
 
 interface xdmpFunctions {
@@ -3478,7 +3474,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -3491,7 +3487,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for UpdateBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The update built-in functions are XQuery functions to perform update-related
@@ -3616,7 +3612,7 @@ interface temporalFunctions {
 declare var temporal:temporalFunctions
 
 // Type definitions for Walkers
-// Definitions:
+// Definitions: 
 
 /****/
 
@@ -3635,7 +3631,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for XSLTBuiltins
-// Definitions:
+// Definitions: 
 
 /**
 The XSLT functions.  These functions are available in XSLT only.
@@ -3659,7 +3655,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Zip
-// Definitions:
+// Definitions: 
 
 /**
   Zip function allow the server to handle .zip files.
@@ -3686,28 +3682,28 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AlertModule
-// Definitions:
+// Definitions: 
 
 /**
-		The Alerting API function module is used to create alerting
-			applications.  The Alerting API abstracts the security
+		The Alerting API function module is used to create alerting 
+			applications.  The Alerting API abstracts the security 
 			considerations and the reverse search functionality
-			from the developer.  The Alerting API is installed as
+			from the developer.  The Alerting API is installed as 
 			the following file:
 	install_dir/Modules/MarkLogic/alert.xqy
-      where install_dir is the directory in which
+      where install_dir is the directory in which 
 	      MarkLogic Server is installed.
-       To use the alert.xqy module in your own XQuery modules, include the
+       To use the alert.xqy module in your own XQuery modules, include the 
 	      following line in your XQuery prolog:
-      import module namespace alert = "http://marklogic.com/xdmp/alert"
+      import module namespace alert = "http://marklogic.com/xdmp/alert" 
 		  at "/MarkLogic/alert.xqy";
-      The library uses the alert: namespace, which is
+      The library uses the alert: namespace, which is 
 	      not predefined in the server.
-      The Alerting API requires a valid alerting license key.  Without a
-	      valid license key, the functions in the Alerting API will throw an
+      The Alerting API requires a valid alerting license key.  Without a 
+	      valid license key, the functions in the Alerting API will throw an 
 	      exception.  Additionally, a valid alerting license key is
-	     required to use the reverse index.
-
+	     required to use the reverse index. 
+      
    **/
 
 declare module alert {
@@ -3903,8 +3899,8 @@ declare module alert {
 
 }
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3913,8 +3909,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3923,8 +3919,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3933,8 +3929,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3943,8 +3939,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3953,8 +3949,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3963,8 +3959,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3973,8 +3969,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -3984,13 +3980,13 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for semantics
-// Definitions:
+// Definitions: 
 
 /**
-The semantic functions include functions that are built into MarkLogic
+The semantic functions include functions that are built into MarkLogic 
 Server as well as functions that are implemented in an XQuery library.
 
-To use the semantics XQuery library module as part of your own XQuery
+To use the semantics XQuery library module as part of your own XQuery 
 module, include the following line in your XQuery prolog:
 
 
@@ -4059,8 +4055,8 @@ interface semFunctions {
 }
 declare var sem:semFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
@@ -4070,27 +4066,27 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for TemporalModule
-// Definitions:
+// Definitions: 
 
 /**
-
+    
     This module contains the functions used to insert, delete and manage temporal documents.
-
+    
      To understand the temporal functions, you need to understand the meaning of the following terms:
-
-    Instant: an instant of time, such as "now", "12/31/2012, 01:00:00 am".Period: an anchored duration of time (e.g. December 01, 1999 through December 31, 2000, the fall semester)Axis: a named pair of range indexes that is the container for periods.Valid time: when a fact was true in modeled reality.System time: when a fact was stored in the database.User-defined time: a time value that user provides in replacement of system start time.      LSQT (Last Stable Query Time): a document with a system start time before this point
-      can be queried and a document with a system start time after this point can be updated
-      and ingested.
-
-
+       
+    Instant: an instant of time, such as "now", "12/31/2012, 01:00:00 am".Period: an anchored duration of time (e.g. December 01, 1999 through December 31, 2000, the fall semester)Axis: a named pair of range indexes that is the container for periods.Valid time: when a fact was true in modeled reality.System time: when a fact was stored in the database.User-defined time: a time value that user provides in replacement of system start time.      LSQT (Last Stable Query Time): a document with a system start time before this point 
+      can be queried and a document with a system start time after this point can be updated 
+      and ingested. 
+        
+    
     The Tiered Storage function module is installed as the following file:
     install_dir/Modules/MarkLogic/temporal.xqy
-    where install_dir is the directory in which
+    where install_dir is the directory in which 
 	    MarkLogic Server is installed.
-    To use the temporal.xqy module in your own XQuery modules,
+    To use the temporal.xqy module in your own XQuery modules, 
      include the following line in your XQuery prolog:
-
-import module namespace temporal="http://marklogic.com/xdmp/temporal"
+    
+import module namespace temporal="http://marklogic.com/xdmp/temporal" 
           at "/MarkLogic/temporal.xqy";
   **/
 
@@ -4132,8 +4128,8 @@ interface temporalFunctions {
 }
 declare var temporal:temporalFunctions
 
-// Type definitions for
-// Definitions:
+// Type definitions for 
+// Definitions: 
 
 /****/
 
