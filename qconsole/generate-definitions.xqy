@@ -154,7 +154,7 @@ let $definition := xdmp:xslt-eval(
         <xsl:when test="$type = 'ValueIterator'">ValueIterator&lt;any&gt;</xsl:when>
         <xsl:when test="$type = 'document-node()'">DocumentNode&lt;any&gt;</xsl:when>
         <xsl:when test="$type = ('binary()')">MLNode&lt;any&gt;</xsl:when>
-        <xsl:when test="$type = ('element()', 'node()', 'item()')">
+        <xsl:when test="$type = ('element()', 'node()')">
           <xsl:choose>
             <xsl:when test="$isForParameter">MLNodeOrObject&lt;any&gt;</xsl:when>
             <xsl:otherwise>MLNode&lt;any&gt;</xsl:otherwise>
@@ -166,7 +166,7 @@ let $definition := xdmp:xslt-eval(
         <xsl:when test="$type = ('json:object', 'map:map')">&#123;&#91;key:string&#93;:any&#125;</xsl:when>
         <xsl:when test="$type = ('function()', 'xdmp:function', 'function(*', 'function(*)')">() => any</xsl:when>
         <xsl:when test="$type = 'xs:boolean'">boolean</xsl:when>
-        <xsl:when test="$type = 'xs:anyAtomicType'">any</xsl:when>
+        <xsl:when test="$type = ('xs:anyAtomicType', 'item()')">any</xsl:when>
         <xsl:when test="$type = ('xs:dateTime', 'xs:date')">Date</xsl:when>
         <xsl:when test="$type = ('Int', 'double', 'xs:numeric', 'numeric', 'xs:decimal', 'xs:double', 'xs:unsignedLong', 'xs:int', 'xs:float', 'xs:integer', 'xs:long', 'xs:nonNegativeInteger', 'xs:positiveInteger', 'xs:unsignedInt')">number</xsl:when>
         <xsl:when test="matches($type, '^(schema-)?[Ee]lement\([^)]+\)$')">
