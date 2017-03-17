@@ -1,6 +1,6 @@
 ///<reference path="./types.d.ts" />
 // Type definitions for AccessorBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The accessor built-in functions are XQuery functions to access node properties.
@@ -43,7 +43,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AdminBuiltins
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -55,7 +55,7 @@ interface xdmpFunctions {
     /** Restores forest data files. Restarts the forest to complete the restoration. **/
   forestRestore(forestID: number, pathname: string): void;
 
-    /** Clears forest data files. **/
+    /** Clears forest data files, including all stands and journals. If any of the forests being cleared are attached to the context database, then xdmp:forest-clear is run asynchronously, returning immediately but doing the clear in a background thread. If the forest being cleared is not attached to the context database, it is run synchronously and will block until it returns. The xdmp:forest-clear function is not transactional, and the best practice is to not call it in a transaction that is also doing updates. **/
   forestClear(forestIDs: MLArray<number>): void;
 
     /** Restarts a forest. If multiple forest IDs are specified, the restarts occur in parallel. **/
@@ -98,7 +98,7 @@ interface xdmpFunctions {
   databaseRestore(forestIDs: MLArray<number>, pathname: string, restoreToTime?: Date, journalArchiving?: boolean, journalArchivePath?: string, incrementalBackup?: boolean, incrementalBackupPath?: string): number;
 
     /** Checks the status of the outstanding restore job with the specified job ID. Returns a database restore status node Object. **/
-  databaseRestoreStatus(jobid: number): Array<any>;
+  databaseRestoreStatus(jobid: number): Object;
 
     /** Cancels an outstanding restore job with the specified job ID, returning true if the cancel operation is successful, false if the cancel operation is not successful. **/
   databaseRestoreCancel(jobid: number): boolean;
@@ -152,7 +152,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for OfficeConvert
-// Definitions: 
+// Definitions:
 
 /**
   Includes the Microsoft Office convert functions using the AntennaHouse
@@ -174,7 +174,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AnyURIBuiltins
-// Definitions: 
+// Definitions:
 
 /**
   The anyURI built-in function is the XQuery function that applies
@@ -206,7 +206,7 @@ interface semFunctions {
 declare var sem:semFunctions
 
 // Type definitions for AppServerBuiltins
-// Definitions: 
+// Definitions:
 
 /**
   The application server built-in functions are XQuery functions for many
@@ -226,7 +226,7 @@ interface xdmpFunctions {
   urlDecode(encoded: string): string;
 
     /** Logs in a user on an application server that is using application-level authentication and sends a session cookie containing the session ID to the user's browser. Returns true on success, false on failure. If the user calling this function has the xdmp:login privilege, this function can be called without a password or with the empty sequence as the password. In this case, login will succeed if the specified user exists. Therefore, use the xdmp:login privilege carefully, as any user with that privilege will be able to execute code that uses the xdmp:login function to log in as any user. Note that only HTTP App Servers allow application-level authentication, and therefore this function only works on an HTTP App Server; it always returns false against an XDBC server. **/
-  login(name: string, password?: string, setSession?: boolean, roleNames?: MLArray<string>): boolean;
+  login(name: string, password?: string|null, setSession?: boolean, roleNames?: MLArray<string>): boolean;
 
     /** This function is used for kerberos GSS authentication in application level authentication. **/
   gssServerNegotiate(inputToken: string): Object;
@@ -343,7 +343,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for BooleanBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The boolean built-in functions are XQuery functions to manipulate xs:boolean
@@ -368,7 +368,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for ClassifierBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The classifier built-in functions perform automatic classification of
@@ -395,7 +395,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for ClustererBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The clusterer built-in functions perform dynamic clustering of nodes.
@@ -415,7 +415,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for ContextBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The context built-in functions are XQuery functions defined to obtain information from the dynamic context.
@@ -427,10 +427,10 @@ and XPath 2.0 Functions and Operators.
 interface fnFunctions {
 
     /** Returns the current dateTime value (with timezone) from the dynamic context. (See Section C.2 Dynamic Context Components[XP].) This is an xs:dateTime that is current at some time during the evaluation of a query or transformation in which fn:current-dateTime() is executed. This function is *stable*. The precise instant during the query or transformation represented by the value of fn:current-dateTime() is *implementation dependent*. **/
-  currentDateTime(): Date;
+  currentDateTime(): xs.DateTime;
 
     /** Returns xs:date(fn:current-dateTime()). This is an xs:date (with timezone) that is current at some time during the evaluation of a query or transformation in which fn:current-date() is executed. This function is *stable*. The precise instant during the query or transformation represented by the value of fn:current-date() is *implementation dependent*. **/
-  currentDate(): Date;
+  currentDate(): xs.Date;
 
     /** Returns xs:time(fn:current-dateTime()). This is an xs:time (with timezone) that is current at some time during the evaluation of a query or transformation in which fn:current-time() is executed. This function is *stable*. The precise instant during the query or transformation represented by the value of fn:current-time() is *implementation dependent*. **/
   currentTime(): string;
@@ -448,7 +448,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Crypt
-// Definitions: 
+// Definitions:
 
 /**
 Builtin functions relating to cryptography.
@@ -465,8 +465,26 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
+// Type definitions for DebugBuiltins
+// Definitions:
+
+/**
+Implements a library of functions which allow developers to build an IDE
+which will allow runtime debugging of query requests against MarkLogic Server.
+The debug functions allow you to build an application that does things
+like attach to a running server, set breakpoints in a query, examine the
+value of variables at a point in query execution, and so on.  Note that the
+debug function library is not a debugger, but provides server-side support
+to build an application that can debug queries against MarkLogic Server.
+**/
+
+interface dbgFunctions {
+
+}
+declare var dbg:dbgFunctions
+
 // Type definitions for DurationDateTimeBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The duration, date, and time built-in functions are XQuery functions
@@ -574,14 +592,14 @@ interface sqlFunctions {
 declare var sql:sqlFunctions
 
 // Type definitions for ErrorBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The error built-in functions are XQuery functions defined for reporting
 errors.
 They are defined in
-XQuery 1.0 
-and XPath 2.0 Functions and Operators. 
+XQuery 1.0
+and XPath 2.0 Functions and Operators.
 
 The error built-in functions use the fn namespace
 prefix, which is predefined in the server.  Also, the fn
@@ -597,7 +615,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Eval
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -628,7 +646,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for ExsltBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 EXSLT extension functions are extensions to XSLT spec as a community initiative.
@@ -647,38 +665,38 @@ interface exslFunctions {
 declare var exsl:exslFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /**
    The extension built-in functions are miscellaneous extensions to the
    XQuery core library, including functions for evaluating
    strings as XQuery expressions and functions to get information about
    documents in the database.
-  
+
    The function values functions allow you to pass a function value
    as a parameter to another function.  You can also pass in the location
    of the implementation of a function, allowing the caller to
    specify a different version of a function to use in the context of
    making that function.
-  
+
  The MarkLogic Server extension functions are XQuery extensions that
  return MarkLogic Server-specific information, such as the version of
- MarkLogic Server, the IDs of the hosts in the cluster, and so on. 
-  
+ MarkLogic Server, the IDs of the hosts in the cluster, and so on.
+
  The extension functions provide miscellaneous extensions to XQuery.
-  
+
  The HTTP functions allow you to make various HTTP calls from
  within your XQuery program.
-  
+
  The search extension functions complement the Search Built-in functions.
-  
+
  The XML extension functions provide XML functionality such as
  parsing a string as XML.
-  
+
  The XQuery Context functions are XQuery extensions that allow
  you to start a new query context, manipulate the current context, or
  get information about the current context.
-  
+
  The Documents, Directories, Properties, and Locks functions are XQuery built-in
  extension functions that get information from documents, directories,
  properties, and locks from MarkLogic Server.  All of these are stored
@@ -693,6 +711,9 @@ interface xdmpFunctions {
     /** Returns the current MarkLogic Server version. **/
   version(): string;
 
+    /** Returns the current MarkLogic Server effective version. **/
+  clusterEffectiveVersion(): xs.UnsingedLong;
+
     /** Returns the operating-system platform upon which MarkLogic Server is running ("solaris", "winnt", "linux", or "macosx"). **/
   platform(): string;
 
@@ -702,7 +723,7 @@ interface xdmpFunctions {
     /** Returns a string whose value corresponds to the path of the node. **/
   path(node: MLNodeOrObject<any>, includeDocument?: boolean): string;
 
-    /** Returns a string representing the description of a given item sequence. If you take the output of the xdmp:describe function and evaluate it as an XQuery program, it returns the item(s) input to the function. **/
+    /** Returns a string representing the description of a given item sequence. If you take the output of this function and evaluate it as an XQuery program, it returns the item(s) input to the function. **/
   describe(item: MLArray<any>, maxSequenceLength?: number, maxItemLength?: number): string;
 
     /** Returns the 32-bit hash of a string. **/
@@ -775,10 +796,13 @@ interface xdmpFunctions {
   unquote(arg: string, defaultNamespace?: string, options?: MLArray<string>): ValueIterator<any>;
 
     /** Logs a message to the log file <install_dir>/Logs/ErrorLog.txt. The log message is sent as soon as this function is called, even if the program from which it is called has not completed. **/
-  log(msg: MLArray<any>, level?: string): void;
+  log(msg: ValueIterator<any>|Object|string|Array<any>|void|Number|Boolean, level?: string): void;
 
     /** Retrieves the current server log level. **/
   logLevel(): string;
+
+    /** Returns whether or not a trace event is enabled. **/
+  traceEnabled(name: string): boolean;
 
     /** Returns the current value of the resource meters for this query sequence as a JSON node. **/
   queryMeters(): Object;
@@ -819,7 +843,7 @@ interface xdmpFunctions {
     /** Returns the forest ID of the forest in which a document (or a lock or a property) with the specified URI is stored. Otherwise, returns the empty sequence. **/
   documentForest(uri: string, forestIds?: MLArray<number>): number;
 
-    /** Returns the ID of the forest specified as the parameter. Throws XDMP-NOSUCHFOREST if no forest exists at the specified ID. **/
+    /** Returns the ID of the forest specified as the parameter. Throws XDMP-NOSUCHFOREST if no forest exists for the specified name. **/
   forest(name: string): number;
 
     /** Returns the ID of the database named in the parameter. Returns the ID of the current database if no parameter is specified. Throws XDMP-NOSUCHDB if no database exists for the specified name. **/
@@ -846,8 +870,50 @@ interface xdmpFunctions {
     /** Returns the most recent commit timestamp for which a query on the database including its foreign database will not block waiting for transactions to commit or journal frames to arrive from a foreign master. **/
   databaseGlobalNonblockingTimestamp(databaseId: number): number;
 
-    /** Return the name of the App Server with the given ID. **/
+    /** This function returns the directory creation setting for the specified database. **/
+  databaseDirectoryCreation(databaseId: string): string;
+
+    /** This function returns true if the specificed forest is retired and false the specificed forest is not retired. **/
+  databaseIsForestRetired(databaseId: string, forestId: string): Boolean;
+
+    /** This function returns the assignment policy for the specified database. **/
+  databaseAssignmentPolicy(databaseId: string): Object;
+
+    /** This function returns the rebalancer enable setting for the specified database. **/
+  databaseIsRebalancerEnable(databaseId: string): Boolean;
+
+    /** This function returns all the mimetypes specifications of the cluster. **/
+  mimetypes(): ValueIterator<MLNode<any>>;
+
+    /** This function returns all the mimetypes specifications of the cluster. **/
+  mimetypes(): Array<any>;
+
+    /** Return the name of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. **/
   serverName(id: number): string;
+
+    /** Return the ID of the group for an App Server, XDBC Server, ODBC Server, or Task Server. **/
+  serverGroup(id: number): number;
+
+    /** Return the port of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverPort(id: number): number;
+
+    /** Return the SSL certificate template ID of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. If none, return 0. For a Task Server, return the empty sequence. **/
+  serverSslCertificateTemplate(id: number): number;
+
+    /** Return the database ID of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverDatabase(id: number): number;
+
+    /** Return the modules database ID of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverModulesDatabase(id: number): number;
+
+    /** Return the default collation of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverCollation(id: number): string;
+
+    /** Return the root of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverRoot(id: number): string;
+
+    /** Return the default xquery version of the App Server, XDBC Server, ODBC Server, or Task Server with the given ID. For a Task Server, return the empty sequence. **/
+  serverDefaultXqueryVersion(id: number): string;
 
     /** Return the name of the forest with the given ID. **/
   forestName(forestId: number): string;
@@ -945,11 +1011,29 @@ interface xdmpFunctions {
     /** Returns the ID of the host named in the parameter. Returns the ID of the current host if no parameter is specified. **/
   host(name?: string): number;
 
-    /** Returns the name of the host ID specified as the parameter. Returns the current host if no name is specified. **/
+    /** Returns the name of the specified host. **/
   hostName(ID?: number): string;
 
-    /** Returns a sequence of the IDs of all the hosts in the system. **/
+    /** Returns the ID of the group that the specified host belongs to. **/
+  hostGroup(ID?: number): number;
+
+    /** Returns this host's software version **/
+  softwareVersion(): number;
+
+    /** Returns the effective version of this host **/
+  effectiveVersion(): number;
+
+    /** Returns this host mode **/
+  hostMode(): boolean;
+
+    /** Return the description string for this host mode setting **/
+  hostModeDescription(ID?: number): boolean;
+
+    /** Returns a sequence of the IDs of all the hosts in the cluster. **/
   hosts(): ValueIterator<number>;
+
+    /** Returns a sequence of the IDs of all the bootstrap hosts in the cluster. **/
+  bootstrapHosts(): ValueIterator<number>;
 
     /** Returns the ID of the cluster named in the parameter. Returns the ID of the current cluster if no parameter is specified. **/
   cluster(name?: string): number;
@@ -960,10 +1044,10 @@ interface xdmpFunctions {
     /** Returns the IDs of the foreign clusters. **/
   foreignClusters(): ValueIterator<number>;
 
-    /** Returns the ID(s) of the App Server specified in the parameter. Returns the ID of the current App Server if no parameter is specified. **/
+    /** Return the ID(s) of the App Servers, XDBC Servers, ODBC Servers, or Task Servers with the given name. Returns the ID of the current server if no parameter is specified. **/
   server(name?: string, group?: number): ValueIterator<number>;
 
-    /** Returns a sequence of the IDs of all the App Servers in the system. **/
+    /** Returns a sequence of the IDs of all the App Servers (HTTP, XDBC, ODBC, and TaskServer) in the system. **/
   servers(): ValueIterator<number>;
 
     /** Returns a sequence of the IDs of all the groups in the system. **/
@@ -1011,8 +1095,8 @@ interface xdmpFunctions {
     /** Construct a QName from a string of the form "{namespaceURI}localname". This function is useful for constructing Clark notation parameters for the xdmp:xslt-eval and xdmp:xslt-invoke functions. **/
   QNameFromKey(key: string): xs.QName;
 
-    /** Create a multipart encoding of the specified node. The returned binary node can be passed to xdmp:http-post. The manifest is modeled after the manifest that is passed to zip:create, with the headers element being the same as is described for xdmp:http-get allowing users to add arbitrary headers to each part. If a content-type header is not specified for a part, it will be determined if possible from the content. There should be one part element for each node in the content sequence. Each part also has an optional options node to control how xml or text will be serialized. The two options are the same as for xdmp:save. <parts> <part> <headers> <Content-Type>image/jpeg</Content-Type> <headers> <options> <output-encoding>...</output-encoding> <output-sgml-character-entities>...</output-sgml-character-entities> </options> </part> </parts> **/
-  multipartEncode(separator: string, manifest: MLNodeOrObject<any>, content: MLArray<any>): MLNode<any>;
+    /** Create a multipart encoding of the specified node. The returned binary node can be passed to xdmp:http-post. The manifest is modeled after the manifest that is passed to zip:create, with the headers element being the same as is described for xdmp:http-get allowing users to add arbitrary headers to each part. If a content-type header is not specified for a part, it will be determined if possible from the content. There should be one part element for each node in the content sequence. Each part also has an optional options node to control how xml or text will be serialized. The two options are the same as for xdmp:save. <part> <headers> <Content-Type>image/jpeg</Content-Type> <headers> <options> <output-encoding>...</output-encoding> <output-sgml-character-entities>...</output-sgml-character-entities> </options> </part> The manifest can also be defined as a JSON array. [ { "headers": { "Content-Type":"image/jpeg" }, "options": { "outputEncoding": ..., "outputSgmlCharacterEntities" : ... } }, { "headers": { "Content-Type":"text/html" } } ] **/
+  multipartEncode(separator: string, manifest: Array<any>|Node, content: Array<any>|ValueIterator<any>): MLNode<any>;
 
     /** Extract the parts from a multipart encoding. The first item in the sequence is a manifest, and the remaining items are the decoded parts. An attempt will be made to determine the type of content based on headers such as the part's content-type. If possible, an element will be returned, falling back to an xs:string, and finally binary(). The options control how the parts are unpacked, and are similar to xdmp:zip-get - default-namespace, repair, format, default-language, and encoding. The options apply to all parts, so specifying a format of binary will cause all parts to be returned as binary, and specifying text will cause all parts to be returned as xs:string if possible, falling back to binary() if necessary. This is useful if different parts need different options, in which case the resulting strings can each be passed to xdmp:unquote() with appropriate options. **/
   multipartDecode(separator: string, data: MLNode<any>, options?: MLNodeOrObject<any>): ValueIterator<any>;
@@ -1038,6 +1122,9 @@ interface xdmpFunctions {
     /** Returns timestamp of last configuration changed **/
   configurationTimestamp(name?: string): number;
 
+    /** Returns the dialect (e.g., "javascript", "1.0-ml", etc) of the caller or the empty sequence if no dialect information is available. Note that the return is not the language the function that calls this built-in is written in; it is the dialect the function is called from. For example, if a JavaScript program calls function "foo", which uses xdmp:caller-dialect, then the return from xdmp:caller-dialect will be “javascript” even if "foo" is implemented in XQuery. **/
+  callerDialect(): string;
+
     /** Returns ldap search result. The function returns a ValueIterator containing objects, where each object is an ldap attribute with its value. **/
   ldapSearch(query: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
@@ -1054,7 +1141,7 @@ interface ctsFunctions {
     /** Returns the number of fragments selected by a search. This can be used as a fast estimate of the number results. **/
   estimate(query: cts.Query, options?: MLArray<cts.Order>|MLArray<string>, qualityWeight?: number, forestIds?: MLArray<number>, maximum?: number): number;
 
-    /** Returns an XML element recording information about how the given search will be processed by the index. The information is a structured representation of the information provided in the error log when query trace is enabled. The query will be processed up to the point of getting an estimate of the number of fragments returned by the index. **/
+    /** Returns an array of JavaScript objects recording information about how the given search will be processed by the index. The information is a structured representation of the information provided in the error log when query trace is enabled. The query will be processed up to the point of getting an estimate of the number of fragments returned by the index. **/
   plan(query: cts.Query, options?: MLArray<cts.Order>|MLArray<string>, qualityWeight?: number, forestIds?: MLArray<number>, maximum?: number): Array<any>;
 
 }
@@ -1065,7 +1152,7 @@ interface mapFunctions {
 declare var map:mapFunctions
 interface semFunctions {
 
-    /** Creates a sem:binding object, which is a sub-type of json:object (and map:map). **/
+    /** Creates a sem:binding object, which is a sub-type of json:object (and map:map). This function is a built-in. **/
   binding(map?: MLNodeOrObject<any>): sem.Binding;
 
 }
@@ -1076,7 +1163,7 @@ interface jsonFunctions {
 declare var json:jsonFunctions
 
 // Type definitions for FormatBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The format-date, format-time, format-dateTime and format-number built-in functions are XSLT functions that operate on date-, time-, dateTime-, number-related values.
@@ -1122,7 +1209,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for FunctionBuiltins
-// Definitions: 
+// Definitions:
 
 /**
   The Higher-Order built-in functions are XQuery functions to support
@@ -1162,11 +1249,11 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 interface fnFunctions {
 
-    /** Returns a function with the given name and arity, or the empty sequence if none exists. For more details, see XPath 3.0 Functions and Operators. **/
+    /** Returns a function with the given name and arity, or the empty sequence if none exists. You can use the returned function reference with xdmp:applyxdmp.apply. For more details, see XPath 3.0 Functions and Operators. **/
   functionLookup(name: xs.QName, arity: number): () => any;
 
     /** Returns the first item in a sequence. For more details, see XPath 3.0 Functions and Operators. **/
-  head(seq: MLArray<any>, arg: ValueIterator<any>): ValueIterator<any>;
+  head(seq: MLArray<any>, arg: ValueIterator<any>): any;
 
     /** Returns all but the first item in a sequence. For more details, see XPath 3.0 Functions and Operators. **/
   tail(seq: MLArray<any>): ValueIterator<any>;
@@ -1175,13 +1262,126 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for GeospatialBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The geospatial built-in functions are XQuery functions defined to operate on
 geospatial values.
+
+  Use the geospatial constructor functions to create geospatial
+  primitive types such as points, boxes, circles, and polygons from raw
+  data. You can use the resulting constructs in geospatial queries,
+  geospatial lexicon analysis, and geospatial operations such as
+  tests for containment or interesection.
+
+  Use the following geospatial built-in functions to perform operations
+  on geospatial values, such as region containment or intersection, and
+  conversion between MarkLogic geospatial primitive values and standard
+  formats such as WKT.
+
+  The following functions are deprecated. You should use the
+  corresponding functions in the geo namespace instead.
+  For example, use geo:distance instead of
+  cts:distance.
 **/
 
+interface geoFunctions {
+
+    /** Returns the distance (in miles) between two points. **/
+  distance(p1: cts.Point, p2: cts.Point, options?: MLArray<string>): number;
+
+    /** Returns the great circle distance (in miles) between a point and an region. The region is defined by a cts:region. **/
+  shortestDistance(p1: cts.Point, region: MLArray<cts.Region>, options?: MLArray<string>): number;
+
+    /** Returns the true bearing in radians of the path from the first point to the second. An error is raised if the two points are the same. **/
+  bearing(p1: cts.Point, p2: cts.Point, options?: MLArray<string>): number;
+
+    /** Returns the point at the given distance (in miles) along the given bearing (in radians) from the starting point. **/
+  destination(p: cts.Point, bearing: number, distance: number, options?: MLArray<string>): cts.Point;
+
+    /** Returns the point at the intersection of two arcs. If the arcs do not intersect, or lie on the same great circle, or if either arc covers more than 180 degrees, an error is raised. **/
+  arcIntersection(p1: cts.Point, p2: cts.Point, q1: cts.Point, q2: cts.Point, options?: MLArray<string>): cts.Point;
+
+    /** Returns true if the box intersects with a region. **/
+  boxIntersects(box: cts.Box, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the circle intersects with a region. **/
+  circleIntersects(circle: cts.Circle, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the polygon intersects with a region. **/
+  polygonIntersects(polygon: cts.Polygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the polygon contains a region. **/
+  polygonContains(polygon: cts.Polygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the complex-polygon intersects with a region. **/
+  complexPolygonIntersects(complexPolygon: cts.ComplexPolygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the complex-polygon contains a region. **/
+  complexPolygonContains(complexPolygon: cts.ComplexPolygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if the target region intersects with a region. **/
+  regionIntersects(target: cts.Region, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns true if one region contains the other region. **/
+  regionContains(region: cts.Region, region2: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+
+    /** Returns a sequence of boxes that bound the given region. **/
+  boundingBoxes(region: cts.Region, options?: MLArray<string>): ValueIterator<cts.Box>;
+
+    /** Returns a sequence of geospatial regions parsed from Well-Known Text format. **/
+  parseWkt(wtk: MLArray<string>): ValueIterator<cts.Region>;
+
+    /** Returns a sequence of strings in Well-Known Text format. **/
+  toWkt(wtk: MLArray<cts.Region>): ValueIterator<string>;
+
+    /** Test a WKT string for validity in a MarkLogic context. Returns true if the input string is valid Well-Known Text for a supported region type. **/
+  validateWkt(wkt: string): boolean;
+
+    /** Returns a sequence of geospatial regions parsed from Well-Known Binary format. **/
+  parseWkb(wkb: MLNode<any>): ValueIterator<cts.Region>;
+
+    /** Returns a binary node in Well-Known Binary format. **/
+  toWkb(wkb: MLArray<cts.Region>): ValueIterator<string>;
+
+    /** Returns true if the binary data can be parsed as WKB into a supported region type. **/
+  validateWkb(wkb: MLNode<any>): boolean;
+
+    /** Return a point approximating the center of the given region. For a point, this is the point itself. For a circle, it is the center point. For a box, it is the point whose latitude is half-way between the northern and southern limits and whose longitude is half-way between the western and eastern limits. For polygons, complex polygons, and linestrings, an approximate centroid is returned. This approximation is rough, and useful for quick comparisons. **/
+  approxCenter(region: cts.Region, options?: MLArray<string>): cts.Point;
+
+    /** Perform an affine transformation on a geospatial region. The transformation is always applied in the raw coordinate system (Cartesian). **/
+  regionAffineTransform(region: cts.Region, transform: MLArray<{[key:string]:any}>, options?: MLArray<string>): cts.Region;
+
+    /** This function returns a count of the number of vertices in a region. The vertex that closes the ring is only counted once. For a complex polygon this is a count of the vertices in the outer polygon. For points it returns 1, for circles it returns 0, and for boxes it returns the number of distinct points in the set (sw, se, nw, ne). **/
+  countVertices(region: cts.Region): number;
+
+    /** Return a count of the distinct number of vertices in a region, taking tolerance into account. **/
+  countDistinctVertices(region: cts.Region, options?: MLArray<string>): number;
+
+    /** This function fixes various problems with the region or raises an error if it is not repairable. The only relevant fix for MarkLogic is to remove duplicate adjacent vertices in polygons (including inner and outer polygons of complex polygons). The only relevant options are options controlling the coordinate system and the tolerance option. **/
+  regionClean(region: cts.Region, options?: MLArray<string>): cts.Region;
+
+    /** This function returns a point that is guaranteed to be inside the bounds of the given region. For a given region and set of options, the point returned should be stable from one call to the next. **/
+  interiorPoint(region: cts.Region, options?: MLArray<string>): cts.Point;
+
+    /** This function converts a distance from one unit of measure to another. The supported units are "miles", "feet", "km", and "meters". This is a proper superset of the units supported as options to various geospatial functions ("miles","km"). **/
+  distanceConvert(distance: number, unit1: string, unit2: string): number;
+
+    /** This function removes duplicate (adjacent) vertices. Whether a vertex counts as a duplicate depends on the governing coordinate system. If it is applied to a box, circle, or point, no action is taken and the region is returned unchanged. **/
+  removeDuplicateVertices(region: cts.Region, options?: MLArray<string>): cts.Region;
+
+    /** This function returns a simplified approximation of the region, using the Douglas-Peucker algorithm. The threshold specifies how close an approximation this should be in the same units as tolerance. The tolerance option should be smaller than the threshold. **/
+  regionApproximate(region: cts.Region, threshold: number, options?: MLArray<string>): cts.Region;
+
+    /** Construct a polygon approximating a circle. **/
+  circlePolygon(circle: cts.Circle, arcTolerance: number, options?: MLArray<string>): cts.Region;
+
+    /** Construct a polygon that approximates an ellipse. **/
+  ellipsePolygon(center: cts.Point, semiMajorAxis: number, semiMinorAxis: number, azimuth: number, arcTolerance: number, options?: MLArray<string>): cts.Region;
+
+}
+declare var geo:geoFunctions
 interface ctsFunctions {
 
     /** Returns a point value. **/
@@ -1430,53 +1630,53 @@ interface ctsFunctions {
     /** Returns value co-occurrences from the geospatial lexicons. Geospatial lexicons are implemented using geospatial indexes; consequently this function requires a geospatial index for each combination of elements and attributes specified in the function. If there is not a geospatial index configured for the specified element/attribute combination, then an exception is thrown. **/
   geospatialCoOccurrences(geoElementName1: xs.QName, child1Name1: xs.QName, child1Name2: xs.QName, geoElementName2: xs.QName, child2Name1?: xs.QName, child2Name2?: xs.QName, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<MLNode<any>>;
 
-    /** Returns the distance (in miles) between two points. **/
-  distance(p1: cts.Point, p2: cts.Point, options?: MLArray<string>): number;
+    /** [DEPRECATED: use geo:distance instead] Returns the distance (in miles) between two points. **/
+  distance(): ;
 
-    /** Returns the great circle distance (in miles) between a point and an region. The region is defined by a cts:region. **/
-  shortestDistance(p1: cts.Point, region: MLArray<cts.Region>, options?: MLArray<string>): number;
+    /** [DEPRECATED: use geo:shortest-distance instead] Returns the great circle distance (in miles) between a point and an region. The region is defined by a cts:region. **/
+  shortestDistance(): ;
 
-    /** Returns the true bearing in radians of the path from the first point to the second. An error is raised if the two points are the same. **/
-  bearing(p1: cts.Point, p2: cts.Point, options?: MLArray<string>): number;
+    /** [DEPRECATED: use geo:bearing instead] Returns the true bearing in radians of the path from the first point to the second. An error is raised if the two points are the same. **/
+  bearing(): ;
 
-    /** Returns the point at the given distance (in miles) along the given bearing (in radians) from the starting point. **/
-  destination(p: cts.Point, bearing: number, distance: number, options?: MLArray<string>): cts.Point;
+    /** [DEPRECATED: use geo:destination instead] Returns the point at the given distance (in miles) along the given bearing (in radians) from the starting point. **/
+  destination(): ;
 
-    /** Returns the point at the intersection of two arcs. If the arcs do not intersect, or lie on the same great circle, or if either arc covers more than 180 degrees, an error is raised. **/
-  arcIntersection(p1: cts.Point, p2: cts.Point, q1: cts.Point, q2: cts.Point, options?: MLArray<string>): cts.Point;
+    /** [DEPRECATED: use geo:arc-intersection instead] Returns the point at the intersection of two arcs. If the arcs do not intersect, or lie on the same great circle, or if either arc covers more than 180 degrees, an error is raised. **/
+  arcIntersection(): ;
 
-    /** Returns true if the box intersects with a region. **/
-  boxIntersects(box: cts.Box, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:box-intersects instead] Returns true if the box intersects with a region. **/
+  boxIntersects(): ;
 
-    /** Returns true if the circle intersects with a region. **/
-  circleIntersects(circle: cts.Circle, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:circle-intersects instead] Returns true if the circle intersects with a region. **/
+  circleIntersects(): ;
 
-    /** Returns true if the polygon intersects with a region. **/
-  polygonIntersects(polygon: cts.Polygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:polygon-intersects instead] Returns true if the polygon intersects with a region. **/
+  polygonIntersects(): ;
 
-    /** Returns true if the polygon contains a region. **/
-  polygonContains(polygon: cts.Polygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:polygon-contains instead] Returns true if the polygon contains a region. **/
+  polygonContains(): ;
 
-    /** Returns true if the complex-polygon intersects with a region. **/
-  complexPolygonIntersects(complexPolygon: cts.ComplexPolygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:complex-polygon-intersects instead] Returns true if the complex-polygon intersects with a region. **/
+  complexPolygonIntersects(): ;
 
-    /** Returns true if the complex-polygon contains a region. **/
-  complexPolygonContains(complexPolygon: cts.ComplexPolygon, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:complex-polygon-contains instead] Returns true if the complex-polygon contains a region. **/
+  complexPolygonContains(): ;
 
-    /** Returns true if the target region intersects with a region. **/
-  regionIntersects(target: cts.Region, region: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:region-intersects instead] Returns true if the region intersects with a region. **/
+  regionIntersects(): ;
 
-    /** Returns true if one region contains the other region. **/
-  regionContains(region: cts.Region, region2: MLArray<cts.Region>, options?: MLArray<string>): boolean;
+    /** [DEPRECATED: use geo:region-contains instead] Returns true if the region contains the other region. **/
+  regionContains(): ;
 
-    /** Returns a sequence of boxes that bound the given region. **/
-  boundingBoxes(region: cts.Region, options?: MLArray<string>): ValueIterator<cts.Box>;
+    /** [DEPRECATED: use geo:bounding-boxes instead] Returns a sequence of boxes that bound the given region. **/
+  boundingBoxes(): ;
 
-    /** Returns a sequence of geospatial regions parsed from Well-Known Text format. **/
-  parseWkt(wtk: MLArray<string>): ValueIterator<cts.Region>;
+    /** [DEPRECATED: use geo:parse-wkt instead] Returns a sequence of geospatial regions parsed from Well-Known Text format. **/
+  parseWkt(): ;
 
-    /** Returns a sequence of strings in Well-Known Text format. **/
-  toWkt(wtk: MLArray<cts.Region>): ValueIterator<string>;
+    /** [DEPRECATED: use geo:to-wkt instead] Returns a sequence of strings in Well-Known Text format. **/
+  toWkt(): ;
 
     /** Creates a reference to a geospatial element range index, for use as a parameter to cts:value-tuples. This function will throw an exception if the specified range index does not exist. **/
   geospatialElementReference(element: xs.QName, options?: MLArray<string>): cts.Reference;
@@ -1502,14 +1702,17 @@ interface ctsFunctions {
     /** Creates a reference to a geospatial path range index, for use as a parameter to cts:value-tuples. This function will throw an exception if the specified range index does not exist. **/
   geospatialPathReference(pathExpression: string, options?: MLArray<string>, map?: {[key:string]:any}): cts.Reference;
 
-    /** Return a point approximating the center of the given region. For a point, this is the point itself. For a circle, it is the center point. For a box, it is the point whose latitude is half-way between the northern and southern limits and whose longitude is half-way between the western and eastern limits. For polygons, complex polygons, and linestrings, an approximate centroid is returned. This approximation is rough, and useful for quick comparisons. **/
-  approxCenter(region: cts.Region, options?: MLArray<string>): cts.Point;
+    /** [DEPRECATED: use geo:approx-center instead] Return a point approximating the center of the given region. For a point, this is the point itself. For a circle, it is the center point. For a box, it is the point whose latitude is half-way between the northern and southern limits and whose longitude is half-way between the western and eastern limits. For a linestring, it is the middle point in the line. For polygons and complex polygons, an approximate centroid is returned. This approximation is rough, and useful for quick comparisons. **/
+  approxCenter(): ;
+
+    /** Find regions in documents that have a spatial relationship to one or more caller-supplied regions. **/
+  matchRegions(rangeIndexes: MLArray<cts.Reference>, operation: string, regions: MLArray<cts.Region>, options?: MLArray<string>, query?: cts.Query, forestIds?: MLArray<number>): ValueIterator<any>;
 
 }
 declare var cts:ctsFunctions
 
 // Type definitions for DocumentFilter
-// Definitions: 
+// Definitions:
 
 /**
   Includes the document filtering functions using the ISYS
@@ -1525,7 +1728,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for PDFConvert
-// Definitions: 
+// Definitions:
 
 /**
   Includes the PDF convert functions using the Iceni technology.
@@ -1540,12 +1743,56 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for JavaScriptBuiltins
-// Definitions: 
+// Definitions:
 
 /**
-  The JavaScript Global Object functions are MarkLogic-specific JavaScript 
+  The JavaScript Global Object functions are MarkLogic-specific JavaScript
   functions that extend the Global Object.  These functions are available
   in the Global space, without any prefixing.
+
+ Methods and properties on the Error Object.
+
+ Methods and properties on the xs.yearMonthDuration Object.
+
+ Methods and properties on the xs.dayTimeDuration Object.
+
+ Methods and properties on the xs.dateTime Object.
+
+ Methods and properties on the xs.date Object.
+
+ Methods and properties on the xs.time Object.
+
+ Methods and properties on the xs.gYearMonth Object.
+
+ Methods and properties on the xs.gYear Object.
+
+ Methods and properties on the xs.gMonthDay Object.
+
+ Methods and properties on the xs.gMonth Object.
+
+ Methods and properties on the TypeInfo Object.
+
+ Methods and properties on the NodeBuilder Object.
+
+ Methods and properties on the Value Object.
+
+ Methods and properties on the ValueIterator Object.
+
+ Methods and properties on the Node Object.
+
+ Methods and properties on the NodeList Object.
+
+ Methods and properties on the NamedNodeMap Object.
+
+ Methods and properties on the XMLDocument Object.
+
+ Methods and properties on the Element Object (for XML Elements).
+
+ Methods and properties on the Attr Object (for XML attributes).
+
+ Methods and properties on the CharacterData Object.
+
+ Methods and properties on the TypeInfo Object.
 **/
 
 interface xdmpFunctions {
@@ -1567,13 +1814,13 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /**
  The JSON built-in functions serialize XQuery items to JSON and
  read a JSON string and create XQuery items from it.  JSON (JavaScript
  Object Notation) is a data-interchange format popular mechanism for passing
- data from JavaScript to other programming environments. 
+ data from JavaScript to other programming environments.
  **/
 
 interface xdmpFunctions {
@@ -1594,7 +1841,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for LastLogin
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -1607,7 +1854,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for MathBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The math built-in functions.
@@ -1764,7 +2011,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for NodeBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The node built-in functions are XQuery functions defined to operate on nodes.
@@ -1800,7 +2047,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for NumericBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The numeric built-in functions are XQuery functions defined to operate on
@@ -1830,7 +2077,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for SearchBuiltins
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -1865,7 +2112,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for PeriodBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The format-date, format-time, format-dateTime and format-number built-in functions are XSLT functions that operate on date-, time-, dateTime-, number-related values.
@@ -1892,8 +2139,8 @@ interface temporalFunctions {
     /** This function enables or disables the use of LSQT (Last Stable Query Time) on the named collection. When enabled (true), a document is created in the database to hold the LSQT. This document is identified by the collection name with an .lsqt suffix. You must have LSQT enabled on the temporal collection in order to use the temporal:statement-set-system-time function to manually set the system start time when inserting a document into that collection. For details on how to use LSQT, see Last Stable Query Time (LSQT) and Application-controlled System Time in the Temporal Developer's Guide **/
   setUseLsqt(temporalCollection: string, on: boolean): void;
 
-    /** This function enables Last Stable Query Time (LSQT) on the named collection and advances the LSQT for the collection to the maximum system start time. When LSQT is enabled on the temporal collection, you can use the temporal:statement-set-system-time function to manually set the system start time when inserting a document into that collection. For details on how to use LSQT, see Last Stable Query Time (LSQT) and Application-controlled System Time in the Temporal Developer's Guide **/
-  advanceLsqt(temporalCollection: string): Date;
+    /** This function enables Last Stable Query Time (LSQT) on the named collection and advances the LSQT for the collection to the maximum system start time minus a lag. When LSQT is enabled on the temporal collection, you can use the temporal:statement-set-system-time function to manually set the system start time when inserting a document into that collection. For details on how to use LSQT, see Last Stable Query Time (LSQT) and Application-controlled System Time in the Temporal Developer's Guide **/
+  advanceLsqt(temporalCollection: string, lag?: number): Date;
 
     /** This function returns whether Last Stable Query Time (LSQT) management is automatically managed (true) or not automatically managed (false). For details on how to use LSQT, see Last Stable Query Time (LSQT) and Application-controlled System Time in the Temporal Developer's Guide **/
   getLsqtAutomation(temporalCollection: string): boolean;
@@ -1911,7 +2158,7 @@ interface temporalFunctions {
 declare var temporal:temporalFunctions
 
 // Type definitions for QNameBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 These built-in functions are XQuery functions defined to operate on
@@ -1947,7 +2194,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for StringBuiltins
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -1969,20 +2216,20 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /****/
 
 interface semFunctions {
 
-    /** Returns a sem:store value that answers queries from the set of triples derived by applying the ruleset to the triples in the sem:store values provided in $store. **/
+    /** The sem:ruleset-store function returns a set of triples derived by applying the ruleset to the triples in the sem:store constructor provided in $store ("the triple that can be inferred from these rules"). If graph URIs are included with a sem:sparql query that includes sem:ruleset-store, the query will include "triples in the $store that are also in these graphs". **/
   rulesetStore(locations: MLArray<string>, store?: MLArray<sem.Store>, options?: MLArray<string>): sem.Store;
 
 }
 declare var sem:semFunctions
 
 // Type definitions for SMTPClient
-// Definitions: 
+// Definitions:
 
 /**
 Implements the send function.
@@ -1990,14 +2237,14 @@ Implements the send function.
 
 interface xdmpFunctions {
 
-    /** Send an email in an XQuery program. A valid SMTP Relay must be configured in the Groups page of the Admin Interface for the email to be sent. The format of the email message must be an XML file that complies with the schema files listed below. **/
-  email(message: MLNodeOrObject<any>): void;
+    /** Send an email in an JavasCript program. A valid SMTP Relay must be configured in the Groups page of the Admin Interface for the email to be sent. The format of the email message can be an JavaScript object that follows the format as below, or it can be an XML file that complies with the schema files for email (see xdmp:email). **/
+  email(message: Object): void;
 
 }
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /**
   The rdf functions are built-in functions to construct and use
@@ -2007,140 +2254,140 @@ declare var xdmp:xdmpFunctions
 
 interface rdfFunctions {
 
-    /** Returns an rdf:langString value with the given value and language tag. The rdf:langString type extends xs:string, and represents a language tagged string in RDF. **/
+    /** Returns an rdf:langString value with the given value and language tag. The rdf:langString type extends xs:string, and represents a language tagged string in RDF. This function is a built-in. **/
   langString(string: string, lang: string): rdf.LangString;
 
-    /** Returns the language of an rdf:langString value. **/
+    /** Returns the language of an rdf:langString value. This function is a built-in. **/
   langStringLanguage(val: rdf.LangString): string;
 
 }
 declare var rdf:rdfFunctions
 interface semFunctions {
 
-    /** Returns the name of the simple type of the atomic value argument as a SPARQL style IRI. If the value is derived from sem:unknown or sem:invalid, the datatype IRI part of those values is returned. This XQuery function backs up the SPARQL datatype() function. **/
+    /** Returns the name of the simple type of the atomic value argument as a SPARQL style IRI. If the value is derived from sem:unknown or sem:invalid, the datatype IRI part of those values is returned. This XQuery function backs up the SPARQL datatype() function. This function is a built-in. **/
   datatype(value: any): sem.Iri;
 
-    /** This function returns an identifier for a blank node, allowing the construction of a triple that refers to a blank node. This XQuery function backs up the SPARQL BNODE() function. **/
+    /** This function returns an identifier for a blank node, allowing the construction of a triple that refers to a blank node. This XQuery function backs up the SPARQL BNODE() function. This function is a built-in. **/
   bnode(value?: any): sem.Blank;
 
-    /** Returns true if the argument is an RDF IRI - that is, derived from type sem:iri, but not derived from type sem:blank. This XQuery function backs up the SPARQL isIRI() and isURI() functions. **/
+    /** Returns true if the argument is an RDF IRI - that is, derived from type sem:iri, but not derived from type sem:blank. This XQuery function backs up the SPARQL isIRI() and isURI() functions. This function is a built-in. **/
   isIRI(value: any): boolean;
 
-    /** Returns true if the argument is an RDF blank node - that is, derived from type sem:blank. This XQuery function backs up the SPARQL isBlank() function. **/
+    /** Returns true if the argument is an RDF blank node - that is, derived from type sem:blank. This XQuery function backs up the SPARQL isBlank() function. This function is a built-in. **/
   isBlank(value: any): boolean;
 
-    /** Returns true if the argument is an RDF literal - that is, derived from type xs:anyAtomicType, but not derived from type sem:iri. This XQuery function backs up the SPARQL isLiteral() function. **/
+    /** Returns true if the argument is an RDF literal - that is, derived from type xs:anyAtomicType, but not derived from type sem:iri. This XQuery function backs up the SPARQL isLiteral() function. This function is a built-in. **/
   isLiteral(value: any): boolean;
 
-    /** Returns true if the argument is a valid numeric RDF literal. This XQuery function backs up the SPARQL isNumeric() function. **/
+    /** Returns true if the argument is a valid numeric RDF literal. This XQuery function backs up the SPARQL isNumeric() function. This function is a built-in. **/
   isNumeric(value: any): boolean;
 
-    /** Returns true if the arguments are the same RDF term as defined by the RDF concepts specification. This XQuery function backs up the SPARQL sameTerm() function. **/
+    /** Returns true if the arguments are the same RDF term as defined by the RDF concepts specification. This XQuery function backs up the SPARQL sameTerm() function. This function is a built-in. **/
   sameTerm(a: any, b: any): boolean;
 
-    /** Returns the language of the value passed in, or the empty string if the value has no language. Only values derived from rdf:langString have a language. This XQuery function backs up the SPARQL lang() function. **/
+    /** Returns the language of the value passed in, or the empty string if the value has no language. Only values derived from rdf:langString have a language. This XQuery function backs up the SPARQL lang() function. This function is a built-in. **/
   lang(value: any): string;
 
-    /** Returns true if $lang-tag matches $lang-range according to the basic filtering scheme defined in RFC4647. This XQuery function backs up the SPARQL langMatches() function. **/
+    /** Returns true if $lang-tag matches $lang-range according to the basic filtering scheme defined in RFC4647. This XQuery function backs up the SPARQL langMatches() function. This function is a built-in. **/
   langMatches(langTag: string, langRange: string): boolean;
 
-    /** Returns a random double between 0 and 1. This XQuery function backs up the SPARQL RAND() function. **/
+    /** Returns a random double between 0 and 1. This XQuery function backs up the SPARQL RAND() function. This function is a built-in. **/
   random(): number;
 
-    /** Returns the iri of the default graph. **/
+    /** Returns the iri of the default graph. This function is a built-in. **/
   defaultGraphIri(): sem.Iri;
 
-    /** Add permissions to the graph specified. The user must have update or insert permissions on the graph. **/
+    /** Add permissions to the graph specified. The user must have update or insert permissions on the graph. This function is a built-in. **/
   graphAddPermissions(graph: sem.Iri, permissions: Object[]): void;
 
-    /** Set permissions to the graph specified. The user must have update permissions on the graph. **/
+    /** Set permissions to the graph specified. The user must have update permissions on the graph. This function is a built-in. **/
   graphSetPermissions(graph: sem.Iri, permissions: Object[]): void;
 
-    /** Remove permissions from the graph specified. The user must have update permissions on the graph. **/
+    /** Remove permissions from the graph specified. The user must have update permissions on the graph. This function is a built-in. **/
   graphRemovePermissions(graph: sem.Iri, permissions: Object[]): void;
 
-    /** Get permissions to the graph specified. The user must have read permissions on the graph. **/
+    /** Get permissions to the graph specified. The user must have read permissions on the graph. This function is a built-in. **/
   graphGetPermissions(graph: sem.Iri, format?: string): Object[];
 
-    /** The IF function form evaluates the first argument, interprets it as a effective boolean value, then returns the value of expression2 if the EBV is true, otherwise it returns the value of expression3. Only one of expression2 and expression3 is evaluated. If evaluating the first argument raises an error, then an error is raised for the evaluation of the IF expression. This XQuery function backs up the SPARQL IF() functional form. **/
+    /** The IF function form evaluates the first argument, interprets it as a effective boolean value, then returns the value of expression2 if the EBV is true, otherwise it returns the value of expression3. Only one of expression2 and expression3 is evaluated. If evaluating the first argument raises an error, then an error is raised for the evaluation of the IF expression. This XQuery function backs up the SPARQL IF() functional form. This function is a built-in. **/
   if(condition: boolean, then: MLArray<any>, else_: MLArray<any>): ValueIterator<any>;
 
-    /** Returns the value of the first argument that evaluates without error. This XQuery function backs up the SPARQL COALESCE() functional form. **/
+    /** Returns the value of the first argument that evaluates without error. This XQuery function backs up the SPARQL COALESCE() functional form. This function is a built-in. **/
   coalesce(parameter1: MLArray<any>, ...parameterN: MLArray<any>[]): ValueIterator<any>;
 
-    /** Returns the timezone of an xs:dateTime value as a string. This XQuery function backs up the SPARQL TZ() function. **/
+    /** Returns the timezone of an xs:dateTime value as a string. This XQuery function backs up the SPARQL TZ() function. This function is a built-in. **/
   timezoneString(value: Date): string;
 
-    /** Return a string that is the scheme specific part of random UUID URN (RFC4122). This XQuery function backs up the SPARQL STRUUID() function. **/
+    /** Return a string that is the scheme specific part of random UUID URN (RFC4122). This XQuery function backs up the SPARQL STRUUID() function. This function is a built-in. **/
   uuidString(): string;
 
-    /** Return a UUID URN (RFC4122) as a sem:iri value. This XQuery function backs up the SPARQL UUID() function. **/
+    /** Return a UUID URN (RFC4122) as a sem:iri value. This XQuery function backs up the SPARQL UUID() function. This function is a built-in. **/
   uuid(): sem.Iri;
 
-    /** Creates a triple object, which represents an RDF triple containing atomic values representing the subject, predicate, object, and optionally graph identifier (graph IRI). **/
+    /** Creates a triple object, which represents an RDF triple containing atomic values representing the subject, predicate, object, and optionally graph identifier (graph IRI). This function is a built-in. **/
   triple(subject_or_node: any, predicate?: any, object?: any, graph?: sem.Iri): sem.Triple;
 
-    /** Returns the subject from a sem:triple value. **/
+    /** Returns the subject from a sem:triple value. This function is a built-in. **/
   tripleSubject(triple: sem.Triple): any;
 
-    /** Returns the predicate from a sem:triple value. **/
+    /** Returns the predicate from a sem:triple value. This function is a built-in. **/
   triplePredicate(triple: sem.Triple): any;
 
-    /** Returns the object from a sem:triple value. **/
+    /** Returns the object from a sem:triple value. This function is a built-in. **/
   tripleObject(triple: sem.Triple): any;
 
-    /** Returns the graph identifier (graph IRI) from a sem:triple value. **/
+    /** Returns the graph identifier (graph IRI) from a sem:triple value. This function is a built-in. **/
   tripleGraph(triple: sem.Triple): sem.Iri;
 
-    /** Returns a sem:unknown value with the given literal value and datatype IRI. The sem:unknown type extends xs:untypedAtomic, and represents an RDF value with a datatype IRI for which no schema is available. **/
+    /** Returns a sem:unknown value with the given literal value and datatype IRI. The sem:unknown type extends xs:untypedAtomic, and represents an RDF value with a datatype IRI for which no schema is available. This function is a built-in. **/
   unknown(string: string, datatype: sem.Iri): sem.Unknown;
 
-    /** Returns the datatype IRI of a sem:unknown value. **/
+    /** Returns the datatype IRI of a sem:unknown value. This function is a built-in. **/
   unknownDatatype(val: sem.Unknown): sem.Iri;
 
-    /** Returns a sem:invalid value with the given literal value and datatype IRI. The sem:invalid type extends xs:untypedAtomic, and represents an RDF value whose literal string is invalid according to the schema for it's datatype. **/
+    /** Returns a sem:invalid value with the given literal value and datatype IRI. The sem:invalid type extends xs:untypedAtomic, and represents an RDF value whose literal string is invalid according to the schema for it's datatype. This function is a built-in. **/
   invalid(string: string, datatype: sem.Iri): sem.Invalid;
 
-    /** Returns the datatype IRI of a sem:invalid value. **/
+    /** Returns the datatype IRI of a sem:invalid value. This function is a built-in. **/
   invalidDatatype(val: sem.Invalid): sem.Iri;
 
-    /** Returns a value to represent the RDF typed literal with lexical value $value and datatype IRI $datatype. Returns a value of type sem:unknown for datatype IRIs for which there is no schema, and a value of type sem:invalid for lexical values which are invalid according to the schema for the given datatype. This XQuery function backs up the SPARQL STRDT() function. **/
+    /** Returns a value to represent the RDF typed literal with lexical value $value and datatype IRI $datatype. Returns a value of type sem:unknown for datatype IRIs for which there is no schema, and a value of type sem:invalid for lexical values which are invalid according to the schema for the given datatype. This XQuery function backs up the SPARQL STRDT() function. This function is a built-in. **/
   typedLiteral(value: string, datatype: sem.Iri): any;
 
 }
 declare var sem:semFunctions
 interface xdmpFunctions {
 
-    /** Returns the name of the simple type of the atomic value argument as an xs:QName. **/
+    /** Returns the name of the simple type of the atomic value argument as an xs:QName. This function is a built-in. **/
   type(value: any): xs.QName;
 
 }
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /****/
 
 interface semFunctions {
 
-    /** Executes a SPARQL query against the database. SPARQL "SELECT" queries return a solution as a sequence of map objects in the form of a table, where each map represents a set of bindings that satisfies the query. SPARQL "CONSTRUCT" queries return triples as a sequence of sem:triple values in an RDF graph. SPARQL "DESCRIBE" queries return a sequence of sem:triple values as an RDF graph that describes the resources found by the query. SPARQL "ASK" queries return a single xs:boolean value (true or false) indicating whether a query pattern matches in the dataset. **/
+    /** Executes a SPARQL query against the database. SPARQL "SELECT" queries return a solution as a sequence of map objects in the form of a table, where each map represents a set of bindings that satisfies the query. SPARQL "CONSTRUCT" queries return triples as a sequence of sem:triple values in an RDF graph. SPARQL "DESCRIBE" queries return a sequence of sem:triple values as an RDF graph that describes the resources found by the query. SPARQL "ASK" queries return a single xs:boolean value (true or false) indicating whether a query pattern matches in the dataset. This function is a built-in. **/
   sparql(sparql: string, bindings?: {[key:string]:any}, options?: MLArray<string>, store?: MLArray<sem.Store>): ValueIterator<any>;
 
-    /** Executes a SPARQL Update operation against the database. Graph Update - addition and removal of triples from some graphs within the Graph Store. Graph Management - creating and deletion of graphs within the Graph Store, as well as convenient shortcuts for graph update operations often used during graph management (to add, move, and copy graphs). **/
+    /** Executes a SPARQL Update operation against the database. Graph Update - addition and removal of triples from some graphs within the Graph Store. Graph Management - creating and deletion of graphs within the Graph Store, as well as convenient shortcuts for graph update operations often used during graph management (to add, move, and copy graphs). This function is a built-in. **/
   sparqlUpdate(sparql: string, bindings?: {[key:string]:any}, options?: MLArray<string>, store?: MLArray<sem.Store>, defaultPermissions?: Object[]): void;
 
-    /** Returns a sem:store value queries from the sequence of sem:triple values passed in as an argument. The sem:store value returned from this function will raise an error if it is passed as part of the options argument to a call to sem:sparql-update(). The default rulesets configured on the current database have no effect on a sem:store value created with sem:in-memory-store(). This should be used along with sem:sparql() in preference to the deprecated sem:sparql-triples() function. We will remove documentation of sem:sparql-triples(), but leave the function for backwards compatibility. **/
+    /** Returns a sem:store constructor that queries from the sequence of sem:triple values passed in as an argument. The sem:store constructor returned from this function will raise an error if it is passed as part of the options argument of a call to sem:sparql-update(). The default rulesets configured on the current database have no effect on a sem:store value created with sem:in-memory-store(). This should be used along with sem:sparql() in preference to the deprecated sem:sparql-triples() function. We will remove documentation of sem:sparql-triples(), but leave the function for backwards compatibility. This function is a built-in. **/
   inMemoryStore(dataset: MLArray<sem.Triple>): sem.Store;
 
-    /** Returns a sem:store value that queries from the current database's triple index restricted by the cts:query argument when passed to sem:sparql(), sem:sparql-update(), or sem:sparql-values as part of the options argument. The default for sem:store is the triples that can be inferred from the rulesets. **/
+    /** The sem:store function defines a set of criteria, that when evaluated, selects a set of triples to be passed in to sem:sparql(), sem:sparql-update(), or sem:sparql-values as part of the options argument. The sem:store constructor queries from the current database's triple index, restricted by the options and the cts:query argument (for instance, "triples in documents matching this query"). This function is a built-in. **/
   store(options?: MLArray<string>, query?: cts.Query): sem.Store;
 
 }
 declare var sem:semFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -2153,7 +2400,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SSL
-// Definitions: 
+// Definitions:
 
 /**
    The SSL built-in functions are miscellaneous extensions to the
@@ -2200,7 +2447,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SchemaBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The schema component built-in functions.
@@ -2266,33 +2513,49 @@ interface scFunctions {
 declare var sc:scFunctions
 
 // Type definitions for SearchBuiltins
-// Definitions: 
+// Definitions:
 
 /**
+Use the search built-in functions to search XML, JSON, and text documents,
+and document properties, and to browse word and value lexicons.
+Though you can use these functions from both XQuery
+and Server-Side JavaScript, JavaScript developers should consider using
+the fluent native JavaScript Search (jsearch) API instead. For details, see
+ Creating JavaScript Search Applications in the Search Developer's Guide.
+For more details, see the Search Developer's Guide and the following
+Search function sub-categories:
+cts:query Constructorscts:order ConstructorsGeospatial ConstructorsGeospatial LexiconGeospatial OperationsLexiconMath LexiconSearchSearch ClusteringTemporal
+cts:query Constructorscts:order ConstructorsGeospatial ConstructorsGeospatial LexiconGeospatial OperationsLexiconMath LexiconSearchSearch ClusteringTemporal
+For a fluent and natural JavaScript interface to the same capabilities,
+see the JavaScript Search (jsearch) API.
+
+
 The search built-in functions are XQuery functions used to perform text
-searches. The search functions are designed for use with XML structured text.
-Searches that use these functions use the indexes and are designed
-to return fast.
+searches. The search functions are designed for use with XML and JSON
+structured text. Searches that use these functions use the indexes and
+are designed to return results quickly.
+Though you can use these functions from both XQuery
+and Server-Side JavaScript, JavaScript developers should consider using
+the fluent native JavaScript Search (jsearch) API instead. For details, see
+ Creating JavaScript Search Applications in the Search Developer's Guide.
 There are built-in functions to search through documents
-(cts:search, cts:contains
- and cts:highlight);
+(cts:searchcts.search,
+cts:containscts.contains
+ and cts:highlightcts.highlight);
 there is a function to tokenize text into different types
-(cts:tokenize), and there are functions
-to retrieve result characteristics (for example
-cts:quality and cts:score).
+(cts:tokenizects.tokenize),
+and there are functions to retrieve result characteristics (for example
+cts:qualitycts.quality
+and cts:score)cts.score.
 There are also built-in functions to browse word and value lexicons
-(cts:words,
-cts:element-values, and so on.) The lexicon
-built-in functions require the appropriate lexicons to be enabled in the
-Admin interface.
+(cts:wordscts.words,
+cts:element-valuescts.elementValues,
+and so on.) The lexicon built-in functions require the appropriate lexicons
+to be enabled in the Admin interface.
 There are also functions to compose a cts:query,
 as well as accessor functions to retrieve the parameter values
-from a cts:query. These functions are documented in the
-cts:query
-Constructors section.
+from a cts query.
 
-
- 
 The cts:query constructor functions allow you to build
 arbitrarily complex cts:query specifications. Each
 cts:query constructor function has corresponding accessor
@@ -2303,13 +2566,13 @@ cts:registered-query function, which
 provides a mechanism to precompute and store in the cache unfiltered
 cts:query result primitives.
 
- 
+
 MarkLogic Server allows you to create lexicons, which are lists
 of unique words or values, either throughout an entire database (words only)
 or within named elements or attributes (words or values). Also, you can
 define lexicons that allow quick access to the document and collection
 URIs in the database, and you can create word lexicons on named
-fields. 
+fields.
 A word lexicon stores all of the unique, case-sensitive,
 diacritic-sensitive words, either in a database, in an element
 defined by a QName, or in an attribute defined by a QName. A
@@ -2324,14 +2587,14 @@ A URI lexicon stores the URIs of the documents in a database, and a
 collection lexicon stores the URIs of all collections
 in a database.
 This section describes the lexicon APIs.
- 
+
 MarkLogic Server allows you to create geospatial lexicons, which
-are lists of unique values of geospatial data. 
+are lists of unique values of geospatial data.
  A geospatial lexicon returns geospatial values from the geospatial
 index. The geospatial index is required for using the geospatial lexicon
 functions.
 This section describes the geospatial lexicon APIs.
- 
+
 MarkLogic Server provides aggregate math functions that make use of value lexicons
 to calculate results. The math lexicon functions differ from the math functions in the
 math: namespace in that math lexicon functions take frequency into
@@ -2385,6 +2648,12 @@ interface ctsFunctions {
 
     /** Returns the options for the specified query. **/
   periodCompareQueryOptions(query: cts.PeriodCompareQuery): ValueIterator<string>;
+
+    /** Returns a query that matches all fragments. **/
+  trueQuery(): cts.AndQuery;
+
+    /** Returns a query that matches no fragments. **/
+  falseQuery(): cts.OrQuery;
 
     /** Returns a query specifying the intersection of the matches specified by the sub-queries. **/
   andQuery(queries: MLArray<cts.Query>, options?: MLArray<string>): cts.AndQuery;
@@ -2462,7 +2731,7 @@ interface ctsFunctions {
   elementRangeQueryWeight(query: cts.ElementRangeQuery): number;
 
     /** Returns a cts:query matching JSON properties by name with a range-index entry equal to a given value. Searches with the cts:json-property-range-query constructor require a property range index on the specified names; if there is no range index configured, then an exception is thrown. **/
-  jsonPropertyRangeQuery(propertyName: MLArray<string>, operator: string, value: MLArray<any>, options?: MLArray<string>, weight?: number): cts.JsonPropertyRangeQuery;
+  jsonPropertyRangeQuery(propertyName: MLArray<string>, operator: string, value: Any[], options?: MLArray<string>, weight?: number): cts.JsonPropertyRangeQuery;
 
     /** Returns the JSON property name used to construct the specified query. **/
   jsonPropertyRangeQueryPropertyName(query: cts.JsonPropertyRangeQuery): ValueIterator<string>;
@@ -2501,7 +2770,7 @@ interface ctsFunctions {
   tripleRangeQueryWeight(query: cts.TripleRangeQuery): number;
 
     /** Returns a cts:query matching fields by name with a range-index entry equal to a given value. Searches with the cts:field-range-query constructor require a field range index on the specified field name(s); if there is no range index configured, then an exception is thrown. **/
-  fieldRangeQuery(fieldName: MLArray<string>, operator: string, value: MLArray<any>, options?: MLArray<string>, weight?: number): cts.FieldRangeQuery;
+  fieldRangeQuery(fieldName: MLArray<string>, operator: string, value: Any[], options?: MLArray<string>, weight?: number): cts.FieldRangeQuery;
 
     /** Returns the fieldname used to construct the specified query. **/
   fieldRangeQueryFieldName(query: cts.FieldRangeQuery): ValueIterator<string>;
@@ -2522,7 +2791,7 @@ interface ctsFunctions {
   validIndexPath(string: string, ignorens: boolean): boolean;
 
     /** Returns a cts:query matching paths with a range-index entry equal a given value. Searches with the cts:path-range-query constructor require a path range index on the specified path name(s); if there is no range index configured, then an exception is thrown. **/
-  pathRangeQuery(pathExpression: MLArray<string>, operator: string, value: MLArray<any>, options?: MLArray<string>, weight?: number): cts.PathRangeQuery;
+  pathRangeQuery(pathExpression: MLArray<string>, operator: string, value: Any[], options?: MLArray<string>, weight?: number): cts.PathRangeQuery;
 
     /** Returns the path expression used to construct the specified query. **/
   pathRangeQueryPathName(query: cts.PathRangeQuery): ValueIterator<string>;
@@ -2540,7 +2809,7 @@ interface ctsFunctions {
   pathRangeQueryWeight(query: cts.PathRangeQuery): number;
 
     /** Returns a query matching elements by name with text content equal a given phrase. cts:element-value-query only matches against simple elements (that is, elements that contain only text and have no element children). **/
-  elementValueQuery(elementName: MLArray<xs.QName>, text: MLArray<string>, options?: MLArray<string>, weight?: number): cts.ElementValueQuery;
+  elementValueQuery(elementName: MLArray<xs.QName>, text?: MLArray<string>, options?: MLArray<string>, weight?: number): cts.ElementValueQuery;
 
     /** Returns the QNames used to construct the specified query. **/
   elementValueQueryElementName(query: cts.ElementValueQuery): ValueIterator<xs.QName>;
@@ -2562,6 +2831,9 @@ interface ctsFunctions {
 
     /** Returns the value used to construct the specified query. **/
   jsonPropertyValueQueryValue(query: cts.JsonPropertyValueQuery): ValueIterator<any>;
+
+    /** Returns the text used to construct the specified query. **/
+  jsonPropertyValueQueryText(query: cts.JsonPropertyValueQuery): ValueIterator<string>;
 
     /** Returns the options for the specified query. **/
   jsonPropertyValueQueryOptions(query: cts.JsonPropertyValueQuery): ValueIterator<string>;
@@ -2708,7 +2980,7 @@ interface ctsFunctions {
   score(node?: MLNodeOrObject<any>): number;
 
     /** Return the relevance score computation report for a node. **/
-  relevanceInfo(node?: MLNodeOrObject<any>): Object;
+  relevanceInfo(node?: MLNodeOrObject<any>, outputKind?: string): Object;
 
     /** Returns the confidence of a node, or of the context node if no node is provided. **/
   confidence(node?: MLNodeOrObject<any>): number;
@@ -2794,7 +3066,7 @@ interface ctsFunctions {
     /** Deregister a registered query, explicitly releasing the associated resources. **/
   deregister(id: number): void;
 
-    /** Returns a query matching fragments specified by previously registered queries (see cts:register). If a registered query with the specified ID(s) is not found, then a cts:search operation with an invalid cts:registered-query throws an XDMP-UNREGISTERED exception. **/
+    /** Returns a query matching fragments specified by previously registered queries (see cts:register). If the database is not empty and a registered query with the specified ID(s) is not found, then a cts:search operation with an invalid cts:registered-query throws an XDMP-UNREGISTERED exception. **/
   registeredQuery(ids: MLArray<number>, options?: MLArray<string>, weight?: number): cts.RegisteredQuery;
 
     /** Returns the registered query identifiers used to construct the specified query. **/
@@ -2836,6 +3108,9 @@ interface ctsFunctions {
     /** Returns values from the triple index. If subject, predicate, and object are given, then only triples with those given component values are returned. Triples can be returned in any of the sort orders present in the triple index. **/
   triples(subject?: MLArray<any>, predicate?: MLArray<any>, object?: MLArray<any>, operator?: MLArray<string>, options?: MLArray<string>, query?: cts.Query, forestIds?: MLArray<number>): ValueIterator<sem.Triple>;
 
+    /** Returns statistics from the triple index for the values given. **/
+  tripleValueStatistics(values?: MLArray<any>, forestIds?: MLArray<number>): ValueIterator<any>;
+
     /** Returns values from the specified element value lexicon(s) that match the specified wildcard pattern. Element value lexicons are implemented using range indexes; consequently this function requires an element range index for each element specified in the function. If there is not a range index configured for each of the specified elements, then an exception is thrown. **/
   elementValueMatch(elementNames: MLArray<xs.QName>, pattern: any, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<any>;
 
@@ -2848,16 +3123,16 @@ interface ctsFunctions {
     /** Returns values from the specified path value lexicon(s) that match the specified wildcard pattern. Path value lexicons are implemented using range indexes; consequently this function requires a path range index for each path specified in the function. If there is not a range index configured for each of the specified paths, then an exception is thrown. **/
   valueMatch(rangeIndexes: MLArray<cts.Reference>, pattern: any, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<any>;
 
-    /** Returns value co-occurrences (that is, pairs of values, both of which appear in the same fragment) from the specified path value lexicon(s). The values are returned as an XML element an ArrayNode with two children, each child containing one of the co-occurring values. You can use cts:frequencycts.frequency on each item returned to find how many times the pair occurs. Value lexicons are implemented using range indexes; consequently this function requires an path range index for each path specified in the function. If there is not a range index configured for each of the specified paths, an exception is thrown. **/
+    /** Returns value co-occurrences (that is, pairs of values, both of which appear in the same fragment) from the specified value lexicon(s). The values are returned as an XML element an ArrayNode with two children, each child containing one of the co-occurring values. You can use cts:frequencycts.frequency on each item returned to find how many times the pair occurs. Value lexicons are implemented using range indexes; consequently this function requires a range index for each input index reference. If an index or lexicon is not configured for any of the input references, an exception is thrown. **/
   valueCoOccurrences(rangeIndex1: cts.Reference, rangeIndex2: cts.Reference, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<MLNode<any>>;
 
-    /** Returns value ranges from the specified path value lexicon(s). Value lexicons are implemented using range indexes; consequently this function requires a path range index for each element specified in the function. If there is not a range index configured for each of the specified paths, an exception is thrown. The values are divided into buckets. The $bounds parameter specifies the number of buckets and the size of each bucket. All included values are bucketed, even those less than the lowest bound or greater than the highest bound. An empty sequence for $bounds specifies one bucket, a single value specifies two buckets, two values specify three buckets, and so on. If you have string values and you pass a $bounds parameter as in the following call: cts:value-ranges(cts:path-reference("/name/fname"), ("f", "m")) cts.valueRanges(cts.pathReference("/name/fname"), ["f", "m"]) The first bucket contains string values that are less than the string f, the second bucket contains string values greater than or equal to f but less than m, and the third bucket contains string values that are greater than or equal to m. For each non-empty bucket, a cts:range element is returned. Each cts:range element has a cts:minimum child and a cts:maximum child. If a bucket is bounded, its cts:range element will also have a cts:lower-bound child if it is bounded from below, and a cts:upper-bound element if it is bounded from above. Empty buckets return nothing unless the "empties" option is specified. For each non-empty bucket, an ObjectNode is returned. Each ObjectNode has a minimum property and a maximum property. If a bucket is bounded, its ObjectNode will also have a lowerBound property if it is bounded from below, and a upperBound property if it is bounded from above. Empty buckets return nothing unless the "empties" option is specified. **/
+    /** Returns value ranges from the specified path value lexicon(s). Value lexicons are implemented using range indexes; consequently this function requires a range index for each element specified in the function. If there is not an index or lexicon configured for one of the specified references, an exception is thrown. The values are divided into buckets. The $bounds parameter specifies the number of buckets and the size of each bucket. All included values are bucketed, even those less than the lowest bound or greater than the highest bound. An empty sequence for $bounds specifies one bucket, a single value specifies two buckets, two values specify three buckets, and so on. If you have string values and you pass a $bounds parameter as in the following call: cts:value-ranges(cts:path-reference("/name/fname"), ("f", "m")) cts.valueRanges(cts.pathReference("/name/fname"), ["f", "m"]) The first bucket contains string values that are less than the string f, the second bucket contains string values greater than or equal to f but less than m, and the third bucket contains string values that are greater than or equal to m. For each non-empty bucket, a cts:range element is returned. Each cts:range element has a cts:minimum child and a cts:maximum child. If a bucket is bounded, its cts:range element will also have a cts:lower-bound child if it is bounded from below, and a cts:upper-bound element if it is bounded from above. Empty buckets return nothing unless the "empties" option is specified. For each non-empty bucket, an ObjectNode is returned. Each ObjectNode has a minimum property and a maximum property. If a bucket is bounded, its ObjectNode will also have a lowerBound property if it is bounded from below, and a upperBound property if it is bounded from above. Empty buckets return nothing unless the "empties" option is specified. **/
   valueRanges(rangeIndexes: MLArray<cts.Reference>, bounds?: MLArray<any>, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<MLNode<any>>;
 
     /** Accessor for the scalar type of a reference to a value lexicon. **/
   referenceScalarType(index: cts.Reference): string;
 
-    /** Creates a reference to the URI lexicon, for use as a parameter to cts:value-tuples. Since lexicons are implemented with range indexes, this function will throw an exception if the specified range index does not exist. **/
+    /** Creates a reference to the URI lexicon, for use as a parameter to cts:value-tuples. This function requires the URI lexicon to be enabled, otherwise it throws an exception. **/
   uriReference(): cts.Reference;
 
     /** Creates a reference to the collection lexicon, for use as a parameter to cts:value-tuples. Since lexicons are implemented with range indexes, this function will throw an exception if the specified range index does not exist. **/
@@ -2971,7 +3246,7 @@ interface ctsFunctions {
     /** Returns words from the specified field word lexicon(s) that match a wildcard pattern. This function requires an field word lexicon configured for each of the specified fields in the function. If there is not an field word lexicon configured for any of the specified fields, an exception is thrown. **/
   fieldWordMatch(fieldNames: MLArray<string>, pattern: string, options?: MLArray<string>, query?: cts.Query, qualityWeight?: number, forestIds?: MLArray<number>): ValueIterator<string>;
 
-    /** Returns a query matching the model nodes. Use with a cts:search or a cts:contains over serialized cts:query nodes. The serialized cts:query nodes can be either stored in the database or passed in as XML. **/
+    /** Construct a query that matches serialized cts queries, based on a set of model input nodes. A serialized query matches if it would match the model nodes. Use with a cts.search or cts.contains over serialized cts.query nodes. **/
   reverseQuery(nodes: MLArray<any>, weight?: number): cts.ReverseQuery;
 
     /** Returns the nodes used to construct the specified query. **/
@@ -3013,8 +3288,22 @@ interface ctsFunctions {
 }
 declare var cts:ctsFunctions
 
+// Type definitions for SearchBuiltins
+// Definitions:
+
+/**
+**/
+
+interface ctsFunctions {
+
+    /** Parses a query string **/
+  parse(query: string, bindings?: {[key:string]:any}): cts.Query;
+
+}
+declare var cts:ctsFunctions
+
 // Type definitions for SecurityBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The security built-in functions are XQuery functions to perform many
@@ -3032,10 +3321,10 @@ interface xdmpFunctions {
     /** Tests whether the current user has at least one of a given set of privileges. Returns true if they do, false otherwise. **/
   hasPrivilege(privileges: MLArray<string>, kind: string): boolean;
 
-    /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. **/
+    /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. Returns roles for users from the security database or from the specified external security, depending on the parameter values. **/
   userRoles(name: string, extSecId?: number, secDbFirst?: boolean): ValueIterator<number>;
 
-    /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. **/
+    /** Returns all roles assigned to a user, including roles directly assigned to the user and roles inherited by other roles. Returns role IDs for users from the security database or from the specified external security, depending on the parameter values. **/
   useridRoles(userId: number, extSecId?: number, secDbFirst?: boolean): ValueIterator<number>;
 
     /** Returns the set of all roles inherited by a given role, including roles directly assigned to the role and roles inherited from other roles. **/
@@ -3054,13 +3343,13 @@ interface xdmpFunctions {
   nodeCollections(node: MLNodeOrObject<any>): String[];
 
     /** Returns the permissions to a given document. **/
-  documentGetPermissions(uri: string, format?: string): Object[];
+  documentGetPermissions(uri: string, outputKind?: string): Object[];
 
     /** Returns the permissions to a node's document. **/
-  nodePermissions(node: MLNodeOrObject<any>, format?: string): Object[];
+  nodePermissions(node: MLNodeOrObject<any>, outputKind?: string): Object[];
 
     /** Returns the permissions any new document would get if the current user were to insert a document without specifying the default permissions. **/
-  defaultPermissions(uri?: string, format?: string): Object[];
+  defaultPermissions(uri?: string, outputKind?: string): Object[];
 
     /** Returns the collections any new document would get if the current user were to insert a document without specifying the collections. **/
   defaultCollections(uri?: string): ValueIterator<string>;
@@ -3078,31 +3367,31 @@ interface xdmpFunctions {
   getCurrentRoles(): ValueIterator<number>;
 
     /** Returns a permission object corresponding to the named role and capability given. **/
-  permission(role: string, capability: string, format?: string): Object;
+  permission(role: string, capability: string, outputKind?: string): Object|Element;
 
-    /** Returns the user ID for the specified user name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the user ID from the security database configured for the database in which the App Server evaluates against. **/
+    /** Returns the user ID for the specified user name. Unlike the security library module function sec:uid-for-name, this function can be evaluated against any database and does not need to be evaluated directly against the security database. It returns the user ID either from the security database or from the specified external security, depending on the parameter values. **/
   user(user: string, extSecId?: number, secDbFirst?: boolean): number;
 
-    /** Returns the role ID for the specified role name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the role ID from the security database configured for the database in which the App Server evaluates against. **/
+    /** Returns the role ID for the specified role name. Unlike the security library module function sec:uid-for-name, this function can be evaluated against any database and does not need to be evaluated directly against the security database. It returns the role ID from the security database configured for the database in which the App Server evaluates against. **/
   role(role: string): number;
 
-    /** Returns the privilege ID for the specified privilege name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the privilege ID from the security database configured for the database in which the App Server evaluates against. **/
+    /** Returns the privilege ID for the specified privilege name. Unlike the security library module function sec:uid-for-name, this function can be evaluated against any database and does not need to be evaluated directly against the security database. It returns the privilege ID from the security database configured for the database in which the App Server evaluates against. **/
   privilege(action: string, kind: string): number;
 
-    /** Returns the amp ID for the specified amp. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the amp ID from the security database configured for the database in which the App Server evaluates against. **/
+    /** Returns the amp ID for the specified amp. Unlike the security library module function sec:uid-for-name, this function can be evaluated against any database and does not need to be evaluated directly against the security database. It returns the amp ID from the security database configured for the database in which the App Server evaluates against. **/
   amp(namespace: string, localname: string, moduleUri: string, database: number): number;
 
     /** Returns external security id and user name for an external user. **/
   userExternalSecurity(userId: number): Object;
 
-    /** Returns the external security ID for the specified external security name. Unlike the security library module function sec:uid-for-name, this function can be evaluted against any database and does not need to be evaluated directly against the security database. It returns the external security ID from the security database configured for the database in which the App Server evaluates against. **/
+    /** Returns the external security ID for the specified external security name. Unlike the security library module function sec:uid-for-name, this function can be evaluated against any database and does not need to be evaluated directly against the security database. It returns the external security ID from the security database configured for the database in which the App Server evaluates against. **/
   externalSecurity(externalSecurity: string): number;
 
 }
 declare var xdmp:xdmpFunctions
 
 // Type definitions for SequenceBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 These built-in functions are XQuery functions defined to operate on
@@ -3152,7 +3441,7 @@ interface fnFunctions {
     /** Returns $arg if it contains exactly one item. Otherwise, raises an error [err:FORG0005]. For detailed type semantics, see Section 7.2.16 The fn:zero-or-one, fn:one-or-more, and fn:exactly-one functions[FS]. **/
   exactlyOne(arg: MLArray<any>): any;
 
-    /** This function assesses whether two sequences are deep-equal to each other. To be deep-equal, they must contain items that are pairwise deep-equal; and for two items to be deep-equal, they must either be atomic values that compare equal, or nodes of the same kind, with the same name, whose children are deep-equal. This is defined in more detail below. The $collation argument identifies a collation which is used at all levels of recursion when strings are compared (but not when names are compared), according to the rules in 7.3.1 Collations. If the two sequences are both empty, the function returns true. If the two sequences are of different lengths, the function returns false. If the two sequences are of the same length, the function returns true if and only if every item in the sequence $parameter1 is deep-equal to the item at the same position in the sequence $parameter2. The rules for deciding whether two items are deep-equal follow. Call the two items $i1 and $i2 respectively. If $i1 and $i2 are both atomic values, they are deep-equal if and only if ($i1 eq $i2) is true. Or if both values are NaN. If the eq operator is not defined for $i1 and $i2, the function returns false. If one of the pair $i1 or $i2 is an atomic value and the other is a node, the function returns false. If $i1 and $i2 are both nodes, they are compared as described below: If the two nodes are of different kinds, the result is false. If the two nodes are both document nodes then they are deep-equal if and only if the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). If the two nodes are both element nodes then they are deep-equal if and only if all of the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the two nodes are both annotated as having simple content or both nodes are annotated as having complex content.the two nodes have the same number of attributes, and for every attribute $a1 in $i1/@* there exists an attribute $a2 in $i2/@* such that $a1 and $a2 are deep-equal. One of the following conditions holds: Both element nodes have a type annotation that is simple content, and the typed value of $i1 is deep-equal to the typed value of $i2. Both element nodes have a type annotation that is complex content with elementOnly content, and each child element of $i1 is deep-equal to the corresponding child element of $i2. Both element nodes have a type annotation that is complex content with mixed content, and the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). Both element nodes have a type annotation that is complex content with empty content. If the two nodes are both attribute nodes then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the typed value of $i1 is deep-equal to the typed value of $i2. If the two nodes are both processing instruction nodes or namespace bindings, then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)). the string value of $i1 is equal to the string value of $i2. If the two nodes are both text nodes or comment nodes, then they are deep-equal if and only if their string-values are equal. Notes: The two nodes are not required to have the same type annotation, and they are not required to have the same in-scope namespaces. They may also differ in their parent, their base URI, and the values returned by the is-id and is-idrefs accesors (see Section 5.5 is-id Accessor[DM] and Section 5.6 is-idrefs Accessor[DM]). The order of children is significant, but the order of attributes is insignificant. The following note applies to the Jan 2007 XQuery specification, but not to the May 2003 XQuery specification: The contents of comments and processing instructions are significant only if these nodes appear directly as items in the two sequences being compared. The content of a comment or processing instruction that appears as a descendant of an item in one of the sequences being compared does not affect the result. However, the presence of a comment or processing instruction, if it causes a text node to be split into two text nodes, may affect the result. The result of fn:deep-equal(1, current-dateTime()) is false; it does not raise an error. **/
+    /** This function assesses whether two sequences are deep-equal to each other. To be deep-equal, they must contain items that are pairwise deep-equal; and for two items to be deep-equal, they must either be atomic values that compare equal, or nodes of the same kind, with the same name, whose children are deep-equal. This is defined in more detail below. The $collation argument identifies a collation which is used at all levels of recursion when strings are compared (but not when names are compared), according to the rules in 7.3.1 Collations. If the two sequences are both empty, the function returns true. If the two sequences are of different lengths, the function returns false. If the two sequences are of the same length, the function returns true if and only if every item in the sequence $parameter1 is deep-equal to the item at the same position in the sequence $parameter2. The rules for deciding whether two items are deep-equal follow. Call the two items $i1 and $i2 respectively. If $i1 and $i2 are both atomic values, they are deep-equal if and only if ($i1 eq $i2) is true. Or if both values are NaN. If the eq operator is not defined for $i1 and $i2, the function returns false. If one of the pair $i1 or $i2 is an atomic value and the other is a node, the function returns false. If $i1 and $i2 are both nodes, they are compared as described below: If the two nodes are of different kinds, the result is false. If the two nodes are both document nodes then they are deep-equal if and only if the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). If the two nodes are both element nodes then they are deep-equal if and only if all of the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the two nodes are both annotated as having simple content or both nodes are annotated as having complex content.the two nodes have the same number of attributes, and for every attribute $a1 in $i1/@* there exists an attribute $a2 in $i2/@* such that $a1 and $a2 are deep-equal. One of the following conditions holds: Both element nodes have a type annotation that is simple content, and the typed value of $i1 is deep-equal to the typed value of $i2. Both element nodes have a type annotation that is complex content with elementOnly content, and each child element of $i1 is deep-equal to the corresponding child element of $i2. Both element nodes have a type annotation that is complex content with mixed content, and the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()). Both element nodes have a type annotation that is complex content with empty content. If the two nodes are both attribute nodes then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)).the typed value of $i1 is deep-equal to the typed value of $i2. If the two nodes are both processing instruction nodes or namespace bindings, then they are deep-equal if and only if both the following conditions are satisfied: the two nodes have the same name, that is (node-name($i1) eq node-name($i2)). the string value of $i1 is equal to the string value of $i2. If the two nodes are both text nodes and their parent nodes are not object nodes, then they are deep-equal if and only if their string-values are both equal. If the two nodes are both text nodes and their parent nodes are both object nodes, then they are deep-equal if and only if their keys and string-values are both equal. If the two nodes are both comment nodes, then they are deep-equal if and only if their string-values are equal. If the two nodes are both object nodes, then they are deep-equal if and only if all of the following conditions are satisfied: the two nodes have the same number of children, and the children have the same set of keys.two children of the two nodes with the same key are deep-equal.the order of children does not matter. If the two nodes are both boolean nodes, then they are deep-equal if and only if their keys and boolean values are equal. If the two nodes are both number nodes, then they are deep-equal if and only if their keys and values are equal. If the two nodes are both null nodes, they are deep-equal. Notes: The two nodes are not required to have the same type annotation, and they are not required to have the same in-scope namespaces. They may also differ in their parent, their base URI, and the values returned by the is-id and is-idrefs accesors (see Section 5.5 is-id Accessor[DM] and Section 5.6 is-idrefs Accessor[DM]). The order of children is significant, but the order of attributes is insignificant. The following note applies to the Jan 2007 XQuery specification, but not to the May 2003 XQuery specification: The contents of comments and processing instructions are significant only if these nodes appear directly as items in the two sequences being compared. The content of a comment or processing instruction that appears as a descendant of an item in one of the sequences being compared does not affect the result. However, the presence of a comment or processing instruction, if it causes a text node to be split into two text nodes, may affect the result. The result of fn:deep-equal(1, current-dateTime()) is false; it does not raise an error. **/
   deepEqual(parameter1: MLArray<any>, parameter2: MLArray<any>, collation?: string): boolean;
 
     /** Returns the number of items in the value of $arg. Returns 0 if $arg is the empty sequence. **/
@@ -3197,8 +3486,21 @@ interface fnFunctions {
 }
 declare var fn:fnFunctions
 
+// Type definitions for Extensions
+// Definitions:
+
+/****/
+
+interface xdmpFunctions {
+
+    /** Sets the serialization method. This overrides any output option set in the xdmp:output XQuery prolog option. **/
+  setResponseOutputMethod(method: string): void;
+
+}
+declare var xdmp:xdmpFunctions
+
 // Type definitions for SearchBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The spelling correction built-in functions are used with dictionary documents
@@ -3219,8 +3521,8 @@ interface spellFunctions {
     /** Returns true() if the specified word is spelled correctly, otherwise returns false(). A word is considered to be spelled correctly if it is in the specified dictionary. **/
   isCorrect(uri: MLArray<string>, word: string): boolean;
 
-    /** Suggests a list of spellings for a word. Returns a sequence of the most likely spellings for the specified word. **/
-  suggest(uri: MLArray<string>, word: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<String>;
+    /** Suggests a list of spellings for a word. Returns a sequence of Returns a ValueIterator containing the most likely spellings for the specified word. **/
+  suggest(uri: MLArray<string>, word: string, options?: MLNodeOrObject<any>|{[key:string]:any}): ValueIterator<any>;
 
     /** Given two strings, returns the Levenshtein distance between those strings. The Levenshtein distance is a measure of how many operations it takes to transform a string into another string, and it is useful in determining if a word is spelled correctly, or in simply comparing how "different" two words are. **/
   levenshteinDistance(str1: string, str2: string): number;
@@ -3238,7 +3540,7 @@ interface spellFunctions {
 declare var spell:spellFunctions
 
 // Type definitions for StatusBuiltins
-// Definitions: 
+// Definitions:
 
 /**
   The Server Monitoring built-in functions include functions that provide
@@ -3261,8 +3563,11 @@ interface xdmpFunctions {
     /** Returns the status of a forest as a ValueIterator of ObjectNodes. **/
   forestStatus(forestId: MLArray<number>): ValueIterator<any>;
 
-    /** Returns true if the specified forest is online with a state of open, open replica or sync replicating if isReplica is true, or syncing replica if syncingOk is true, otherwise returns false. **/
+    /** Returns true if the specified forest is online with a state of open, open replica or sync replicating if isReplica is true, or syncing replica if syncingOk is true, otherwise returns false. For a remote forest, returns false if the cached forest online status is older than the specified timestamp. **/
   forestOnline(forestID: number, timestamp?: number, isReplica?: boolean, syncingOk?: boolean): boolean;
+
+    /** Returns state of the forests **/
+  forestState(forestID: number): ValueIterator<string>;
 
     /** Returns the status of an app-server on a host as a ValueIterator of ObjectNodes. **/
   serverStatus(hostId: number, serverId: MLArray<number>): ValueIterator<any>;
@@ -3280,7 +3585,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for StringBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The string built-in functions are XQuery functions defined to operate on
@@ -3378,7 +3683,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Tidy
-// Definitions: 
+// Definitions:
 
 /**
    The conversion functions are built-in to the server and support
@@ -3400,14 +3705,14 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for TraceBuiltins
-// Definitions: 
+// Definitions:
 
 /**
-The error and trace built-in functions are XQuery functions defined for 
+The error and trace built-in functions are XQuery functions defined for
 throwing errors from XQuery programs and debug tracing.
 They are defined in
-XQuery 1.0 
-and XPath 2.0 Functions and Operators. 
+XQuery 1.0
+and XPath 2.0 Functions and Operators.
 
 The error and trace built-in functions use the fn namespace
 prefix, which is predefined in the server.  Also, the fn
@@ -3423,7 +3728,7 @@ interface fnFunctions {
 declare var fn:fnFunctions
 
 // Type definitions for TransactionBuiltins
-// Definitions: 
+// Definitions:
 
 /**
   Use these XQuery functions for manipulating transactions. You will
@@ -3432,7 +3737,7 @@ declare var fn:fnFunctions
      discussion of multi-statement transactions, see "Understanding
      Transactions in MarkLogic Server" in the Application Developer's
      Guide
-  
+
 **/
 
 interface xdmpFunctions {
@@ -3474,7 +3779,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Extensions
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -3487,7 +3792,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for UpdateBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The update built-in functions are XQuery functions to perform update-related
@@ -3535,7 +3840,7 @@ interface xdmpFunctions {
     /** Adds an immediately following sibling to a node. **/
   nodeInsertAfter(sibling: MLNodeOrObject<any>, new_: MLNodeOrObject<any>): void;
 
-    /** Adds a new last child to a node. Only element nodes and document nodes can have children. Element nodes cannot have document node children. Document nodes cannot have multiple roots. On-the-fly constructed nodes cannot be updated. The parameters must specify individual nodes and not node sets. **/
+    /** Adds a new last child to a node. For XML documents, only element nodes and document nodes can have children. For JSON documents, object nodes and array nodes can have children. Element nodes, object nodes, and array nodes cannot have document node children. Document nodes cannot have multiple roots. On-the-fly constructed nodes cannot be updated. The parameters must specify individual nodes and not node sets. **/
   nodeInsertChild(parent: MLNodeOrObject<any>, new_: MLNodeOrObject<any>): void;
 
     /** Adds the named document to the given collections. For each collection that is protected, the user must have permissions to update that collection or have the any-collection privilege. For each unprotected collection, the user must have the unprotected-collections privilege. **/
@@ -3612,7 +3917,7 @@ interface temporalFunctions {
 declare var temporal:temporalFunctions
 
 // Type definitions for Walkers
-// Definitions: 
+// Definitions:
 
 /****/
 
@@ -3631,7 +3936,7 @@ interface ctsFunctions {
 declare var cts:ctsFunctions
 
 // Type definitions for XSLTBuiltins
-// Definitions: 
+// Definitions:
 
 /**
 The XSLT functions.  These functions are available in XSLT only.
@@ -3655,7 +3960,7 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for Zip
-// Definitions: 
+// Definitions:
 
 /**
   Zip function allow the server to handle .zip files.
@@ -3682,225 +3987,232 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for AlertModule
-// Definitions: 
+// Definitions:
 
 /**
-		The Alerting API function module is used to create alerting 
-			applications.  The Alerting API abstracts the security 
+		The Alerting API function module is used to create alerting
+			applications.  The Alerting API abstracts the security
 			considerations and the reverse search functionality
-			from the developer.  The Alerting API is installed as 
+			from the developer.  The Alerting API is installed as
 			the following file:
 	install_dir/Modules/MarkLogic/alert.xqy
-      where install_dir is the directory in which 
+      where install_dir is the directory in which
 	      MarkLogic Server is installed.
-       To use the alert.xqy module in your own XQuery modules, include the 
+
+       To use the alert.xqy module in your own XQuery modules, include the
 	      following line in your XQuery prolog:
-      import module namespace alert = "http://marklogic.com/xdmp/alert" 
+      import module namespace alert = "http://marklogic.com/xdmp/alert"
 		  at "/MarkLogic/alert.xqy";
-      The library uses the alert: namespace, which is 
+      The library uses the alert: namespace, which is
 	      not predefined in the server.
-      The Alerting API requires a valid alerting license key.  Without a 
-	      valid license key, the functions in the Alerting API will throw an 
+
+
+      To use the alert module in your own Server-Side JavaScript
+         modules, include the following line in your JavaScript program:
+      var alert = require("/MarkLogic/alert");
+
+      The Alerting API requires a valid alerting license key.  Without a
+	      valid license key, the functions in the Alerting API will throw an
 	      exception.  Additionally, a valid alerting license key is
-	     required to use the reverse index. 
-      
+	     required to use the reverse index.
+
    **/
 
 declare module alert {
 
-    /** Create an alerting configuration associated with a particular URI. The URI will be used to create a protected collection when the config is inserted into the database with alert:config-insert. This URI will also be used as a directory for all documents (config, actions, and rules) associated with the config. **/
-  function makeConfig(uri: string, name: string, description: string, options: MLNodeOrObject<any>): MLNode<any>;
+    /** Create an alerting configuration associated with a particular URI. The URI will be used to create a protected collection when the config is inserted into the database with alert:config-insert alert.configInsert. This URI will also be used as a directory for all documents (config, actions, and rules) associated with the config. **/
+  function makeConfig(uri: string, name: string, description: string, options: Object): Object;
 
     /** Inserts a config into the database. If this is the first time the config has been inserted, a protected collection will be created for the config's URI. A user must have the alert-admin privilege to call this function. **/
-  function configInsert(config: MLNodeOrObject<any>): void;
+  function configInsert(config: Object): void;
 
     /** Gets the config associated with the specified URI. The user must have the alert-user privilege to call this function. **/
-  function configGet(uri: string): MLNode<any>;
+  function configGet(uri: string): Object;
 
     /** Remove an alerting configuration identified by the specified URI. If the config does not exist, an exception will be thrown. Any triggers associated with the alerting configuration will be automatically removed. Any actions and/or rules associated by the config will also be removed as well as the protected collection. The caller must have the alert-admin privilege to call this function. **/
   function configDelete(uri: string): void;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetId(config: MLNodeOrObject<any>): number;
+    /** This function returns the ID of the specified alerting configuration. **/
+  function configGetId(config: Object): number;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetUri(config: MLNodeOrObject<any>, uri: string): MLNode<any>;
+    /** This function sets the URI in the specified alerting configuration. **/
+  function configSetUri(config: Object, uri: string): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetUri(config: MLNodeOrObject<any>): string;
+    /** This function returns the URI set in the specified alerting configuration. **/
+  function configGetUri(config: Object): string;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetName(config: MLNodeOrObject<any>): string;
+    /** This function returns the name set in the specified an alerting configuration. **/
+  function configGetName(config: Object): string;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetName(config: MLNodeOrObject<any>, name: string): MLNode<any>;
+    /** This function sets the name in the specified alerting configuration. **/
+  function configSetName(config: Object, name: string): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetDescription(config: MLNodeOrObject<any>): string;
+    /** This function provides returns the description set in the specified alerting configuration. **/
+  function configGetDescription(config: Object): string;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetDescription(config: MLNodeOrObject<any>, description: string): MLNode<any>;
+    /** This function sets the description within the specified alerting configuration. **/
+  function configSetDescription(config: Object, description: string): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetTriggerIds(config: MLNodeOrObject<any>): ValueIterator<number>;
+    /** This function returns the trigger IDs set in the specified alerting configuration. **/
+  function configGetTriggerIds(config: Object): Array<any>;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetTriggerIds(config: MLNodeOrObject<any>, ids: MLArray<number>): MLNode<any>;
+    /** This function sets the trigger IDs in the specified alerting configuration. **/
+  function configSetTriggerIds(config: Object, ids: MLArray<number>): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetCpfDomainIds(config: MLNodeOrObject<any>): ValueIterator<number>;
+    /** This function returns the CPF domain IDs set in the specified alerting configuration. **/
+  function configGetCpfDomainIds(config: Object): ValueIterator<number>;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetCpfDomainNames(config: MLNodeOrObject<any>): ValueIterator<string>;
+    /** This function returns the CPF domain names set in the specified alerting configuration. **/
+  function configGetCpfDomainNames(config: Object): Array<any>;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetCpfDomainNames(config: MLNodeOrObject<any>, names: MLArray<string>): MLNode<any>;
+    /** This function sets the CPF domain names in the specified alerting configuration. **/
+  function configSetCpfDomainNames(config: Object, names: MLArray<string>): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetCpfDomainIds(config: MLNodeOrObject<any>, ids: MLArray<number>): MLNode<any>;
+    /** This function sets the CPF domain IDs in the specified alerting configuration. **/
+  function configSetCpfDomainIds(config: Object, ids: MLArray<number>): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configGetOptions(config: MLNodeOrObject<any>): MLNode<any>;
+    /** This function returns the options set in specified alerting configuration. **/
+  function configGetOptions(config: Object): Object;
 
-    /** This function provides convenient access to the specified sub-element within an alerting config. **/
-  function configSetOptions(config: MLNodeOrObject<any>, options: MLNodeOrObject<any>): MLNode<any>;
+    /** This function sets the options in the specified alerting configuration. **/
+  function configSetOptions(config: Object, options: Object): Object;
 
-    /** Create triggers that invoke the standard alerting trigger module. The caller must have the alert-admin privilege. The returned trigger IDs must be associated with the config using alert:config-set-trigger-ids and then saving the updated config with alert:config-insert. **/
-  function createTriggers(uri: string, events: MLArray<MLNodeOrObject<any>>): ValueIterator<number>;
+    /** Create triggers that invoke the standard alerting trigger module. The caller must have the alert-admin privilege. The returned trigger IDs must be associated with the config using alert:config-set-trigger-ids alert.configSetTriggerIds and then saving the updated config with alert:config-insert alert.configInsert. **/
+  function createTriggers(uri: string, events: MLArray<MLNodeOrObject<any>>): Array<any>;
 
-    /** Remove triggers whose IDs are listed in the config. The caller must have the alert-admin privilege. This function writes the updated configuration to the database, so if you need to delete the configuration as well (using admin:delete-config, for example), you should do so in another transaction. **/
+    /** Remove triggers whose IDs are listed in the config. The caller must have the alert-admin privilege. This function writes the updated configuration to the database, so if you need to delete the configuration as well (using admin:delete-config alert.configDelete, for example), you should do so in another transaction. **/
   function removeTriggers(uri: string): void;
 
     /** Returns a list of all rules associated with the specified config that match the specified document. You must have the alert-admin privilege to call this function. **/
-  function findMatchingRules(configUri: string, doc: MLNodeOrObject<any>): ValueIterator<MLNode<any>>;
+  function findMatchingRules(configUri: string, doc: MLNodeOrObject<any>): Array<any>;
 
     /** Finds the rules that match the specified document and invokes their associated actions. The actions will be invoked as the user who owns each rule in a different transaction. **/
-  function invokeMatchingActions(configUri: string, doc: MLNodeOrObject<any>, options: MLNodeOrObject<any>): void;
+  function invokeMatchingActions(configUri: string, doc: MLNodeOrObject<any>, options: Object): void;
 
     /** Finds the rules that match the specified document and spawns their associated actions. The spawned tasks will run as the user that owns the rule. **/
-  function spawnMatchingActions(configUri: string, doc: MLNodeOrObject<any>, options: MLNodeOrObject<any>): void;
+  function spawnMatchingActions(configUri: string, doc: MLNodeOrObject<any>, options: Options): void;
 
-    /** This function creates the XML representing a rule. If the caller does not have the alert-admin privilege then $user-id must be the ID of the current user from the security database. If $user-id is 0, it will be automatically replaced with the current user's ID. **/
-  function makeRule(name: string, description: string, userId: number, query: cts.Query, action: string, options: MLNodeOrObject<any>): MLNode<any>;
+    /** This function creates the specified rule. If the caller does not have the alert-admin privilege then $user-id must be the ID of the current user from the security database. If $user-id is 0, it will be automatically replaced with the current user's ID. **/
+  function makeRule(name: string, description: string, userId: number, query: cts.Query, action: string, options: Object): Object;
 
     /** This function inserts rule into the database associated with the specified alerting configuration. A user must have the alert-user privilege to call this function. **/
-  function ruleInsert(collectionUri: string, rule: MLNodeOrObject<any>): void;
+  function ruleInsert(configUri: string, rule: Object): void;
 
-    /** This function removes the XML representing the rule from the collection. A user must have the alert-user privilege to call this function. An exception is thrown if the rule does not exist. A user must have the alert-admin privilege to delete other users' rules. **/
-  function ruleRemove(collectionUri: string, id: number): void;
+    /** This function removes the specified rule from the collection. A user must have the alert-user privilege to call this function. An exception is thrown if the rule does not exist. A user must have the alert-admin privilege to delete other users' rules. **/
+  function ruleRemove(configUri: string, id: number): void;
 
     /** This function returns all rules visible to the current user. **/
-  function getAllRules(collectionUri: string, query: cts.Query): ValueIterator<MLNode<any>>;
+  function getAllRules(configUri: string, query: cts.Query): Array<any>;
 
     /** This function returns all rules associated with the current user. **/
-  function getMyRules(collectionUri: string, query: cts.Query): ValueIterator<MLNode<any>>;
+  function getMyRules(configUri: string, query: cts.Query): Array<any>;
 
-    /** This function creates a query to find rules with any of the specified IDs. Returns a query to be passed to alert:get-my-rules or alert:get-all-rules. **/
+    /** This function creates a query to find rules with any of the specified IDs. Returns a query to be passed to alert:get-my-rules alert.getMyRules or alert:get-all-rules alert.getAllRules. **/
   function ruleIdQuery(ids: MLArray<number>): cts.Query;
 
-    /** This function creates a query to find rules with any of the specified names. Returns a query to be passed to alert:get-my-rules or alert:get-all-rules. **/
+    /** This function creates a query to find rules with any of the specified names. Returns a query to be passed to alert:get-my-rules alert.getMyRules or alert:get-all-rules alert.getAllRules. **/
   function ruleNameQuery(names: MLArray<string>): cts.Query;
 
-    /** This function creates a query to find rules with any of the specified user IDs. Returns a query to be passed to alert:get-my-rules or alert:get-all-rules. **/
+    /** This function creates a query to find rules with any of the specified user IDs. Returns a query to be passed to alert:get-my-rules alert.getMyRules or alert:get-all-rules alert.getAllRules. **/
   function ruleUserIdQuery(userIds: MLArray<number>): cts.Query;
 
-    /** This function creates a query to find rules with any of the specified actions. Returns a query to be passed to alert:get-my-rules or alert:get-all-rules. **/
+    /** This function creates a query to find rules with any of the specified actions. Returns a query be passed to alert:get-my-rules alert.getMyRules or alert:get-all-rules alert.getAllRules. **/
   function ruleActionQuery(actions: MLArray<string>): cts.Query;
 
     /** This function returns the ID of a given rule. **/
-  function ruleGetId(rule: MLNodeOrObject<any>): number;
+  function ruleGetId(rule: Object): number;
 
     /** This function returns the user ID of a given rule. **/
-  function ruleGetUserId(rule: MLNodeOrObject<any>): number;
+  function ruleGetUserId(rule: Object): number;
 
     /** This function returns the rule with the user ID updated. If the caller does not have the alert-config privilege, an exception will be thrown if the caller attempts to save a rule for a user other than himself. **/
-  function ruleSetUserId(rule: MLNodeOrObject<any>, userId: number): MLNode<any>;
+  function ruleSetUserId(rule: Object, userId: number): Object;
 
     /** This function returns the action of a given rule. **/
-  function ruleGetAction(rule: MLNodeOrObject<any>): string;
+  function ruleGetAction(rule: Object): string;
 
     /** This function returns the rule with the action updated. **/
-  function ruleSetAction(rule: MLNodeOrObject<any>, action: string): MLNode<any>;
+  function ruleSetAction(rule: Object, action: string): Object;
 
     /** This function returns the name of a given rule. **/
-  function ruleGetName(rule: MLNodeOrObject<any>): string;
+  function ruleGetName(rule: Object): string;
 
     /** This function returns the rule with the name of the rule updated. **/
-  function ruleSetName(rule: MLNodeOrObject<any>, name: string): MLNode<any>;
+  function ruleSetName(rule: Object, name: string): Object;
 
     /** This function returns the description of a given rule. **/
-  function ruleGetDescription(rule: MLNodeOrObject<any>): string;
+  function ruleGetDescription(rule: Object): string;
 
     /** This function returns the rule with the description of the rule updated. **/
-  function ruleSetDescription(rule: MLNodeOrObject<any>, description: string): MLNode<any>;
+  function ruleSetDescription(rule: Object, description: string): Object;
 
-    /** Get the cts:query corresponding to the rule's query expression. **/
-  function ruleGetQuery(rule: MLNodeOrObject<any>): cts.Query;
+    /** Get the cts:query cts.query corresponding to the rule's query expression. **/
+  function ruleGetQuery(rule: Object): cts.Query;
 
     /** Set the cts:query corresponding to the rule's query expression. **/
-  function ruleSetQuery(rule: MLNodeOrObject<any>, query: cts.Query): MLNode<any>;
+  function ruleSetQuery(rule: Object, query: cts.Query): Object;
 
     /** This function returns the options of a given rule. **/
-  function ruleGetOptions(rule: MLNodeOrObject<any>): MLNode<any>;
+  function ruleGetOptions(rule: Object): Object;
 
     /** This function returns the rule with the options of the rule updated. **/
-  function ruleSetOptions(rule: MLNodeOrObject<any>, options: MLNodeOrObject<any>): MLNode<any>;
+  function ruleSetOptions(rule: Object, options: Object): Object;
 
     /** This function returns the name of a given action. **/
-  function actionGetName(action: MLNodeOrObject<any>): string;
+  function actionGetName(action: Object): string;
 
     /** This function returns the action with the name of the action updated. **/
-  function actionSetName(action: MLNodeOrObject<any>, name: string): MLNode<any>;
+  function actionSetName(action: Object, name: string): Object;
 
     /** This function returns the description of a given action. **/
-  function actionGetDescription(action: MLNodeOrObject<any>): string;
+  function actionGetDescription(action: Object): string;
 
     /** This function returns the action with the description of the action updated. **/
-  function actionSetDescription(action: MLNodeOrObject<any>, description: string): MLNode<any>;
+  function actionSetDescription(action: Object, description: string): Object;
 
     /** This function returns the module database of a given action. **/
-  function actionGetModuleDb(action: MLNodeOrObject<any>): number;
+  function actionGetModuleDb(action: Object): number;
 
     /** This function sets the module database of a given action. **/
-  function actionSetModuleDb(action: MLNodeOrObject<any>, moduleDb: number): MLNode<any>;
+  function actionSetModuleDb(action: Object, moduleDb: number): Object;
 
     /** This function returns the module root of a given action. **/
-  function actionGetModuleRoot(action: MLNodeOrObject<any>): string;
+  function actionGetModuleRoot(action: Object): string;
 
     /** This function sets the module root of a given action. **/
-  function actionSetModuleRoot(action: MLNodeOrObject<any>, moduleRoot: string): MLNode<any>;
+  function actionSetModuleRoot(action: Object, moduleRoot: string): Object;
 
     /** This function returns the module of a given action. **/
-  function actionGetModule(action: MLNodeOrObject<any>): string;
+  function actionGetModule(action: Object): string;
 
     /** This function returns the action with the module of the action updated. **/
-  function actionSetModule(action: MLNodeOrObject<any>, module: string): MLNode<any>;
+  function actionSetModule(action: Object, module: string): Object;
 
     /** This function returns the options of a given action. **/
-  function actionGetOptions(action: MLNodeOrObject<any>): MLNode<any>;
+  function actionGetOptions(action: Object): Object;
 
     /** This function returns the action with the options of the action updated. **/
-  function actionSetOptions(action: MLNodeOrObject<any>, options: MLNodeOrObject<any>): MLNode<any>;
+  function actionSetOptions(action: Object, options: Object): Object;
 
-    /** This function creates the xml representing an action. When a rule associated with the action matches a document, the action's module will be invoked with the following external variables set: declare variable $alert:config-uri as xs:string external; declare variable $alert:doc as node() external; declare variable $alert:rule as element(alert:rule) external; declare variable $alert:action as element(alert:action) external; All actions must accept these external variables. **/
-  function makeAction(name: string, description: string, moduleDb: number, moduleRoot: string, module: string, options: MLNodeOrObject<any>): MLNode<any>;
+    /** This function creates the specified action. When a rule associated with the action matches a document, the action's module will be invoked with the following external variables set: var configUri; var doc; var rule; var action; All actions must accept these external variables. **/
+  function makeAction(name: string, description: string, moduleDb: number, moduleRoot: string, module: string, options: Object): Object;
 
-    /** Create a standard logging action named "log". Rules that reference this action must provide an <alert:directory/> element that specifies where the log file should be created. The inserted document will have a random long integer ID and its filename will be ID.xml within the specified directory. Rules that reference this action may also provide options with an <alert:permissions> element containing a series of <sec:permission> elements and/or an <alert:collections> element containing <alert:collection> elements that specify the permissions and collections for the log document. This information is simply passed through to xdmp:document-insert. An example of the rule's options is as follows: <alert:options> <alert:directory>/some/directory</alert:directory> <alert:permissions> <sec:permission> <sec:capability>read</sec:capability> <sec:role-id>129382323</sec:role-id> </sec:permission> </alert:permissions> <alert:collections> <alert:collection>http://acme.com/alert-log</alert:collection> </alert:collections> </alert:options> The log document has the following structure: <alert:log> <alert:log-id>82388423</alert:log-id> <alert:config-uri>http://acme.com/alert/message-board</alert:config-uri> <alert:rule-id>12352</alert:rule-id> <alert:user-id>8271938239</alert:user-id> <alert:document-uri>/the/URI/of/the/matching/document</alert:document-uri> <alert:timestamp>2008-05-31T08:20:00-08:00</alert:timestamp> </alert:log> The log document insertion will be performed as the user who created the rule, and the user must have permission to create documents in any collections they specify. The log-id is a random number chosen by the action. **/
-  function makeLogAction(): MLNode<any>;
+    /** Create a standard logging action named "log". Rules that reference this action must provide an directory property that specifies where the log file should be created. The inserted document will have a random long integer ID and its filename will be ID.json within the specified directory. Rules that reference this action may also provide options with an permission property containing a series of permission properties and/or an collections object containing collection properties that specify the permissions and collections for the log document. This information is simply passed through to xdmp.documentInsert. An example of the rule's options is as follows: {"directory":"/some/directory", "permissions":[{"capability":"read","role-id":"129382323"}], "collections":["http://acme.com/alert-log"]} The log document insertion will be performed as the user who created the rule, and the user must have permission to create documents in any collections they specify. The log-id is a random number chosen by the action. **/
+  function makeLogAction(): Object;
 
-    /** This function inserts the xml representing the action into the collection. The caller must have the alert-admin privilege to call this function. **/
-  function actionInsert(collectionUri: string, action: MLNodeOrObject<any>): void;
+    /** This function inserts the specified action into the collection. The caller must have the alert-admin privilege to call this function. **/
+  function actionInsert(configUri: string, action: Object): void;
 
     /** This function removes the named action from the database or throws an exception if the action does not exist. The caller must have the alert-admin privilege to call this function. **/
-  function actionRemove(collectionUri: string, name: string): void;
+  function actionRemove(configUri: string, name: string): void;
 
     /** This function retrieves all the named actions in the specified config URI. Returns a list of actions. **/
-  function getActions(collectionUri: string, names: MLArray<string>): ValueIterator<MLNode<any>>;
+  function getActions(configUri: string, names: MLArray<string>): Array<any>;
 
 }
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3909,8 +4221,228 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for EC2Module
+// Definitions:
+
+/**
+The Elastic Compute Cloud (EC2) API module contains functions that allow you to write scripts to
+  configure EC2.
+EC2 is installed as the following file:
+install_dir/Modules/MarkLogic/ec2-2009-11-30.xqy
+
+where install_dir is the directory in which
+   MarkLogic Server is installed.
+ To use the ec2-2009-11-30.xqy module in your own XQuery modules,
+    include the following line in your XQuery prolog:
+
+   import module namespace ec2 = "http://marklogic.com/ec2"
+           at "/MarkLogic/ec2-2009-11-30.xqy";
+The library uses the ec2: namespace, which is
+   not predefined in the server.
+MarkLogic recommends enabling the URI Lexicon when using
+    EC2; the URI lexicon will improve performance,
+   especially when the database grows to a large number of documents.
+**/
+
+interface ec2Functions {
+
+    /** This function calls the Amazon DescribeImages function. **/
+  describeImages(accessKey: string, secretKey: string, ec2Region: string, imageIds?: MLArray<string>, executableBy?: MLArray<string>, owners?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DescribeAvailabilityZones function. **/
+  describeAvailabilityZones(accessKey: string, secretKey: string, ec2Region: string, zoneName?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DescribeRegions function. **/
+  describeRegions(accessKey: string, secretKey: string, ec2Region: string, regionNames?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon AttachVolume function. **/
+  attachVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, instanceId: string, device: string): MLNode<any>;
+
+    /** This function calls the Amazon CreateSnapshot function. **/
+  createSnapshot(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, description?: string): MLNode<any>;
+
+    /** This function calls the Amazon CreateVolume function without a SnapshotId parameter. **/
+  createVolume(accessKey: string, secretKey: string, ec2Region: string, availabilityZone: string, size: number): MLNode<any>;
+
+    /** This function calls the Amazon CreateVolume function with a $snapshot-id parameter. **/
+  createVolumeFromSnapshot(accessKey: string, secretKey: string, ec2Region: string, availabilityZone: string, snapshotId: string, size?: number): MLNode<any>;
+
+    /** This function calls the Amazon DeleteSnapshot function. **/
+  deleteSnapshot(accessKey: string, secretKey: string, ec2Region: string, snapshotId: string): MLNode<any>;
+
+    /** This function calls the Amazon DeleteVolume function. **/
+  deleteVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeSnapshotAttribute function and passes createVolumePermission as the Attribute parameter. **/
+  describeSnapshotCreateVolumePermission(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DescribeSnapshots function. **/
+  describeSnapshots(accessKey: string, secretKey: string, ec2Region: string, snapshotIds?: MLArray<string>, owners?: MLArray<string>, restorableBys?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DescribeVolumes function. **/
+  describeVolumes(accessKey: string, secretKey: string, ec2Region: string, volumeIds?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DetachVolume function. **/
+  detachVolume(accessKey: string, secretKey: string, ec2Region: string, volumeId: string, instanceId?: string, device?: string, force?: boolean): MLNode<any>;
+
+    /** This function calls the Amazon ModifySnapshotAttribute function and passes the IDs of the users to be given permission to create the snapshot. This function sets add as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
+  addSnapshotCreateVolumePermissionUsers(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>, userIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ModifySnapshotAttribute function and passes the names of the groups to be given permission to create the snapshot. This function sets add as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
+  addSnapshotCreateVolumePermissionGroups(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>, userGroups: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ModifySnapshotAttribute function and passes the IDs of the users to be denied permission to create the snapshot. This function sets remove as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
+  removeSnapshotCreateVolumePermissionUsers(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>, userIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ModifySnapshotAttribute function and passes the names of the groups to be denied permission to create the snapshot. This function sets remove as the OperationType parameter and createVolumePermission as the Attribute parameter. **/
+  removeSnapshotCreateVolumePermissionGroups(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>, userGroups: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ResetSnapshotAttribute function. **/
+  resetSnapshotCreateVolumePermission(accessKey: string, secretKey: string, ec2Region: string, snapshotIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon AllocateAddress function. **/
+  allocateAddress(accessKey: string, secretKey: string, ec2Region: string): MLNode<any>;
+
+    /** This function calls the Amazon AssociateAddress function. **/
+  associateAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string, instanceId: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeAddresses function. **/
+  describeAddresses(accessKey: string, secretKey: string, ec2Region: string, publicIps?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon DisassociateAddress function. **/
+  disassociateAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string): MLNode<any>;
+
+    /** This function calls the Amazon ReleaseAddress function. **/
+  releaseAddress(accessKey: string, secretKey: string, ec2Region: string, publicIp: string): MLNode<any>;
+
+    /** This function calls the Amazon GetConsoleOutput function. **/
+  getConsoleOutput(accessKey: string, secretKey: string, ec2Region: string, instanceId: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes blockDeviceMapping as the Attribute parameter. **/
+  describeInstanceBlockDeviceMapping(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes disableApiTermination as the Attribute parameter. **/
+  describeInstanceDisableApiTermination(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes instanceInitiatedShutdownBehavior as the Attribute parameter. **/
+  describeInstanceInitiatedShutdownBehavior(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes kernel as the Attribute parameter. **/
+  describeInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
+  describeInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes rootDeviceName as the Attribute parameter. **/
+  describeInstanceRootDeviceName(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes instanceType as the Attribute parameter. **/
+  describeInstanceType(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstanceAttribute function and passes userData as the Attribute parameter. **/
+  describeInstanceUserData(accessKey: string, secretKey: string, ec2Region: string, instanceIds: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeInstances function. **/
+  describeInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes blockDeviceMapping as the Attribute parameter. **/
+  modifyInstanceBlockDeviceMapping(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes disableApiTermination as the Attribute parameter. **/
+  modifyInstanceDisableApiTermination(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: boolean): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes instanceInitiatedShutdownBehavior as the Attribute parameter. **/
+  modifyInstanceInitiatedShutdownBehavior(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes kernel as the Attribute parameter. **/
+  modifyInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
+  modifyInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes rootDeviceName as the Attribute parameter. **/
+  modifyInstanceRootDeviceName(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes instanceType as the Attribute parameter. **/
+  modifyInstanceType(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon ModifyInstanceAttribute function and passes userData as the Attribute parameter. **/
+  modifyInstanceUserData(accessKey: string, secretKey: string, ec2Region: string, instanceId: string, value: string): MLNode<any>;
+
+    /** This function calls the Amazon RebootInstances function. **/
+  rebootInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ResetInstanceAttribute function and passes kernel as the Attribute parameter. **/
+  resetInstanceKernel(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon ResetInstanceAttribute function and passes ramdisk as the Attribute parameter. **/
+  resetInstanceRamdisk(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon RunInstances function. **/
+  runInstances(accessKey: string, secretKey: string, ec2Region: string, imageId: string, minCount: number, maxCount: number, instanceType: string, keyPair: string, securityGroup: MLArray<string>, instanceOptions: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon StartInstances function. **/
+  startInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon StopInstances function. **/
+  stopInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>, force: boolean): MLNode<any>;
+
+    /** This function calls the Amazon TerminateInstances function. **/
+  terminateInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon CreateKeyPair function. **/
+  createKeyPair(accessKey: string, secretKey: string, ec2Region: string, keyName: string): MLNode<any>;
+
+    /** This function calls the Amazon DeleteKeyPair function. **/
+  deleteKeyPair(accessKey: string, secretKey: string, ec2Region: string, keyName: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeKeyPairs function. **/
+  describeKeyPairs(accessKey: string, secretKey: string, ec2Region: string, keyNames?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon MonitorInstances function. **/
+  monitorInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon UnmonitorInstances function. **/
+  unmonitorInstances(accessKey: string, secretKey: string, ec2Region: string, instanceIds: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon AuthorizeSecurityGroupIngress function. **/
+  authorizeGroupIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, sourceGroupOwnerId: string, sourceGroupName: string): MLNode<any>;
+
+    /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes icmp as the IpPermissions.n.IpProtocol parameter. **/
+  authorizeIcmpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, icmpType: number, icmpCode: number, cidrIp: string): MLNode<any>;
+
+    /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes tcp as the IpPermissions.n.IpProtocol parameter. **/
+  authorizeTcpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: MLArray<number>, cidrIp: string): MLNode<any>;
+
+    /** This function calls the Amazon AuthorizeSecurityGroupIngress function and passes udp as the IpPermissions.n.IpProtocol parameter. **/
+  authorizeUdpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: MLArray<number>, cidrIp: string): MLNode<any>;
+
+    /** This function calls the Amazon CreateSecurityGroup function. **/
+  createSecurityGroup(accessKey: string, secretKey: string, ec2Region: string, groupName: string, groupDescription: string): MLNode<any>;
+
+    /** This function calls the Amazon DeleteSecurityGroup function. **/
+  deleteSecurityGroup(accessKey: string, secretKey: string, ec2Region: string, groupName: string): MLNode<any>;
+
+    /** This function calls the Amazon DescribeSecurityGroups function. **/
+  describeSecurityGroups(accessKey: string, secretKey: string, ec2Region: string, groupNames?: MLArray<string>): MLNode<any>;
+
+    /** This function calls the Amazon RevokeSecurityGroupIngress function and sets the UserId and GroupName parameters. **/
+  revokeGroupIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, sourceGroupOwnerId: string, sourceGroupName: string): MLNode<any>;
+
+    /** This function calls the Amazon RevokeSecurityGroupIngress function, passes icmp as the IpProtocol parameter, and sets the FromPort, ToPort, and CidrIp parameters. **/
+  revokeIcmpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, icmpType: number, icmpCode: number, cidrIp: string): MLNode<any>;
+
+    /** This function calls the Amazon RevokeSecurityGroupIngress function, passes tcp as the IpProtocol parameter. **/
+  revokeTcpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: MLArray<number>, cidrIp: string): MLNode<any>;
+
+    /** This function calls the Amazon RevokeSecurityGroupIngress function, passes udp as the IpProtocol parameter. **/
+  revokeUdpIngress(accessKey: string, secretKey: string, ec2Region: string, groupName: string, portRange: MLArray<number>, cidrIp: string): MLNode<any>;
+
+}
+declare var ec2:ec2Functions
+
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3919,8 +4451,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3929,8 +4461,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3939,8 +4471,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3949,8 +4481,8 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3959,8 +4491,325 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for jsearch
+// Definitions:
+
+/**
+    The jsearch library module is a JavaScript interface for
+      searching documents and browsing and analyzing lexicons. The
+      functionality overlaps that of the cts:* built-in functions,
+      but is designed to feel more natural to a JavaScript developer, both
+      in its interface design and by using JavaScript objects and JSON
+      data for input and output. For more details, see
+      [xref name="search-dev-guide/Creating JavaScript Search Applications"].
+    To use this module in your Server-Side JavaScript code, include a
+       require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+	The jsearch JavaScript module is installed as the following file:
+    install_dir/Modules/MarkLogic/jsearch.sjs
+    where install_dir is the directory in which
+       MarkLogic Server is installed.
+
+
+     This class contains the top level entry points into the JSearch API,
+     plus helper functions for constructing some of the more complex
+     inputs expected by the interfaces.
+
+     To use this module in your Server-Side JavaScript code, include a
+     require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     Use the following methods to begin building a query on documents,
+     index or lexicon values, or value co-occurrences:
+
+   jsearch.documentsjsearch.valuesjsearch.tuplesjsearch.words
+
+    If you're working primarily with documents in one or more collections,
+    you can use jsearch.collections to create a
+    jsearch object implicitly scoped to those collecitons.
+
+    You can use jsearch.documentSelect to leverage JSearch
+    features such as snippeting and content extraction to an arbitrary
+    set of documents.
+
+    The remaining jsearch methods are helper functions for
+    constructing non-trivial inputs to other methods, such as lexicon
+    references and heat maps.
+
+    The following classes are also part of the JSearch API. You usually
+    end up working with these interfaces by starting with a call to a
+    jsearch method. For example, if you invoke
+    jsearch.documents, you end up working with the
+    DocumentsSearch interface.
+
+   DocumentsSearchWordsSearchValuesSearchTuplesSearchFacetsSearchFacetDefinition
+
+
+     Use these functions to search document content and document properties.
+
+     To use this module in your Server-Side JavaScript code, include a
+     require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The usage model for these methods is as follows:
+     Create a document search builder using jsearch.documents,
+     then chain calls to methods such as where and
+     orderBy on the resulting object. Finally, execute
+     the query by calling the result method.
+
+     The order in which you call the methods of this class is
+     significant. You should preserve the order shown in the
+     template below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+     Use the methods of this class in the following way, where everything
+     except the call to documents and result
+     being optional.
+
+jsearch.documents()                         // creates a DocumentsSearch object
+  .where(queries)
+  .orderBy(jsonPropNamesOrIndexReferences)
+  .filter()
+  .slice(startPos, endPosPlusOne)
+  .map(configOrFuncRef) | .reduce(configOrFuncRef)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      For details, see
+      jsearch.documents,
+      DocumentsSearch, and
+ Searching Documents in the Search Developer's Guide.
+
+
+
+      Use these functions to generate facets from values in a lexicon or
+      range index. You can generate facets in combination with a document
+      search and from an arbitrary set of documents in the database.
+
+     To use this module in your Server-Side JavaScript code, include a
+     require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The order in which you chain together the methods of this class
+     matters. You should preserve the ordering shown in the template
+     below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+      The intended usage is as follows, with everything
+      except the calls to facets and result
+      being optional.
+
+jsearch.facets(facetDefinitions, srcDocuments)    // creates a FacetsSearch obj
+  .where(queries)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      Use jsearch.facet and the FacetDefinition
+      methods to create the input facet definitions.
+
+      For details, see
+      jsearch.facets,
+      FacetsSearch,
+      FacetsDefinition, and
+ Including Facets in Search Results in the Search Developer's Guide.
+
+
+
+     Use these functions to build a facet definition for use with
+     jsearch.facets and FacetsSearch.
+
+     To use this module in your Server-Side JavaScript code, include a
+     require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The order in which you call the methods of this class is
+     significant. You should preserve the order shown in the
+     template below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+     The intended usage is as follows, with everything
+     except the call to documents and result
+     being optional.
+
+jsearch.facet()                          // creates a FacetDefinition object
+  .where(queries)
+  .othersWhere(queries)
+  .thisWhere(queries)
+  .groupInto(bucketDefinition)
+  .orderBy(jsonPropNameOrIndexReference)
+  .slice(startPos, endPosPlusOne)
+  .map(configOrFuncRef) | .reduce(configOrFuncRef)
+  .withOptions(optionsConfig)
+
+
+     The where, orderBy, slice,
+     map, reduce, and withOptions
+     methods behave as for a values query.
+
+     For details, see
+     jsearch.facets,
+     FacetsSearch, and
+ Including Facets in Search Results in the Search Developer's Guide.
+
+
+
+      Use these functions to find n-way value co-occurrences across lexicons
+      and range indexes and to compute aggregates from co-occurrences.
+      Create a tuples query builder using jsearch.tuples,
+      then build up the query by chaining calls to methods such as
+      where and orderBy. Finally, execute the
+      query by calling result.
+
+      To use this module in your Server-Side JavaScript code, include a
+      require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The order in which you call the methods of this class is
+     significant. You should preserve the order shown in the
+     templates below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+      The intended usage for retrieving tuples is as follows, with everything
+      except the call to tuples and result
+      being optional.
+
+      Use the following form for finding co-occurrences in lexicons and
+      range index:
+
+jsearch.tuples(jsonPropNamesOrIndexRefs)       // creates a TuplesSearch object
+  .where(queries)
+  .orderBy(orderingConfig)
+  .slice(startPos, endPosPlusOne)
+  .map(funcRef) | .reduce(funcRef, optionalSeed)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      Use the following form for computing aggregates over lexicon and
+      range index co-occurrences:
+
+jsearch.tuples(jsonPropNamesOrWordlexiconRefs)
+  .where(queries)
+  .aggregate(builtinAggregateOrUDF)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      For details, see
+      jsearch.tuples,
+      TuplesSearch, and
+ Querying Lexicons and Range Indexes in the Search Developer's Guide.
+
+
+
+      Use these functions to query and compute aggregates over values in
+      lexicons and range indexes. Create a tuples query builder using
+      jsearch.values, then build up the query by chaining
+      calls to methods such as where and orderBy.
+      Finally, execute the query by calling the result method.
+
+      To use this module in your Server-Side JavaScript code, include a
+      require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The order in which you call the methods of this class is
+     significant. You should preserve the order shown in the
+     templates below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+      Use the following form to query the values in an index or lexicon, with
+      everything except the call to values and result
+      being optional.
+
+jsearch.values(jsonPropNamesOrIndexRefs)           // creates a ValuesSearch obj
+  .where(queries)
+  .match(pattern) | .groupInto(bucketDefinitions)
+  .orderBy(orderingConfig)
+  .slice(startPos, endPosPlusOne)
+  .map(configOrFuncRef) | .reduce(funcRef, optionalSeed)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      Use the following form for computing aggregates over the values in
+      a lexicon or range index. The calls to where and
+      withOptions are optional.
+
+jsearch.values(jsonPropNamesOrWordLexiconRefs)
+  .where(queries)
+  .aggregate(builtinAggregateOrUDF)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      For details, see
+      jsearch.values,
+      ValuesSearch, and
+ Querying Lexicons and Range Indexes in the Search Developer's Guide.
+
+
+
+      Use these functions to query and compute aggregates over words in a
+      word lexicons. Create a words query builder using
+      jsearch.words, then build up the query by chaining
+      calls to methods such as where and orderBy.
+      Finally, execute the query by calling the result method.
+
+      To use this module in your Server-Side JavaScript code, include a
+      require statement similar to following line in your code:
+
+var jsearch = require("/MarkLogic/jsearch");
+
+
+     The order in which you call the methods of this class is
+     significant. You should preserve the order shown in the
+     template below. For details, see
+ Query Design Pattern in the Search Developer's Guide.
+
+      Use the following form for querying the values in a lexicon or range
+      index. All the calls except jsearch.words and
+      result are optional.
+
+jsearch.words(jsonPropNamesOrWordLexiconRefs)
+  .where(queries)
+  .match(pattern)
+  .orderBy(orderingConfig)
+  .slice(startPos, endPosPlusOne)
+  .map(funcRef) | .reduce(funcRef, optionalSeed)
+  .withOptions(optionsConfig)
+  .result()
+
+
+      For details, see
+      jsearch.words,
+      WordsSearch, and
+ Querying Values in a Word Lexicon in the Search Developer's Guide.
+
+  **/
+
+interface jsearchFunctions {
+
+}
+declare var jsearch:jsearchFunctions
+
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3969,8 +4818,44 @@ interface xdmpFunctions {
 }
 declare var xdmp:xdmpFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for MCGM
+// Definitions:
+
+/**
+The MCGM module provides support for geospatial queries using MetaCarta
+geospatial markup.
+
+To use the MCGM module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+
+import module namespace mcgm = "http://marklogic.com/geospatial/mcgm"
+         at "/MarkLogic/geospatial/mcgm.xqy";
+The library namespace prefix mcgm is not predefined
+in the server.
+**/
+
+interface mcgmFunctions {
+
+    /** Create a cts:point value from a MCGM Dot element. **/
+  point(point: MLNodeOrObject<any>): cts.Point;
+
+    /** Create a cts:circle value from a radius and MCGM Dot element. **/
+  circle(radius: number, center: MLNodeOrObject<any>): cts.Circle;
+
+    /** Construct a cts:polygon value from a sequence of MCGM Dot elements. **/
+  polygon(vertices: MLArray<MLNodeOrObject<any>>): cts.Polygon;
+
+    /** Returns a cts:query matching points within given regions. **/
+  geospatialQuery(regions: MLArray<cts.Region>, options?: MLArray<string>, weight?: number): cts.Query;
+
+    /** Returns a cts:query matching points within given regions. **/
+  geospatialQueryFromElements(regions: MLArray<MLNodeOrObject<any>>, options?: MLArray<string>, weight?: number): cts.Query;
+
+}
+declare var mcgm:mcgmFunctions
+
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -3980,13 +4865,13 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for semantics
-// Definitions: 
+// Definitions:
 
 /**
-The semantic functions include functions that are built into MarkLogic 
+The semantic functions include functions that are built into MarkLogic
 Server as well as functions that are implemented in an XQuery library.
 
-To use the semantics XQuery library module as part of your own XQuery 
+To use the semantics XQuery library module as part of your own XQuery
 module, include the following line in your XQuery prolog:
 
 
@@ -4040,7 +4925,7 @@ interface semFunctions {
     /** This function returns a function that builds triples from CURIE and blank node syntax. The resulting function takes three string arguments, representing subject, predicate, and object respectively, which returns a sem:triple object using the graph and prefix mappings passed in to the call to sem:rdf-builder. Blank nodes specified with a leading underscore (_) will be assigned blank node identifiers, and will maintain that identity across multiple invocations; for example, "_:person1" will refer to the same node as a later invocation that also mentions "_:person1". In the predicate position, the special value of "a" will be interpreted as the same as "rdf:type". **/
   rdfBuilder(prefixes?: {[key:string]:any}, graph?: sem.Iri): (p1:any,p2:any,p3:any)=>sem.Triple;
 
-    /** This function implements the Concise Bounded Definition (CBD) specification to describe one or more nodes in the graph. **/
+    /** This function implements the Concise Bounded Description (CBD) specification to describe one or more nodes in the graph. **/
   describe(iris: MLArray<sem.Iri>): ValueIterator<sem.Triple>;
 
     /** From a starting set of seeds, follow a given set of predicates, to a given depth, and return all unique node IRIs. **/
@@ -4055,8 +4940,8 @@ interface semFunctions {
 }
 declare var sem:semFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
@@ -4066,27 +4951,27 @@ interface xdmpFunctions {
 declare var xdmp:xdmpFunctions
 
 // Type definitions for TemporalModule
-// Definitions: 
+// Definitions:
 
 /**
-    
+
     This module contains the functions used to insert, delete and manage temporal documents.
-    
+
      To understand the temporal functions, you need to understand the meaning of the following terms:
-       
-    Instant: an instant of time, such as "now", "12/31/2012, 01:00:00 am".Period: an anchored duration of time (e.g. December 01, 1999 through December 31, 2000, the fall semester)Axis: a named pair of range indexes that is the container for periods.Valid time: when a fact was true in modeled reality.System time: when a fact was stored in the database.User-defined time: a time value that user provides in replacement of system start time.      LSQT (Last Stable Query Time): a document with a system start time before this point 
-      can be queried and a document with a system start time after this point can be updated 
-      and ingested. 
-        
-    
+
+    Instant: an instant of time, such as "now", "12/31/2012, 01:00:00 am".Period: an anchored duration of time (e.g. December 01, 1999 through December 31, 2000, the fall semester)Axis: a named pair of range indexes that is the container for periods.Valid time: when a fact was true in modeled reality.System time: when a fact was stored in the database.User-defined time: a time value that user provides in replacement of system start time.      LSQT (Last Stable Query Time): a document with a system start time before this point
+      can be queried and a document with a system start time after this point can be updated
+      and ingested.
+
+
     The Tiered Storage function module is installed as the following file:
     install_dir/Modules/MarkLogic/temporal.xqy
-    where install_dir is the directory in which 
+    where install_dir is the directory in which
 	    MarkLogic Server is installed.
-    To use the temporal.xqy module in your own XQuery modules, 
+    To use the temporal.xqy module in your own XQuery modules,
      include the following line in your XQuery prolog:
-    
-import module namespace temporal="http://marklogic.com/xdmp/temporal" 
+
+import module namespace temporal="http://marklogic.com/xdmp/temporal"
           at "/MarkLogic/temporal.xqy";
   **/
 
@@ -4128,8 +5013,8 @@ interface temporalFunctions {
 }
 declare var temporal:temporalFunctions
 
-// Type definitions for 
-// Definitions: 
+// Type definitions for
+// Definitions:
 
 /****/
 
