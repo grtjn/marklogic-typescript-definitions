@@ -12,8 +12,6 @@
     },
     "compileOnSave": false,
     "files": [
-        "./ts/functions.d.ts",
-        "./ts/index.d.ts",
-        "./ts/types.d.ts"
+        "./ts/index.d.ts"
     ]
 }
