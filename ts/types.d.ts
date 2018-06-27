@@ -1,3 +1,5 @@
+/// <reference lib="dom.iterable" />
+
 declare class DocumentNode<T> extends MLNode<T> {
   /**
    * The root node of the document.
@@ -122,7 +124,7 @@ declare enum NodeType {
 
 declare type MLNodeOrObject<T> = MLNode<T> | {[property:string]:any}
 declare type MLNodeAndObject<T> = MLNode<T> & T
-declare type MLArray<T> = T|Array<T>|ValueIterator<T>
+declare type MLArray<T> = T|Array<T>|Sequence<T>
 
 declare abstract class MLNode<T> {
   /**
@@ -194,6 +196,18 @@ interface IteratorResult<T> {
   value?: T
 }
 
+declare class Value<T> {
+  toObject(): Object
+  toString(): string
+  valueOf(): T
+}
+
+declare class Sequence<T> implements Iterable<Value<T>> {
+  from(srcValue: Array<T> | Object, mapFn?: () => T, thisValue?: Object): Sequence<T>
+  toArray(): Value<T>[]
+  [Symbol.iterator]()
+}
+
 declare namespace cts {
   interface Reference {
     __$cts_Reference
@@ -246,7 +260,9 @@ declare namespace cts {
   interface PathGeospatialQuery extends Query {
     __$cts_PathGeospatialQuery
   }
-  interface Order {
+  interface GeospatialRegionQuery extends Query {
+    __$cts_GeospatialRegionQuery
+  }  interface Order {
     __$cts_Order
   }
   interface Period {
@@ -279,19 +295,22 @@ declare namespace cts {
   interface WordQuery extends Query {
     __$cts_WordQuery
   }
-  interface ElementRangeQuery extends Query {
+  interface RangeQuery extends Query {
+    __$cts_RangeQuery
+  }
+  interface ElementRangeQuery extends RangeQuery {
     __$cts_ElementRangeQuery
   }
-  interface JsonPropertyRangeQuery extends Query {
+  interface JsonPropertyRangeQuery extends RangeQuery {
     __$cts_JsonPropertyRangeQuery
   }
-  interface TripleRangeQuery extends Query {
+  interface TripleRangeQuery extends RangeQuery {
     __$cts_TripleRangeQuery
   }
-  interface FieldRangeQuery extends Query {
+  interface FieldRangeQuery extends RangeQuery {
     __$cts_FieldRangeQuery
   }
-  interface PathRangeQuery extends Query {
+  interface PathRangeQuery extends RangeQuery {
     __$cts_PathRangeQuery
   }
   interface ElementValueQuery extends Query {
@@ -363,6 +382,12 @@ declare namespace cts {
   interface Token{
     __$cts_Token
   }
+  interface Entity{
+    __$cts_Entity
+  }
+  interface EntityDictionary{
+    __$cts_EntityDictionary
+  }
 }
 
 declare namespace math{
@@ -429,7 +454,28 @@ declare namespace rdf {
   }
 }
 
+declare namespace sql {
+  interface CollatedString{
+    __$sql_CollatedString
+  }
+  interface ColumnID{
+    __$sql_ColumnID
+  }
+}
+
 declare namespace xs {
+  interface Date{
+    __$xs_Date
+  }
+  interface DateTime{
+    __$xs_DateTime
+  }
+  interface GenericDateTimeArg{
+    __$xs_GenericDateTimeArg
+  }
+  interface ID{
+    __$xs_ID
+  }
   interface QName{
     __$xs_QName
   }
