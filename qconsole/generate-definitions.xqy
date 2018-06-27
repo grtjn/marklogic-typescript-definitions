@@ -1,7 +1,7 @@
 xquery version "1.0-ml";
 
 declare variable $xml external;
-let $xml := xdmp:unquote($xml)
+let $xml := xdmp:unquote("<wrap>" || $xml || "</wrap>")
 
 let $definition := xdmp:xslt-eval(
   <xsl:stylesheet version="2.0" exclude-result-prefixes="#all" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" xmlns:local="local">
@@ -17,8 +17,9 @@ let $definition := xdmp:xslt-eval(
     <xsl:template match="apidoc:function" mode="#all">
       <xsl:param name="use-function-keyword" select="false()"/>
       <xsl:param name="use-declare-keyword" select="false()"/>
+
       <xsl:text>    /** </xsl:text>
-      <xsl:value-of select="normalize-space(apidoc:summary[not(@class) or @class = 'javascript'])"/>
+      <xsl:value-of select="normalize-space(apidoc:summary)"/>
       <xsl:text> **/&#10;</xsl:text>
 
       <xsl:text>&#32;&#32;</xsl:text>
@@ -30,39 +31,44 @@ let $definition := xdmp:xslt-eval(
       </xsl:if>
       <xsl:value-of select="local:fixName(@name)"/>
       <xsl:text>(</xsl:text>
-      <xsl:for-each select="apidoc:params/apidoc:param[not(@class) or @class = 'javascript']">
-        <xsl:variable name="is-multi" select ="substring(@type, string-length(@type) - 3) = ',...'"/>
+      <xsl:for-each select="apidoc:params/apidoc:param">
+        <xsl:variable name="is-multi" select="matches(@type, ',\.\.\.$')"/>
         <xsl:if test="$is-multi">...</xsl:if>
         <xsl:value-of select="local:fixName(@name)"/>
-        <xsl:if test="preceding-sibling::apidoc:param[not(@class) or @class = 'javascript'][@name = current()/@name]">2</xsl:if>
+        <xsl:if test="preceding-sibling::apidoc:param[@name = current()/@name]">2</xsl:if>
         <xsl:if test="not($is-multi) and string(@optional) = 'true'">?</xsl:if>
         <xsl:text>: </xsl:text>
         <xsl:value-of select="local:fixType(@type, true())"/>
         <xsl:if test="$is-multi">[]</xsl:if>
+        <xsl:if test="not($is-multi) and string(@optional) = 'true'">|null|undefined</xsl:if>
         <xsl:if test="not(position() = last())">, </xsl:if>
       </xsl:for-each>
       <xsl:text>): </xsl:text>
-      <xsl:value-of select="local:fixType(string(apidoc:return[not(@class) or @class = 'javascript']), false())"/>
+      <xsl:value-of select="local:fixType(string(apidoc:return), false())"/>
       <xsl:text>;&#10;&#10;</xsl:text>
     </xsl:template>
 
-    <xsl:template match="/">
+    <xsl:template match="/wrap">
       <xsl:variable name="root" select="."/>
 
-      <xsl:text>// Type definitions for </xsl:text><xsl:value-of select="apidoc:module/@name"/><xsl:text>&#10;</xsl:text>
+      <xsl:text>// Type definitions for </xsl:text><xsl:value-of select="apidoc:module[exists(apidoc:function)]/@name"/><xsl:text>&#10;</xsl:text>
       <xsl:text>// Definitions: </xsl:text><xsl:value-of select="base-uri(.)"/><xsl:text>&#10;&#10;</xsl:text>
 
-      <xsl:text>/**</xsl:text>
-      <xsl:value-of select="apidoc:module/apidoc:summary[not(@class) or @class = 'javascript']"/>
-      <xsl:text>**/&#10;&#10;</xsl:text>
-
-        <xsl:for-each select="distinct-values(((apidoc:module/@lib, 'xdmp')[1], //apidoc:function[empty(@http-verb)]/@lib))">
+        <xsl:for-each select="distinct-values(((//apidoc:module[exists(apidoc:function)]/@lib, 'xdmp')[1], //apidoc:function/@lib))">
+          <xsl:sort/>
           <xsl:variable name="lib" select="."/>
           <xsl:variable name="name" select="string-join(local:fixName($lib), '')"/>
+          <xsl:variable name="functions" select="$root//apidoc:function[@lib = $lib]"/>
+          <xsl:variable name="module" select="$functions/.."/>
+
+          <xsl:text>&#10;/**&#10;</xsl:text>
+          <xsl:value-of select="$module/apidoc:summary"/>
+          <xsl:text>&#10;**/&#10;&#10;</xsl:text>
 
           <xsl:choose>
           <xsl:when test="$name = 'GlobalObject'">
-            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']">
+            <xsl:apply-templates select="$functions">
+              <xsl:sort select="@name" />
               <xsl:with-param name="use-function-keyword" select="true()"/>
               <xsl:with-param name="use-declare-keyword" select="true()"/>
             </xsl:apply-templates>
@@ -72,7 +78,8 @@ let $definition := xdmp:xslt-eval(
             <xsl:value-of select="$name"/>
             <xsl:text> {{&#10;&#10;</xsl:text>
 
-            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']">
+            <xsl:apply-templates select="$functions">
+              <xsl:sort select="@name" />
               <xsl:with-param name="use-function-keyword" select="true()"/>
             </xsl:apply-templates>
 
@@ -83,7 +90,9 @@ let $definition := xdmp:xslt-eval(
             <xsl:value-of select="$name"/>
             <xsl:text>Functions {{&#10;&#10;</xsl:text>
 
-            <xsl:apply-templates select="$root//apidoc:function[@lib = $lib][empty(@http-verb)][not(@class) or @class = 'javascript']"/>
+            <xsl:apply-templates select="$functions">
+              <xsl:sort select="@name" />
+            </xsl:apply-templates>
 
             <xsl:text>}}&#10;</xsl:text>
 
@@ -98,14 +107,14 @@ let $definition := xdmp:xslt-eval(
     </xsl:template>
 
     <xsl:function name="local:fixType">
-      <xsl:param name="pType"/>
+      <xsl:param name="fullType"/>
       <xsl:param name="isForParameter"/>
 
-      <xsl:variable name="preTypeAndCardinality" select="replace(replace($pType, '^([^,]+)(,\.\.\.)?$', '$1'), ' ', '')"/>
-      <xsl:variable name="lastCharacter" select="substring($preTypeAndCardinality, string-length($preTypeAndCardinality))"/>
-      <xsl:variable name="preType" select="if (matches($lastCharacter, '^[?*+]$')) then substring($preTypeAndCardinality, 1, string-length($preTypeAndCardinality) - 1) else $preTypeAndCardinality"/>
-      <xsl:variable name="isArray" select="matches($lastCharacter, '^[*+]$')"/>
-      <xsl:variable name="type" select="if (substring($preType, 1, 1) = '(') then substring($preType, 2, string-length($preType) - 2) else $preType"/>
+      <xsl:variable name="fullType" select="translate($fullType, ' ', '')"/>
+      <xsl:variable name="type" select="replace(replace($fullType, ',\.\.\.$', ''), '([?*+]|\[\])$', '')"/>
+      <xsl:variable name="cardinality" select="substring($fullType, string-length($type) + 1)"/>
+      <xsl:variable name="isArray" select="matches($cardinality, '^([*+]|\[\])')"/>
+      <xsl:variable name="type" select="if (substring($type, 1, 1) = '(') then substring($type, 2, string-length($type) - 2) else $type"/>
 
       <xsl:value-of select="local:fixEachType($type, $isArray, $isForParameter)"/>
     </xsl:function>
@@ -116,6 +125,7 @@ let $definition := xdmp:xslt-eval(
       <xsl:param name="isForParameter"/>
 
       <xsl:variable name="type" select="substring-before(concat($typeUnion,'|'),'|')"/>
+      <xsl:variable name="type" select="replace($type, '([?*+]|\[\])$', '')"/>
 
       <xsl:choose>
         <xsl:when test="matches($type, '^function\(.*\)as(.+)$')">
@@ -144,14 +154,21 @@ let $definition := xdmp:xslt-eval(
     <xsl:function name="local:fixArrayType">
       <xsl:param name="type"/>
       <xsl:param name="isForParameter"/>
-      <xsl:value-of select="concat(concat(if($isForParameter) then 'MLArray&lt;' else 'ValueIterator&lt;', $type), '&gt;')"/>
+      <xsl:value-of select="concat(concat(if($isForParameter) then 'MLArray&lt;' else 'Sequence&lt;', $type), '&gt;')"/>
     </xsl:function>
 
     <xsl:function name="local:fixSingleType">
       <xsl:param name="type"/>
       <xsl:param name="isForParameter"/>
       <xsl:choose>
-        <xsl:when test="$type = 'ValueIterator'">ValueIterator&lt;any&gt;</xsl:when>
+        <!-- workarounds for docs bugs -->
+        <xsl:when test="$type = 'query-results-serialize($results)'">MLNode&lt;any&gt;</xsl:when>
+        <xsl:when test="$type = 'option'">Sequence&lt;any&gt;</xsl:when>
+        <xsl:when test="$type = 'genericDateTimeArg'">xs.GenericDateTimeArg</xsl:when>
+        <xsl:when test="$type = 'rdf:collatedString'">sql.CollatedString</xsl:when>
+
+        <xsl:when test="$type = 'any[]'">Array&lt;any&gt;</xsl:when>
+        <xsl:when test="$type = ('ValueIterator', 'Sequence')">Sequence&lt;any&gt;</xsl:when>
         <xsl:when test="$type = 'document-node()'">DocumentNode&lt;any&gt;</xsl:when>
         <xsl:when test="$type = ('binary()')">MLNode&lt;any&gt;</xsl:when>
         <xsl:when test="$type = ('element()', 'node()')">
@@ -160,16 +177,16 @@ let $definition := xdmp:xslt-eval(
             <xsl:otherwise>MLNode&lt;any&gt;</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="$type = ('empty-sequence()', 'Null')">void</xsl:when>
+        <xsl:when test="$type = ('empty-seq', 'empty-sequence', 'empty-sequence()', 'null', 'Null')">null</xsl:when>
         <xsl:when test="$type = ('String', 'xs:anyURI', 'xs:NCName', 'xs:string', 'xs:time', 'xs:duration', 'xs:dayTimeDuration')">string</xsl:when>
         <xsl:when test="$type = ('json:array', 'Array')">Array&lt;any&gt;</xsl:when>
-        <xsl:when test="$type = ('json:object', 'map:map')">&#123;&#91;key:string&#93;:any&#125;</xsl:when>
-        <xsl:when test="$type = ('function()', 'xdmp:function', 'function(*', 'function(*)')">() => any</xsl:when>
+        <xsl:when test="$type = ('json:object', 'map:map', 'Options')">&#123;&#91;key:string&#93;:any&#125;</xsl:when>
+        <xsl:when test="$type = ('function()', 'xdmp:function', 'function(*', 'function(*)', 'function')">() => any</xsl:when>
         <xsl:when test="$type = 'xs:boolean'">boolean</xsl:when>
-        <xsl:when test="$type = ('xs:anyAtomicType', 'item()')">any</xsl:when>
+        <xsl:when test="$type = ('any', 'xs:anyAtomicType', 'item()')">any</xsl:when>
         <xsl:when test="$type = ('xs:dateTime', 'xs:date')">Date</xsl:when>
-        <xsl:when test="$type = ('Int', 'double', 'xs:numeric', 'numeric', 'xs:decimal', 'xs:double', 'xs:unsignedLong', 'xs:int', 'xs:float', 'xs:integer', 'xs:long', 'xs:nonNegativeInteger', 'xs:positiveInteger', 'xs:unsignedInt')">number</xsl:when>
-        <xsl:when test="matches($type, '^(schema-)?[Ee]lement\([^)]+\)$')">
+        <xsl:when test="$type = ('Int', 'double', 'xs:numeric', 'numeric', 'xs:decimal', 'xs:double', 'xs:unsigned', 'xs:unsingedLong', 'xs:unsignedLong', 'xs:int', 'xs:float', 'xs:integer', 'xs:long', 'xs:nonNegativeInteger', 'xs:positiveInteger', 'xs:unsignedInt')">number</xsl:when>
+        <xsl:when test="matches($type, '^(schema-)?[Ee]lement\([^)]+\)')">
           <xsl:choose>
             <!-- TODO: Can we perform generics on this? -->
             <xsl:when test="$isForParameter">MLNodeOrObject&lt;any&gt;</xsl:when>
