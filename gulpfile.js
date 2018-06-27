@@ -22,7 +22,7 @@ var options = {
   mlHost: argv['ml-host'] || 'localhost',
   mlPort: argv['ml-port'] || '8000',
   mlUser: argv['ml-user'] || 'admin',
-  mlPass: argv['ml-pass'] || 'passw0rd'
+  mlPass: argv['ml-pass'] || 'admin'
 };
 
 var createAddHeader = function(){
@@ -32,12 +32,12 @@ var createAddHeader = function(){
   })
 }
 
-var createProcessXML = function(){
-  var query = fs.readFileSync('qconsole/generate-definitions.xqy').toString();
+var cleanupDefinitions = function(){
+  var query = fs.readFileSync('qconsole/cleanup-definitions.xqy').toString();
 
   return through.obj(function (file, enc, cb) {
     var xml = file.contents.toString();
-    var escapedXml = xml.replace(/\\/gm, '\\\\').replace(/"/gm, '\\"').replace(/(\n\r|\r\n|\n|\r)/gm, '\\n').replace(/\t/gm, '\\t');
+    var escapedXml = xml.replace(/<\?[^>]+>/gm, '').replace(/\\/gm, '\\\\').replace(/"/gm, '\\"').replace(/(\n\r|\r\n|\n|\r)/gm, '\\n').replace(/\t/gm, '\\t');
 
     request({
       method: 'POST',
@@ -54,15 +54,56 @@ var createProcessXML = function(){
     }, function(err, httpResponse, body) {
       try {
         // get rid of multipart response wrapping
-        body = body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
+        body = body && body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
 
         if (err || httpResponse.statusCode !== 200) {
           console.log(file.path)
-          cb(new Error(body))
+          cb(body ? new Error(body) : err)
         } else {
           cb(null, new File({
             base: file.base,
-            path: file.path.replace('/xml/', '/ts/').replace('.xml', '.d.ts'),
+            path: file.path.replace('/xml/', '/.tmp/'),
+            contents: new Buffer(body)
+          }));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  });
+}
+
+var createProcessXML = function(){
+  var query = fs.readFileSync('qconsole/generate-definitions.xqy').toString();
+
+  return through.obj(function (file, enc, cb) {
+    var xml = file.contents.toString();
+    var escapedXml = xml.replace(/<\?[^>]+>/gm, '').replace(/\\/gm, '\\\\').replace(/"/gm, '\\"').replace(/(\n\r|\r\n|\n|\r)/gm, '\\n').replace(/\t/gm, '\\t');
+
+    request({
+      method: 'POST',
+      url: 'http://' + options.mlHost + ':' + options.mlPort + '/v1/eval',
+      form: {
+        xquery: query,
+        vars: '{ xml: "'+ escapedXml +'"}'
+      },
+      auth: {
+        user: options.mlUser,
+        pass: options.mlPass,
+        sendImmediately: false
+      }
+    }, function(err, httpResponse, body) {
+      try {
+        // get rid of multipart response wrapping
+        body = body && body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
+
+        if (err || httpResponse.statusCode !== 200) {
+          console.log(file.path)
+          cb(body ? new Error(body) : err)
+        } else {
+          cb(null, new File({
+            base: file.base,
+            path: file.path.replace('/.tmp/', '/ts/').replace('.xml', '.d.ts'),
             contents: new Buffer(body)
           }));
         }
@@ -75,6 +116,9 @@ var createProcessXML = function(){
 
 gulp.task('generate', function(){
   return gulp.src(['xml/**/*.xml'])
+    .pipe(concat('definitions.xml'))
+    .pipe(cleanupDefinitions())
+    .pipe(gulp.dest('./.tmp/'))
     .pipe(createProcessXML())
     .pipe(concat('functions.d.ts'))
     .pipe(createAddHeader())
