@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/task-server/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/task-server/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="memory-size">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount of system memory in megabytes, min 1, max 73728.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="73728" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="log-level">
+    <xs:annotation>
+      <xs:documentation>
+        Logging configuration for all logging features. "disabled" prevents logging entirely.
+	disabled, emergency, alert, critical, error, warning, notice, info,
+	config, debug, fine, finer, or finest
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="finest"/>
+      <xs:enumeration value="finer"/>
+      <xs:enumeration value="fine"/>
+      <xs:enumeration value="debug"/>
+      <xs:enumeration value="config"/>
+      <xs:enumeration value="info"/>
+      <xs:enumeration value="notice"/>
+      <xs:enumeration value="warning"/>
+      <xs:enumeration value="error"/>
+      <xs:enumeration value="critical"/>
+      <xs:enumeration value="alert"/>
+      <xs:enumeration value="emergency"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="threadCount">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of threads, min 1, max 256.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="256" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="directory-pathname">
+    <xs:annotation>
+      <xs:documentation>
+        It can be absolute or relative.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="timeout">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of seconds, min 0, max 4294967295.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+      <xs:maxInclusive value="4294967295" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="boolean">
+    <xs:annotation>
+      <xs:documentation>
+        true or false
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="queue-size">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of tasks.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="10000000" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="pre-commit-trigger-limit">
+    <xs:annotation>
+      <xs:documentation>
+        A maximum number of triggers a single statement can invoke.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="trigger-depth">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of trigger invocation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="task-server-id">
+    <xs:annotation>
+      <xs:documentation>
+        An task server id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="task-server-name">
+    <xs:annotation>
+      <xs:documentation>
+        An task server name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="start-time">
+    <xs:annotation>
+      <xs:documentation>
+  The starting time (in 24:00 notation).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time"/>
+  </xs:simpleType>
+  <xs:simpleType name="start-date">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="day">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="monday"/>
+      <xs:enumeration value="tuesday"/>
+      <xs:enumeration value="wednesday"/>
+      <xs:enumeration value="thursday"/>
+      <xs:enumeration value="friday"/>
+      <xs:enumeration value="saturday"/>
+      <xs:enumeration value="sunday"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="user-id">
+    <xs:annotation>
+      <xs:documentation>
+        A user ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="task-id">
+    <xs:annotation>
+      <xs:documentation>
+        A task ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="task-enabled">
+    <xs:annotation>
+      <xs:documentation>
+        Whether a task is enabled.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="task-path">
+    <xs:annotation>
+      <xs:documentation>
+        A task-path must start with a "/".
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="/[^\?:#]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="task-type">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="once"/>
+      <xs:enumeration value="monthly"/>
+      <xs:enumeration value="weekly"/>
+      <xs:enumeration value="daily"/>
+      <xs:enumeration value="hourly"/>
+      <xs:enumeration value="minutely"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="task-period">
+    <xs:restriction base="xs:positiveInteger"/>
+  </xs:simpleType>
+  <xs:simpleType name="task-priority">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="higher"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="task-month-day">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="31" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="task-timestamp">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:complexType name="task-server-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A task server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="task-server-id" minOccurs="0"/>
+      <xs:element ref="task-server-name" minOccurs="0"/>
+      <xs:element ref="threads" minOccurs="0"/>
+      <xs:element ref="debug-threads" minOccurs="0"/>
+      <xs:element ref="max-time-limit" minOccurs="0"/>
+      <xs:element ref="default-time-limit" minOccurs="0"/>
+      <xs:element ref="max-inference-size" minOccurs="0"/>
+      <xs:element ref="default-inference-size" minOccurs="0"/>
+      <xs:element ref="queue-size" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-depth" minOccurs="0"/>
+      <xs:element ref="post-commit-trigger-depth" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-limit" minOccurs="0"/>
+      <xs:element ref="file-log-level" minOccurs="0"/>
+      <xs:element ref="log-errors" minOccurs="0"/>
+      <xs:element ref="debug-allow" minOccurs="0"/>
+      <xs:element ref="profile-allow" minOccurs="0"/>
+      <xs:element ref="scheduled-tasks" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="task-days" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A selection of days.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="7">
+      <xs:element ref="task-day" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="scheduled-task" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A scheduled task specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="task-id" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-enabled" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-path" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-root" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-type" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-period" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-month-day" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-days" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-start-date" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-start-time" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-timestamp" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-database" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-modules" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-user" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="task-host" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="task-priority" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="scheduled-tasks" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The scheduled tasks' specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="scheduled-task" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="file-log-level" type="log-level" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum log level for log messages in the log file.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="threads" type="threadCount" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of server threads allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="debug-threads" type="threadCount" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of debugging threads allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="max-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound for a request's time limit, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default time limit for a request, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="max-inference-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound for a request's inference size, in megabytes.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-inference-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default inference size for a request, in megabytes.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="log-errors" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Log uncaught request processing errors to ErrorLog.txt.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="debug-allow" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Allow debugging on this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="profile-allow" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Allow profiling on this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="queue-size" type="queue-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of tasks allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="pre-commit-trigger-limit" type="pre-commit-trigger-limit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of triggers a single statement can invoke.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="pre-commit-trigger-depth" type="trigger-depth" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum depth of pre-commit trigger invocation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="post-commit-trigger-depth" type="trigger-depth" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum depth of post-commit trigger invocation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-server-properties" type="task-server-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The task server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-server-id" type="task-server-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The task server id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-server-name" type="task-server-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-user" type="user-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The user to run this task as.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-host" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The host to run this task on.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-modules" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The database that contains application modules.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The database name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-root" type="directory-pathname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The path to the module directory root.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-id" type="task-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The task ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-enabled" type="task-enabled" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not a task is enabled
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-path" type="task-path" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The module to invoke.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-type" type="task-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        What type of scheduled task is this.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-period" type="task-period" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        How often this task should run (every n months, weeks, days, hours or minutes).
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-priority" type="task-priority" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The priority of this task.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-day" type="day" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A day that this task runs on.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-days" type="task-days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The days that this task runs on.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-month-day" type="task-month-day" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The day of the month that this task runs on.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-start-date" type="start-date" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation) for this task.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-start-time" type="start-time" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The starting time (in 24:00 notation) for this task.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="task-timestamp" type="task-timestamp" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The date and time this task was created.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="scheduled-task" type="scheduled-task" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A scheduled task specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="scheduled-tasks" type="scheduled-tasks" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The scheduled tasks' specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation>
+      Server configuration file schema.
+    </xs:documentation>
+    <xs:appinfo/>
+  </xs:annotation>
+  <?xdmp-annotations?>
+</xs:schema>

@@ -1,0 +1,858 @@
+<apidoc:module name="InfoDevModule" category="Information Studio Developer" 
+	lib="infodev"  bucket="XQuery Library Modules" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" class="xquery">
+<apidoc:summary category="Information Studio Developer"  bucket="XQuery Library Modules">
+<p>The Information Studio Developer API module contains functions that allow you to 
+   write custom collectors and transformers.  This module is deprecated.</p>	
+<p>The Information Studio Developer API is installed as the following file:</p>
+<code><em>install_dir</em>/Modules/MarkLogic/appservices/infostudio/infodev.xqy</code> 
+ 
+<p>where <code><em>install_dir</em></code> is the directory in which 
+   MarkLogic Server is installed.</p>
+<p> To use the <code>infodev.xqy</code> module in your own XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+<pre xml:space="preserve">
+   <code>import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev" 
+           at "/MarkLogic/appservices/infostudio/infodev.xqy";</code></pre>
+<p>The library uses the <code>infodev:</code> namespace, which is 
+   <em>not</em> predefined in the server.</p>
+<p>MarkLogic recommends enabling the URI Lexicon when using 
+   Information Studio; the URI lexicon will improve performance, 
+   especially when the database grows to a large number of documents.</p>
+</apidoc:summary>
+
+
+<apidoc:function name="check-options" lib="infodev" category="Information Studio Developer"  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  [DEPRECATED] This function checks the options node to ensure that the structure and values are 
+  correct.  It returns a sequence of report elements.  An empty sequence indicates
+  that the options node is correct.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="options" type="element(info:options)">
+    The options node to be checked.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:report)*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  infodev:check-options(  
+     <options name="default" xmlns="http://marklogic.com/appservices/infostudio">
+        <collection>http://marklogic.com/appservices/infostudio</collection>
+        <error-handling>continue-with-warning</error-handling>
+        <fab-retention-duration>P30D</fab-retention-duration>
+        <file-filter>^[^\.]</file-filter>
+        <max-docs-per-transaction>100</max-docs-per-transaction>
+        <overwrite>overwrite</overwrite>
+        <ticket-retention-duration>P30D</ticket-retention-duration>
+        <uri>
+         <literal>http://foo</literal>
+          <filename/>
+          <literal>.</literal>
+          <ext/>
+       </uri>
+      </options>)
+
+(: Returns an empty sequence if the options node is correct.  Otherwise, errors
+   are returned. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-create" lib="infodev" category="Information Studio Developer"  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  [DEPRECATED] This function generates a ticket and stores it in the specified database.  It
+  returns the id of the generated ticket.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="annotation" type="element(info:annotation)?">
+    A custom annotation element designed to store implementation-specific data.
+    </apidoc:param>
+    <apidoc:param name="database" type="xs:string?">
+    The database in which to store the generated ticket.
+    </apidoc:param>
+    <apidoc:param name="policy-name" type="xs:string?">
+    The name of the policy to be used with requests associated with this ticket.  
+    If the name is provided but does not exist, an error is thrown.  If no name 
+    is provided, a stored default policy is used if available.  If neither exists, 
+    reasonable global defaults are used.
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)?">
+    An options node to be used with requests associated with this ticket.  
+    It is merged with the effective policy at runtime.
+    </apidoc:param>   
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $policy := 
+  <options name="default" xmlns="http://marklogic.com/appservices/infostudio">
+    <collection>http://marklogic.com/appservices/infostudio</collection>
+    <error-handling>continue-with-warning</error-handling>
+    <fab-retention-duration>P30D</fab-retention-duration>
+    <file-filter>^[^\.]</file-filter>
+    <max-docs-per-transaction>100</max-docs-per-transaction>
+    <overwrite>overwrite</overwrite>
+    <ticket-retention-duration>P30D</ticket-retention-duration>
+    <uri>
+      <literal>http://docs/newdocs/</literal>
+      <filename/>
+      <literal>.</literal>
+      <ext/>
+    </uri>
+  </options>
+
+  let $annotation := <info:annotation>Adding new docs to newdocs</info:annotation>
+
+  return
+    infodev:ticket-create($annotation, "testDB", "default", $policy) 
+
+  (: Creates a new ticket. :) 
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="ticket-add-annotation" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] This function adds annotation to the specified ticket.</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket to which to add the annotation.
+    </apidoc:param>
+    <apidoc:param name="annotation" type="element(info:annotation)">
+    A custom annotation element designed to store implementation-specific data.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $ticket-id := "/tickets/ticket/10095158268051211232"
+  let $annotation := <info:annotation>Adding corrected documents</info:annotation>
+
+  return
+    infodev:ticket-add-annotation($ticket-id, $annotation)
+
+  (: Adds an annotation to the specified ticket. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-get-status" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] This function returns the status of the specified ticket.</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket from which to get the status.</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  for $ticket in info:tickets()
+    return if (infodev:ticket-get-status($ticket) = "completed")
+           then info:ticket-delete($ticket)
+           else ()
+
+  (: Remove all tickets with the status of 'completed'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-set-status" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] This function sets the status of the specified ticket.</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket to which to set the status.</apidoc:param>
+    <apidoc:param name="status" type="xs:string">
+    The status to set on the ticket.  The valid status values are "aborted", 
+    "active", "cancelled", "cleared", "completed", "inactive", "unloading", "unloaded", 
+    and "unload-aborted".
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  infodev:ticket-set-status("/tickets/ticket/13580249356496860619", "active")
+
+  (: Sets the status of the specified ticket to "active." :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-set-total-documents" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] This function sets the number of documents to load into the database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket.</apidoc:param>
+    <apidoc:param name="total-documents" type="xs:unsignedInt">
+    The number of documents to load into the database.</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  infodev:ticket-set-total-documents("/tickets/ticket/13580249356496860619", 5)
+
+  (: Sets the total-documents value in the ticket to 5. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-set-total-transactions" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function adds and sets the value of a total-transactions element
+  in the specified ticket.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">The id of the ticket.</apidoc:param>
+    <apidoc:param name="total-transactions" type="xs:unsignedInt">
+    The total-transactions value to set.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  infodev:ticket-set-total-transactions("/tickets/ticket/13580249356496860619", 2)
+
+  (: Adds a <total-transactions> element to the ticket and sets the value to 2. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="file-filter" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function returns a string representing a matching pattern to be applied to file 
+  paths on ingest.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string?">
+    The name of a stored ingestion policy.  
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)*">
+    Zero or more options nodes that contain a file-filter element.  The
+    specified file filter can be any valid XQuery regular expression.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $options := 
+      <options xmlns="http://marklogic.com/appservices/infostudio">
+          <file-filter>^[^\.xml]</file-filter>
+      </options> 
+
+  return 
+     infodev:file-filter("default", $options)
+
+  =>
+
+  ^[^\.xml] 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="transaction-size" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function resolves the transaction size parameter based on stored policy and 
+  runtime options and returns an integer that represents the maximum number of 
+  documents to handled in a single transaction.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string?">
+    The name of a stored ingestion policy.  Uses default policy if none is provided.
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)*">
+    Zero or more options nodes that override those in the stored or default policy.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:positiveInteger</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  infodev:transaction-size("default", ()) 
+
+  (: Returns the max-docs-per-transaction size set in the default policy. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="handle-error" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function provides configuration-aware error handling. If the error is to be logged, 
+  a <code>infodev:error</code> element is logged to the App-Services database, 
+  including document source-location, error code, and other information necessary to find 
+  and fix the error. Must be used within a try-catch block.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket.
+    </apidoc:param>
+    <apidoc:param name="context" type="xs:string">
+    The file that generated the error.
+    </apidoc:param>
+    <apidoc:param name="error" type="element(error:error)">
+    The error node caught by MarkLogic Server in the try block.
+    </apidoc:param>
+    <apidoc:param name="annotation" type="element(info:annotation)?" optional="true">
+    The description of the error. 
+    </apidoc:param>
+    <apidoc:param name="error-log-level" type="xs:string?" optional="true">
+    The error log level.  The possible levels are emergency, alert, critcal,
+    error, warning, notice, info, config, debug, fine, finer, or finest. 
+    The default level is info. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  declare namespace error = "http://marklogic.com/xdmp/error";
+
+  declare function local:load-doc(
+     $doc
+  ) as xs:string 
+  {
+     let $document := xdmp:document-get($doc)
+     let $path := "/xml/my.xml"
+     let $annotation := <info:annotation>Adding new docs to newdocs</info:annotation>
+     let $ticket := infodev:ticket-create($annotation, "myDB", "default", ()) 
+
+     let $deltas :=
+     <options xmlns="http://marklogic.com/appservices/infostudio">
+        <uri>
+           <literal>http://test</literal>
+           <path/>
+           <filename/>
+           <literal>.</literal>
+           <ext/>
+        </uri>
+     </options>
+  
+     let $ingestion :=
+         try {
+              infodev:ingest($document, $path, $ticket),
+              infodev:log-progress(
+                $ticket, 
+                <info:annotation>my.xml doc inserted</info:annotation>)
+         } catch($e) {
+            infodev:handle-error($ticket, $path, $e)
+         }
+      let $_ := infodev:ticket-set-status($ticket, "completed")
+      return (fn:concat($path, " loaded into myDB") )
+  };
+
+  local:load-doc("C:\test\my.xml")
+ 
+  (: Logs any errors encountered when loading my.xml into the database. :) 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="log-progress" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function writes log information into a ticket's progress file that is written to
+  the App-Services database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket.
+    </apidoc:param>
+    <apidoc:param name="annotation" type="element(info:annotation)">
+    The string to place in the annotation element.
+    </apidoc:param>
+    <apidoc:param name="documents-processed" type="xs:nonNegativeInteger?" optional="true">
+    The value to place in the documents-processed element.
+    </apidoc:param>
+    <apidoc:param name="transactions-completed" type="xs:nonNegativeInteger?" optional="true">
+    The value to place in the transactions-completed element.
+    </apidoc:param>
+    <apidoc:param name="error-log-level" type="xs:string?" optional="true">
+    The error log level.  The possible levels are emergency, alert, critcal, error, warning,
+    notice, info, config, debug, fine, finer, or finest. The default level is info. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $annotation := <info:annotation>Load took longer than 10 minutes</info:annotation>
+
+  for $ticket in info:tickets()
+    let $time := fn:data(info:ticket($ticket)//info:time-consumed)
+    return 
+      if (fn:minutes-from-duration(xs:duration($time)) gt 10)
+      then infodev:log-progress($ticket, $annotation)
+      else ()
+
+  (: Change progress annotation on any ticket with a time-consumed value 
+     over 10 minutes. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ingest" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function ingests a single document into the database specified in the ticket, 
+  according to the rules defined by the named policy and user-supplied options.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="document" type="node()?">
+    The node to be inserted.
+    </apidoc:param>
+    <apidoc:param name="path" type="xs:string">
+    The name of the document and the URI path under which it is to be 
+    inserted in the database.
+    In order for the path to be included in the URI, you must have 
+    <![CDATA[<path/>]]> in the uri portion of your policy:
+    <p/>
+    <pre xml:space="preserve"><![CDATA[
+      <options xmlns="http://marklogic.com/appservices/infostudio">
+         <uri>
+           <literal/>
+           <path/>
+           <filename/>
+           <literal>.</literal>
+           <ext/>
+         </uri>
+      </options> ]]></pre>
+    </apidoc:param>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The ID of the ticket created by the <code>infodev:ticket-create</code> function.  
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)?" optional="true">
+    An options node to be used with requests associated with this ticket. It is 
+    merged with the effective policy at runtime. 
+    </apidoc:param>
+    <apidoc:param name="properties" type="element()*" optional="true">
+    Any properties you want to set on the document. This does the same thing as
+    the <code>xdmp:document-set-properties</code> function.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+  
+  let $document := xdmp:document-get("C:\mydocs\xmldocs\my.xml")
+  let $path := "/newxml/my.xml"
+  let $annotation := <info:annotation>Adding my.xml doc</info:annotation>
+  let $ticket := infodev:ticket-create($annotation, "myDB", "default", ())
+
+  let $deltas :=
+  <options xmlns="http://marklogic.com/appservices/infostudio">
+     <uri>
+        <literal>http://testing</literal>
+        <path/>
+        <filename/>
+        <literal>.</literal>
+        <ext/>
+     </uri>
+  </options>
+  
+  return
+     infodev:ingest($document, $path, $ticket. $deltas)
+
+  (: loads the my.xml file, using the default policy, into the URI, 
+     http://testing/newxml/my.xml. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="collector-options" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function returns an options node in the <code>xdmp:document-get</code> namespace 
+  that is ready to pass into <code>xdmp:document-get</code>, including default-namespace, 
+  repair, format, default-language, encoding if they are 
+  defined by policy or options.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string?">
+    The name of a stored ingestion policy. 
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)*">
+    Zero or more options nodes that override those in the stored or default policy.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(dg:options)?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $options :=  
+      <options xmlns="http://marklogic.com/appservices/infostudio">
+         <format>xml</format>
+      </options>
+
+  return
+     infodev:collector-options("default", $options) 
+ 
+  =>
+
+  <dg:options xmlns:dg="xdmp:document-get">
+    <dg:format>xml</dg:format>
+  </dg:options>
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="effective-policy" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function temporarily resets the specified deltas on the named policy, while 
+  leaving the policy itself unchanged.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string?">
+    The name of the policy to temporily modify.
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)*">
+    One or more deltas to be applied to the policy.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:options)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+  let $uri := 
+  <options name="default" xmlns="http://marklogic.com/appservices/infostudio">
+    <uri>
+      <literal>http://docs/</literal>
+      <filename/>
+      <literal>.</literal>
+      <ext/>
+    </uri>
+  </options>
+
+  let $error:= 
+  <options name="default" xmlns="http://marklogic.com/appservices/infostudio">
+      <error-handling>error</error-handling>
+  </options>
+
+  return infodev:effective-policy("default", ($uri, $error))
+
+  (: Returns an options node reflecting different URI and error-handling settings 
+     in the default policy. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="filesystem-walk" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function can be used along with the <code>infodev:ingest</code> function to 
+  build custom load operations.  
+   <p/>
+  This function recurses the specified filesystem directory and uses the 
+  policy deltas from the specified ticket to determine which files to select for ingestion.
+  The specified process function can be written to modify the content of 
+  files before calling the <code>infodev:ingest</code> function to load them into the 
+  database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="dir-path" type="xs:string">The directory path to walk.</apidoc:param>
+    <apidoc:param name="ticket-id" type="xs:string">The ID of the created ticket.</apidoc:param>
+    <apidoc:param name="function" type="xdmp:function">
+    The process function to apply to each file. This is where you can make modifications 
+    to each file before loading them into the database. The function signature must be 
+    as follows: 
+     <pre xml:space="preserve">
+     declare function my:function(
+        $document as node()?,
+        $source-location as xs:string,
+        $ticket-id as xs:string,
+        $policy-deltas as element(info:options)?,
+        $context as item()?)
+     as empty-sequence()
+     </pre>
+  </apidoc:param>
+  <apidoc:param name="policy-deltas" type="element(info:options)?">
+   One or more deltas to be applied to the policy.
+  </apidoc:param>
+  <apidoc:param name="context" type="item()?" optional="true">
+   User-supplied context that is passed to the process function.
+  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+   xquery version "1.0-ml"; 
+
+   import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+   import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+   declare function local:process-file(
+       $document as node()?,
+       $source-location as xs:string,
+       $ticket-id as xs:string,
+       $policy-deltas as element(info:options)?,
+       $context as item()?)
+     {
+       (: You can modify the file here :)
+       infodev:ingest($document, $source-location, $ticket-id)
+     };
+
+   let $function := xdmp:function(xs:QName("local:process-file"))
+   let $annotation := <info:annotation>Loading XML docs</info:annotation>
+   let $dir-path := "C:\mydocs\xmldocs"
+   let $ticket := infodev:ticket-create(
+                      $annotation,
+                      "myDB",
+                      (),
+                      () ) 
+
+   return infodev:filesystem-walk(
+                      $dir-path,
+                      $ticket,
+	              $function,
+	              (),
+                      () )
+
+  (: This query does the same thing as the info:load function.  You can write the 
+     process-file function to modify each file in some manner before calling
+     the infodev:ingest function. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="transaction" lib="infodev" category="Information Studio Developer" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary> 
+   [DEPRECATED] This function ingests a batch of documents in a single invoked transaction. 
+   The batch of documents is contained in <code>$document-map</code>.   
+   Ingestion is done using a function named by the <code>$function</code> parameter. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="document-map" type="map:map">
+    A map containing a batch of documents to be ingested in a single transaction.  
+    Map keys are used to construct the URI used to locate the document 
+    to be ingested, such as the <code>$source-location</code> in the function referenced
+    by the <code>$function</code> parameter, below.
+    </apidoc:param>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The ID of the created ticket.
+    </apidoc:param>
+    <apidoc:param name="function" type="xdmp:function">
+    The ingestion function to apply to each file.  This function should call <code>infodev:ingest</code> to 
+    insert the document into the database.
+    <p/>
+    The function signature of <code>$function</code> must be of the pattern: 
+    <pre xml:space="preserve"> 
+    declare function my:function(
+        $document as node(),
+        $source-location as xs:string,
+        $ticket-id as xs:string,
+        $policy-deltas as element(info:options)?,
+        $context as item()?)
+     as xs:string+
+      </pre> 
+     </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)?">
+    One or more deltas to be applied to the policy.
+    </apidoc:param>
+    <apidoc:param name="transaction-index" type="xs:integer">
+    An integer representing this transaction's index in a sequence of transactions.  
+    This is used in error reporting, to distinguish between transactions.
+    </apidoc:param>
+    <apidoc:param name="context" type="item()?">
+    User-supplied context that is passed to the process function.
+    </apidoc:param>
+    <apidoc:param name="error-log-level" type="xs:string?" optional="true">
+    The error log level.  The possible levels are emergency, alert, critcal,
+    error, warning, notice, info, config, debug, fine, finer, or finest. 
+    The default level is info.
+    </apidoc:param>
+ </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+   xquery version "1.0-ml"; 
+
+   import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy"; 
+   import module namespace infodev = "http://marklogic.com/appservices/infostudio/dev"
+      at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+   (: Define a process-file function. :)
+   declare function local:process-file(
+       $document as node()?,
+       $source-location as xs:string,
+       $ticket-id as xs:string,
+       $policy-deltas as element(info:options)?,
+       $context as item()?)
+     {
+       (: You can modify the file here :)
+       infodev:ingest($document, $source-location, $ticket-id)
+     };
+
+   let $function := xdmp:function(xs:QName("local:process-file"))
+   let $annotation := <info:annotation>Loading XML Shakespeare docs</info:annotation>
+ 
+   (: Create a ticket to load contents into the myDB database. :)
+   let $ticket := infodev:ticket-create($annotation, "myDB", (), ()) 
+
+   (: Gather the documents to be loaded into $entries. :)
+   let $playdir := "C:\Shakespeare\bill_xml"
+   let $entries := for $x in xdmp:filesystem-directory($playdir)//dir:pathname/text()
+                              [ends-with(lower-case(.), ".xml")]
+                   return xdmp:document-get($x) 
+
+   (: Determine the number of documents; the number of documents to be loaded in each
+      transaction, and the total number of transactions needed to load all of the documents. :)
+   let $entry-count := fn:count($entries)
+   let $transaction-size := 5 (: Typically, this value would be extracted from the policy. :)
+   let $total-transactions := ceiling($entry-count div $transaction-size) 
+
+   (: Create a map containing the documents to be loaded. :)
+   let $transactions :=
+        for $i at $index in 1 to $total-transactions
+        let $map := map:map()
+        let $start :=  (($i -1) *$transaction-size) + 1
+        let $finish := min((($start  - 1 + $transaction-size),$entry-count))
+        let $put := for $entry in ($entries)[$start to $finish]
+	      (: Create an ID for each document that consists of the date, a number, and a
+	         filename contructed from the title of the play, minus spaces. :)
+              let $title := fn:replace($entry/PLAY/TITLE, " ", "") 
+              let $id := fn:concat("/", fn:format-dateTime(fn:current-dateTime(),
+				   "[Y01]-[M01]-[D01]_[H01]-[m01]-[s01]-[f01]") ,
+				   "/", $index ,"/", $title, ".xml")
+            return map:put($map,$id,$entry)
+        return $map 
+ 
+    (: Create the transactions to load the documents into the database. :)
+    let $ingestion :=
+        for $transaction at $index in $transactions
+        return
+           try {
+               infodev:transaction($transaction, $ticket, $function, (), $index,(),())
+           } catch($e) {
+               infodev:handle-error($ticket, concat("transaction ",$index), $e)
+           }
+    (: When the load transactions have completed, set the ticket status to "completed". :)
+    let $_ := infodev:ticket-set-status($ticket, "completed") 
+    return ()
+
+   (: This query creates multiple transactions to load the XML files located in the 
+      "C:\Shakespeare\bill_xml" directory into the myDB database.  Five documents are 
+      loaded in each transaction. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+ 
+<apidoc:function name="get-file" lib="infodev" 
+	category="Information Studio Developer" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		<p>[DEPRECATED] This is a convenience function that wraps 
+		<code>xdmp:document-get</code>.  The document specified 
+		in <code>$source-location</code> is bundled with other 
+		documents into a transaction, and ingested.</p> 
+	<p>This function is similar to <code>infodev:ingest</code>, only 
+		it takes care of handling the infostudio options.</p> 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="source-location" type="xs:string">
+    The document to be ingested.
+    </apidoc:param>
+    <apidoc:param name="ticket-id" type="xs:string">
+	    The ID of the ticket created by the 
+	    <code>infodev:ticket-create</code> function. 
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)?">
+	    An options node to be used with requests associated with this 
+	    ticket. It is merged with the effective policy at runtime. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()</apidoc:return>
+  <apidoc:privilege>
+	  <code>http://marklogic.com/xdmp/privileges/infostudio</code>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+
+import module namespace infodev = 
+   "http://marklogic.com/appservices/infostudio/dev"
+   at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+infodev:get-file("/space/myfile.xml", infodev:ticket-create(), ())  
+ 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-external-binary-file" lib="infodev" 
+	category="Information Studio Developer" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>[DEPRECATED] 
+		This function gets the specified binary file from 
+		the filesystem.
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="source-location" type="xs:string">
+		  The path to the binary file.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()</apidoc:return>
+  <apidoc:privilege>
+	  <code>http://marklogic.com/xdmp/privileges/infostudio</code>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace infodev = 
+   "http://marklogic.com/appservices/infostudio/dev" 
+   at "/MarkLogic/appservices/infostudio/infodev.xqy";
+
+infodev:get-external-binary-file("/space/myfile.bin") 
+
+=> returns the binary document 
+]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

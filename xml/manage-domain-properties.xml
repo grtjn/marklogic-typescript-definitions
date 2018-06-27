@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/domain/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://marklogic.com/manage/domain/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="name">
+    <xs:annotation>
+      <xs:documentation>
+                A domain name.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="description">
+    <xs:annotation>
+      <xs:documentation>
+                A domain description.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="document-scope">
+    <xs:annotation>
+      <xs:documentation>
+                Document scope, same as for triggers.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="collection"/>
+      <xs:enumeration value="directory"/>
+      <xs:enumeration value="document"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="depth">
+    <xs:annotation>
+      <xs:documentation>
+                Depth specification, for directory triggers.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="infinity"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="root">
+    <xs:annotation>
+      <xs:documentation>
+                The root path under which to find imported modules.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="pipeline">
+    <xs:annotation>
+      <xs:documentation>
+                A pipeline.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="pipelines">
+    <xs:sequence>
+      <xs:element ref="pipeline" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="capability">
+    <xs:annotation>
+      <xs:documentation>
+        The action permitted on an object.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="update"/>
+      <xs:enumeration value="insert"/>
+      <xs:enumeration value="execute"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="role-name">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="permission" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A permission.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="role-name"/>
+      <xs:element ref="capability" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="permissions" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of permissions
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="permission" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="domain-properties" abstract="false">
+    <xs:all>
+      <xs:element ref="domain-name" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="scope" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="uri" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="depth" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="eval-module" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="eval-root" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="pipelines" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="permissions" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="domain-properties" type="domain-properties" abstract="false" nillable="false"/>
+  <xs:element name="capability" type="capability" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The action/task permitted by a permission
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permission" type="permission" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	Permission representation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permissions" type="permissions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The default set of permissions used in document creation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="role-name" type="role-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The Role name (unique)
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="domain-name" type="name" abstract="false" nillable="false"/>
+  <xs:element name="description" type="description" abstract="false" nillable="false"/>
+  <xs:element name="scope" type="document-scope" abstract="false" nillable="false"/>
+  <xs:element name="uri" type="xs:anyURI" abstract="false" nillable="false"/>
+  <xs:element name="depth" type="depth" abstract="false" nillable="false"/>
+  <xs:element name="eval-module" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="eval-root" type="root" abstract="false" nillable="false"/>
+  <xs:element name="pipelines" type="pipelines" abstract="false" nillable="false"/>
+  <xs:element name="pipeline" type="pipeline" abstract="false" nillable="false"/>
+</xs:schema>

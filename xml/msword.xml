@@ -1,0 +1,47 @@
+<apidoc:module name="MSWordModule" category="CPF Functions"
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="msword" class="xquery"
+>
+<apidoc:summary access="public">
+<p>The MSWord module is part of the conversion processing pipeline.
+These functions are used to manipulate XHTML derived by converting Microsoft
+Msword spreadsheets, as part of conversion processing.
+</p>
+<p>To use the MSWord module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace msword = "http://marklogic.com/cpf/msword"
+         at "/MarkLogic/conversion/msword.xqy";</code></p>
+<p>You will need to ensure that the MSWord module is loaded into the same
+modules database as the importing module.</p>
+<p>The library namespace prefix <code>msword</code> is <em>not</em> predefined
+in the server.</p>
+</apidoc:summary>
+
+<apidoc:function name="clean" type="msword" lib="msword" 
+	subcategory="MSWord Conversion" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Clean up any conversion artifacts or other infelicities.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+    The source URI of the converted document.
+    </apidoc:param>
+    <apidoc:param name="doc" type="node()?">
+    The XHTML produced by conversion of a Microsoft Word document.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace msword = "http://marklogic.com/cpf/msword" 
+		  at "/MarkLogic/conversion/msword.xqy";
+
+  msword:clean("my_doc.xhtml",fn:doc("my_doc.xhtml"))
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

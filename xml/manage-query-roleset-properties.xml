@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/query-roleset/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/query-roleset/properties" xmlns:http="xdmp:http" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="xdmp:http" schemaLocation="http.xsd"/>
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:metadata" schemaLocation="saml-schema-metadata-2.0.xsd"/>
+  <xs:simpleType name="id">
+    <xs:annotation>
+      <xs:documentation>
+        An object's unique id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="role-name">
+    <xs:annotation>
+      <xs:documentation>
+        A role name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:element name="role-name" type="role-name">
+    <xs:annotation>
+      <xs:documentation>
+        The role-name.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="query-roleset" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A query roleset definition
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="role-id"/>
+      <xs:element ref="role-name"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="query-roleset-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A query rolesets definition
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="query-roleset" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="role-id" type="id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	A role identifier (unique key).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="query-roleset" type="query-roleset" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A query roleset definition
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="query-roleset-properties" type="query-roleset-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A query rolesets definition
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <?xdmp-annotations?>
+</xs:schema>

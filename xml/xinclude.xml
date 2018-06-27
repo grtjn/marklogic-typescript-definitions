@@ -1,0 +1,79 @@
+<apidoc:module name="XIncludeModule" category="Modular Documents" 
+	subcategory="XInclude" bucket="XQuery Library Modules" lib="xinc" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" 
+	xmlns="http://www.w3.org/1999/xhtml" class="xquery">
+<apidoc:summary category="Modular Documents" bucket="XQuery Library Modules">
+  The functions in this category are used with the modular documents
+  CPF application. For more details, see 
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/dev_guide/mod-docs.xml%2386523'>Reusing Content With Modular Document Applications</a> in the <em>Application Developer's Guide</em>.
+</apidoc:summary>
+	<apidoc:summary category="Modular Documents" subcategory="XInclude" 
+		bucket="XQuery Library Modules">
+		<p>This is the XInclude module, which is used with the 
+			modular documents CPF application.</p>
+		<p>To use the XInclude module as part of your own XQuery 
+			module, include the following line in your 
+			XQuery prolog: </p>
+<p><code>import module namespace xinc = "http://marklogic.com/xinclude"
+         at "/MarkLogic/xinclude/xinclude.xqy";</code></p>
+<p>The library namespace prefix <code>xinc</code> is <em>not</em> predefined
+in the server.</p>
+
+	</apidoc:summary>
+	<apidoc:function name="link-expand" lib="xinc" 
+		category="Modular Documents" 
+		subcategory="XInclude" bucket="XQuery Library Modules">
+    <apidoc:summary>This function performs a single level expansion of a single XInclude reference.  XInclude references in the referenced node will not be expanded.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="context" type="node()">The root node containing the XInclude reference, which is used for the interpretation of relative links with empty href attributes.</apidoc:param>
+      <apidoc:param name="ref" type="element(xi:include)">An XInclude include element.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:usage>
+      Since this function only performs a single-level expansion of a single
+      reference, applications will typically call node-expand instead.
+    </apidoc:usage>
+    <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml";
+  import module namespace xinc = "http://marklogic.com/xinclude" 
+		  at "/MarkLogic/xinclude/xinclude.xqy";
+
+  declare namespace xi="http://www.w3.org/2001/XInclude";
+
+  let $root := fn:doc("http://example.org/mydoc.xml")
+  return xinc:link-expand( $root, $root/section[1]/xi:include[1] )
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="node-expand" lib="xinc" category="Modular Documents" subcategory="XInclude" bucket="XQuery Library Modules">
+    <apidoc:summary>This function recursively examines the node for XInclude references and expands them, following the rules of the XInclude specification.  The result is a node in which all the XInclude references have been resolved, or an error if there were unresolvable references with no fallback specifications.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()">The node to expand.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()</apidoc:return>
+    <apidoc:usage>URI references are resolved against the current database.</apidoc:usage>
+    <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml";
+  import module namespace xinc = "http://marklogic.com/xinclude" 
+		  at "/MarkLogic/xinclude/xinclude.xqy";
+
+  xinc:node-expand( fn:doc("http://example.org/mydoc.xml") )
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+  <apidoc:function name="link-references" lib="xinc" category="Modular Documents" subcategory="XInclude" bucket="XQuery Library Modules">
+    <apidoc:summary>This function returns a list of all the distinct URIs of documents referenced (either directly or indirectly) in the expansion of the node.</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()">The node containing XInclude references.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml";
+  import module namespace xinc = "http://marklogic.com/xinclude" 
+		  at "/MarkLogic/xinclude/xinclude.xqy";
+
+  xinc:link-references(fn:doc("http://example.org/mydoc.xml"))
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+</apidoc:module>

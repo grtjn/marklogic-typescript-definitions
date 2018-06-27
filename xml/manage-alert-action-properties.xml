@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/alert-action/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/alert-action/properties" xmlns:cts="http://marklogic.com/cts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="http://marklogic.com/cts" schemaLocation="cts.xsd"/>
+  <xs:complexType name="options" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The options for a rule or action or configuration.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="strict"/>
+    </xs:sequence>
+    <xs:attribute name="js" type="xs:boolean" use="optional"/>
+    <xs:attribute name="unfiltered" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="alert-action-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        An action description.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all>
+      <xs:element ref="name" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="module-db" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="module-root" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="module" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="options" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="name" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="description" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="options" type="options" abstract="false" nillable="false"/>
+  <xs:element name="module-db" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="module-root" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="module" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="alert-action-properties" type="alert-action-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The alert action description.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:attribute name="id" type="xs:unsignedLong"/>
+  <?xdmp-annotations?>
+</xs:schema>

@@ -1,0 +1,2046 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/server/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/server/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="memory-size">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount of system memory in megabytes, min 1, max 73728.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="73728" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="log-level">
+    <xs:annotation>
+      <xs:documentation>
+        Logging configuration for all logging features. "disabled" prevents logging entirely.
+	disabled, emergency, alert, critical, error, warning, notice, info,
+	config, debug, fine, finer, or finest
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="finest"/>
+      <xs:enumeration value="finer"/>
+      <xs:enumeration value="fine"/>
+      <xs:enumeration value="debug"/>
+      <xs:enumeration value="config"/>
+      <xs:enumeration value="info"/>
+      <xs:enumeration value="notice"/>
+      <xs:enumeration value="warning"/>
+      <xs:enumeration value="error"/>
+      <xs:enumeration value="critical"/>
+      <xs:enumeration value="alert"/>
+      <xs:enumeration value="emergency"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="address">
+    <xs:annotation>
+      <xs:documentation>
+        A numeric internet address.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:simpleType name="port">
+    <xs:annotation>
+      <xs:documentation>
+        An integer internet port number, min 1, max 65534.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="65534" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backlog">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of connections, min 1, max 4096.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="4096" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="threadCount">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of threads, min 1, max 256.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="256" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="directory-pathname">
+    <xs:annotation>
+      <xs:documentation>
+        It can be absolute or relative.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="request-limit">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of seconds, min 0, max 4294967295.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+      <xs:maxInclusive value="4294967295" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="timeout">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of seconds, min 0, max 4294967295.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+      <xs:maxInclusive value="4294967295" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="optional-timeout">
+    <xs:annotation>
+      <xs:documentation>
+        An optional integer number of seconds, min 0, max 4294967295.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+      <xs:maxInclusive value="4294967295" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="multi-version-concurrency-control">
+    <xs:annotation>
+      <xs:documentation>
+        contemporaneous or nonblocking
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="contemporaneous"/>
+      <xs:enumeration value="nonblocking"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="distribute-timestamps">
+    <xs:annotation>
+      <xs:documentation>
+        fast or strict
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="fast"/>
+      <xs:enumeration value="strict"/>
+      <xs:enumeration value="cluster"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="authentication">
+    <xs:annotation>
+      <xs:documentation>
+        The authentication mode for the server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="application-level"/>
+      <xs:enumeration value="basic"/>
+      <xs:enumeration value="certificate"/>
+      <xs:enumeration value="digest"/>
+      <xs:enumeration value="digestbasic"/>
+      <xs:enumeration value="kerberos-ticket"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="external-security">
+    <xs:annotation>
+      <xs:documentation>
+        External security.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="default-user">
+    <xs:annotation>
+      <xs:documentation>
+        The default user for application level security.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="namespace-uri">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="schema-location">
+    <xs:annotation>
+      <xs:documentation>
+        A URI used to find a schema.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="server-name">
+    <xs:annotation>
+      <xs:documentation>
+        An server name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="server-type">
+    <xs:annotation>
+      <xs:documentation>
+        The server type.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="http"/>
+      <xs:enumeration value="odbc"/>
+      <xs:enumeration value="xdbc"/>
+      <xs:enumeration value="webdav"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="server-type" type="server-type">
+    <xs:annotation>
+      <xs:documentation>
+        The server type.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="group-name">
+    <xs:annotation>
+      <xs:documentation>
+        The group name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:element name="group-name" type="group-name">
+    <xs:annotation>
+      <xs:documentation>
+        The group name.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="ssl-certificate-template-id">
+    <xs:annotation>
+      <xs:documentation>
+        The id of the certificate template in the security database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="ssl-hostname">
+    <xs:annotation>
+      <xs:documentation>
+        A hostname.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:minLength value="0" fixed="false"/>
+      <xs:maxLength value="64" fixed="false"/>
+      <!-- per RFC 2459 -->
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ssl-ciphers-string">
+    <xs:annotation>
+      <xs:documentation>
+        The id of the certificate template in the security database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="ssl-certificate-authority-id">
+    <xs:annotation>
+      <xs:documentation>
+        An SSL certificate authority ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="sgml-entity-mapping">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="math"/>
+      <xs:enumeration value="pub"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="output-encoding">
+    <xs:annotation>
+      <xs:documentation>
+        An application server's default output encoding.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="UTF-8"/>
+      <xs:enumeration value="ASCII"/>
+      <xs:enumeration value="ISO-8859-1"/>
+      <xs:enumeration value="ISO-8859-5"/>
+      <xs:enumeration value="ISO-8859-6"/>
+      <xs:enumeration value="ISO-2022-KR"/>
+      <xs:enumeration value="ISO-2022-JP"/>
+      <xs:enumeration value="EUC-CN"/>
+      <xs:enumeration value="EUC-KR"/>
+      <xs:enumeration value="EUC-JP"/>
+      <xs:enumeration value="CP932"/>
+      <xs:enumeration value="CP936"/>
+      <xs:enumeration value="CP949"/>
+      <xs:enumeration value="CP950"/>
+      <xs:enumeration value="CP1252"/>
+      <xs:enumeration value="CP1256"/>
+      <xs:enumeration value="KOI8-R"/>
+      <xs:enumeration value="GB12052"/>
+      <xs:enumeration value="GB18030"/>
+      <xs:enumeration value="GB2312"/>
+      <xs:enumeration value="HZ-GB-2312"/>
+      <xs:enumeration value="BIG5"/>
+      <xs:enumeration value="BIG5-HKSCS"/>
+      <xs:enumeration value="Shift_JIS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="default-xquery-version">
+    <xs:annotation>
+      <xs:documentation>
+        An application server's default XQuery language version.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="1.0-ml"/>
+      <xs:enumeration value="0.9-ml"/>
+      <xs:enumeration value="1.0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="prefix">
+    <xs:annotation>
+      <xs:documentation>
+        A QName prefix.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NCName"/>
+  </xs:simpleType>
+  <xs:simpleType name="location">
+    <xs:annotation>
+      <xs:documentation>
+        A module location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="boolean">
+    <xs:annotation>
+      <xs:documentation>
+        true or false
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="pre-commit-trigger-limit">
+    <xs:annotation>
+      <xs:documentation>
+        A maximum number of triggers a single statement can invoke.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="trigger-depth">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of trigger invocation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="collation">
+    <xs:annotation>
+      <xs:documentation>
+        A collation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="coordinate-system">
+    <xs:annotation>
+      <xs:documentation>
+        A coordinate-system.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="default-error-format">
+    <xs:annotation>
+      <xs:documentation>
+        The default error format for protocol errors.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="html"/>
+      <xs:enumeration value="xml"/>
+      <xs:enumeration value="json"/>
+      <xs:enumeration value="compatible"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="error-handler">
+    <xs:annotation>
+      <xs:documentation>
+        The error handler.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="url-rewriter">
+    <xs:annotation>
+      <xs:documentation>
+        The URL rewriter.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:complexType name="role-ids">
+    <xs:annotation>
+      <xs:documentation>
+        Role ids.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="role"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="role-id">
+    <xs:annotation>
+      <xs:documentation>
+        A role ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:element name="role" type="role-id">
+    <xs:annotation>
+      <xs:documentation>
+        A role id.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="user-ids">
+    <xs:annotation>
+      <xs:documentation>
+        User ids.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="user-id">
+    <xs:annotation>
+      <xs:documentation>
+        A user ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:element name="user" type="user-id">
+    <xs:annotation>
+      <xs:documentation>
+        A user id.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="start-time">
+    <xs:annotation>
+      <xs:documentation>
+  The starting time (in 24:00 notation).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time"/>
+  </xs:simpleType>
+  <xs:simpleType name="end-time">
+    <xs:annotation>
+      <xs:documentation>
+  The ending time (in 24:00 notation).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time"/>
+  </xs:simpleType>
+  <xs:simpleType name="start-date">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="end-date">
+    <xs:annotation>
+      <xs:documentation>
+        The ending date (in MM/DD/YYYY notation)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="duration">
+    <xs:annotation>
+      <xs:documentation>
+        The duration, specifed as hours:minutes (i.e. 2 hours 5 minutes is 2:05)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:duration"/>
+  </xs:simpleType>
+  <xs:simpleType name="day">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="monday"/>
+      <xs:enumeration value="tuesday"/>
+      <xs:enumeration value="wednesday"/>
+      <xs:enumeration value="thursday"/>
+      <xs:enumeration value="friday"/>
+      <xs:enumeration value="saturday"/>
+      <xs:enumeration value="sunday"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="blackout-type">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="once"/>
+      <xs:enumeration value="recurring"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="output-method">
+    <xs:annotation>
+      <xs:documentation>
+        Per 'method' attribute from xsl:output, one of: "xml", "xhtml", "html", or "text".
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="default"/>
+      <xs:enumeration value="xml"/>
+      <xs:enumeration value="xhtml"/>
+      <xs:enumeration value="html"/>
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="sparql-results-json"/>
+      <xs:enumeration value="sparql-results-csv"/>
+      <xs:enumeration value="n-triples"/>
+      <xs:enumeration value="n-quads"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="yes-or-no">
+    <xs:annotation>
+      <xs:documentation>
+       Nullable Boolean type accepting values "yes", "no", and "default".
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="yes"/>
+      <xs:enumeration value="no"/>
+      <xs:enumeration value="default"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="output-cdata-section-namespace-uri">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace URI string.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="output-cdata-section-localname">
+    <xs:annotation>
+      <xs:documentation>
+       A list of element localname strings
+      </xs:documentation>
+    </xs:annotation>
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="output-doctype-public">
+    <xs:annotation>
+      <xs:documentation>
+        A public DOCTYPE string.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="output-doctype-system">
+    <xs:annotation>
+      <xs:documentation>
+        A system DOCTYPE string.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="output-media-type">
+    <xs:annotation>
+      <xs:documentation>
+        A MIME content type name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:pattern value="([0-9A-Za-z.+\-]+/[0-9A-Za-z.+\-]+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="output-normalization-form">
+    <xs:annotation>
+      <xs:documentation>
+        A normalization token.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="NFC"/>
+      <xs:enumeration value="NFD"/>
+      <xs:enumeration value="NFKD"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="yes-or-no-or-omit">
+    <xs:annotation>
+      <xs:documentation>
+       Nullable Boolean type, taking values "yes", "no", and "omit".
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="omit"/>
+      <xs:enumeration value="yes"/>
+      <xs:enumeration value="no"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="output-version">
+    <xs:annotation>
+      <xs:documentation>
+        A version string.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:complexType name="external-securities" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        External security configurations.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="external-security" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="schema" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="schema-location" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="schemas" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The schema binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="schema" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+    <xs:attribute name="action">
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="merge"/>
+	  <xs:enumeration value="replace"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ssl-client-certificate-authorities" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The certificate authorities that may sign a client certificate.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="ssl-client-certificate-authority" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ssl-client-certificate-pems">
+    <xs:annotation>
+      <xs:documentation>
+        Wrapper for list of certificate authority PEMs
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="ssl-client-certificate-pem" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ssl-client-certificate-pems" type="ssl-client-certificate-pems">
+    <xs:annotation>
+      <xs:documentation>
+        Wrapper for list of certificate authority PEMs
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="ssl-client-certificate-pem">
+    <xs:annotation>
+      <xs:documentation>
+        A certificate PEM
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:element name="ssl-client-certificate-pem" type="ssl-client-certificate-pem">
+    <xs:annotation>
+      <xs:documentation>
+        A certificate PEM
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="http-server-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        An HTTP application server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="server-name" minOccurs="0"/>
+      <xs:element ref="server-type" minOccurs="0"/>
+      <xs:element ref="group-name" minOccurs="0"/>
+      <xs:element ref="enabled" minOccurs="0"/>
+      <xs:element ref="root" minOccurs="0"/>
+      <xs:element ref="port" minOccurs="0"/>
+      <xs:element ref="webDAV" minOccurs="0"/>
+      <xs:element ref="execute" minOccurs="0"/>
+      <xs:element ref="modules-database" minOccurs="0"/>
+      <xs:element ref="content-database" minOccurs="0"/>
+      <xs:element ref="last-login-database" minOccurs="0"/>
+      <xs:element ref="display-last-login" minOccurs="0"/>
+      <xs:element ref="address" minOccurs="0"/>
+      <xs:element ref="backlog" minOccurs="0"/>
+      <xs:element ref="threads" minOccurs="0"/>
+      <xs:element ref="request-timeout" minOccurs="0"/>
+      <xs:element ref="keep-alive-timeout" minOccurs="0"/>
+      <xs:element ref="session-timeout" minOccurs="0"/>
+      <xs:element ref="max-time-limit" minOccurs="0"/>
+      <xs:element ref="default-time-limit" minOccurs="0"/>
+      <xs:element ref="max-inference-size" minOccurs="0"/>
+      <xs:element ref="default-inference-size" minOccurs="0"/>
+      <xs:element ref="static-expires" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-depth" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-limit" minOccurs="0"/>
+      <xs:element ref="collation" minOccurs="0"/>
+      <xs:element ref="coordinate-system" minOccurs="0"/>
+      <xs:element ref="authentication" minOccurs="0"/>
+      <xs:element ref="internal-security" minOccurs="0"/>
+      <xs:element ref="external-security" minOccurs="0"/>
+      <xs:element ref="external-securities" minOccurs="0"/>
+      <xs:element ref="default-user" minOccurs="0"/>
+      <xs:element ref="privilege" minOccurs="0"/>
+      <xs:element ref="concurrent-request-limit" minOccurs="0"/>
+      <xs:element ref="compute-content-length" minOccurs="0"/>
+      <xs:element ref="file-log-level" minOccurs="0"/>
+      <xs:element ref="log-errors" minOccurs="0"/>
+      <xs:element ref="debug-allow" minOccurs="0"/>
+      <xs:element ref="profile-allow" minOccurs="0"/>
+      <xs:element ref="default-xquery-version" minOccurs="0"/>
+      <xs:element ref="multi-version-concurrency-control" minOccurs="0"/>
+      <xs:element ref="distribute-timestamps" minOccurs="0"/>
+      <xs:element ref="output-sgml-character-entities" minOccurs="0"/>
+      <xs:element ref="output-encoding" minOccurs="0"/>
+      <xs:element ref="output-method" minOccurs="0"/>
+      <xs:element ref="output-byte-order-mark" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-namespace-uri" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-localname" minOccurs="0"/>
+      <xs:element ref="output-doctype-public" minOccurs="0"/>
+      <xs:element ref="output-doctype-system" minOccurs="0"/>
+      <xs:element ref="output-escape-uri-attributes" minOccurs="0"/>
+      <xs:element ref="output-include-content-type" minOccurs="0"/>
+      <xs:element ref="output-indent" minOccurs="0"/>
+      <xs:element ref="output-indent-untyped" minOccurs="0"/>
+      <xs:element ref="output-indent-tabs" minOccurs="0"/>
+      <xs:element ref="output-media-type" minOccurs="0"/>
+      <xs:element ref="output-normalization-form" minOccurs="0"/>
+      <xs:element ref="output-omit-xml-declaration" minOccurs="0"/>
+      <xs:element ref="output-standalone" minOccurs="0"/>
+      <xs:element ref="output-undeclare-prefixes" minOccurs="0"/>
+      <xs:element ref="output-version" minOccurs="0"/>
+      <xs:element ref="output-include-default-attributes" minOccurs="0"/>
+      <xs:element ref="default-error-format" minOccurs="0"/>
+      <xs:element ref="error-handler" minOccurs="0"/>
+      <xs:element ref="schemas" minOccurs="0"/>
+      <xs:element ref="namespaces" minOccurs="0"/>
+      <xs:element ref="using-namespaces" minOccurs="0"/>
+      <xs:element ref="module-locations" minOccurs="0"/>
+      <xs:element ref="request-blackouts" minOccurs="0"/>
+      <xs:element ref="url-rewriter" minOccurs="0"/>
+      <xs:element ref="rewrite-resolves-globally" minOccurs="0"/>
+      <xs:element ref="ssl-certificate-template" minOccurs="0"/>
+      <xs:element ref="ssl-allow-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-allow-tls" minOccurs="0"/>
+      <xs:element ref="ssl-disable-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-2" minOccurs="0"/>
+      <xs:element ref="ssl-hostname" minOccurs="0"/>
+      <xs:element ref="ssl-ciphers" minOccurs="0"/>
+      <xs:element ref="ssl-require-client-certificate" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-authorities" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-pems" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="xdbc-server-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        An XDBC server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="server-name" minOccurs="0"/>
+      <xs:element ref="server-type" minOccurs="0"/>
+      <xs:element ref="group-name" minOccurs="0"/>
+      <xs:element ref="enabled" minOccurs="0"/>
+      <xs:element ref="root" minOccurs="0"/>
+      <xs:element ref="port" minOccurs="0"/>
+      <xs:element ref="modules-database" minOccurs="0"/>
+      <xs:element ref="content-database" minOccurs="0"/>
+      <xs:element ref="last-login-database" minOccurs="0"/>
+      <xs:element ref="display-last-login" minOccurs="0"/>
+      <xs:element ref="address" minOccurs="0"/>
+      <xs:element ref="backlog" minOccurs="0"/>
+      <xs:element ref="threads" minOccurs="0"/>
+      <xs:element ref="request-timeout" minOccurs="0"/>
+      <xs:element ref="keep-alive-timeout" minOccurs="0"/>
+      <xs:element ref="session-timeout" minOccurs="0"/>
+      <xs:element ref="max-time-limit" minOccurs="0"/>
+      <xs:element ref="default-time-limit" minOccurs="0"/>
+      <xs:element ref="max-inference-size" minOccurs="0"/>
+      <xs:element ref="default-inference-size" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-depth" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-limit" minOccurs="0"/>
+      <xs:element ref="collation" minOccurs="0"/>
+      <xs:element ref="coordinate-system" minOccurs="0"/>
+      <xs:element ref="authentication" minOccurs="0"/>
+      <xs:element ref="internal-security" minOccurs="0"/>
+      <xs:element ref="external-security" minOccurs="0"/>
+      <xs:element ref="external-securities" minOccurs="0"/>
+      <xs:element ref="privilege" minOccurs="0"/>
+      <xs:element ref="concurrent-request-limit" minOccurs="0"/>
+      <xs:element ref="file-log-level" minOccurs="0"/>
+      <xs:element ref="log-errors" minOccurs="0"/>
+      <xs:element ref="debug-allow" minOccurs="0"/>
+      <xs:element ref="profile-allow" minOccurs="0"/>
+      <xs:element ref="default-xquery-version" minOccurs="0"/>
+      <xs:element ref="multi-version-concurrency-control" minOccurs="0"/>
+      <xs:element ref="distribute-timestamps" minOccurs="0"/>
+      <xs:element ref="output-sgml-character-entities" minOccurs="0"/>
+      <xs:element ref="output-encoding" minOccurs="0"/>
+      <xs:element ref="output-method" minOccurs="0"/>
+      <xs:element ref="output-byte-order-mark" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-namespace-uri" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-localname" minOccurs="0"/>
+      <xs:element ref="output-doctype-public" minOccurs="0"/>
+      <xs:element ref="output-doctype-system" minOccurs="0"/>
+      <xs:element ref="output-escape-uri-attributes" minOccurs="0"/>
+      <xs:element ref="output-include-content-type" minOccurs="0"/>
+      <xs:element ref="output-indent" minOccurs="0"/>
+      <xs:element ref="output-indent-untyped" minOccurs="0"/>
+      <xs:element ref="output-indent-tabs" minOccurs="0"/>
+      <xs:element ref="output-media-type" minOccurs="0"/>
+      <xs:element ref="output-normalization-form" minOccurs="0"/>
+      <xs:element ref="output-omit-xml-declaration" minOccurs="0"/>
+      <xs:element ref="output-standalone" minOccurs="0"/>
+      <xs:element ref="output-undeclare-prefixes" minOccurs="0"/>
+      <xs:element ref="output-version" minOccurs="0"/>
+      <xs:element ref="output-include-default-attributes" minOccurs="0"/>
+      <xs:element ref="schemas" minOccurs="0"/>
+      <xs:element ref="namespaces" minOccurs="0"/>
+      <xs:element ref="using-namespaces" minOccurs="0"/>
+      <xs:element ref="module-locations" minOccurs="0"/>
+      <xs:element ref="request-blackouts" minOccurs="0"/>
+      <xs:element ref="ssl-certificate-template" minOccurs="0"/>
+      <xs:element ref="ssl-allow-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-allow-tls" minOccurs="0"/>
+      <xs:element ref="ssl-disable-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-2" minOccurs="0"/>
+      <xs:element ref="ssl-hostname" minOccurs="0"/>
+      <xs:element ref="ssl-ciphers" minOccurs="0"/>
+      <xs:element ref="ssl-require-client-certificate" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-authorities" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-pems" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="odbc-server-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        An ODBC server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="server-name" minOccurs="0"/>
+      <xs:element ref="server-type" minOccurs="0"/>
+      <xs:element ref="group-name" minOccurs="0"/>
+      <xs:element ref="enabled" minOccurs="0"/>
+      <xs:element ref="root" minOccurs="0"/>
+      <xs:element ref="port" minOccurs="0"/>
+      <xs:element ref="modules-database" minOccurs="0"/>
+      <xs:element ref="content-database" minOccurs="0"/>
+      <xs:element ref="last-login-database" minOccurs="0"/>
+      <xs:element ref="display-last-login" minOccurs="0"/>
+      <xs:element ref="address" minOccurs="0"/>
+      <xs:element ref="backlog" minOccurs="0"/>
+      <xs:element ref="threads" minOccurs="0"/>
+      <xs:element ref="connection-timeout" minOccurs="0"/>
+      <xs:element ref="max-query-time-limit" minOccurs="0"/>
+      <xs:element ref="default-query-time-limit" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-depth" minOccurs="0"/>
+      <xs:element ref="pre-commit-trigger-limit" minOccurs="0"/>
+      <xs:element ref="collation" minOccurs="0"/>
+      <xs:element ref="coordinate-system" minOccurs="0"/>
+      <xs:element ref="authentication" minOccurs="0"/>
+      <xs:element ref="internal-security" minOccurs="0"/>
+      <xs:element ref="external-security" minOccurs="0"/>
+      <xs:element ref="external-securities" minOccurs="0"/>
+      <xs:element ref="privilege" minOccurs="0"/>
+      <xs:element ref="concurrent-request-limit" minOccurs="0"/>
+      <xs:element ref="file-log-level" minOccurs="0"/>
+      <xs:element ref="log-errors" minOccurs="0"/>
+      <xs:element ref="debug-allow" minOccurs="0"/>
+      <xs:element ref="profile-allow" minOccurs="0"/>
+      <xs:element ref="default-xquery-version" minOccurs="0"/>
+      <xs:element ref="multi-version-concurrency-control" minOccurs="0"/>
+      <xs:element ref="distribute-timestamps" minOccurs="0"/>
+      <xs:element ref="output-sgml-character-entities" minOccurs="0"/>
+      <xs:element ref="output-encoding" minOccurs="0"/>
+      <xs:element ref="output-method" minOccurs="0"/>
+      <xs:element ref="output-byte-order-mark" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-namespace-uri" minOccurs="0"/>
+      <xs:element ref="output-cdata-section-localname" minOccurs="0"/>
+      <xs:element ref="output-doctype-public" minOccurs="0"/>
+      <xs:element ref="output-doctype-system" minOccurs="0"/>
+      <xs:element ref="output-escape-uri-attributes" minOccurs="0"/>
+      <xs:element ref="output-include-content-type" minOccurs="0"/>
+      <xs:element ref="output-indent" minOccurs="0"/>
+      <xs:element ref="output-indent-untyped" minOccurs="0"/>
+      <xs:element ref="output-indent-tabs" minOccurs="0"/>
+      <xs:element ref="output-media-type" minOccurs="0"/>
+      <xs:element ref="output-normalization-form" minOccurs="0"/>
+      <xs:element ref="output-omit-xml-declaration" minOccurs="0"/>
+      <xs:element ref="output-standalone" minOccurs="0"/>
+      <xs:element ref="output-undeclare-prefixes" minOccurs="0"/>
+      <xs:element ref="output-version" minOccurs="0"/>
+      <xs:element ref="output-include-default-attributes" minOccurs="0"/>
+      <xs:element ref="schemas" minOccurs="0"/>
+      <xs:element ref="namespaces" minOccurs="0"/>
+      <xs:element ref="using-namespaces" minOccurs="0"/>
+      <xs:element ref="module-locations" minOccurs="0"/>
+      <xs:element ref="request-blackouts" minOccurs="0"/>
+      <xs:element ref="ssl-certificate-template" minOccurs="0"/>
+      <xs:element ref="ssl-allow-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-allow-tls" minOccurs="0"/>
+      <xs:element ref="ssl-disable-sslv3" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-1" minOccurs="0"/>
+      <xs:element ref="ssl-disable-tlsv1-2" minOccurs="0"/>
+      <xs:element ref="ssl-hostname" minOccurs="0"/>
+      <xs:element ref="ssl-ciphers" minOccurs="0"/>
+      <xs:element ref="ssl-require-client-certificate" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-authorities" minOccurs="0"/>
+      <xs:element ref="ssl-client-certificate-pems" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="namespace" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="prefix" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="using-namespace" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace path URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        The namespace binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="namespace"/>
+    </xs:choice>
+    <xs:attribute name="action">
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="merge"/>
+	  <xs:enumeration value="replace"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="using-namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        Default namespace bindings.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="using-namespace"/>
+    </xs:choice>
+    <xs:attribute name="action">
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="merge"/>
+	  <xs:enumeration value="replace"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="module-location" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="location" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="module-locations" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The module location specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="module-location" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+    <xs:attribute name="action">
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="merge"/>
+	  <xs:enumeration value="replace"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="period" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A period, with a start and end time/duration.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element ref="start-date" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="start-time" minOccurs="0" maxOccurs="1"/>
+      <xs:choice minOccurs="1" maxOccurs="1">
+	<xs:sequence minOccurs="1" maxOccurs="1">
+	  <xs:element ref="end-date" minOccurs="0" maxOccurs="1"/>
+	  <xs:element ref="end-time" minOccurs="0" maxOccurs="1"/>
+	</xs:sequence>
+	<xs:element ref="duration" minOccurs="0" maxOccurs="1"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="days" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A selection of days
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="7">
+      <xs:element ref="day" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="request-blackout" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A merge blackout period.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="users" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="roles" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="blackout-type" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="days" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="period" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="request-blackouts" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        Users, roles, orperiods for request blackouts.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="request-blackout" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+    <xs:attribute name="action">
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="merge"/>
+	  <xs:enumeration value="replace"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="file-log-level" type="log-level" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum log level for log messages in the log file.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="address" type="address" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server socket bind numeric internet address.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="port" type="port" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server socket bind internet port number.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backlog" type="backlog" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The socket listen backlog.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="threads" type="threadCount" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of server threads allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="root" type="directory-pathname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      For HTTP App Servers, the root document directory pathname. For XDBC and ODBC App Servers, the module directory.
+    </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Appserver enabled status.
+      </xs:documentation>
+      <xs:appinfo><manage:health equals="false()" state="maintenance" code="HEALTH-SERVER-DISABLED"/><manage:health equals="false()" state="offline" code="HEALTH-SERVER-OFFLINE"/></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="content-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The database name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="privilege" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The privilege restricting access to the server.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="concurrent-request-limit" type="request-limit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of concurrent requests per user.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="request-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The request socket recv timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="keep-alive-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The keep-alive socket recv timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="session-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The session expiration timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="connection-timeout" type="optional-timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The idle connection expiration timeout, in seconds, or 0
+        to indicate no idle connection timeout.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="max-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound for a request's time limit, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default time limit for a request, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="max-inference-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound for a request's inference size, in megabytes.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-inference-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default inference size for a request, in megabytes.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="max-query-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound for a query's time limit, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-query-time-limit" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default time limit for a query, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="multi-version-concurrency-control" type="multi-version-concurrency-control" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Specifies concurrency control of read-only queries.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="distribute-timestamps" type="distribute-timestamps" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Specifies the distribution of commit timestamps after updates.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="static-expires" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Add an "expires" HTTP header for static content to expire after this many seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="authentication" type="authentication" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The authentication scheme to use for this server
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="internal-security" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not the security database is used for authentication and authorization.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="external-security" type="external-security" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        External authentication and authorization configuration.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="external-securities" type="external-securities" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        External authentication and authorization configurations.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-user" type="default-user" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The user used as the default user in application level
+        authentication.  Using the admin user as the default user is
+        equivalent to turning security off.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespace-uri" type="namespace-uri" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schema-location" type="schema-location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schema" type="schema" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schemas" type="schemas" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The schema binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="server-name" type="server-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-allow-sslv3" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not SSLv3 is allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-allow-tls" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS is allowed.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-disable-sslv3" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not ssl v3 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-disable-tlsv1" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-disable-tlsv1-1" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-disable-tlsv1-2" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-certificate-template" type="ssl-certificate-template-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The certificate template. When
+        a certificate template is specified, the App Server uses an SSL
+        encrypted protocol (e.g. https, davs, xccs). The certificate
+        template specifies the common information for the individual SSL
+        certificates needed for each host in the group. <p>You can add a new
+        certificate template by navigating to
+          <a href="/add-certificate-template.xqy">Security &gt; Certificate Templates &gt; Create</a></p></xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-hostname" type="ssl-hostname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The host name for the server's SSL certificate. This is
+        useful when many servers are running behind a load balancer. If not
+        specified, each host will use a certificate specifying its own hostname.
+        Note that per RFC 2459, hostnames must not exceed 64 characters in length.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-ciphers" type="ssl-ciphers-string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A colon separated list of ciphers (e.g. ALL:!LOW:@STRENGTH)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-require-client-certificate" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not a client certificate is required. This only has an
+        effect when one or more more client certificate authorities are
+        specified, in which case a value of true will refuse a client request
+        if it does not present a valid client certificate.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-client-certificate-authority" type="ssl-certificate-authority-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        An SSL certificate authority
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ssl-client-certificate-authorities" type="ssl-client-certificate-authorities" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Certificate authorities that may sign client certificates for this
+        server. Selecting one or more certificate authorities when SSL is
+        enabled will require all clients to present a valid certificate signed
+        by one of the selected authorities. Clicking on an organization below
+        will reveal the certificate authorities for that organization.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="http-server-properties" type="http-server-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A HTTP server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="modules-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The database that contains application modules.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="last-login-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The database that contains users' last login information.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="display-last-login" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Indicates whether an appserver should display users' last login
+        information.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="webDAV" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        webDAV server versus HTTP server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="execute" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        True if server executes xquery modules.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="compute-content-length" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Compute content lengths for webDAV.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="log-errors" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Log uncaught request processing errors to ErrorLog.txt.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="debug-allow" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Allow debugging on this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="profile-allow" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Allow profiling on this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-sgml-character-entities" type="sgml-entity-mapping" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Output SGML character entities.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-encoding" type="output-encoding" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default output encoding.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-xquery-version" type="default-xquery-version" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default XQuery language version for this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdbc-server-properties" type="xdbc-server-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        An XDBC server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="odbc-server-properties" type="odbc-server-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        An ODBC server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="prefix" type="prefix" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A QName prefix.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespace" type="namespace" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="using-namespace" type="using-namespace" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace path URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespaces" type="namespaces" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The namespace binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="using-namespaces" type="using-namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        The default namespace bindings.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="location" type="location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="module-location" type="module-location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="module-locations" type="module-locations" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The module location specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="pre-commit-trigger-limit" type="pre-commit-trigger-limit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum number of triggers a single statement can invoke.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="pre-commit-trigger-depth" type="trigger-depth" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum depth of pre-commit trigger invocation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="collation" type="collation" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default collation for queries.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="coordinate-system" type="coordinate-system" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default coordinate system for queries.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="default-error-format" type="default-error-format" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The default error format for protocol errors.  One of html,xml,json,compatiable
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="error-handler" type="error-handler" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The script that handles 400 and 500 errors for this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="url-rewriter" type="url-rewriter" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The script that rewrites URLs for this server.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rewrite-resolves-globally" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Allow rewritten URLs to be resolved from the global MarkLogic Modules/ directory.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="roles" type="role-ids">
+    <xs:annotation>
+      <xs:documentation>
+        The roles that this blackout is active for.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional><admin:help xmlns="http://www.w3.org/1999/xhtml"/></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="users" type="user-ids" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The users that this blackout is active for.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="start-time" type="start-time" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  The starting time (in 24:00 notation).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="end-time" type="end-time" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  The ending time (in 24:00 notation).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="start-date" type="start-date" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="end-date" type="end-date" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The ending date (in MM/DD/YYYY notation)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="duration" type="duration" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The duration, specifed as hours:minutes (i.e. 2 hours 5 minutes is 2:05)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="period" type="period" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A period, which is all day, a start time and a duration, or a
+  start and end time.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="day" type="day" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A day that this blackout is active.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="days" type="days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The days that this blackout is active.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="blackout-type" type="blackout-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        What type of blackout is this.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="request-blackout" type="request-blackout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A request blackout specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="request-blackouts" type="request-blackouts" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Users, roles, or periods during which requests will
+        be denied.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-method" type="output-method" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Output method.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-byte-order-mark" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The output sequence of octets is to be preceded by a Byte Order Mark.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-cdata-section-namespace-uri" type="output-cdata-section-namespace-uri" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Namespace URI of the "cdata section localname" specified below.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-cdata-section-localname" type="output-cdata-section-localname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Element localname or list of element localnames to be output as CDATA sections.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-doctype-public" type="output-doctype-public" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      A public identifier to use on the emitted DOCTYPE.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-doctype-system" type="output-doctype-system" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      A system identifier to use on the emitted DOCTYPE.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-escape-uri-attributes" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Apply Unicode normalization, percent-encoding, and HTML escaping to serialized URI attributes.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-include-content-type" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Include the content-type declaration when serializing the node.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-indent" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Pretty-print typed XML (that is, XML for which there is an
+    in-scope schema).
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-indent-untyped" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       Pretty-print untyped XML (that is, XML for which there is no
+       in-scope schema).
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-indent-tabs" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       Output a tab character instead of 8 consecutive spaces when indenting.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-media-type" type="output-media-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      A mimetype representing a media type.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-normalization-form" type="output-normalization-form" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      A Unicode normalization to be applied to serialized output.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-omit-xml-declaration" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Omit the XML declaration in serialized output.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-standalone" type="yes-or-no-or-omit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      For a value of "yes" or "no", include "standalone=&lt;value&gt;" in the XML declaration; for a value of "omit", omit "standalone=".
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-undeclare-prefixes" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Undeclare the namespace prefix of any child element that does not bind the prefix of its parent element.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-version" type="output-version" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       Optionally stipulate conformance to a specific version of the output method.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="output-include-default-attributes" type="yes-or-no" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       Specifies whether attributes defaulted with a schema should be
+    included in the serialization.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation>
+      Server configuration file schema.
+    </xs:documentation>
+    <xs:appinfo/>
+  </xs:annotation>
+  <?xdmp-annotations?>
+</xs:schema>

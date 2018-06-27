@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/saml-entity/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/saml-entity/properties" xmlns:http="xdmp:http" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="xdmp:http" schemaLocation="http.xsd"/>
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:metadata" schemaLocation="saml-schema-metadata-2.0.xsd"/>
+  <xs:simpleType name="saml-entity-id">
+    <xs:annotation>
+      <xs:documentation>
+        SAML entity id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="saml-attribute-name">
+    <xs:annotation>
+      <xs:documentation>
+        SAML attribute name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="saml-privilege-attribute-name">
+    <xs:annotation>
+      <xs:documentation>
+        SAML privilege attribute name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="saml-attribute-names" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of SAML attribute names.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="saml-attribute-name" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="saml-server" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        SAML server configuration.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="saml-entity-id" minOccurs="0"/>
+      <xs:element ref="saml-attribute-names" minOccurs="0"/>
+      <xs:element ref="saml-privilege-attribute-name" minOccurs="0"/>
+      <xs:element ref="http-options" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="saml-entity-id" type="saml-entity-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        SAML entity id. Required if authorization is SAML.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="saml-attribute-name" type="saml-attribute-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        SAML attribute name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="saml-attribute-names" type="saml-attribute-names" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of SAML attribute names.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="saml-privilege-attribute-name" type="saml-privilege-attribute-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        SAML privilege attribute name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="http-options" type="http:options" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The HTTP options to use when connecting to the
+        replication application server.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="saml-entity-properties" type="saml-server" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        An SAML server configuration.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <?xdmp-annotations?>
+</xs:schema>

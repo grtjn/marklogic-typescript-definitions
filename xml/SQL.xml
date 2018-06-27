@@ -1,0 +1,194 @@
+<apidoc:module name="Extensions" category="Extension" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:function name="sql" type="builtin" lib="xdmp" category="Extension" subcategory="XQuery Context">
+    <apidoc:summary>
+  Executes an ad hoc SQL query.  This function is for testing
+  your SQL views when data modeling; it is not intended to be used directly
+  in applications.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="sql" type="xs:string">
+    The SQL statement to be executed.
+  </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options as a sequence of string values. Available options are:
+    <dl xmlns="http://www.w3.org/1999/xhtml">
+    <dt><p>"array"</p></dt><dd>Return the result as a sequence of array
+    values (<code>json:array</code>).</dd>
+    <dt><p>"format"</p></dt><dd>Return the results as formatted strings.</dd>
+    <dt><p>"map"</p></dt><dd>Return the result as a sequence of map values,
+    where the key is the column name.</dd>
+    <dt>"prepare"</dt>
+    <dd>Parse and optimize the query, caching the result. No execution is
+    performed. Default is false.</dd>
+    <dt>"optimize=N"</dt>
+    <dd>Sets the optimization level to use. Levels of 0 (off), 1, and 2 are
+    recognized. The default is 1.</dd>
+    <dt>"any"</dt>
+    <dd>Values from any fragment should be included.</dd>
+    <dt>"document"</dt>
+    <dd>Values from document fragments should be included.</dd>
+    <dt>"properties"</dt>
+    <dd>Values from properties fragments should be included.</dd>
+    <dt>"locks"</dt>
+    <dd>Values from locks fragments should be included.</dd>
+    <dt>"checked"</dt>
+    <dd>Word positions should be checked when resolving the query.</dd>
+    <dt>"unchecked"</dt>
+    <dd>Word positions should not be checked when resolving the query.</dd>
+    </dl>
+  </apidoc:param>
+      <apidoc:param name="bindings" type="map:map?" class="xquery" optional="true">
+    A map containing initial values for variables from the query, or the
+    empty sequence if no query variables are to be initially bound. This
+    is a way to parameterize the query.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+    One of the benefits of parameterizing the query is that you can reuse the same
+    query multiple times with different values plugged in.  In this case, the SQL engine
+    will not have to analyze the query each time it runs and instead use the cached
+    query plan for increased speed.  You should always using bindings, rather than
+    string concatenation, to parameterize queries.
+    </p>
+   <p xmlns="http://www.w3.org/1999/xhtml">
+    As shown in the example below, bindings are passed in as a <code>map:map</code>
+    of values. The keys for the map are either a string representation of the ordinal
+    number of the <code>?</code> dynamic parameter in the SQL query, or the name of a named SQL
+    parameter using the <code>:name</code>, <code>@name</code>, or <code>$name</code>
+    syntax. Ordinal parameters can also be expressed as <code>?NNN</code>where
+    <code>NNN</code> is an explicit ordinal number rather than an implicitly asigned
+    one as with <code>?</code> by itself.
+   </p>
+   </apidoc:param>
+      <apidoc:param name="bindings" type="Object?" class="javascript" optional="true">
+    An object containing initial values for variables from the query, or the
+    empty sequence if no query variables are to be initially bound. This
+    is a way to parameterize the query.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+    One of the benefits of parameterizing the query is that you can reuse the same
+    query multiple times with different values plugged in.  In this case, the SQL engine
+    will not have to analyze the query each time it runs and instead use the cached
+    query plan for increased speed.  You should always using bindings, rather than
+    string concatenation, to parameterize queries.
+    </p>
+    <p xmlns="http://www.w3.org/1999/xhtml">
+    As shown in the example below, bindings are passed in as an <code>object</code>
+    of values. The keys for the object are either a string representation of the ordinal
+    number of the <code>?</code> dynamic parameter in the SQL query, or the name of a named SQL
+    parameter using the <code>:name</code>, <code>@name</code>, or <code>$name</code>
+    syntax. Ordinal parameters can also be expressed as <code>?NNN</code>where
+    <code>NNN</code> is an explicit ordinal number rather than an implicitly asigned
+    one as with <code>?</code> by itself.
+   </p>
+  </apidoc:param>
+      <apidoc:param name="query" type="cts:query?" optional="true">
+    Only include triples in fragments selected by the <code xmlns="http://www.w3.org/1999/xhtml">cts:query</code>.
+    The triples do not need to match the query, but they must occur in
+    fragments selected by the query.
+    The fragments are not filtered to ensure they match the query,
+    but instead selected in the same manner as <a href="#unfiltered" xmlns="http://www.w3.org/1999/xhtml">
+    "unfiltered" <code>cts:search</code></a> operations.  If a string
+    is entered, the string is treated as a <code xmlns="http://www.w3.org/1999/xhtml">cts:word-query</code> of the
+    specified string.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:privilege>
+<p xmlns="http://www.w3.org/1999/xhtml"><code>http://marklogic.com/xdmp/privileges/xdmp-sql</code></p>
+</apidoc:privilege>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Only one of the "map" and "array" options may be specified. If neither
+is specified, the default is "array". If the "format" option is specified, the
+output will be formatted, regardless of whether "array" or "map" was selected.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">The first tuple returned will always be one consisting of the column names.
+<!-- This tuple is not included in the limit count. -->
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:sql("select title,author from books limit 4", "format")
+==&gt;
+| title| author|
+| The C++ Programming Language| Bjarne Stroustrup|
+| Modern Information Retrieval| Ricardo Baeza-Yates|
+| Modern Information Retrieval| Berthier Ribeiro-Neto|
+| Unicode Demystified| Richard Gillam|
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.sql("select title,author from books limit 4", "format");
+==&gt;
+| title| author|
+| The C++ Programming Language| Bjarne Stroustrup|
+| Modern Information Retrieval| Ricardo Baeza-Yates|
+| Modern Information Retrieval| Berthier Ribeiro-Neto|
+| Unicode Demystified| Richard Gillam|
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:to-json(xdmp:sql("select title,author from books limit 4", "array"))
+==&gt;
+[["title", "author"],
+ ["The C++ Programming Language", "Bjarne Stroustrup"],
+ ["Modern Information Retrieval", "Ricardo Baeza-Yates"],
+ ["Modern Information Retrieval", "Berthier Ribeiro-Neto"],
+ ["Unicode Demystified", "Richard Gillam"]
+]
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.toJSON(xdmp.sql("select title,author from books limit 4", "array"));
+==&gt;
+[["title", "author"],
+ ["The C++ Programming Language", "Bjarne Stroustrup"],
+ ["Modern Information Retrieval", "Ricardo Baeza-Yates"],
+ ["Modern Information Retrieval", "Berthier Ribeiro-Neto"],
+ ["Unicode Demystified", "Richard Gillam"]
+]
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+for $row in xdmp:sql("select title,author from books limit 4")
+return fn:concat("Title=",$row[1],"; Author=",$row[2])
+==&gt;
+Title=title, Author=author
+Title=The C++ Programming Language; Author=Bjarne Stroustrup
+Title=Modern Information Retrieval; Author=Ricardo Baeza-Yates
+Title=Modern Information Retrieval; Author=Berthier Ribeiro-Neto
+Title=Unicode Demystified; Author=Richard Gillam
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var res = new Array();
+for (var row of xdmp.sql("select title,author from books limit 4")) {
+  res.push(fn.concat("Title=", row[0],"; Author=", row[1])); };
+==&gt;
+Title=title, Author=author
+Title=The C++ Programming Language; Author=Bjarne Stroustrup
+Title=Modern Information Retrieval; Author=Ricardo Baeza-Yates
+Title=Modern Information Retrieval; Author=Berthier Ribeiro-Neto
+Title=Unicode Demystified; Author=Richard Gillam
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $bindings := map:new(map:entry("num", 1))
+return (
+xdmp:sql("SELECT * FROM main.employees
+          where EmployeeID &gt; @num
+          order by LastName, EmployeeID",("format","locking=read-write"), $bindings))
+==&gt;
+| main.employees.EmployeeID| main.employees.FirstName| main.employees.LastName| main.employees.Position|
+| 4| Debbie| Goodall| Senior Widget Researcher|
+| 4| Debbie| Goodall| Senior Widget Researcher|
+| 2| Jane| Lead| Manager of Widget Research|
+| 2| Jane| Lead| Manager of Widget Research|
+| 3| Steve| Manager| Senior Technical Lead|
+| 3| Steve| Manager| Senior Technical Lead|
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+'use strict'
+var bindings = {"num": 1} ;
+xdmp.sql("SELECT * FROM main.employees \
+         where EmployeeID &gt; @num \
+         order by LastName, EmployeeID",("format","locking=read-write"), bindings)
+==&gt;
+| main.employees.EmployeeID| main.employees.FirstName| main.employees.LastName| main.employees.Position|
+| 4| Debbie| Goodall| Senior Widget Researcher|
+| 4| Debbie| Goodall| Senior Widget Researcher|
+| 2| Jane| Lead| Manager of Widget Research|
+| 2| Jane| Lead| Manager of Widget Research|
+| 3| Steve| Manager| Senior Technical Lead|
+| 3| Steve| Manager| Senior Technical Lead|
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,32 @@
+<apidoc:module name="LastLogin" category="Extension" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:function name="user-last-login" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Returns the last-login node for the current user. If no last-login
+  database is specified in the App Server configuration, then the empty
+  sequence is returned.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return class="xquery">element(last-login)?</apidoc:return>
+    <apidoc:return class="javascript">Object?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:user-last-login()
+  =&gt; 
+  &lt;last-login xmlns="http://marklogic.com/xdmp/last-login"&gt;
+    &lt;user-id&gt;1134406269933351074&lt;/user-id&gt;
+    &lt;last-successful-login&gt;2008-03-19T15:41:08&lt;/last-successful-login&gt;
+    &lt;last-unsuccessful-login&gt;2008-03-19T15:40:45&lt;/last-unsuccessful-login&gt;
+    &lt;number-unsuccessful-logins&gt;0&lt;/number-unsuccessful-logins&gt;
+    &lt;display-last-login&gt;true&lt;/display-last-login&gt;
+  &lt;/last-login&gt; 
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.userLastLogin()
+  =&gt; 
+  {
+    "userId":"1134406269933351074",
+    "lastSuccessfulLogin":"2008-03-19T15:41:08",
+    "lastUnsuccessfulLogin":"2008-03-19T15:40:45",
+    "numberUnsuccessfulLogins":0,
+    "displayLastLogin":true
+  }
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,328 @@
+<apidoc:module name="CustomeDictionaryModule" 
+	category="Custom Dictionary Management" 
+	bucket="XQuery Library Modules" 
+        xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+        xmlns="http://www.w3.org/1999/xhtml" lib="cdict">
+  <apidoc:summary access="public" category="Custom Dictionary Management"
+	  bucket="XQuery Library Modules">
+  <p>The custom dictionary functions are designed to help you manage dictionaries
+  that customize the stemming and tokenization in MarkLogic Server.
+  The custom dictionary function module is installed as the following file:</p>
+  <ul><li><code><em>install_dir</em>/Modules/MarkLogic/custom-dictionary.xqy</code></li></ul>
+  <p>where <code><em>install_dir</em></code> is the directory in which 
+  MarkLogic Server is installed.</p>
+  <span class="xquery">
+  <p>To use the <code>custom-dictionary.xqy</code> module in your own code, 
+  include the following line in your XQuery prolog:</p>
+  <p><code>import module namespace cdict = "http://marklogic.com/xdmp/custom-dictionary"
+		  at "/MarkLogic/custom-dictionary.xqy";
+     </code></p>
+  <p>The library namespace prefix <code>cdict</code> is <em>not</em> predefined in
+  the server.</p>
+  </span><span class="javascript">
+   <p>To use the custom dictionary library in your own code, use a 
+    <code>requires</code> statement similar to the following:</p>
+    <p><code>const cdict = require('/MarkLogic/custom-dictionary.xqy');</code></p>
+  </span>
+  <p>For more details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2326361'>Custom Dictionaries for Tokenizing and Stemming</a> in the <em>Search Developer's Guide</em>
+  </p>
+</apidoc:summary>
+
+<apidoc:function name="get-languages" type="cdict" lib="cdict" 
+	category="Custom Dictionary Management" bucket="XQuery Library Modules">
+  <apidoc:summary>
+   Return the ISO language codes for all licensed languages.
+  </apidoc:summary>
+  <apidoc:return>xs:string*</apidoc:return>
+  <apidoc:usage>
+   This function returns the 2-letter ISO language codes for all 
+   languages licensed for your MarkLogic installation. A list of codes 
+   and their associated languages is at 
+   <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">http://www.loc.gov/standards/iso639-2/php/code_list.php</a>.
+   Note that MarkLogic only uses the 2-letter ISO 639-1 codes, including 
+   zh's <code>zh_Hant</code> variant.
+  </apidoc:usage>
+  <apidoc:privilege>
+   This function requires the <code>custom-dictionary-user</code> role
+   or the following privileges:
+   <p><code>http://marklogic.com/xdmp/privileges/custom-dictionary-user</code></p>
+  </apidoc:privilege>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2326361'>Custom Dictionaries for Tokenizing and Stemming</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2393279'>Stemming and Tokenization Customization</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace cdict = "http://marklogic.com/xdmp/custom-dictionary" 
+  at "/MarkLogic/custom-dictionary.xqy";
+
+cdict:get-languages()
+
+(: Returns a list of language codes such as the following:
+ : ("en", "ja", "zh", "zh_Hant") :)
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+'use strict';
+const cdict = require('/MarkLogic/custom-dictionary');
+
+cdict.getLanguages();
+
+// Returns a list of language codes such as the following:
+// ("en", "ja", "zh", "zh_Hant")
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="dictionary-delete" type="cdict" lib="cdict" 
+	category="Custom Dictionary Management" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+   Delete a custom dictionary.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="lang" type="xs:string">The ISO language code 
+	  of the dictionary to be deleted.
+    </apidoc:param>
+    <apidoc:param name="tokenization" type="xs:boolean" optional="true">
+      Whether to delete the tokenization dictionary or the stemming dictionary for
+      the specified language. Set to true for tokenization, false for stemming.
+      Default: false (stemming). This parameter is ignored for languages that 
+      use a single dictionary for both stemming and tokenization, such as 
+      Japanese and Chinese.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+   This function requires the <code>custom-dictionary-admin</code> or the
+   following privileges:
+   <p><code>http://marklogic.com/xdmp/privileges/custom-dictionary-admin</code></p>
+   <p>If your language configure uses user-defined lexer and/or stemmer
+    plugins, you can define additional privileges for finer control. For
+    details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2371163'>Custom Dictionary Security Considerations</a> in the <em>Search Developer's Guide</em>.</p>
+  </apidoc:privilege>
+  <apidoc:usage>
+   If no dictionary is installed for the specified language and dictionary 
+   type combination, this operation is a no-op. 
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2326361'>Custom Dictionaries for Tokenizing and Stemming</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2393279'>Stemming and Tokenization Customization</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace cdict = "http://marklogic.com/xdmp/custom-dictionary" 
+  at "/MarkLogic/custom-dictionary.xqy";
+
+cdict:dictionary-delete("en")
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const cdict = require('/MarkLogic/custom-dictionary');
+
+cdict.dictionaryDelete('en');
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="dictionary-read" type="cdict" lib="cdict" 
+	category="Custom Dictionary Management" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+   Retrieve the custom dictionary for a language.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="lang" type="xs:string">The ISO language code of the dictionary.
+    </apidoc:param>
+    <apidoc:param name="tokenization" type="xs:boolean" optional="true">
+      Whether to read the tokenization dictionary or the stemming dictionary for
+      the specified language. Set to true for tokenization, false for stemming.
+      Default: false (stemming). This parameter is ignored for languages that 
+      use a single dictionary for both stemming and tokenization, such as 
+      Japanese and Chinese.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(cdict:dictionary)?</apidoc:return>
+  <apidoc:privilege>
+   This function requires the <code>custom-dictionary-user</code> or the
+   following privileges:
+   <p><code>http://marklogic.com/xdmp/privileges/custom-dictionary-user</code></p>
+  </apidoc:privilege>
+  <apidoc:usage>
+   If no custom dictionary is configured for the specified language and 
+   dictionary type combination, this function returns an empty sequence.
+   <p>The returned dictionary element will have an <code>xml:lang</code> 
+    attribute indicating the language.</p>
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2326361'>Custom Dictionaries for Tokenizing and Stemming</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2393279'>Stemming and Tokenization Customization</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace cdict = "http://marklogic.com/xdmp/custom-dictionary" 
+		  at "/MarkLogic/custom-dictionary.xqy";
+
+  cdict:dictionary-read("en")
+
+(: Returns a dictionary similar to the following:
+  <cdict:dictionary 
+      xmlns:cdict="http://marklogic.com/xdmp/custom-dictionary"
+      xml:lang="en">
+    <cdict:entry>
+      <cdict:word>Furbies</cdict:word>
+      <cdict:stem>Furby</cdict:stem>
+    </cdict:entry>
+    <cdict:entry>
+      <cdict:word>servlets</cdict:word>
+      <cdict:stem>servlet</cdict:stem>
+    </cdict:entry>
+  </cdict:dictionary>
+:)
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const cdict = require('/MarkLogic/custom-dictionary');
+cdict.dictionaryRead('en');
+
+/* Returns a dictionary similar to the following:
+  <cdict:dictionary 
+      xmlns:cdict="http://marklogic.com/xdmp/custom-dictionary"
+      xml:lang="en">
+    <cdict:entry>
+      <cdict:word>Furbies</cdict:word>
+      <cdict:stem>Furby</cdict:stem>
+    </cdict:entry>
+    <cdict:entry>
+      <cdict:word>servlets</cdict:word>
+      <cdict:stem>servlet</cdict:stem>
+    </cdict:entry>
+  </cdict:dictionary>
+*/
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="dictionary-write" type="cdict" lib="cdict" 
+	category="Custom Dictionary Management" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+    Insert or update a custom dictionary for language.
+  </apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="lang" type="xs:string">The ISO language code 
+		  of the dictionary.
+    </apidoc:param>
+    <apidoc:param name="dict" type="element(cdict:dictionary)">
+      A custom dictionary. For details on the structure, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2391509'>Custom Dictionary Format</a> in the <em>Search Developer's Guide</em>.
+    </apidoc:param>
+    <apidoc:param name="tokenization" type="xs:boolean" optional="true">
+      Whether to insert the dictionary for use in tokenization or stemming. Set to 
+      true for tokenization, false for stemming. Default: false (stemming). This
+      parameter is ignored for languages that use a single dictionary for both
+      stemming and tokenization, such as Japanese and Chinese.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:usage>
+    This function will validate the supplied dictionary. If the dictionary
+    validates, it is installed on the cluster. If validation fails, validation
+    errors are raised.
+   <p>
+    Any <code>xml:lang</code> attribute on the dictionary element is ignored.
+    The <code>lang</code> parameter determines what language the dictionary
+    is associated with.
+   </p><p>
+    When you configure a dictionary for a language, it is associated with
+    the stemmer or lexer configured for the language. If you change the
+    stemmer/lexer for the language, you will need to write the dictionary
+    again.
+   </p><p>
+    Changes affecting stemming and tokenization take effect immediately.
+    Queries started after a custom dictionary is written or deleted will use the
+    new behavior.
+   </p><p>
+    Documents are not automatically reindexed after a custom dictionary change.
+    To get accurate results for stemmed searches, documents must be reindexed.
+    If it is not practical to reindex all documents, use this process to 
+    selectively reindex affected documents:
+  </p><ol>
+   <li>Before updating the dictionary, record the words affected by the
+    change. That is, the value of the <code>word</code> element of dictionary
+    entries that are added, removed, or modified.</li>
+   <li>Search for documents containing these words, and save the URIs.</li>
+   <li>Update the custom dictionaries.</li>
+   <li>Make an idempotent update to each of the documents found in Step 2.
+    For example, you could add an element to each document and then delete it.
+    Any change will cause each document to be reindexed.</li>
+  </ol>
+  </apidoc:usage>
+  <apidoc:privilege>
+   This function requires the <code>custom-dictionary-admin</code> role or
+   the following privileges:
+   <p><code>http://marklogic.com/xdmp/privileges/custom-dictionary-admin</code></p>
+   <p>If your language configure uses user-defined lexer and/or stemmer
+    plugins, you can define additional privileges for finer control. For
+    details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2371163'>Custom Dictionary Security Considerations</a> in the <em>Search Developer's Guide</em>.</p>
+  </apidoc:privilege>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/custom-dictionaries.xml%2326361'>Custom Dictionaries for Tokenizing and Stemming</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/languages.xml%2393279'>Stemming and Tokenization Customization</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace cdict = "http://marklogic.com/xdmp/custom-dictionary" 
+  at "/MarkLogic/custom-dictionary.xqy";
+  
+let $dict :=
+  <cdict:dictionary xmlns:cdict="http://marklogic.com/xdmp/custom-dictionary">
+    <cdict:entry>
+      <cdict:word>Furbies</cdict:word>
+      <cdict:stem>Furby</cdict:stem>
+    </cdict:entry>
+    <cdict:entry>
+      <cdict:word>servlets</cdict:word>
+      <cdict:stem>servlet</cdict:stem>
+    </cdict:entry>
+  </cdict:dictionary>
+return cdict:dictionary-write("en", $dict)
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+'use strict';
+const cdict = require('/MarkLogic/custom-dictionary');
+
+const dict = fn.head(xdmp.unquote(  
+  '<cdict:dictionary xmlns:cdict="http://marklogic.com/xdmp/custom-dictionary">' +
+    '<cdict:entry>' +
+      '<cdict:word>Furbies</cdict:word>' +
+      '<cdict:stem>Furby</cdict:stem>' +
+    '</cdict:entry>' +
+    '<cdict:entry>' +
+      '<cdict:word>servlets</cdict:word>' +
+      '<cdict:stem>servlet</cdict:stem>' +
+    '</cdict:entry>' +
+  '</cdict:dictionary>'
+)).root;
+cdict.dictionaryWrite('en', dict);
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

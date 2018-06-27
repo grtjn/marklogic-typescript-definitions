@@ -1,0 +1,1535 @@
+<apidoc:module name="TieredStorageModule" category="TieredStorage" 
+	lib="tieredstorage" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>This module provides functions for managing forests and partitions
+     in storage tiers and for managing super-databases and sub-databases.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </p>
+    <p>The Tiered Storage function module is installed as the following file:</p>
+    <ul>
+	  <li><code><em>install_dir</em>/Modules/MarkLogic/tieredstorage.xqy</code></li>
+    </ul>
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+	    MarkLogic Server is installed.</p>
+    <p>To use the <code>tieredstorage.xqy</code> module in your own XQuery modules, 
+     include the following line in your XQuery prolog:</p>
+    <pre xml:space="preserve">
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";</pre>
+  </apidoc:summary>
+
+  <apidoc:function name="forest-migrate" lib="tieredstorage" 
+	  category="TieredStorage" bucket="XQuery Library Modules">
+    <apidoc:summary>This function moves data in a forest to new data 
+    directories and optionally sets new host for the forest.  If no data 
+    directory is specified, the default data directory will be used.  
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2398555'>Migrating Forests and Partitions</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forest-ids" type="xs:unsignedLong*">
+        IDs of the forests to migrate.
+      </apidoc:param>
+      <apidoc:param name="new-host-id" type="xs:unsignedLong?" optional="true">
+        ID of the destination host.
+      </apidoc:param>
+      <apidoc:param name="new-data-directory" type="xs:string?" optional="true">
+        The optional data directory of the forest. If no directory
+        is specified, then it will be a private forest.
+      </apidoc:param>
+      <apidoc:param name="new-large-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory where large objects are stored. If no directory
+        is specified, then large objects will be stored in
+        DATA_DIR/Forests/FOREST_NAME/Large.
+      </apidoc:param>
+      <apidoc:param name="new-fast-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory for the fast data directory for this forest.
+        The fast data directory is typically located on a fast storage device,
+        such as an SSD.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+        <blockquote>
+        <dl>
+         <dt> <pre>timeout=N</pre>
+        </dt>
+	<dd>    
+        Specifies the number of seconds to wait for a forest to re-open after a
+        configuration is made during the migration operation.
+        </dd>
+         <dt> <pre>local-to-local</pre>
+        </dt>
+	<dd>
+        Indicates that the migration is between local storage to local storage.
+        This is the default when no other direction parameter is specified and 
+        the type of storage cannot be derived from either the data directory 
+        path. 
+        </dd>
+         <dt> <pre>local-to-shared</pre>
+        </dt>
+	<dd>
+        Indicates that the migration is between local storage and shared 
+        storage.  This type of migration supports changing the host.
+        </dd>
+         <dt> <pre>shared-to-local</pre>
+        </dt>
+	<dd>
+        Indicates that the migration is to move data from shared storage to 
+        local storage.  This type of migration supports changing the host.
+        </dd>
+         <dt> <pre>shared-to-shared</pre>
+        </dt>
+	<dd>
+        Indicates that the migration is to move data from shared storage to 
+        shared storage.  This type of migration supports changing the host.
+        </dd> </dl> 
+        </blockquote>
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:forest-migrate(
+    xdmp:forest("Forest1"), 
+    xdmp:host("host1"), 
+    "/tmp/test", 
+    (), 
+    (), 
+    ("timeout=20"))
+ 
+    (: Moves the Forest1 from its current location to /tmp/test and sets their 
+       timeouts to 20 seconds. :)
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Moves the Forest1 from its current location to /tmp/test and sets their 
+// timeouts to 20 seconds. 
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.forestMigrate(
+    xdmp.forest('Forest1'), 
+    xdmp.host('host1'), 
+    '/tmp/test', 
+    null, 
+    null, 
+    ['timeout=20']);
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="forest-combine" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function combines data in multiple forests into one 
+     new forest.  If no data directory is specified, the default data directory 
+     is used.  The source forests are required to be either all in "open" or 
+     "open-replica" state or all in "sync replicating" state. If a forest's 
+     state changes during the combine operation, an error may be thrown. If all 
+     source forests are in "open" or "open replica" state and are all attached 
+     to a database, the combined forest will be attached to the database and 
+     the source forests (or their masters) detached to the database. For 
+ details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2343572'>Combining Forests</a> in the <em>Administrator's Guide</em>. 
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forest-ids" type="xs:unsignedLong*">
+        IDs of the forests to be combined.
+      </apidoc:param>
+      <apidoc:param name="forest-name" type="xs:string">
+        Name of the combined forest.
+      </apidoc:param>
+      <apidoc:param name="host-id" type="xs:unsignedLong">
+        ID of the destination host.
+      </apidoc:param>
+      <apidoc:param name="data-directory" type="xs:string?" optional="true">
+        The optional data directory of the forest. If no directory
+        is specified, then it will be a private forest.
+      </apidoc:param>
+      <apidoc:param name="large-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory where large objects are stored. If no directory
+        is specified, then large objects will be stored in
+        DATA_DIR/Forests/FOREST_NAME/Large.
+      </apidoc:param>
+      <apidoc:param name="fast-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory for the fast data directory for this forest.
+        The fast data directory is typically located on a fast storage device,
+        such as an SSD.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+         <blockquote>
+           <dl>        
+            <dt> 
+              <pre>timeout=N</pre>
+            </dt>
+	   <dd>
+        Specifies the number of seconds to wait for a forest to re-open after
+        a change requiring the forest to close and re-mount is made during the 
+        migration operation.
+          </dd>
+            <dt> 
+              <pre>local-to-local</pre>
+            </dt>
+	   <dd>     
+        Indicates that the migration is between local storage to local storage.
+        This is the default when no other direction parameter is specified and 
+        the type of storage cannot be derived from either the data directory 
+        path. 
+          </dd>
+            <dt> 
+              <pre>local-to-shared</pre>
+            </dt>
+	   <dd>   
+        Indicates that the migration is between local storage and shared 
+        storage.  This type of migration supports changing the host.
+          </dd>
+            <dt> 
+              <pre>shared-to-local</pre>
+            </dt>
+	   <dd>       
+        Indicates that the migration is to move data from shared storage to 
+        local storage.  This type of migration supports changing the host.
+          </dd>
+            <dt> 
+              <pre>shared-to-shared</pre>
+            </dt>
+	   <dd>
+        Indicates that the migration is to move data from shared storage to 
+        shared storage.  This type of migration supports changing the host.
+        </dd>
+            <dt> 
+              <pre>keep-source-forests</pre>
+            </dt>
+	   <dd>
+        Specifies to keep source forests after the combined forest is created.
+        By default, the source forests are removed before the combine function
+        returns.  The source forests will not be removed when this option is 
+        turned on.  This option can be used to combine forests associated with
+        other forests as masters or replicas. 
+        </dd>
+            <dt> 
+              <pre>snapshot</pre>
+            </dt>
+	   <dd>
+        Specifies to create a combined forest based on a consistent snapshot 
+        of the source forests.  The source forests will not be removed when
+        this option is turned on.  This option can be used to combine replica
+        forests.
+        </dd></dl>
+        </blockquote>    
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:usage>
+	If the forests reside in a database configured for database replication,
+	you must specify the <code>snapshot</code> option when combining forests with overrides.
+	Otherwise an <code>TS-FORESTHASOVERRIDE</code> exception will be thrown.   
+    </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:forest-combine(
+   (xdmp:forest("Forest1"), xdmp:forest("Forest2")),
+   "ForestCombined",
+   xdmp:host(), 
+   "/tmp/test")
+ 
+(: Combines Forest1 and Forest2 into a single forest, named ForestCombined, in
+   the /tmp/test data directory. :)
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Combines Forest1 and Forest2 into a single forest, named ForestCombined, in
+// the /tmp/test data directory.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.forestCombine(
+   [xdmp.forest('Forest1'), xdmp.forest('Forest2')],
+   'ForestCombined',
+   xdmp.host(), 
+   '/tmp/test');
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="range-partition-create" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function creates forests on the specified 
+    hosts and forms a range partition with the specified partition range. 
+    All of the forests will share the partition name as their prefix, as well as the range 
+    policy settings.
+    The names of the created forests will either be in the form of partition-
+    name-[fixed-digit-number] or partition-name-[fixed-digit-number]-[M,Rn], 
+    if local disk failover is configured. 
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2348262'>Creating Range Partitions</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in which the partition will reside.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="lower" type="xs:anyAtomicType?">
+        Lower bound of partition range.
+      </apidoc:param>
+      <apidoc:param name="upper" type="xs:anyAtomicType?">
+        Upper bound of partition range.
+      </apidoc:param>
+      <apidoc:param name="forests-per-host" type="xs:unsignedInt">
+        Number of forests per host in the partition to be created.
+      </apidoc:param>
+      <apidoc:param name="host-ids" type="xs:unsignedLong*">
+        Ids of hosts on which to create the partition forests.
+      </apidoc:param>
+      <apidoc:param name="data-directory" type="xs:string?" optional="true">
+        The optional data directory of the forests. If no directory
+        is specified, then the forests will be private.
+      </apidoc:param>
+      <apidoc:param name="large-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory where large objects are stored. If no directory
+        is specified, then large objects will be stored in
+        DATA_DIR/Forests/FOREST_NAME/Large.
+      </apidoc:param>
+      <apidoc:param name="fast-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory for the fast data directory for the forests.
+        The fast data directory is typically located on a fast storage device,
+        such as an SSD.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+       <blockquote>
+       <dl>
+       <dt>
+          <pre>failover =[none, local, shared]</pre>
+       </dt>
+       <dd>
+	If failover is <code>local</code> and multiple hosts are specified, new
+        replica(s) will be created.
+        <p>
+        Shared disk failover will be set up if failover is 
+	<code>shared</code> and multiple hosts are specified. The failover hosts 
+        will be chosen to cover as many different zones as possible. 
+        </p><p>
+	If failover is <code>none</code>, neither  will be set up.
+        </p><p>
+        If failover is left unspecified, it will be <code>local</code> unless data 
+        directories are on shared platforms such as HDFS and S3.
+        </p>
+       </dd>
+       <dt>
+          <pre>replicas=N</pre>
+       </dt>
+       <dd>
+	  Specifies the number of replicas/failover forests to configure for local-disk or
+	  shared-disk failover.
+       </dd></dl>
+       </blockquote>
+       
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:range-partition-create(
+     xdmp:database("Documents"),
+     "2012",
+     xs:date("2012-01-01"),xs:date("2012-12-31"), 
+     2, 
+     (xdmp:host("host-1.marklogic.com"), xdmp:host("host-2.marklogic.com")), 
+     "/forest", 
+     (), 
+     (), 
+     ("failover=local","replicas=1"))
+
+(: Creates a range partition, named 2012, on the Documents database with a date range of 1/1/2012
+   through 1/31/2012. The partition consists of four master forests and four replica forests
+   distributed across two hosts and configured for local disk failover. :)
+  ]]></pre>
+  </apidoc:example>
+	<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Creates a range partition, named 2017, on the Documents database with a date range of 1/1/2017
+// through 1/31/2017. The partition consists of four master forests and four replica forests
+// distributed across two hosts and configured for local disk failover.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.rangePartitionCreate(
+     xdmp.database('Documents'),
+     '2017',
+     xs.date('2017-01-01'), xs.date('2017-12-31'), 
+     2, 
+     [xdmp.host('host-1.marklogic.com'), xdmp.host('host-2.marklogic.com')], 
+     '/forest', 
+     null, 
+     null, 
+     ['failover=local', 'replicas=1']);
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="partition-forests" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function returns a sequence of ids for the forests 
+    in the named partition. If the <code>$include-replicas</code> parameter is not specified 
+    or is set to <code>false</code>, replica forests are not included.  
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in containing the partition.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="include-replicas" type="xs:boolean" optional="true">
+        Whether or not replicas will be included.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-forests(xdmp:database("Documents"),"2012-April")
+=>
+8708998620766669503 57548986207876743
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionForests(xdmp.database('Documents'), '2017-October').toArray();
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+
+  <apidoc:function name="database-partitions" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function returns the names of the partitions in the named database.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in containing the partitions.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-partitions(xdmp:database("Documents"))
+
+(: Returns the names of the partitions in the Documents database. :)
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Returns the names of the partitions in the Documents database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.databasePartitions(xdmp.database('Documents'));
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="partition-set-updates-allowed" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function sets update-allowed state for 
+    the forests in the specified partition.  
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in which the partition will reside.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="value" type="xs:string">
+        The new updates-allowed state of the partition. Must be one of
+        <code>all</code> for all updates allowed, 
+        <code>delete-only</code> for only deletes allowed,
+        <code>read-only</code> for no updates allowed and to cause
+        updating transactions to abort immediately,
+        <code>flash-backup</code> for no updates allowed and to make
+        updating transactions retry for a time period specified in 
+	the group's retry timeout.  These are the same setting as used on
+ the forests, as described in <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/forests.xml%2380927'>Forests</a> in the <em>Administrator's Guide</em>.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-set-updates-allowed(xdmp:database("Documents"), "2012-April", "all")
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionSetUpdatesAllowed(xdmp.database('Documents'), '2017-October', 'all');
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+<apidoc:function name="partition-set-availability" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>This function sets the availability of the partition to either
+  <code>online</code> or <code>offline</code>.  An  <code>online</code> partition
+  is fully accessable through queries when its forests are attached to a database.
+  The forests in an <code>offline</code> partition, as well as any replica forests, cannot be accessed.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-id" type="xs:unsignedLong">
+     ID of the database containing the partition.
+    </apidoc:param>
+    <apidoc:param name="partition-name" type="xs:string">
+    Name of the partition.
+    </apidoc:param>
+    <apidoc:param name="value" type="xs:string">
+    The availability of the partition.  Values can be <code>online</code> or <code>offline</code>.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-set-availability(xdmp:database("Documents"),"2012-April", "offline")
+ 
+(: Takes the 2012-April partition in the Documents database offline. :)
+ 
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Takes the 2017-October partition in the Documents database offline.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionSetAvailability(xdmp.database('Documents'), '2017-April', 'offline');
+   ]]></pre>
+   </apidoc:example>
+</apidoc:function>
+
+
+  <apidoc:function name="partition-transfer" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function detaches forests in a partition 
+    from one database and attaches them to another.  
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2389873'>Transferring Partitions between Databases</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="partition-db-id" type="xs:unsignedLong">
+        ID of the database from which the partition will be moved.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="dst-db-id" type="xs:unsignedLong">
+        ID of the database to which the partition will be moved.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+	Whether or not data will be deleted. Valid option value: 
+        <blockquote>
+        <dl>
+        <dt>
+          <pre>timeout=N</pre>
+        </dt>
+        <dd>
+        Specifies the number of seconds to wait for a forest to re-open after a
+        configuration is made during the transfer operation.
+        </dd>
+        </dl>	
+        </blockquote>
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+
+ts:partition-transfer(xdmp:database("srcDB"), "2012-April", xdmp:database("dstDB"))
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionTransfer(xdmp.database('srcDB'), '2017-October', xdmp.database('dstDB'));
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="partition-migrate" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function migrates all forests in a partition to the specified data directory and hosts.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2398555'>Migrating Forests and Partitions</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in which the partition will reside.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="host-ids" type="xs:unsignedLong*">
+        Ids of hosts on which the forests in the partition will be migrated to.
+      </apidoc:param>
+      <apidoc:param name="data-directory" type="xs:string?" optional="true">
+        The optional data directory of the forest. If no directory
+        is specified, then it will be a private forest.
+      </apidoc:param>
+      <apidoc:param name="large-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory where large objects are stored. If no directory
+        is specified, then large objects will be stored in
+        DATA_DIR/Forests/FOREST_NAME/Large.
+      </apidoc:param>
+      <apidoc:param name="fast-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory for the fast data directory for this forest.
+        The fast data directory is typically located on a fast storage device,
+        such as an SSD.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+	<blockquote>
+        <dl>
+          <dt>
+             <pre>timeout=N</pre>
+          </dt>
+        <dd>Specifies the number of seconds to wait for a forest to re-open after a
+        configuration is made during the migration operation.
+        </dd>
+          <dt>
+             <pre>local-to-local</pre>
+          </dt>
+        <dd>
+        Indicates that the migration is between local storage to local storage.
+        This is the default when no other direction parameter is specified and 
+        the type of storage cannot be derived from either the data directory 
+        path. 
+        </dd>
+          <dt>
+             <pre>local-to-shared</pre>
+          </dt>
+        <dd>
+        Indicates that the migration is between local storage and shared 
+        storage.  This type of migration supports changing the host.
+        </dd>
+          <dt>
+             <pre>shared-to-local</pre>
+          </dt>
+        <dd> 
+        Indicates that the migration is to move data from shared storage to 
+        local storage.  This type of migration supports changing the host.
+        </dd>
+          <dt>
+             <pre>shared-to-shared</pre>
+          </dt>
+        <dd>
+        Indicates that the migration is to move data from shared storage to 
+        shared storage.  This type of migration supports changing the host.
+        </dd>
+          <dt>
+             <pre>failover=[local, shared, none]</pre>
+          </dt>
+        <dd> 
+        If failover is set to <code>local</code> and multiple hosts are specified,
+        any existing replica forests will be migrated and new replica forests will be 
+	created, if no replica forests exist. 
+        <p>
+        Shared disk failover will be set up if 
+	failover is specified to be <code>shared</code> and multiple hosts are specified.
+	The failover hosts will be chosen to cover as many different zones as possible.
+	</p> 
+        <p>
+        If failover is specified to be <code>none</code>, any existing replica forests will be 
+	deleted. 
+	</p> 
+        <p>
+        If failover is left unspecified, and if local-disk failover is configured,
+	 and if the data is being migrated to shared storage, the local disk replicas will be
+	 removed, and shared-disk failover will be configured. If shared-disk failover is
+	configured and if the data is being migrated from shared storage to local storage, local-
+	disk failover will replace shared-disk failover. In all other scenarios, the
+	failover policy will be left unchanged when not specified.
+	</p>
+        </dd>
+          <dt>
+             <pre>replicas=N</pre>
+          </dt>
+        <dd>
+	Specifies the number of replicas/failover hosts to maintain if failover.
+        </dd>
+</dl>	
+</blockquote>	
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-migrate(xdmp:database("Documents"),"2012-April",xdmp:host(),"/space/ts/")
+ 
+(: Migrates all forests in the "2012-April" partition to the "/space/ts/" data directory 
+   on the local host. :)
+  ]]></pre>
+  </apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Migrates all forests in the "2017-October" partition to the "/space/ts/" data directory 
+// on the local host.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionMigrate(xdmp.database('Documents'), '2017-October', xdmp.host(), '/space/ts/');
+   ]]></pre>
+   </apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="partition-resize" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>
+        This function either creates or combines forests in a partition. 
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2348391'>Resizing Partitions</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in which the partition will reside.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="forests-per-host" type="xs:unsignedInt">
+        Number of forests per host in the partition to be created.
+      </apidoc:param>
+      <apidoc:param name="host-ids" type="xs:unsignedLong*">
+        Ids of hosts on which the forests in the partition are to be created on.
+      </apidoc:param>
+      <apidoc:param name="data-directory" type="xs:string?" optional="true">
+        The optional data directory of the forest. If no directory
+        is specified, then it will be a private forest.
+      </apidoc:param>
+      <apidoc:param name="large-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory where large objects are stored. If no directory
+        is specified, then large objects will be stored in
+        DATA_DIR/Forests/FOREST_NAME/Large.
+      </apidoc:param>
+      <apidoc:param name="fast-data-directory" type="xs:string?" 
+        optional="true">
+        The optional directory for the fast data directory for this forest.
+        The fast data directory is typically located on a fast storage device,
+        such as an SSD.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+        <blockquote>
+        <dl>
+        <dt>
+          <pre>timeout=N</pre>
+        </dt>
+        <dd>
+        Specifies the number of seconds to wait for a forest to re-open after a
+        configuration is made during the migration operation.
+        </dd>
+        <dt>
+          <pre>local-to-local</pre>
+        </dt>
+        <dd>
+        Indicates that the partition is to be moved between local storage to local storage.
+        This is the default when no other direction parameter is specified and 
+        the type of storage cannot be derived from either the data directory 
+        path.
+        </dd>
+        <dt>
+          <pre>local-to-shared</pre>
+        </dt>
+        <dd>
+        Indicates that the partition is to be moved between local storage and shared 
+        storage.  This option supports changing the host.
+        </dd>
+        <dt>
+          <pre>shared-to-local</pre>
+        </dt>
+        <dd>         
+        Indicates that the partition is to be moved from shared storage to 
+        local storage.  This option supports changing the host.
+        </dd>
+        <dt>
+          <pre>shared-to-shared</pre>
+        </dt>
+        <dd>
+        Indicates that the partition is to be moved from shared storage to 
+        shared storage.  This type option supports changing the host.
+        </dd>
+        <dt>
+          <pre>failover=[none, local, shared]</pre>
+        </dt>
+        <dd>
+        If failover is <code>local</code> and multiple hosts are specified,
+        any existing replica forests will be migrated/combined and new replica forests will be 
+	created if no replica forests exist.
+        <p>
+        Shared disk failover will be set up if 
+	failover is <code>shared</code> and multiple hosts are specified.
+	The failover hosts will be chosen to cover as many different zones as possible.
+         </p><p>
+        If failover is <code>none</code>, any existing replica forests will be deleted.
+         </p><p>
+        If failover is left unspecified, and if local-disk failover is configured,
+	 and the data is being migrated/combined to shared storage, the local disk replicas will be
+	 removed, and shared-disk failover will be configured. If shared-disk failover is
+	configured, and the data is being migrated/combined from shared storage to local 
+	storage, local-disk failover is going to replace to shared-disk failover. 
+	In all other scenarios, the
+	failover policy will be left unchanged when not specified.
+        </p> 
+        </dd>
+        <dt>
+          <pre>replicas=N</pre>
+        </dt>
+        <dd>
+        Specifies the number of replicas/failover hosts to maintain if failover.
+        </dd>
+        </dl>	
+        </blockquote>	
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:usage>
+	If the partition resides in a database configured for database replication,
+        you cannot combine partitions in which forest overrides exist. An attempt to do so
+        will result in a <code>TS-FORESTHASOVERRIDE</code> exception.     
+    </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-resize(xdmp:database("Documents"),"2012-July",15,xdmp:host(),"/home/2012-July")
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionResize(xdmp.database('Documents'), '2017-October', 15, xdmp.host(), '/home/2017-October');
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="partition-delete" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function deletes all forests in the 
+ specified partition.  For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2347166'>Deleting Partitions</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database in which the partition will reside.
+      </apidoc:param>
+      <apidoc:param name="partition-name" type="xs:string">
+        Name of the partition.
+      </apidoc:param>
+      <apidoc:param name="delete-data" type="xs:boolean">
+        Whether or not data will be deleted.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+	Whether or not data will be deleted. Valid option value: 
+        <blockquote>
+        <dl>
+        <dt>
+          <pre>timeout=N</pre>
+        </dt>
+        <dd>
+        Specifies the number of seconds to wait for a forest to re-open after a
+        configuration is made during the delete operation.
+        </dd>
+        </dl>	
+        </blockquote>
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-delete(xdmp:database("Documents"),"2012-April",xs:boolean("true"))
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionDelete(xdmp.database('Documents'), '2017-October', xs.boolean('true'));
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="database-create-super-database" lib="tieredstorage" category="TieredStorage"
+	   bucket="XQuery Library Modules">
+    <apidoc:summary>This function creates a database with the name 
+    <code>$database-name</code> and make the created database the super database 
+    of the database designated by <code>$database-id</code>. The newly created database 
+    inherits the configuration of the original database.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/superDB.xml%2326898'>Creating a Super-database</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database as sub-database of the one to be created.
+      </apidoc:param>
+      <apidoc:param name="database-name" type="xs:string">
+        Name of the new database.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-create-super-database(xdmp:database("Documents"),"superdb")
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.databaseCreateSuperDatabase(xdmp.database('Documents'), 'superdb');
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="database-create-sub-database" lib="tieredstorage" 
+	  category="TieredStorage" bucket="XQuery Library Modules">
+    <apidoc:summary>This function creates a database with the name 
+    <code>$database-name</code> and make the created database the sub database 
+    of the database designated by <code>$database-id</code>. The newly created database 
+    inherits the configuration of the original database.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/superDB.xml%2326898'>Creating a Super-database</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="dbid" type="xs:unsignedLong">
+        ID of the database as super-database of the one to be created.
+      </apidoc:param>
+      <apidoc:param name="database-name" type="xs:string">
+        Name of the new database.
+      </apidoc:param>
+      <apidoc:param name="kind" type="xs:string" optional="true">
+        <code>active</code> or <code>archive</code>, where <code>active</code> is the default. 
+        If <code>$kind</code> is <code>archive</code>, the newly created database will have the 
+	following configuration set automatically: <code>index detection none</code>,
+	 <code>expunge locks none</code>, <code>reindexer enable false</code>, 
+	 <code>rebalancer enable false</code>, <code>format compatibility 5.0</code>.
+     </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-create-sub-database(xdmp:database("Documents"),"subdb")
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.databaseCreateSubDatabase(xdmp.database('Documents'), 'subdb');
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="database-delete-super-database" lib="tieredstorage" 
+	  category="TieredStorage" bucket="XQuery Library Modules">
+    <apidoc:summary>This function disassociates the super database 
+    designated by <code>$delete-dbid</code> with the sub-database designated by <code>$database-id</code> 
+    and deletes the super database. An error is thrown if the database 
+    designated by <code>$delete-dbid</code> is not a super database of the one designated
+    by <code>$database-id</code> or contains other sub-databases than the one designated by <code>$database-id</code>.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database as sub-database of the one to be deleted
+      </apidoc:param>
+      <apidoc:param name="delete-dbid" type="xs:unsignedLong">
+        The ID of the database to be deleted.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-delete-super-database(xdmp:database("Documents"),xdmp:database())
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.databaseDeleteSuperDatabase(xdmp.database('Documents'), xdmp.database('superdb'));
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="database-delete-sub-database" lib="tieredstorage" 
+	  category="TieredStorage" bucket="XQuery Library Modules">
+    <apidoc:summary>This function disassociates the sub database 
+    designated by <code>$delete-dbid</code> with the super-database designated by <code>$database-id</code> 
+    and deletes the sub database. An error is thrown if the database 
+    designated by <code>$delete-dbid</code> is not a sub database of the one designated
+    by <code>$database-id</code> or contains other super-databases than the one designated by <code>$database-id</code>.
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2350544'>Tiered Storage</a> in the <em>Administrator's Guide</em>.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="database-id" type="xs:unsignedLong">
+        ID of the database as super-database of the one to be deleted
+      </apidoc:param>
+      <apidoc:param name="delete-dbid" type="xs:unsignedLong">
+        Name of the database to be deleted.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+          at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-delete-sub-database(xdmp:database("Documents"),xdmp:database())
+=>
+()
+  ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.databaseDeleteSubDatabase(xdmp.database('Documents'), xdmp.database('subdb'));
+   ]]></pre>
+</apidoc:example>
+  </apidoc:function>
+
+<apidoc:function name="query-partition-create" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+
+    This function creates forests on specified hosts and forms a partition with the specified 
+    partition number. All of the forests will share the partition name as their prefix and the 
+    same partition number. The query for the partition is set separately by the 
+    tieredstorage:partition-set-query function. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-id" type="xs:unsignedLong">
+       ID of the database in which the query partition will reside. 
+    </apidoc:param>
+    <apidoc:param name="partition-name" type="xs:string">
+       Name of the query partition. 
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt?">
+       The number of the query partition.
+    </apidoc:param>
+    <apidoc:param name="forests-per-host" type="xs:unsignedInt">
+       Number of forests per host in the partition to be created. 
+    </apidoc:param>
+    <apidoc:param name="host-ids" type="xs:unsignedLong*">
+       Ids of hosts on which to create the partition forests. 
+    </apidoc:param>
+    <apidoc:param name="data-directory" type="xs:string?" optional="true">
+       The optional data directory of the forests. If no directory is specified, then 
+       the forests will be private. 
+    </apidoc:param>
+    <apidoc:param name="large-data-directory" type="xs:string?" optional="true">
+       The optional directory where large objects are stored. If no directory is specified, then 
+       large objects will be stored in DATA_DIR/Forests/FOREST_NAME/Large. 
+    </apidoc:param>
+    <apidoc:param name="fast-data-directory" type="xs:string?" optional="true">
+       The optional directory for the fast data directory for the forests. The fast data directory 
+       is typically located on a fast storage device, such as an SSD. 
+    </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        Valid option values include: 
+       <blockquote>
+       <dl>
+       <dt>
+          <pre>failover =[none, local, shared]</pre>
+       </dt>
+       <dd>
+	If failover is <code>local</code> and multiple hosts are specified, new
+        replica(s) will be created.
+        <p>
+        Shared disk failover will be set up if failover is 
+	<code>shared</code> and multiple hosts are specified. The failover hosts 
+        will be chosen to cover as many different zones as possible. 
+        </p><p>
+	If failover is <code>none</code>, neither  will be set up.
+        </p><p>
+        If failover is left unspecified, it will be <code>local</code> unless data 
+        directories are on shared platforms such as HDFS and S3.
+        </p>
+       </dd>
+       <dt>
+          <pre>replicas=N</pre>
+       </dt>
+       <dd>
+	  Specifies the number of replicas/failover forests to configure for local-disk or
+	  shared-disk failover.
+       </dd></dl>
+       </blockquote>    
+      </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:query-partition-create(
+   xdmp:database("Documents"),
+   "Default",
+   1,
+   2,
+   xdmp:host("host-1.marklogic.com")
+)
+
+(: Creates a Query Partition, named "Default," identified as partition number 
+   "1" and consisting of two forests for the "Documents" database. :)
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Creates a Query Partition, named "Default," identified as partition number 
+// "1" and consisting of two forests for the "Documents" database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.queryPartitionCreate(
+   xdmp.database('Documents'),
+   'Default',
+   1,
+   2,
+   xdmp.host('host-1.marklogic.com')
+);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="database-partition-numbers" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function returns the partition numbers of the forests in the database
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-id" type="xs:unsignedLong">
+       ID of the database in which the partitions reside. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:unsignedLong*</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:database-partition-numbers(xdmp:database("Documents"))
+ 
+(: Returns the partition numbers in the "Documents" database. :)
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+//Returns the partition numbers in the "Documents" database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.databasePartitionNumbers(xdmp.database('Documents'));
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="partition-number-forests" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+     This function returns the IDs of the forests with the specified 
+     partition-number in the named database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-id" type="xs:unsignedLong">
+       ID of the database in which the partition resides. 
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedLong">
+       The partition number from which to return the forest IDs.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:unsignedLong*</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+ 
+ts:partition-number-forests(xdmp:database("Documents"), 1)
+
+(: Returns the IDs of the forests in the number 1 partition in the
+   "Documents" database. :)
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Returns the IDs of the forests in the number 1 partition in the
+// 'Documents' database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionNumberForests(xdmp.database('Documents'), 1);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="partition-set-query" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function sets the query for a partition specified by the partition number.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+       ID of the Schema database used by the database in which the partition resides. 
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt">
+       The partition number for which to set the query.
+    </apidoc:param>
+    <apidoc:param name="query" type="cts:query">
+       The query to set on the partition.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-set-query(
+  xdmp:database("Schemas"), 
+  1,
+  cts:element-range-query(
+     QName("","create-date"),">",
+     xs:dateTime("2014-01-01T00:00:00")))
+
+(: Sets the query for parition 1 in the Schemas database. :) 
+    
+    ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-set-query(
+   xdmp:schema-database(xdmp:database("Schemas")),
+  1,
+  cts:element-range-query(
+            xs:QName("LastModified"), 
+            ">=",
+            xs:yearMonthDuration("P1Y")))
+
+(: Sets the query for parition 1 in the Schemas database so that
+   the documents with a LastModified date within last year will 
+   go to partition 1. Other documents will go to partition 2. :) 
+    ]]></pre>
+  </apidoc:example>  
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Sets the query for partition 1 in the Schemas database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionSetQuery(
+  xdmp.database('Schemas'), 
+  1,
+  cts.elementRangeQuery(
+     xs.QName('create-date'), '>',
+     xs.dateTime('2014-01-01T00:00:00')));
+   ]]></pre>
+</apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Sets the query for partition 1 in the Schemas database so that
+// the documents with a LastModified date within last year will 
+// go to partition 1. Other documents will go to partition 2.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionSetQuery(
+   xdmp.schemaDatabase(xdmp.database('Schemas')),
+  1,
+  cts.elementRangeQuery(
+            xs.QName('LastModified'), 
+            '>=',
+            xs.yearMonthDuration('P1Y')));
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="partition-get-query" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function returns the query of a partition specified by the partition number.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+       ID of the Schema database used by the database in which the partition resides. 
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt">
+       The partition number from which to return the query.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:query?</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-get-query(xdmp:database("Schemas"), 1)
+
+(: Returns the query set for partition 1 in the "Schemas database. :) 
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Returns the query set for partition 1 in the "Schemas database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionGetQuery(xdmp.database('Schemas'), 1);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="partition-delete-query" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function deletes the query from the specified partition. 
+      It will not throw any error if query is not found. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+        ID of the Schema database used by the database in which the partition resides. 
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt">
+       The partition number from which to delete the query.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-delete-query(xdmp:database("Schemas"), 1)
+ 
+(: Deletes the query set for partition 1 in the "Schemas database. :) 
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionDeleteQuery(xdmp.database('Schemas'), 1);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="partition-queries" lib="tieredstorage" category="TieredStorage" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function returns all the queries in this schema database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+       ID of the Schema database used by the database in which the partitions reside. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>map:map</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+ 
+ts:partition-queries(xdmp:database("Schemas"))
+
+(: Returns all of the queries set for the Query Partitions in 
+   the "Schemas database. :) 
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Returns all of the queries set for the Query Partitions in 
+// the "Schemas database. 
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionQueries(xdmp.database('Schemas'));
+database('Schemas'))
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="partition-set-exclusion-enabled" lib="tieredstorage" category="TieredStorage" 
+bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      By default, when a search query is given to MarkLogic, all query partitions are searched, 
+      regardless of the query assignment policy set on the partition. This function enables
+      you to avoid this overhead, so that the query partition will not be searched if the 
+      search query does not match the query assignment policy set for that partition. 
+      <p>
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2367973'>Isolating a Query Partition</a> in the <em>Administrator's Guide</em>
+      </p>
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+       The schema database used by the content database holding the query partition.
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt">
+       The number of the query partition.
+    </apidoc:param>
+    <apidoc:param name="safe-to-exclude" type="xs:boolean">
+       Set to <code>fn:true()</code> to enable exclusion or <code>fn:false()</code> 
+       (the default) to disable.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+   <apidoc:usage>
+   The query partition must have a query set (for example, by 
+   <a href="#tieredstorage:partition-set-query"><code>tieredstorage:partition-set-query</code></a>)
+   before enabling partition-set-safe-to-exclude. If no query is configured for the partition, 
+   TS-NOPARTITIONQUERY is thrown.
+   </apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace tieredstorage = "http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-set-exclusion-enabled(
+   xdmp:database("Schemas"),
+   3,
+   fn:true()
+)
+
+(: Enables safe-to-exclude on Query Partition 3 in the Schemas database. :)
+ 
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Enables safe-to-exclude on Query Partition 3 in the Schemas database. 
+
+const ts = require('/MarkLogic/tieredstorage');
+
+declareUpdate();
+ts.partitionSetExclusionEnabled(
+   xdmp.database('Schemas'),
+   3,
+   true
+);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+<apidoc:function name="partition-get-exclusion-enabled" lib="tieredstorage" category="TieredStorage" 
+bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+      This function returns the safe-to-exclude setting for the database.
+      <p>
+ For details, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/admin/tiered-storage.xml%2367973'>Isolating a Query Partition</a> in the <em>Administrator's Guide</em>
+      </p> 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="schema-database-id" type="xs:unsignedLong">
+       The schema database used by the content database holding the query partition.
+    </apidoc:param>
+    <apidoc:param name="partition-number" type="xs:unsignedInt">
+       The number of the query partition.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:boolean</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace ts="http://marklogic.com/xdmp/tieredstorage" 
+      at "/MarkLogic/tieredstorage.xqy";
+
+ts:partition-get-exclusion-enabled(xdmp:database("Schemas"), 3)
+
+(: Returns the safe-to-exclude setting for Query Partition 3 in the
+   Schemas database. :)
+    ]]></pre>
+  </apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Returns the safe-to-exclude setting for Query Partition 3 in the
+// Schemas database.
+
+const ts = require('/MarkLogic/tieredstorage');
+
+ts.partitionGetExclusionEnabled(xdmp.database('Schemas'), 3);
+   ]]></pre>
+</apidoc:example>
+</apidoc:function>
+
+
+
+</apidoc:module>
+

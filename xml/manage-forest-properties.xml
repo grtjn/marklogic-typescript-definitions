@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/forest/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/forest/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="data-directory">
+    <xs:annotation>
+      <xs:documentation>
+        An optional public directory for forests.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="fast-data-max-size">
+    <xs:annotation>
+      <xs:documentation>
+        Maximum allowable size (in megabytes) for data to be kept
+	by this forest in the fast data directory, or 0 for no limit.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="forest-name">
+    <xs:annotation>
+      <xs:documentation>
+        The forest name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+      <xs:pattern value="([^\\*?/:&lt;&gt;|&quot; \.'])|([^\\*?/:&lt;&gt;|&quot; \.'][^\\*?/:&lt;&gt;|&quot;]*[^\\*?/:&lt;&gt;|&quot; \.'])"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="host-name">
+    <xs:annotation>
+      <xs:documentation>
+        A host unique ID (64-bit value).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:simpleType name="boolean">
+    <xs:annotation>
+      <xs:documentation>
+        true or false
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="updates-allowed">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="all"/>
+      <xs:enumeration value="delete-only"/>
+      <xs:enumeration value="read-only"/>
+      <xs:enumeration value="flash-backup"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="partition-number">
+    <xs:annotation>
+      <xs:documentation>
+        A partition number for query assignment policy
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+	<xs:restriction base="xs:unsignedInt"/>
+      </xs:simpleType>
+      <xs:simpleType>
+	<xs:restriction base="xs:string">
+	  <xs:maxLength value="0" fixed="false"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="day">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="monday"/>
+      <xs:enumeration value="tuesday"/>
+      <xs:enumeration value="wednesday"/>
+      <xs:enumeration value="thursday"/>
+      <xs:enumeration value="friday"/>
+      <xs:enumeration value="saturday"/>
+      <xs:enumeration value="sunday"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backup-month-day">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="31" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backup-type">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="once"/>
+      <xs:enumeration value="monthly"/>
+      <xs:enumeration value="weekly"/>
+      <xs:enumeration value="daily"/>
+      <xs:enumeration value="hourly"/>
+      <xs:enumeration value="minutely"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backup-period">
+    <xs:restriction base="xs:positiveInteger"/>
+  </xs:simpleType>
+  <xs:simpleType name="directory-pathname">
+    <xs:annotation>
+      <xs:documentation>
+        It can be absolute or relative.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backup-timestamp">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:simpleType name="start-time">
+    <xs:annotation>
+      <xs:documentation>
+	The starting time (in 24:00 notation).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:time"/>
+  </xs:simpleType>
+  <xs:simpleType name="start-date">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="backup-id">
+    <xs:annotation>
+      <xs:documentation>
+        A backup ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="backup-enabled">
+    <xs:annotation>
+      <xs:documentation>
+        Whether a backup is enabled.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:complexType name="forest-replica">
+    <xs:annotation>
+      <xs:documentation>
+        Forest replica properties
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all>
+      <xs:element ref="host"/>
+      <xs:element ref="replica-name"/>
+      <xs:element ref="data-directory" minOccurs="0"/>
+      <xs:element ref="large-data-directory" minOccurs="0"/>
+      <xs:element ref="fast-data-directory" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:simpleType name="replica-name">
+    <xs:annotation>
+      <xs:documentation>
+        The name of a replica forest
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:element name="replica-name" type="replica-name">
+    <xs:annotation>
+      <xs:documentation>
+        The name of a replica forest
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="database-name">
+    <xs:annotation>
+      <xs:documentation>
+  The database ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:simpleType name="cluster-name">
+    <xs:annotation>
+      <xs:documentation>
+        A cluster ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN"/>
+  </xs:simpleType>
+  <xs:simpleType name="range-boundary">
+    <xs:annotation>
+      <xs:documentation>
+        The type for the boundaries used by the range assignment policy
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:simpleType name="availability">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="online"/>
+      <xs:enumeration value="offline"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="failover-hosts" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of failover hosts for shared-disk failover.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="failover-host" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="backup-days" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A selection of days.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="7">
+      <xs:element ref="backup-day" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="forest-backup" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A scheduled forest backup.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="backup-id" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="backup-enabled" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="backup-directory" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="backup-type" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="backup-period" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-month-day" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-days" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-start-date" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-start-time" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-timestamp" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="forest-backups" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The scheduled backups for this forest.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="forest-backup" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="forest-replicas" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of replica forests, used for local-disk failover.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="forest-replica" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="foreign-replica" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign replica of this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="foreign-cluster-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="foreign-database-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="foreign-forest-name" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="foreign-replicas" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign replicas of this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="foreign-replica" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="foreign-master" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign master for this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="foreign-cluster-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="foreign-database-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="foreign-forest-name" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="database-replication" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        Database replication configuration.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="1">
+      <xs:element ref="foreign-replicas" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="foreign-master" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="range" abstract="false" mixed="false">
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="lower-bound" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="upper-bound" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="forest-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A forest assignment specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="database" minOccurs="0"/>
+      <xs:element ref="forest-name" minOccurs="0"/>
+      <xs:element ref="enabled" minOccurs="0"/>
+      <xs:element ref="host" minOccurs="0"/>
+      <xs:element ref="data-directory" minOccurs="0"/>
+      <xs:element ref="large-data-directory" minOccurs="0"/>
+      <xs:element ref="fast-data-directory" minOccurs="0"/>
+      <xs:element ref="fast-data-max-size" minOccurs="0"/>
+      <xs:element ref="updates-allowed" minOccurs="0"/>
+      <xs:element ref="availability" minOccurs="0"/>
+      <xs:element ref="rebalancer-enable" minOccurs="0"/>
+      <xs:element ref="range" minOccurs="0"/>
+      <xs:element ref="partition-number" minOccurs="0"/>
+      <xs:element ref="failover-enable" minOccurs="0"/>
+      <xs:element ref="failover-hosts" minOccurs="0"/>
+      <xs:element ref="forest-backups" minOccurs="0"/>
+      <xs:element ref="forest-replicas" minOccurs="0"/>
+      <xs:element ref="database-replication" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="database" type="database-name">
+    <xs:annotation>
+      <xs:documentation>
+        The name of the database to which this forest is attached.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="data-directory" type="data-directory" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The optional public directory for forests.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="large-data-directory" type="data-directory" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The optional directory for large objects in a forest.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="fast-data-directory" type="data-directory" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The optional smaller but faster directory for forests.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="fast-data-max-size" type="fast-data-max-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Maximum allowable size (in megabytes) of the data to be kept
+	by this forest in the fast-data-directory, or 0 for no limit.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Forest enabled status.
+      </xs:documentation>
+      <xs:appinfo><manage:health equals="false()" state="maintenance" code="HEALTH-FOREST-DISABLED"/><manage:health equals="false()" state="offline" code="HEALTH-FOREST-OFFLINE"/></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-name" type="forest-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The forest name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="host" type="host-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The primary host to which the forest is assigned.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>false</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="failover-enable" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	Enable assignment to a failover host if the primary host is down.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="failover-host" type="host-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A failover host.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>false</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="failover-hosts" type="failover-hosts" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of failover hosts for shared-disk failover.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="updates-allowed" type="updates-allowed" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The kinds of updates that should be allowed for this forest.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>false</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rebalancer-enable" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable automatic rebalancing after configuration changes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="partition-number" type="partition-number" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A partition number for query assignment policy
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-days" type="backup-days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The days that this backup happens.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-day" type="day" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A day that this backup occurs.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-month-day" type="backup-month-day" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The day of the month that this backup happens.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-type" type="backup-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        What type of backup is this.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-period" type="backup-period" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        How often this backup should run (every n months, weeks, days, hours or minutes).
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-directory" type="directory-pathname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The backup directory pathname.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-start-time" type="start-time" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The starting time (in 24:00 notation).
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-start-date" type="start-date" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The starting date (in MM/DD/YYYY notation) for a one-time backup
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-timestamp" type="backup-timestamp" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The date and time this backup was created.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-backup" type="forest-backup" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A scheduled forest backup.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-backups" type="forest-backups" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Backups scheduled for this forest.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-id" type="backup-id" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The backup ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-enabled" type="backup-enabled" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not a backup is enabled
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-replica" type="forest-replica" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The unique key of a forest.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-replicas" type="forest-replicas" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A list of replica forests, used for local-disk failover.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-cluster-name" type="cluster-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A foreign cluster ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-database-name" type="database-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A foreign database ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-forest-name" type="forest-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A foreign forest ID.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-replica" type="foreign-replica" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign replica of this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-replicas" type="foreign-replicas" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign replicas of this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="foreign-master" type="foreign-master" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Foreign replica of this database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="database-replication" type="database-replication" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Database replication configuration.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="lower-bound" type="range-boundary" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The lower bound of the range on the forest.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="upper-bound" type="range-boundary" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The upper bound of the range on the forest.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="range" type="range" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Range configuration for the range assignment policy.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="availability" type="availability" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Availability of the forest data.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="forest-properties" type="forest-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The forest assignment specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation>
+      Assignments configuration file schema.
+    </xs:documentation>
+    <xs:appinfo/>
+  </xs:annotation>
+  <?xdmp-annotations?>
+</xs:schema>

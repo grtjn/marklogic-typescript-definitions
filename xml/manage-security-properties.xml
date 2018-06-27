@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/security/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/security/properties" xmlns:wl="http://marklogic.com/xdmp/wallet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="port-type">
+    <xs:annotation>
+      <xs:documentation>
+        An integer internet port number, min 1, max 65534.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="65534" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="host-type">
+    <xs:annotation>
+      <xs:documentation>
+        The host name of the external Key Management Server
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:simpleType name="path-type">
+    <xs:annotation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:simpleType name="encryption-enum-type">
+    <xs:annotation>
+      <xs:documentation>
+        Encryption setting
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="on"/>
+      <xs:enumeration value="off"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="encryption-setting-type">
+    <xs:annotation>
+      <xs:documentation>
+        Encryption setting
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="force"/>
+      <xs:enumeration value="default-on"/>
+      <xs:enumeration value="default-off"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="keystore-id-type">
+    <xs:annotation>
+      <xs:documentation>A keystore ID</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="uuid-type">
+    <xs:annotation>
+      <xs:documentation>
+        RFC4122: UUID string representation
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:pattern value="([a-fA-F0-9-]+)?"/>
+      <xs:whiteSpace value="collapse" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="key-size-type">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number minimum 256, maximum 1024
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong">
+      <xs:minInclusive value="256" fixed="false"/>
+      <xs:maxInclusive value="1024" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="slot-id-type">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="kms-id-type">
+    <xs:annotation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+  <xs:simpleType name="kms-enum-type">
+    <xs:annotation>
+      <xs:documentation>
+        Specifies the type of KMS being used. Valid values are external or internal
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="internal"/>
+      <xs:enumeration value="internal-hsm"/>
+      <xs:enumeration value="internal-wallet"/>
+      <xs:enumeration value="external"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="backup-option-type">
+    <xs:annotation>
+      <xs:documentation>
+        Specifies the type of KMS being used. Valid values are include or exclude.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="exclude"/>
+      <xs:enumeration value="include"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="keystore-type" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The keystore specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all>
+      <xs:element ref="keystore-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="data-encryption" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="config-encryption" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="logs-encryption" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="kms-type" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="backup-option" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="host-name" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="port" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="data-encryption-key-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="config-encryption-key-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="logs-encryption-key-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="kmip-certificate-path" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="kmip-key-path" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="kmip-CA-path" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="key-size" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="slot-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="p11-driver-path" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="p11-wallet-path" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="kms-init-id" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="logs-encryption-auxiliary-id" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+    <xs:attribute name="timestamp" type="xs:unsignedLong" use="optional"/>
+  </xs:complexType>
+  <xs:element name="keystore" type="keystore-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The Key Management Server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="security-properties">
+    <xs:annotation>
+      <xs:documentation>
+        Manage security properties.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="1">
+      <xs:element ref="keystore"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="security-properties" type="security-properties">
+    <xs:annotation>
+      <xs:documentation>
+        Manage security properties.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="port" type="port-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The external Key Management Server's socket port number
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="host-name" type="host-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The host name of the external Key Management Server
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="kmip-certificate-path" type="path-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A path to the Cluster's certificate PEM for securing SSL/TLS communications with the KMS.
+        Each host must have it's copy at the same path.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="kmip-key-path" type="path-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A path to the Cluster's private key PEM for securing SSL/TLS communications with the KMS. 
+        Each host must have it's copy at the same path.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="kmip-CA-path" type="path-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A path to the certificate authority (CA) PEM for securing SSL/TLS communications with the KMS.
+        Each host must have it's copy at the same path.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="data-encryption" type="encryption-setting-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable encryption for user data.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="config-encryption" type="encryption-enum-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable encryption for configuration files.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="logs-encryption" type="encryption-enum-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable encryption for new log files.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="keystore-id" type="keystore-id-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        An identifying the keystore
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="data-encryption-key-id" type="uuid-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A UUID identifying the encryption key at the KMS that should be use to encrypt user data
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="logs-encryption-key-id" type="uuid-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A UUID identifying the encryption key at the KMS that should be use to encrypt log files
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="config-encryption-key-id" type="uuid-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A UUID identifying the encryption key at the KMS that should be use to encrypt configuration files
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="key-size" type="key-size-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum size of the encryption keys generated by MarkLogic
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="slot-id" type="slot-id-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The PKCS#11 token slot id to be used, default 0
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="p11-driver-path" type="path-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Path to a shared library that provides support for PKCS#11 devices
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="p11-wallet-path" type="path-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Path to a directory where the PKCS#11 wallet is located
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="kms-init-id" type="kms-id-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation/>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="logs-encryption-auxiliary-id" type="kms-id-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation/>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="kms-type" type="kms-enum-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Type of KMS.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="backup-option" type="backup-option-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The internal KMS is included in backups automatically. Set this field to exclude 
+        to prevent inclusion of the internal KMS in backups.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation>
+      keystore configuration file schema.
+    </xs:documentation>
+    <xs:appinfo/>
+  </xs:annotation>
+  <?xdmp-annotations?>
+</xs:schema>

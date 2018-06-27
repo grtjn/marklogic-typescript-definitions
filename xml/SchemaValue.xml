@@ -1,0 +1,697 @@
+<apidoc:module name="SchemaBuiltins" category="SchemaBuiltins" lib="sc" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+The schema component built-in functions.
+</apidoc:summary><apidoc:function name="type" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the type of item, as a schema component, if any.
+  If the item has no type, the empty sequence is returned.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is a document node, the result is the type of its root element.</li>
+	<li>If the item is an element node, the result is the type of its element declaration.</li>
+	<li>If the item is an attribute node, the result is the type of its attribute declaration.</li>
+	<li>If the item is a schema component, the result is the associated type schema component.</li>
+	<li>If the item is an atomic value, the result is the type of that atomic value.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose type is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-type()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:describe(sc:type(47))
+  =&gt; "#xs:integer"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(sc.type(47));
+  =&gt; "#xs:integer"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="simple-type" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the simple type of item, as a schema component, if any.
+  If the item has a complex type rather than a simple type, the empty
+  sequence is returned.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is a document node, the result is the simple type of its
+   root element.</li>
+	<li>If the item is an element node, the result is the simple type of
+   its element declaration.</li>
+	<li>If the item is an attribute node, the result is the simple type of its
+   attribute declaration.</li>
+	<li>If the item is a schema component, the result is the associated
+   simple type schema component.</li>
+	<li>If the item is an atomic value, the result is the simple type of that
+   atomic value.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose simple type is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>simple-type()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:describe(sc:simple-type(47))
+  =&gt; "#xs:integer"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(sc.simpleType(47));
+  =&gt; "#xs:integer"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="complex-type" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the complex type of item, as a schema component, if any.
+  If the item has a simple type rather than a complex type, the empty
+  sequence is returned.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is a document node, the result is the complex type of its
+   root element.</li>
+	<li>If the item is an element node, the result is the complex type of its
+   element declaration.</li>
+	<li>If the item is a schema component, the result is the associated
+   complex type schema component.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose simple type is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>complex-type()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:describe(sc:complex-type(47))
+  =&gt; ()
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(sc.complexType(47));
+  =&gt; null
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="type-apply" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  Apply a type to an item to construct a typed instance of that type.
+  If the type is a simple type this amounts to casting.
+  If the type is a complex type this amounts to validating as that type.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="type" type="schema-type()">
+     The type to apply.
+  </apidoc:param>
+      <apidoc:param name="arg" type="item()">
+     The item to apply the type to.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc:type-apply( sc:type-named(xs:QName('xs:integer')), "47" )
+  =&gt; 47
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc.typeApply( sc.typeNamed(xs.QName('xs:integer')), "47" );
+  =&gt; 47
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="element-decl" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the element declaration of item, as a schema component, if any.
+  If the item has no element declaration, the empty sequence is returned.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is a document node, the result is the element declaration
+   of its root element.</li>
+	<li>If the item is an element node, the result is of its element
+   declaration.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose element declaration is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element-decl()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace th="http://marklogic.com/xdmp/thesaurus";
+&lt;decl&gt;{
+&lt;th:thesaurus&gt;
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;
+  &lt;/th:entry&gt;
+&lt;/th:thesaurus&gt;//th:entry/sc:element-decl()
+}&lt;/decl&gt;
+  =&gt;
+&lt;decl&gt;
+   &lt;xs:element name="entry" type="th:entry" 
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+    &lt;xs:unique name="th:syn-term"&gt;
+      &lt;xs:selector&gt;synonym&lt;/xs:selector&gt;
+      &lt;xs:field xpath="term"/&gt;
+    &lt;/xs:unique&gt;
+  &lt;/xs:element&gt;&lt;/decl&gt;
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var th = 
+  fn.head(xdmp.unquote('&lt;th:thesaurus xmlns:th="http://marklogic.com/xdmp/thesaurus"&gt;'
++'  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;'
++'     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;'
++'  &lt;/th:entry&gt;'
++'&lt;/th:thesaurus&gt;')).root;
+sc.elementDecl(th.xpath("//th:entry", 
+                        {th: "http://marklogic.com/xdmp/thesaurus"} ));
+=&gt;
+{http://marklogic.com/xdmp/thesaurus}entry
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="attribute-decl" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the attribute declaration of item, as a schema component, if any.
+  If the item has no attribute declaration, the empty sequence is returned.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is an attribute node, the result is of its attribute
+   declaration.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose attribute declaration is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>attribute-decl()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace xh="http://www.w3.org/1999/xhtml";
+
+&lt;decl&gt;{sc:attribute-decl(
+  &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;head&gt;&lt;title&gt;Example&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;p class="example"&gt;Example&lt;/p&gt;&lt;/body&gt;
+  &lt;/html&gt;//xh:p/@class)}&lt;/decl&gt;;
+
+  =&gt;
+&lt;decl&gt;
+  &lt;xs:attribute name="class" type="xs:NMTOKENS" 
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"/&gt;
+&lt;/decl&gt;
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var th = fn.head(xdmp.unquote('&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;'
++'    &lt;head&gt;&lt;title&gt;Example&lt;/title&gt;&lt;/head&gt;'
++'    &lt;body&gt;&lt;p class="example"&gt;Example&lt;/p&gt;&lt;/body&gt;'
++'  &lt;/html&gt;')).root;
+sc.attributeDecl(th.xpath("//xh:p/@class", {xh: "http://www.w3.org/1999/xhtml"} ));
+=&gt;
+@class
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="annotations" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the schema annotations of the component, if any.
+  The context item is used if no argument is given.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">Annotations will only be returned for schemas that have preservation
+  of them enabled with the "xdmp-annotations" processing instruction.
+  The annotations returned will only include the appinfo children of the
+  annotations unless the schema has the "all" parameter set in the
+  "xdmp-annotations" processing instruction.
+  </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The item whose annotations are to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+&lt;?xdmp-annotations?&gt; &lt;!-- Preserve annotations --&gt;
+&lt;?xdmp-annotations all?&gt; &lt;!-- Preserve documentation annotations --&gt;
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: Get the annotations on the element declaration for the first child of 
+   the root of the document "example.xml". Look in those annotations for the
+   app:hidden element and get its value. The element declaration might
+   have a declaration that includes:
+   &lt;xs:annotation&gt;
+     &lt;xs:appinfo&gt;
+        &lt;app:hidden xmlns="http://example.com/appinfo"&gt;false&lt;/app:hidden&gt;
+        &lt;app:default xmlns="http://example.com/appinfo"&gt;47&lt;/app:default&gt;
+     &lt;/xs:appinfo&gt;
+   &lt;/xs:annotation&gt;
+:)
+declare namespace ex="http://example.com/dummy";
+declare namespace app="http://example.com/appinfo";
+
+fn:data(doc("example.xml")/ex:root/element()[1]
+  /sc:element-decl()!sc:annotations()//app:hidden)
+  =&gt;
+false()
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Get the annotations on the element declaration for the first child of 
+// the root of the document "example.xml". Look in those annotations for the
+// app:hidden element and get its value. The element declaration might
+// have a declaration that includes:
+//   &lt;xs:annotation&gt;
+//     &lt;xs:appinfo&gt;
+//        &lt;app:hidden xmlns="http://example.com/appinfo"&gt;false&lt;/app:hidden&gt;
+//        &lt;app:default xmlns="http://example.com/appinfo"&gt;47&lt;/app:default&gt;
+//     &lt;/xs:appinfo&gt;
+//   &lt;/xs:annotation&gt;
+//
+
+var ns = {"ex":"http://example.com/dummy", "app":"http://example.com/appinfo"};
+var e = fn.head(cts.doc("example.xml").xpath("/ex:root/element()[1]", ns));
+var ann = fn.head(sc.annotations(e.elementDecl));
+fn.head(ann.xpath(".//app:hidden", ns)).data;
+  =&gt;
+false()
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="name" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the name of the schema component, if any.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The item whose name is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:QName?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace th="http://marklogic.com/xdmp/thesaurus";
+xdmp:describe(
+&lt;th:thesaurus&gt;
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;
+  &lt;/th:entry&gt;
+&lt;/th:thesaurus&gt;/th:entry/element()[2]/sc:type()!sc:name())
+  =&gt;
+xs:QName("th:synonym")
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(fn.head(xdmp.unquote(
+  '&lt;th:thesaurus xmlns:th="http://marklogic.com/xdmp/thesaurus"&gt;\n\
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;\n\
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;\n\
+  &lt;/th:entry&gt;\n\
+&lt;/th:thesaurus&gt;')).root.xpath(
+  "/th:thesaurus/th:entry/element()[2]/sc:type()!sc:name()",
+ {th:"http://marklogic.com/xdmp/thesaurus"}));
+
+  =&gt;
+fn.QName("http://marklogic.com/xdmp/thesaurus","synonym")
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="particles" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the particles of the schema component, if any.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The item whose particles are to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-particle()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace th="http://marklogic.com/xdmp/thesaurus";
+xdmp:describe(
+&lt;th:thesaurus&gt;
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;
+  &lt;/th:entry&gt;
+&lt;/th:thesaurus&gt;/th:entry/element()[2]/sc:type()!sc:particles())
+  =&gt;
+"(th:term&amp;th:qualifiers?&amp;th:scope-notes?&amp;th:part-of-speech?)"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+
+xdmp.describe(fn.head(xdmp.unquote(
+  '&lt;th:thesaurus xmlns:th="http://marklogic.com/xdmp/thesaurus"&gt;\n\
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;\n\
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;\n\
+  &lt;/th:entry&gt;\n\
+&lt;/th:thesaurus&gt;')).root.xpath(
+   "/th:thesaurus/th:entry/element()[2]/sc:type()!sc:particles()",
+  {th:"http://marklogic.com/xdmp/thesaurus"}));
+=&gt;
+({http://marklogic.com/xdmp/thesaurus}term
+&amp;{http://marklogic.com/xdmp/thesaurus}qualifiers?
+&amp;{http://marklogic.com/xdmp/thesaurus}scope-notes?
+&amp;{http://marklogic.com/xdmp/thesaurus}part-of-speech?)
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="attributes" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the attribute declarations of the schema component, if any.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The item whose attribute declarations are to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>attribute-decl()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace xh="http://www.w3.org/1999/xhtml";
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;&lt;title&gt;Example&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;&lt;p&gt;&lt;a id="a1"&gt;Example&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;
+&lt;/html&gt;/sc:element-decl()!sc:attributes()
+  =&gt;
+@version
+@xml:lang
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(fn.head(xdmp.unquote(
+  '&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;\n\
+&lt;head&gt;&lt;title&gt;Example&lt;/title&gt;&lt;/head&gt;\n\
+&lt;body&gt;&lt;p&gt;&lt;a id="a1"&gt;Example&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;\n\
+&lt;/html&gt;')).root.xpath(
+  "/sc:element-decl()!sc:attributes()"));
+=&gt; Sequence("@version", "@xml:lang")
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="function-return-type" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the return type of a function item as a schema component.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="function(*)" optional="true">
+     The function item whose return type is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-type()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:describe(
+  function-lookup(xs:QName("fn:normalize-unicode"),1) !
+    sc:function-return-type(.)
+)
+  =&gt;
+#xs:string
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.describe(
+   sc.functionReturnType(
+     fn.functionLookup(xs.QName("fn:normalize-unicode"),1) )
+);
+  =&gt;
+#xs:string
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="function-parameter-type" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the declared parameter type of a specific parameter of the
+  function item as a schema component.
+  </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="function(*)" optional="true">
+     The function item whose return type is to be returned. 
+     The default function item is used if no parameter is provided.
+  </apidoc:param>
+      <apidoc:param name="param" type="xs:integer?" optional="true">
+     The number of the parameter, 1 for the first, 2 for the second, and
+     so on. If the param is out of range, the empty sequence is returned.
+     The default is 1.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-type()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  let $f := function-lookup(xs:QName("sc:function-parameter-type"),2)
+  return (
+    for $a in 1 to function-arity($f)
+    return (concat("arg",$a,"=",sc:function-parameter-type($f,$a)))
+  )
+  =&gt;
+arg1=#xdmp:function
+arg2=#xs:anyAtomicType
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var f = fn.functionLookup(xs.QName("sc:function-parameter-type"),2);
+var b = [0, 1, 2, 3];
+var res = [];
+for (var a in b)
+   { res.push(fn.concat("arg",a,"=",sc.functionParameterType(f,a))); };
+res;
+
+  =&gt;
+["arg0=","arg1=#xdmp:function","arg2=#xs:integer","arg3="]
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="type-named" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the type with the given name, if any, as a schema component. If there is no such type, an undefined type error is raised.
+  </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:QName">
+     The type name.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-type()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc:type-named('xs:integer')
+  =&gt;
+#xs:integer
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc.typeNamed('xs:integer');
+  =&gt;
+#xs:integer
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="facets" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the facets of the component, if any. Only simple types have
+  facets.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The item whose facets are to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-facet()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+for $f in sc:type-named(xs:QName('xs:NCName'))!sc:facets()
+return data($f)
+  =&gt;
+"collapse"
+"[\i-[:]][\c-[:]]*"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc.facets(sc.typeNamed(xs.QName('xs:NCName')));
+  =&gt;
+whiteSpace=collapse
+pattern=([\i-[:]][\c-[:]]*)
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="schema" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the root schema of the item.
+  The context item is used if no argument is given.</p>
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is a document node, the result is the schema of its
+   root element.</li>
+	<li>If the item is an element node, the result is the schema of its
+   element declaration.</li>
+	<li>If the item is an attribute node, the result is the schema of its
+   attribute declaration.</li>
+	<li>If the item is a schema component, the result is the containing
+   schema.</li>
+	<li>If the item is an atomic value, the result is the schema containing the
+   type of that atomic value.</li>
+	<li>In other cases, the result is the empty sequence.</li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()" optional="true">
+     The item whose associated schema is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-root()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace th="http://marklogic.com/xdmp/thesaurus";
+xdmp:describe(
+&lt;th:thesaurus&gt;
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;
+  &lt;/th:entry&gt;
+&lt;/th:thesaurus&gt;//th:entry/sc:schema()!sc:component-property("schema-location")
+)
+  =&gt;
+"thesaurus.xsd"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(xdmp.unquote('&lt;th:thesaurus xmlns:th="http://marklogic.com/xdmp/thesaurus"&gt;\n\
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;\n\
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;\n\
+  &lt;/th:entry&gt;\n\
+&lt;/th:thesaurus&gt;')).root.xpath(
+  '//th:entry/sc:schema()!sc:component-property("schema-location")',
+  {th:"http://marklogic.com/xdmp/thesaurus"});
+  =&gt;
+"thesaurus.xsd"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="component-property" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the named property of the schema component.
+  The context item is used for the second argument if it is not given.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">Properties include:</p>
+  <dl xmlns="http://www.w3.org/1999/xhtml">
+  <dt>name</dt><dd>Same as sc:name</dd>
+  <dt>type</dt><dd>Same as sc:type</dd>
+  <dt>complex-type</dt><dd>Same as sc:complex-type</dd>
+  <dt>simple-type</dt><dd>Same as sc:simple-type</dd>
+  <dt>element-decl</dt><dd>Same as sc:element-decl</dd>
+  <dt>attribute-decl</dt><dd>Same as sc:attribute-decl</dd>
+  <dt>schema</dt><dd>Same as sc:schema</dd>
+  <dt>annotations</dt><dd>Same as sc:annotations</dd>
+  <dt>facets</dt><dd>Same as sc:facets</dd>
+  <dt>attributes</dt><dd>Same as sc:attributes</dd>
+  <dt>particles</dt><dd>Same as sc:particles</dd>
+  <dt>attribute-groups</dt><dd>The attribute groups of the schema</dd>
+  <dt>model-groups</dt><dd>The model groups of the schema</dd>
+  <dt>notations</dt><dd>The notations of the schema</dd>
+  <dt>types</dt><dd>The types of the schema</dd>
+  <dt>elements</dt><dd>The element declarations of the schema</dd>
+  <dt>attribute-wildcard</dt><dd>The attribute wildcard on the type or in
+    the attribute group</dd>
+  <dt>identity-constraints</dt><dd>The identity constraints on the element
+    declaration or schema</dd>
+  <dt>scope</dt><dd>The scope of the element or attribute declaration</dd>
+  <dt>fixed</dt><dd>The fixed value of the element or attribute declaration
+    or whether a facet is fixed</dd>
+  <dt>default</dt><dd>The default value of the element or attribute
+    declaration</dd>
+  <dt>substitution-group</dt><dd>The element declaration serving as the
+    substitution group head of the element declaration</dd>
+  <dt>nillable</dt><dd>Whether the element declaration is declared as
+    nillable</dd>
+  <dt>abstract</dt><dd>Whether the element declaration or type is declared as
+    abstract</dd>
+  <dt>block-extension</dt><dd>Whether the element declaration or complex type
+    is declared as blocking extensions</dd>
+  <dt>block-restriction</dt><dd>Whether the element declaration or complex type
+    is declared as blocking restrictions</dd>
+  <dt>block-substitution</dt><dd>Whether the element declaration is declared as
+    blocking substitutions</dd>
+  <dt>final-extension</dt><dd>Whether the element declaration or complex type is
+    declared as final for extensions</dd>
+  <dt>final-restriction</dt><dd>Whether the element declaration or complex type
+    is declared as final for restrictions</dd>
+  <dt>variety</dt><dd>The variety of the simple type (atomic, list, or
+    union)</dd>
+  <dt>base</dt><dd>The base type of the type</dd>
+  <dt>primitive</dt><dd>The primitive type of the simple type</dd>
+  <dt>item-type</dt><dd>The item type of the list simple type</dd>
+  <dt>member-types</dt><dd>The member types of the union simple type</dd>
+  <dt>ordered</dt><dd>The ordering of the simple type</dd>
+  <dt>numeric</dt><dd>Whether the simple type is numeric</dd>
+  <dt>finite</dt><dd>Whether the simple type is finite</dd>
+  <dt>bounded</dt><dd>Whether the simple type is bounded</dd>
+  <dt>final-list</dt><dd>Whether the simple type is declared as final
+    for lists</dd>
+  <dt>final-union</dt><dd>Whether the simple type is declared as final
+    for unions</dd>
+  <dt>final-restriction</dt><dd>Whether the simple type is declared as final
+    for restrictions</dd>
+  <dt>derivation-method</dt><dd>The derivation method of the complex type
+    (extension, restriction)</dd>
+  <dt>content-type</dt><dd>The kind of content type of the complex type
+    (empty, simple, element-only, mixed)</dd>
+  <dt>min-occurs</dt><dd>The declared minimum occurrences of the particle</dd>
+  <dt>max-occurs</dt><dd>The declared maximum occurrences of the particle</dd>
+  <dt>process-contents</dt><dd>What processing is declared for the wildcard
+    (strict, lax, skip)</dd>
+  <dt>namespaces</dt><dd>What namespaces the wildcard references</dd>
+  <dt>value</dt><dd>The value of the facet</dd>
+  <dt>category</dt><dd>The kind of identity constraint (key, unique, keyref)</dd>
+  <dt>referenced-key</dt><dd>The key referenced by the keyref</dd>
+  <dt>selector</dt><dd>The selector path in the identity constraint</dd>
+  <dt>fields</dt><dd>The field paths in the identity constraint</dd>
+  <dt>system</dt><dd>The notation's system identifier</dd>
+  <dt>public</dt><dd>The notation's public identifier</dd>
+  <dt>version</dt><dd>The schema's version</dd>
+  <dt>schema-location</dt><dd>The schema's location</dd>
+  </dl>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="propname" type="xs:string">
+     The name of the component property to return.
+  </apidoc:param>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The component whose associated schema is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declare namespace th="http://marklogic.com/xdmp/thesaurus";
+xdmp:describe(
+&lt;th:thesaurus&gt;
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;
+  &lt;/th:entry&gt;
+&lt;/th:thesaurus&gt;//th:entry/sc:schema()!sc:component-property("schema-location")
+)
+  =&gt;
+"thesaurus.xsd"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(xdmp.unquote('&lt;th:thesaurus xmlns:th="http://marklogic.com/xdmp/thesaurus"&gt;\n\
+  &lt;th:entry&gt;&lt;th:term&gt;dog&lt;/th:term&gt;\n\
+     &lt;th:synonym&gt;&lt;th:term&gt;canine&lt;/th:term&gt;&lt;/th:synonym&gt;\n\
+  &lt;/th:entry&gt;\n\
+&lt;/th:thesaurus&gt;')).root.xpath(
+  '//th:entry/sc:schema()!sc:component-property("schema-location")',
+  {th:"http://marklogic.com/xdmp/thesaurus"});
+=&gt;
+thesaurus.xsd
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="schema-from-path" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Get a schema object as a value based on its namespace and schema
+  location hint.
+  </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="namespace" type="xs:string">
+    The target namespace of the schema. 
+  </apidoc:param>
+      <apidoc:param name="location" type="xs:string" optional="true">
+    The location of the schema.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>schema-root()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc:schema-from-path("http://www.w3.org/1999/xhtml");
+  =&gt; 
+  [16, 1.1, http://www.w3.org/1999/xhtml at xhtml1.1.xsd global ok]
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc.schemaFromPath("http://www.w3.org/1999/xhtml");
+  =&gt; 
+  [16, 1.1, http://www.w3.org/1999/xhtml at xhtml1.1.xsd global ok]
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="canonical-path" type="builtin" lib="sc" category="SchemaBuiltins">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the canonical schema component path of the component.
+  See <a href="http://www.w3.org/TR/xmlschema-ref/">http://www.w3.org/TR/xmlschema-ref/</a>
+  for the definition of this path.
+  The context item is used if no argument is given.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="schema-component()" optional="true">
+     The schema component whose canonical path is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc:canonical-path(sc:type(47))
+  =&gt; "/type::p:integer"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sc.canonicalPath(sc.type(47));
+  =&gt; "/type::p:integer"
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

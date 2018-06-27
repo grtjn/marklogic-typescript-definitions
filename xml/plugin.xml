@@ -1,0 +1,557 @@
+<apidoc:module name="PluginModule" category="Plugin" lib="plugin" 
+	bucket="XQuery Library Modules" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+	xmlns="http://www.w3.org/1999/xhtml" class="xquery">
+
+<apidoc:summary category="Plugin" bucket="XQuery Library Modules">
+	<p>The Plugin API module contains functions that allow you to 
+		register plugins for use by MarkLogic Server. </p>	
+<p>The Plugin API is installed as the following file:</p>
+   <code><em>install_dir</em>/Modules/MarkLogic/plugin/plugin.xqy</code> 
+ 
+<p>where <code><em>install_dir</em></code> is the directory in which 
+   MarkLogic Server is installed.</p>
+<p> To use the <code>plugin.xqy</code> module in your own XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+<pre xml:space="preserve">
+  <code>
+   import module namespace plugin = "http://marklogic.com/extension/plugin"  
+      at "/MarkLogic/plugin/plugin.xqy";
+  </code></pre>
+<p>The library uses the <code>plugin:</code> namespace, which is 
+   <em>not</em> predefined in the server.</p>
+</apidoc:summary>
+ 
+<apidoc:function name="plugins" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+  This function returns unique IDs of the registered plugins 
+  that have the specified capabilities. If no matching plugins are registered, 
+  an empty sequence is returned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="capability" type="xs:string*">
+    A list of strings representing desired capabilities to match.  The plugin 
+    must match all of the listed capabilities.  Specify an empty sequence to 
+    return the IDs of all of the plugins.
+    </apidoc:param>
+    <apidoc:param name="scope" type="xs:string" optional="true">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+     </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+  plugin:plugins("http://marklogic.com/appservices/infostudio/collector/abort")
+
+  (: Lists all collector plugins with the 'abort' capability. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="enumerate" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+  This function enumerates functions implementing all capabilities supported 
+  by the given plugin. It returns a map, keyed on the capabilities.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+    The unique identifier of the plugin.
+    </apidoc:param>
+    <apidoc:param name="scope" type="xs:string" optional="true">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+     </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>map:map</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+  xquery version "1.0-ml"; 
+
+  import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+  plugin:enumerate("plugin:collector-filescan.xqy")
+
+  (: Returns the capabilities map for the filescan collector. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="capability" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+  This function returns a function pointer implementing a given capability from a 
+  particular plugin.  If the plugin doesn't exist an exception is thrown. If the 
+  plugin does exist but the capability isn't present, an empty sequence is returned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="capability" type="xs:string">
+    The desired capability to match.
+    </apidoc:param>
+    <apidoc:param name="uri" type="xs:string">
+    The unique identifier of the plugin.
+    </apidoc:param>
+    <apidoc:param name="scope" type="xs:string" optional="true">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+     </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xdmp:function?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+  plugin:capability(
+     "http://marklogic.com/appservices/infostudio/collector/cancel", 
+     "plugin:collector-filescan.xqy")
+
+  (: Returns a pointer to the function that implements the 'cancel' capability. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="implementations" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+  This function returns a map referencing all of the plugins that implement the 
+  specified capability. If no plugins implement the given capability, returns 
+  an empty map.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="capability" type="xs:string">
+    The desired capability to match.
+    </apidoc:param>
+    <apidoc:param name="scope" type="xs:string" optional="true">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+     </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>map:map</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+  plugin:implementations(
+     "http://marklogic.com/appservices/infostudio/collector/cancel")
+
+  (: Returns a pointer to the function that implements the 'cancel' capability 
+     for each plugin that implements 'cancel'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="register" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>This function registers the capabilities map 
+		for use by MarkLogic Server.  It returns the URI of the 
+		plugin.
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="capabilities" type="map:map">The map of 
+		  capabilities to be registered.
+	  </apidoc:param>
+    <apidoc:param name="plugin-uri" type="xs:string">
+	    An identifier that uniquely identifies this plugin.  If a 
+	    plugin is added with the same identifier as an existing plugin, 
+	    then the newly registered plugin will be used.
+    </apidoc:param>
+  </apidoc:params>
+
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:privilege>
+  <p><code>http://marklogic.com/xdmp/privileges/plugin-register</code></p>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  declare namespace testdoc = "http://marklogic.com/extension/plugin/testdoc";
+
+  import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+  declare function testdoc:capabilities() 
+  as map:map
+  {
+   let $map := map:map()
+   let $_ := map:put($map, 
+                "http://marklogic.com/appservices/infostudio/collector/model", 
+                xdmp:function(xs:QName("testdoc:model")))
+   let $_ := map:put($map, 
+		"http://marklogic.com/appservices/infostudio/collector/start",  
+                xdmp:function(xs:QName("testdoc:start")))
+   let $_ := map:put($map, 
+	"http://marklogic.com/appservices/infostudio/collector/config-view",  
+        xdmp:function(xs:QName("testdoc:view")))
+   let $_ := map:put($map, 
+	"http://marklogic.com/appservices/infostudio/collector/cancel",  
+         xdmp:function(xs:QName("testdoc:cancel")))
+   let $_ := map:put($map, 
+	 "http://marklogic.com/appservices/infostudio/collector/abort",  
+         xdmp:function(xs:QName("testdoc:abort")))
+   let $_ := map:put($map, 
+	 "http://marklogic.com/appservices/infostudio/collector/validate",  
+         xdmp:function(xs:QName("testdoc:validate")))
+   let $_ := map:put($map, "http://marklogic.com/appservices/string",  
+                       xdmp:function(xs:QName("testdoc:string")))
+   return $map
+  };
+
+  (: Implement the functions in the capabilities map. :)
+
+  plugin:register(testdoc:capabilities(), "testdoc.xqy")
+
+  (: Registers the capabilities in the map for this plugin. :)
+      ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="initialize-scope" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		<p>This function ensures the availability of all 
+			plugins from a given scope. A scope is a directory
+			relative to 
+			<code><em>marklogic-dir</em>/Assets/plugins</code>.
+			Attempting to reload the 
+			System scope (with an empty string for 
+			<code>$scope</code>) has no effect 
+		(and hence returns 0). Any application that calls this 
+		function must do so through a function amped to the 
+		<code>application-plugin-registrar</code> role.</p>
+	<p>This function MUST be called by an application before 
+		querying or enumerating plugins (or else see an empty set 
+		of available plugins). Even if called on every request, 
+		this function will only load from the directory on the 
+		first call. This function checks the global debug flag, 
+		and if true, forces a reload on every request.</p>
+
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:integer</apidoc:return>
+  <apidoc:privilege>
+	  <p>This function requires the privileges in the 
+		  <code>application-plugin-registrar</code> role, and the 
+		  best practice is to put
+		  <code>plugin:initialize-scope</code> in a function that 
+		  is amped to the <code>application-plugin-registrar</code> 
+		  role.
+	  </p>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+    at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:initialize-scope("marklogic.appservices")
+
+(: Initializes all of the plugins located in /Assets/plugins/marklogic/appservices :)
+]]> </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="flush-scope" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		This function unloads all application plugins 
+		from a given scope. Note that system plugins are 
+		unaffected by this function. Like 
+		<code>plugin:initialize-scope</code>, 
+		this function requires the 
+		<code>application-plugin-registrar</code> role.
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+	  <apidoc:param name="pid" type="xs:string?" optional="true">
+		  A plugin ID.
+	  </apidoc:param>	  
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+	  This function requires the privileges in the 
+	  <code>application-plugin-registrar</code> role, and the best 
+	  practice is to put <code>plugin:flush-scope</code> in a 
+	  function that is amped to the 
+	  <code>application-plugin-registrar</code> role. 
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:flush-scope("marklogic.appservices")
+
+(: Unloads all of the plugins located in /Assets/plugins/marklogic/appservices :)
+]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="install-from-zip" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		Installs a Library Module plugin from a zip file provided 
+		as a parameter into the Extensions database. Any application 
+		that calls this function must do so through a function 
+		amped to the <code>application-plugin-registrar</code> role. 
+		Returns an integer representing the number of plugins 
+		installed.
+	</apidoc:summary>
+	<apidoc:params>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+	  <apidoc:param name="zip" type="binary()">
+		  A zip file, consisting of the zipped directory of a 
+		  Library Module plugin (that is, <code>manifest.xml</code>
+		  must exist at the root level, with <code>assets/</code> 
+		  and <code>lib/</code> subdirectories).
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:integer</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:install-from-zip("
+      marklogic.appservices.collector-test", 
+      xdmp:document-get("Assets/plugins/marklogic/appservices/collector-test.zip")/node())
+
+(: Installs the plugin code from the 'collector-test.zip' file. :)         
+      ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="uninstall" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		This function removes a named plugin or set of plugins 
+		from the extensions database.
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+	  <apidoc:param name="pid" type="xs:string?">
+		  A plugin ID.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:uninstall("marklogic.appservices", "collector-test")
+
+(: Uninstalls the 'collector-test' plugin located in 
+   /Assets/plugins/marklogic/appservices from the Extensions database. :) 
+      ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="asset" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+	<apidoc:summary>
+		Returns the named asset, which must exist in the 
+		<code>assets/</code> directory of the plugin, as stored in 
+		the Extensions database. This will only return a value 
+		for Library Module plugins.
+	</apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="pid" type="xs:string">
+		  A plugin ID.
+	  </apidoc:param>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+	  <apidoc:param name="asset-path" type="xs:string">
+		  The filename (omitting any path information) of an 
+		  asset in this plugin space.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:asset-exists("collector-test", "marklogic.appservices", "picture.gif")
+
+(: Returns the asset, 'picture.gif,' used by the collect-test plugin
+   located in the Extensions database. :)      
+      ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="asset-exists" lib="plugin" category="Plugin" 
+	bucket="XQuery Library Modules">
+  <apidoc:summary>
+		Returns true if the named asset exists, otherwise returns
+		false.
+  </apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="pid" type="xs:string">
+		  A plugin ID.
+	  </apidoc:param>
+	  <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+	  <apidoc:param name="asset-path" type="xs:string">
+		  The filename (omitting any path information) of an 
+		  asset in this plugin space.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:boolean</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:asset-exists("collector-test", "marklogic.appservices", "picture.gif")
+
+(: Returns true if the asset, 'picture.gif,' used by the collect-test plugin
+   is located in the Extensions database. :)
+      ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="install-from-filesystem" lib="plugin" 
+	category="Plugin" bucket="XQuery Library Modules">
+	<apidoc:summary>
+		This function installs a Library Module plugin from a fixed 
+		location on the filesystem (Assets/plugins/...) into the
+		Extensions database. Any application that calls this 
+		function must do so through a function amped to the 
+		<code>application-plugin-registrar</code> role. It
+		returns the number of plugins installed.
+	</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="scope" type="xs:string">
+		  A scope identifier.  This must be a "dotted" package-style
+		  path, which will be resolved relative to the
+		  <code><em>marklogic-dir</em>/Assets/plugins</code> directory.
+		  For example, a <code>$scope</code> value of
+		  <code>my-plugin-scope</code> is resolved to the 
+	 <code><em>marklogic-dir</em>/Assets/plugins/myplugin-scope</code> 
+		  directory and a <code>$scope</code> value of
+		  <code>my.plugin.scope</code> is resolved to the 
+	  <code><em>marklogic-dir</em>/Assets/plugins/my/plugin/scope</code> 
+		  directory.
+	  </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:integer</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+ 
+import module namespace plugin = "http://marklogic.com/extension/plugin" 
+      at "/MarkLogic/plugin/plugin.xqy";
+
+plugin:install-from-filesystem("marklogic.appservices")
+
+(: Installs all of the plugins located in /Assets/plugins/marklogic/appservices
+   into the Extensions database. :) 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

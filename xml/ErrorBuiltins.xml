@@ -1,0 +1,59 @@
+<apidoc:module name="ErrorBuiltins" category="ErrorBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+<p xmlns="http://www.w3.org/1999/xhtml">The error built-in functions are XQuery functions defined for reporting
+errors.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 
+and XPath 2.0 Functions and Operators</a>. 
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">The error built-in functions use the <code>fn</code> namespace
+prefix, which is predefined in the server.  Also, the <code>fn</code>
+prefix is the default prefix for function calls if none is specified.</p>
+</apidoc:summary><apidoc:function name="error" type="builtin" lib="fn" category="Error and Trace" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  [1.0 and 1.0-ml only, 0.9-ml has a different signature] 
+  Throw the given error.  
+  When an error is thrown, the XQuery program execution is stopped.  For 
+  detailed semantics, see <a href="http://www.w3.org/TR/xpath-functions/#func-error" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#func-error</a>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="error" type="xs:QName?" optional="true">
+  Error code, as an <code xmlns="http://www.w3.org/1999/xhtml">xs:QName</code>.  Note that this parameter does not
+  exist in 0.9-ml.
+  </apidoc:param>
+      <apidoc:param name="description" type="xs:string" optional="true">
+  String description to be printed with the error.
+  </apidoc:param>
+      <apidoc:param name="data" type="item()*" optional="true">
+  Parameters to the error message.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+let $x := xdmp:random(100)
+return
+(
+if ( $x gt 50 ) 
+then ( fn:error(xs:QName("ERROR"), "greater than 50") )
+else ( "Less than or equal to 50" ) ,
+": no error was thrown" )
+
+=&gt; The error when the random number is greater
+   than 50.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = xdmp.random(100);
+var res = new Array();
+if ( x &gt; 50 ) { 
+  fn.error(xs.QName("ERROR"), "greater than 50") }
+else { res.push("Less than or equal to 50") };
+res.push(": no error was thrown");
+fn.concat(res[0], res[1]);
+
+
+=&gt; The error when the random number is greater
+   than 50, otherwise a string.
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,330 @@
+<apidoc:module name="NodeBuiltins" category="NodeBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="NodeBuiltins" bucket="W3C-Standard Functions">
+The node built-in functions are XQuery functions defined to operate on nodes.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="name" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the name of a node, as an <code>xs:string</code> that is either the
+zero-length string, or has the lexical form of an <code>xs:QName</code>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the argument is omitted, it defaults to the context node. If the context
+item is undefined an error is raised: [err:XPDY002]. If the context item is
+not a node an error is raised: [err:XPTY0004].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the argument is supplied and is the empty sequence, the function
+returns the zero-length string.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the target node has no name (that is, if it is a document node, a
+comment, a text node, or a namespace node having no name), the
+function returns the zero-length string.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the specified node was created with a namespace prefix, that namespace
+prefix is returned with the element localname (for example,
+<code>a:hello</code>).  Note that the namespace prefix is not always the same
+prefix that would be returned if you serialized the QName of the node, as
+the serialized QName will use the namespace from the XQuery context in
+which it was serialized.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?" optional="true">
+The node whose name is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+declare namespace a="a";
+
+let $x := &lt;a:hello/&gt;
+return
+fn:name($x)
+
+=&gt; a:hello
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;a:hello xmlns:a="a"/&gt;')
+   ).root.xpath("/element()");
+fn.name(x);
+
+=&gt; a:hello
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="local-name" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the local part of the name of $arg as an xs:string that
+will either be the zero-length string or will have the lexical form of
+an xs:NCName.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the argument is omitted, it defaults to the context node. If the context
+item is undefined an error is raised: [err:XPDY0002]. If the context item is
+not a node an error is raised: [err:XPTY0004].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the argument is supplied and is the empty sequence, the function
+returns the zero-length string.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the target node has no name (that is, if it is a document node, a
+comment, a text node, or a namespace node having no name), the
+function returns the zero-length string.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, the value returned will be the local part of the expanded-QName of
+the target node (as determined by the dm:node-name accessor in Section 5.11
+node-name Accessor[DM]. This will be an xs:string whose lexical form is an
+xs:NCName.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?" optional="true">
+The node whose local name is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+declare namespace a="a";
+
+let $x := &lt;a:hello/&gt;
+return
+fn:local-name($x)
+
+=&gt; hello
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;a:name xmlns:a="a"/&gt;')
+   ).root.xpath("/element()");
+fn.localName(x);
+
+=&gt; hello
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="namespace-uri" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the namespace URI of the xs:QName of the node specified by $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the argument is omitted, it defaults to the context node. If the context
+item is undefined an error is raised: [err:XPDY0002]. If the context item is
+not a node an error is raised: [err:XPTY0004].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, the xs:anyURI
+corresponding to the zero-length string is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is neither an element nor an attribute node, or if it is an element or
+attribute node whose expanded-QName (as determined by the dm:node-name
+accessor in the Section 5.11 node-name Accessor[DM]) is in no namespace, then
+the function returns the xs:anyURI corresponding to the zero-length string.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?" optional="true">
+The node whose namespace URI is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+declare namespace a="aaa";
+
+let $x := &lt;a:hello/&gt;
+return
+fn:namespace-uri($x)
+
+=&gt; aaa
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;a:name xmlns:a="a"/&gt;')
+   ).root.xpath("/element()");
+fn.namespaceUri(x);
+
+=&gt; a
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="number" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the value indicated by $arg or, if $arg is not specified, the context
+item after atomization, converted to an xs:double. If $arg is the empty
+sequence or if $arg or the context item cannot be converted to an xs:double,
+the xs:double value NaN is returned. If the context item is undefined an
+error is raised: [err:XPDY0002].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Calling the zero-argument version of the function is defined to give the same
+result as calling the single-argument version with an argument of ".". That
+is, fn:number() is equivalent to fn:number(.).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, NaN is returned. Otherwise, $arg, or the context
+item after atomization, is converted to an xs:double following the rules of
+17.1.3.2 Casting to xs:double. If the conversion to xs:double fails, the
+xs:double value NaN is returned.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:anyAtomicType?" optional="true">
+The value to be returned as an xs:double value.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:double</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:number($item1/quantity)
+=&gt; 5.0
+
+fn:number($item2)
+=&gt; NaN
+
+Assume that the context item is the xs:string "15".
+fn:number() returns 1.5E1.
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var item1 = fn.head(xdmp.unquote('&lt;a&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;')).root
+fn.number(item1.xpath("/a/quantity"));
+=&gt; 5
+
+var item1 = fn.head(xdmp.unquote('&lt;a&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;')).root
+fn.number(item1.xpath("/quantity"));
+=&gt; NaN
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="lang" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+This function tests whether the language of $node, or the context node if the
+second argument is omitted, as specified by xml:lang attributes is the same
+as, or is a sublanguage of, the language specified by $testlang. The
+language of the argument node, or the context node if the second argument is
+omitted, is determined by the value of the xml:lang attribute on the node,
+or, if the node has no such attribute, by the value of the xml:lang
+attribute on the nearest ancestor of the node that has an xml:lang
+attribute. If there is no such ancestor, then the function returns false
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the second argument is omitted and the context item is undefined an error is
+raised: [err:XPDY0002]. If the context item is not a node an error is raised
+[err:XPTY0004].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $testlang is the empty sequence it is interpreted as the zero-length string.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The relevant xml:lang attribute is determined by the value of the XPath
+expression:  (ancestor-or-self::* /@xml:lang)[last()]
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If this expression returns an empty sequence, the function returns false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, the function returns true if and only if the string-value of the
+relevant xml:lang attribute is equal to $testlang based on a caseless default
+match as specified in section 3.13 of [The Unicode Standard], or if the
+string-value of the relevant testlang attribute contains a hyphen, "-"
+(The character "-" is HYPHEN-MINUS, #x002D) such that the part of the
+string-value preceding that hyphen is equal to $testlang, using caseless
+matching.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="testlang" type="xs:string?">
+The language against which to test the node.
+  </apidoc:param>
+      <apidoc:param name="node" type="node()" optional="true">
+The node to test.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery">
+<p xmlns="http://www.w3.org/1999/xhtml">
+The expression fn:lang("en") would return true if the context node were any
+of the following four elements:
+</p>
+
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>&lt;para xml:lang="en"/&gt;</li>
+	<li>&lt;div xml:lang="en"&gt;&lt;para&gt;And now, and forever!&lt;/para&gt;&lt;/div&gt;</li>
+	<li>&lt;para xml:lang="EN"/&gt;</li>
+	<li>&lt;para xml:lang="en-us"/&gt;</li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">The expression fn:lang("fr") would return false if the context node were
+&lt;para xml:lang="EN"/&gt;
+</p>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var item1 = fn.head(xdmp.unquote('&lt;a xml:lang="en"&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;')
+    ).root;
+fn.lang("en", item1);
+=&gt; true
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="root" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the root of the tree to which $arg belongs. This will usually, but
+not necessarily, be a document node.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is a document node, $arg is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the function is called without an argument, the context item is used as
+the default argument. If the context item is undefined an error is raised:
+[err:XPDY0002]. If the context item is not a node an error is raised:
+[err:XPTY0004].
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?" optional="true">
+The node whose root node will be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume the following variable definitions:
+let $i := &lt;tool&gt;wrench&lt;/tool&gt;
+let $o := &lt;order&gt; {$i} &lt;quantity&gt;5&lt;/quantity&gt; &lt;/order&gt;
+let $odoc := document {$o}
+let $newi := $o/tool
+
+fn:root($i) returns $i
+fn:root($o/quantity) returns $o
+fn:root($odoc//quantity) returns $odoc
+fn:root($newi) returns $o
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var doc = fn.head(xdmp.unquote('&lt;a&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;')
+    );
+fn.root(doc);
+=&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;a&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var doc = fn.head(xdmp.unquote('&lt;a&gt;&lt;quantity&gt;5.0&lt;/quantity&gt;&lt;/a&gt;')
+    );
+var elem = doc.root;
+fn.root(elem).xpath("/a/quantity");
+=&gt; &lt;quantity&gt;5.0&lt;/quantity&gt;
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="generate-id" type="builtin" lib="fn" category="NodeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns a string that uniquely identifies a given node.  </p>
+<p xmlns="http://www.w3.org/1999/xhtml"> If $node is the empty sequence, the zero-length string is returned.  </p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the function is called without an argument, the context item is used as
+the default argument. The behavior of the function when the argument is
+omitted is the same as if the context item is passed as an argument.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If the context item is undefined an error is raised:
+[err:XPDY0002]. If the context item is not a node an error is raised:
+[err:XPTY0004].
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()?" optional="true">
+The node whose ID will be generated.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := doc("auction.xml")
+return
+fn:generate-id($x)
+
+=&gt; n965c71980e85a011
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var doc = cts.doc("/bar.json");
+fn.generateId(doc);
+=&gt; naaaaffcc704258cd
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,2028 @@
+<apidoc:module name="SequenceBuiltins" category="SequenceBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+These built-in functions are XQuery functions defined to operate on
+sequences. They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="boolean" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Computes the effective boolean value of the sequence $arg. See Section 2.4.3
+Effective Boolean Value[XP].
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*" class="xquery">
+  A sequence of items.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence | Array" class="javascript">
+  A sequence of items (as a Sequence or as an Array, where the sequence
+  is defined as each item of the array).   
+  </apidoc:param>
+      <apidoc:param name="collation" type="xs:string" optional="true">
+  The optional name of a valid collation URI.  For information on the
+  collation URI syntax, see the <em xmlns="http://www.w3.org/1999/xhtml">Search Developer's Guide</em>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">When using XQuery version "1.0-ml", this function implements the semantics
+  from May 2003.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If <code>$arg</code> is the empty sequence, fn:boolean returns false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If <code>$arg</code> is a sequence whose first item is a node, fn:boolean returns true.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If <code>$arg</code> is a singleton value of type xs:boolean or a derived from xs:boolean,
+fn:boolean returns <code>$arg</code>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If <code>$arg</code> is a singleton value of type xs:string or a type derived from xs:string
+or xs:untypedAtomic, fn:boolean returns false if the operand value has zero
+length; otherwise it returns true.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If <code>$arg</code> is a singleton value of any numeric type or a type derived from a
+numeric type, fn:boolean returns false if the operand value is NaN or is
+numerically equal to zero; otherwise it returns true.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+In all other cases, fn:boolean raises a type error [err:FORG0006] when 
+run in XQuery strict mode (1.0).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The static semantics of this function are described in
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_boolean">Section
+7.2.4 The fn:boolean function[FS]</a>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Note:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The result of this function is not necessarily the same as " $arg cast as
+xs:boolean ". For example, fn:boolean("false") returns the value "true" whereas
+"false" cast as xs:boolean returns false.
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0";
+let $x := ("a", "b", "c")
+return
+fn:boolean($x)
+=&gt; raises a type error [err:FORG0006].
+
+xquery version "1.0-ml";
+let $x := ("a", "b", "c")
+return
+fn:boolean($x)
+=&gt; true
+
+let $x := ("a", "b", "c")
+return
+fn:boolean($x[1])
+=&gt; returns true.
+
+let $x := ("a", "b", "c")
+return
+fn:boolean($x[0])
+=&gt; returns false.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const x = ['a', 'b', 'c'];
+fn.boolean(x);
+// returns true
+
+const x = ['a', 'b', 'c'];
+fn.boolean(x[0]);
+// returns true
+
+const x = ['a', 'b', 'c'];
+fn.boolean(x[4]);
+// returns  false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="index-of" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns a sequence of positive integers giving the positions within the
+sequence $seqParam of items that are equal to $srchParam.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The collation used by the invocation of this function is determined according
+to the rules in 7.3.1 Collations. The collation is used when string comparison
+is required.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The items in the sequence $seqParam are compared with $srchParam under the
+rules for the eq operator. Values that cannot be compared, i.e. the eq operator
+is not defined for their types, are considered to be distinct. If an item
+compares equal, then the position of that item in the sequence $srchParam is
+included in the result.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the value of $seqParam is the empty sequence, or if no item in $seqParam
+matches $srchParam, then the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The first item in a sequence is at position 1, not position 0.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The result sequence is in ascending numeric order.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="seqParam" type="xs:anyAtomicType*">
+A sequence of values.
+  </apidoc:param>
+      <apidoc:param name="srchParam" type="xs:anyAtomicType">
+A value to find on the list.
+  </apidoc:param>
+      <apidoc:param name="collationLiteral" type="xs:string" optional="true">
+A collation identifier.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:integer*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:index-of((10, 20, 30, 40), 35) returns ().
+
+fn:index-of((10, 20, 30, 30, 20, 10), 20)
+  returns (2, 5).
+
+fn:index-of(("a", "sport", "and", "a", "pastime"), "a")
+  returns (1, 4).
+
+If @a is an attribute of type xs:NMTOKENS whose
+typed value is " red green blue ", then:
+
+fn:index-of(@a, "blue") returns 3.
+
+This is because the function calling mechanism
+atomizes the attribute node to produce a sequence of
+three xs:NMTOKENs.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.indexOf(xdmp.arrayValues([10, 20, 30, 40]), 35); 
+=&gt; returns null.
+
+fn.indexOf(xdmp.arrayValues([10, 20, 30, 30, 20, 10]), 20);
+=&gt;  returns (2, 5) as a Sequence.
+
+fn.indexOf(xdmp.arrayValues(["a", "sport", "and", "a", "pastime"]), "a");
+=&gt;  returns (1, 4) as a Sequence.
+
+// a is a variable whose value is the attribute @a
+// of type xs:NMTOKENS whose typed value is " red green blue " 
+fn.indexOf(a, "blue") returns 3.
+
+This is because the function calling mechanism
+atomizes the attribute node to produce a sequence of
+three xs:NMTOKENs.
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="empty" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+If the value of $arg is the empty sequence, the function returns true;
+otherwise, the function returns false.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  A sequence to test.  
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:empty(fn:remove(("hello", "world"), 1))
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.empty(fn.remove(xdmp.arrayValues(["hello", "world"]), 1));
+
+=&gt; false
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="exists" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+If the value of $arg is not the empty sequence, the function returns true;
+otherwise, the function returns false.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  A sequence to test. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:exists(fn:remove(("hello"), 1))
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.exists(fn.remove(xdmp.arrayValues(["hello"]), 1));
+
+=&gt; false
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="distinct-nodes" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  [0.9-ml only] Returns the sequence resulting from removing from the input
+  sequence all but one of a set of nodes that have the same identity as one
+  another. If the empty sequence is input, <code xmlns="http://www.w3.org/1999/xhtml">fn:distinct-nodes</code>
+  returns the empty sequence.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="nodes" type="node()*">
+  A sequence of nodes from which to eliminate duplicate nodes (nodes with
+  the same identity) so that only one node of each identity remains.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Note that for a node to have the same identity as another node, it must
+  be exactly the same node (not an equivalent node).  For example, for a node
+  bound to the variable $x to have the same identity
+  as a node bound to the variable $y, the following must return true: </p>
+  <pre xmlns="http://www.w3.org/1999/xhtml">$x is $y</pre>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  (:
+    assume /mydoc.xml has the following contents:
+    &lt;a&gt;hello&lt;/a&gt;
+  :)
+
+  let $x := fn:doc("/mydoc.xml")/a
+  let $y := /a
+  return
+  fn:distinct-nodes(($x, $y))
+
+=&gt; &lt;a&gt;hello&lt;/a&gt;
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  (:
+    assume /mydoc.xml has the following contents:
+    &lt;a&gt;hello&lt;/a&gt;
+  :)
+
+  let $x := fn:doc("/mydoc.xml")/a
+  let $y := &lt;a&gt;hello&lt;/a&gt;
+  return
+  fn:distinct-nodes(($x, $y))
+
+=&gt; (&lt;a&gt;hello&lt;/a&gt;, &lt;a&gt;hello&lt;/a&gt;)
+   It returns both nodes because they do not
+   have the same identity.
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="distinct-values" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the sequence that results from removing from $arg all but one of a set
+of values that are eq to one other. Values that cannot be compared, i.e. the
+eq operator is not defined for their types, are considered to be
+distinct. Values of type xs:untypedAtomic are compared as if they were of
+type xs:string. The order in which the sequence of values is returned is
+implementation dependent. 
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The static type of the result is a sequence of prime types as defined in
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_distinct_node_vals">Section 7.2.7 The fn:distinct-values function[FS]</a>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The collation used by the invocation of this function is determined according
+to the rules in 7.3.1 Collations. The collation is used when string
+comparison is required.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For xs:float and xs:double values, positive zero is equal to negative zero and,
+although NaN does not equal itself, if $arg contains multiple NaN values a
+single NaN is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If xs:dateTime, xs:date or xs:time values do not have a timezone, they are
+considered to have the implicit timezone provided by the dynamic context for
+the purpose of comparison. Note that xs:dateTime, xs:date or xs:time values
+can compare equal even if their timezones are different.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Which value of a set of values that compare equal is returned is
+implementation dependent.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*" class="xquery">
+  A sequence of items.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence" class="javascript">
+  A Sequence of items.  If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, <code xmlns="http://www.w3.org/1999/xhtml">fn.distinctValues</code> will return the array. 
+  If you mean to get the distinct values of each item in the array, then
+  you can call <a href="#xdmp.arrayValues" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp.arrayValues</code></a> 
+  on the array. 
+  </apidoc:param>
+      <apidoc:param name="collation" type="xs:string" optional="true">
+  The optional name of a valid collation URI.  For information on the
+  collation URI syntax, see the <em xmlns="http://www.w3.org/1999/xhtml">Search Developer's Guide</em>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:distinct-values((1, 2.0, 3, 2)) might return (1, 3, 2.0).
+
+The following query:
+
+let $x as xs:untypedAtomic*
+    := (xs:untypedAtomic("cherry"),
+        xs:untypedAtomic("bar"),
+        xs:untypedAtomic("bar"))
+return fn:distinct-values ($x)
+                                   
+returns a sequence containing two items ("cherry", "bar")
+of type xs:untypedAtomic.
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.distinctValues(xdmp.arrayValues([1, 2.0, 3, 2]));
+=&gt; (1, 3, 2.0)
+
+const x = xdmp.arrayValues(["cherry", "bar", "bar"]);
+fn.distinctValues(x);
+                                   
+=&gt; ("cherry", "bar")
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="insert-before" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns a new sequence constructed from the value of $target with the value of
+$inserts inserted at the position specified by the value of $position. (The
+value of $target is not affected by the sequence construction.)
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $target is the empty sequence, $inserts is returned. If $inserts is the
+empty sequence, $target is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The value returned by the function consists of all items of $target whose index
+is less than $position, followed by all items of $inserts, followed by the
+remaining elements of $target, in that sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $position is less than one (1), the first position, the effective value of
+$position is one (1). If $position is greater than the number of items in
+$target, then the effective value of $position is equal to the number of items
+in $target plus 1.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed semantics see, <a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_insert_before">Section
+7.2.15 The fn:insert-before function[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="target" type="item()*">
+  The sequence of items into which new items will be inserted. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+      <apidoc:param name="position" type="xs:integer">
+  The position in the target sequence at which the new items will be added. 
+  </apidoc:param>
+      <apidoc:param name="inserts" type="item()*">
+  The items to insert into the target sequence. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := ("a", "b", "c")
+return
+fn:insert-before($x, 0, "z") returns ("z", "a", "b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:insert-before($x, 1, "z") returns ("z", "a", "b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:insert-before($x, 2, "z") returns ("a", "z", "b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:insert-before($x, 3, "z") returns ("a", "b", "z", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:insert-before($x, 4, "z") returns ("a", "b", "c", "z")
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.insertBefore(x, 0, "z");
+
+=&gt; ("z", "a", "b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.insertBefore(x, 1, "z");
+=&gt; ("z", "a", "b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.insertBefore(x, 2, "z");
+=&gt; ("a", "z", "b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.insertBefore(x, 3, "z");
+=&gt; ("a", "b", "z", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.insertBefore(x, 4, "z");
+=&gt; ("a", "b", "c", "z")
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="remove" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns a new sequence constructed from the value of $target with the item at
+the position specified by the value of $position removed.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $position is less than 1 or greater than the number of items in $target,
+$target is returned. Otherwise, the value returned by the function consists
+of all items of $target whose index is less than $position, followed by all
+items of $target whose index is greater than $position. If $target is the
+empty sequence, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_remove">Section 7.2.11 The fn:remove function[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="target" type="item()*">
+  The sequence of items from which items will be removed. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+      <apidoc:param name="position" type="xs:integer">
+The position in the target sequence from which the items will be removed.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := ("a", "b", "c")
+return
+fn:remove($x, 0) returns ("a", "b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:remove($x, 1) returns ("b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:remove($x, 6) returns ("a", "b", "c")
+
+let $x := ("a", "b", "c")
+return
+fn:remove((), 3) returns ()
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.remove(x, 0);
+=&gt; ("a", "b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.remove(x, 1);
+=&gt; ("b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.remove(x, 6);
+=&gt; ("a", "b", "c")
+
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.remove(null, 3);
+=&gt; ()
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="reverse" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Reverses the order of items in a sequence. If $arg is the empty sequence,
+the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_reverse">Section
+7.2.12 The fn:reverse function[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="target" type="item()*">
+  The sequence of items to be reversed. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:usage>
+  The sequence you specify to reverse must fit into memory, so the sequence
+  size should not be larger than your memory cache sizes.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := ("a", "b", "c")
+return
+fn:reverse($x)
+
+=&gt; ("c", "b", "a")
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const x = xdmp.arrayValues(["a", "b", "c"]);
+fn.reverse(x);
+
+=&gt; ("c", "b", "a")
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:reverse(("hello"))
+
+=&gt; ("hello")
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.reverse("hello")
+
+=&gt; ("hello")
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:reverse(())
+
+=&gt; ()
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.reverse(null)
+
+=&gt; ()
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="subsequence" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the contiguous sequence of items in the value of $sourceSeq beginning
+at the position indicated by the value of $startingLoc and continuing for the
+number of items indicated by the value of $length.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+In the two-argument case, returns:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+$sourceSeq[fn:round($startingLoc) le $p]
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+In the three-argument case, returns:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+$sourceSeq[fn:round($startingLoc) le $p
+     and $p lt fn:round($startingLoc) + fn:round($length)]
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Notes:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $sourceSeq is the empty sequence, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $startingLoc is zero or negative, the subsequence includes items from the
+beginning of the $sourceSeq.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $length is not specified, the subsequence includes items to the end of
+$sourceSeq.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $length is greater than the number of items in the value of $sourceSeq
+following $startingLoc, the subsequence includes items to the end of
+$sourceSeq.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The first item of a sequence is located at position 1, not position 0.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see Section 7.2.13 The fn:subsequence functionFS.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The reason the function accepts arguments of type xs:double is that many
+computations on untyped data return an xs:double result; and the reason for the
+rounding rules is to compensate for any imprecision in these floating-point
+computations.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="sourceSeq" type="item()*" class="xquery">
+  The sequence of items from which a subsequence will be selected.
+  </apidoc:param>
+      <apidoc:param name="sourceSeq" type="Sequence" class="javascript">
+  A Sequence of items from which a subsequence will be 
+  selected.  If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, <code xmlns="http://www.w3.org/1999/xhtml">fn.subsequence</code> will treat the array as
+  a single-item sequence. 
+  If you mean to get the subsequence of each item in the array, then
+  you can call <a href="#xdmp.arrayValues" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp.arrayValues</code></a> 
+  on the array. 
+  </apidoc:param>
+      <apidoc:param name="startingLoc" type="xs:double">
+  The starting position of the start of the subsequence.
+  </apidoc:param>
+      <apidoc:param name="length" type="xs:double" optional="true">
+  The length of the subsequence.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume $seq = ($item1, $item2, $item3, $item4, ...)
+
+fn:subsequence($seq, 4) returns ($item4, ...)
+
+fn:subsequence($seq, 3, 2) returns ($item3, $item4)
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const seq = xdmp.arrayValues(["item1", "item", "item3", "item4" , "..."]);
+fn.subsequence(seq, 4)
+=&gt; (item4, ...)
+
+const seq = xdmp.arrayValues(["item1", "item", "item3", "item4" , "..."]);
+fn.subsequence(seq, 3, 2)
+=&gt; (item3, item4)
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="unordered" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the items of $sourceSeq in an implementation dependent order.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Note:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Query optimizers may be able to do a better job if the order of the output
+sequence is not specified. For example, when retrieving prices from a
+purchase order, if an index exists on prices, it may be more efficient to
+return the prices in index order rather than in document order.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="sourceSeq" type="item()*">
+  The sequence of items. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:unordered((1, 3, 2))
+
+=&gt; 1, 3, 2
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.unordered(xdmp.arrayValues([1, 3, 2]));
+
+=&gt; 1, 3, 2
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="zero-or-one" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns $arg if it contains zero or one items. Otherwise, raises an error
+   [err:FORG0003].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see 
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_cardinality_funcs">Section 7.2.16 The fn:zero-or-one,
+fn:one-or-more, and fn:exactly-one functions[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The sequence of items. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:zero-or-one("hello")
+
+=&gt; "hello"
+
+fn:zero-or-one(("hello", "goodbye"))
+
+=&gt; XDMP-MORETHANONEITEM exception (because there are two items)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.zeroOrOne("hello")
+
+=&gt; "hello"
+
+fn.zeroOrOne(xdmp.arrayValues(["hello", "goodbye"]))
+
+=&gt; XDMP-MORETHANONEITEM exception (because there are two items)
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="one-or-more" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns $arg if it contains one or more items. Otherwise, raises an error
+   [err:FORG0004].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_cardinality_funcs">Section 7.2.16 The fn:zero-or-one,
+fn:one-or-more, and fn:exactly-one functions[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The sequence of items. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()+</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:one-or-more( () )
+
+=&gt; XDMP-ZEROITEMS exception
+
+fn:one-or-more("hello")
+
+=&gt; "hello"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.oneOrMore( null )
+
+=&gt; XDMP-ZEROITEMS exception
+
+fn.oneOrMore("hello")
+
+=&gt; "hello"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="exactly-one" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns $arg if it contains exactly one item. Otherwise, raises an error
+   [err:FORG0005].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_cardinality_funcs">Section 7.2.16 The fn:zero-or-one,
+fn:one-or-more, and fn:exactly-one functions[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The sequence of items. 
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:exactly-one(("hello"))
+
+=&gt; "hello"
+
+fn:exactly-one(("hello", "goodbye"))
+
+=&gt; XDMP-NOTONEITEM exception (because there are 2 items)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.exactlyOne(["hello"])
+
+=&gt; ["hello"]
+
+fn.exactlyOne(xdmp.arrayValues(["hello", "goodbye"]))
+
+=&gt; XDMP-NOTONEITEM exception (because there are 2 items)
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="deep-equal" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">This function assesses whether two sequences are deep-equal to each other. To
+be deep-equal, they must contain items that are pairwise deep-equal; and for
+two items to be deep-equal, they must either be atomic values that compare
+equal, or nodes of the same kind, with the same name, whose children are
+deep-equal. This is defined in more detail below. The $collation argument
+identifies a collation which is used at all levels of recursion when strings
+are compared (but not when names are compared), according to the rules in 7.3.1
+Collations.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If the two sequences are both empty, the function returns true.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two sequences are of different lengths, the function returns false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two sequences are of the same length, the function returns true if and
+only if every item in the sequence $parameter1 is deep-equal to the item at the
+same position in the sequence $parameter2. The rules for deciding whether two
+items are deep-equal follow.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Call the two items $i1 and $i2 respectively.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $i1 and $i2 are both atomic values, they are deep-equal if and only if ($i1
+eq $i2) is true. Or if both values are NaN. If the eq operator is not defined
+for $i1 and $i2, the function returns false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If one of the pair $i1 or $i2 is an atomic value and the other is a node, the
+function returns false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $i1 and $i2 are both nodes, they are compared as described below:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are of different kinds, the result is false.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both document nodes then they are deep-equal if and only
+if the sequence $i1/(*|text()) is deep-equal to the sequence $i2/(*|text()).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both element nodes then they are deep-equal if and only if
+all of the following conditions are satisfied:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>the two nodes have the same name, that is (node-name($i1) eq
+  node-name($i2)).</li>
+	<li>the two nodes are both annotated as having simple content or both nodes
+  are annotated as having complex content.</li>
+	<li>the two nodes have the same number of attributes, and for every attribute
+  $a1 in $i1/@* there exists an attribute $a2 in $i2/@* such that $a1 and $a2
+  are deep-equal. </li>
+	<li>One of the following conditions holds:
+    <ul>
+	    <li>Both element nodes have a type annotation that is simple content, and
+    the typed value of $i1 is deep-equal to the typed value of $i2. </li>
+	    <li>Both element nodes have a type annotation that is complex content with
+    elementOnly content, and each child element of $i1 is deep-equal to the
+    corresponding child element of $i2. </li>
+	    <li>Both element nodes have a type annotation that is complex content with
+    mixed content, and the sequence $i1/(*|text()) is deep-equal to the
+    sequence $i2/(*|text()). </li>
+	    <li>Both element nodes have a type annotation that is complex content with
+    empty content. </li>
+	  </ul>
+  </li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both attribute nodes then they are deep-equal if and only
+if both the following conditions are satisfied:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>the two nodes have the same name, that is (node-name($i1) eq
+  node-name($i2)).</li>
+	<li>the typed value of $i1 is deep-equal to the typed value of $i2.</li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both processing instruction nodes or namespace bindings,
+then they are deep-equal if and only if both the following conditions are
+satisfied:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>the two nodes have the same name, that is (node-name($i1) eq
+  node-name($i2)). </li>
+	<li>the string value of $i1 is equal to the string value of $i2.</li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both text nodes and their parent nodes are not object
+nodes, then they are deep-equal if and only if their string-values are both
+equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both text nodes and their parent nodes are both object
+nodes, then they are deep-equal if and only if their keys and string-values
+are both equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both comment nodes, then they are deep-equal
+if and only if their string-values are equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both object nodes, then they are deep-equal if and only if
+all of the following conditions are satisfied:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>the two nodes have the same number of children, and the children have the
+    same set of keys.</li>
+	<li>two children of the two nodes with the same key are deep-equal.</li>
+	<li>the order of children does not matter. </li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both boolean nodes, then they are deep-equal
+if and only if their keys and boolean values are equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both number nodes, then they are deep-equal
+if and only if their keys and values are equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the two nodes are both null nodes, they are deep-equal.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Notes:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The two nodes are not required to have the same type annotation, and they are
+not required to have the same in-scope namespaces. They may also differ in
+their parent, their base URI, and the values returned by the is-id and
+is-idrefs accesors (see Section 5.5 is-id Accessor[DM] and Section 5.6 is-idrefs
+Accessor[DM]). The order of children is significant, but the order of attributes
+is insignificant.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The following note applies to the Jan 2007 XQuery specification, but not to the
+May 2003 XQuery specification: 
+The contents of comments and processing instructions are significant only if
+these nodes appear directly as items in the two sequences being compared. The
+content of a comment or processing instruction that appears as a descendant of
+an item in one of the sequences being compared does not affect the
+result. However, the presence of a comment or processing instruction, if it
+causes a text node to be split into two text nodes, may affect the result.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The result of fn:deep-equal(1, current-dateTime()) is false; it does not raise
+an error.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="parameter1" type="item()*">
+  The first sequence of items, each item should be an atomic value or node.
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+      <apidoc:param name="parameter2" type="item()*">
+  The sequence of items to compare to the first sequence of items, again each
+  item should be an atomic value or node.
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+      <apidoc:param name="collation" type="xs:string" optional="true">
+  The optional name of a valid collation URI.  For information on the
+  collation URI syntax, see the <em xmlns="http://www.w3.org/1999/xhtml">Search Developer's Guide</em>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume $at := &lt;attendees&gt;
+             &lt;name last='Parker' first='Peter'/&gt;
+             &lt;name last='Barker' first='Bob'/&gt;
+             &lt;name last='Parker' first='Peter'/&gt;
+           &lt;/attendees&gt;
+
+Then:
+
+fn:deep-equal($at, $at/&amp;#42;) returns false.
+
+fn:deep-equal($at/name[1], $at/name[2]) returns false.
+
+fn:deep-equal($at/name[1], $at/name[3]) returns true.
+
+fn:deep-equal($at/name[1], 'Peter Parker') returns false.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const at = xdmp.unquote("&lt;attendees&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+             &lt;name last='Barker' first='Bob'/&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+           &lt;/attendees&gt;")
+node = fn.head(at).xpath("./element()");
+fn.deepEqual(at, node);
+=&gt; false
+
+const at = xdmp.unquote("&lt;attendees&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+             &lt;name last='Barker' first='Bob'/&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+           &lt;/attendees&gt;")
+fn.deepEqual(fn.head(at).xpath("./attendees/name[1]"),
+	     fn.head(at).xpath("./attendees/name[2]"))
+=&gt; false
+
+const at = xdmp.unquote("&lt;attendees&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+             &lt;name last='Barker' first='Bob'/&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+           &lt;/attendees&gt;")
+fn.deepEqual(fn.head(at).xpath("./attendees/name[1]"),
+	     fn.head(at).xpath("./attendees/name[3]"))
+=&gt; true
+
+const at = xdmp.unquote("&lt;attendees&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+             &lt;name last='Barker' first='Bob'/&gt; \
+             &lt;name last='Parker' first='Peter'/&gt; \
+           &lt;/attendees&gt;")
+fn.deepEqual(fn.head(at).xpath("./attendees/name[1]"),
+	     "Peter Parker")
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="count" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the number of items in the value of $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Returns 0 if $arg is the empty sequence.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The sequence of items to count.  
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you pass in a single value, 
+  it is treated as a Sequence with that single item; therefore, if you 
+  pass in an array, the array is treated as a single value (not as one value
+  for each item in the array). If you mean to pass in  
+  the values of each item in the array, then you can call 
+  <a href="#xdmp.arrayValues">xdmp.arrayValues</a> on the array. </span>
+  </apidoc:param>
+      <apidoc:param name="maximum" type="xs:double?" optional="true">
+  The maximum value of the count to return. MarkLogic Server will stop
+  count when the $maximum value is reached and return
+  the $maximum value.  This is an extension to the W3C
+  standard <code xmlns="http://www.w3.org/1999/xhtml">fn:count</code> function.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume:
+$seq1 = ($item1, $item2)
+$seq3 = (), the empty sequence
+
+Then:
+
+fn:count($seq1) returns 2.
+
+fn:count($seq3) returns 0.
+
+Assume $seq2 = (98.5, 98.3, 98.9).
+
+Then:
+
+fn:count($seq2) returns 3.
+fn:count($seq2[. &gt; 100]) returns 0.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const seq1 = xdmp.arrayValues(["item1", "item2"]);
+const seq3 = null ;
+fn.count(seq1);
+=&gt; 2
+
+const seq1 = xdmp.arrayValues(["item1", "item2"]);
+const seq3 = null ;
+fn.count(seq3);
+=&gt; 0
+
+const seq2 = xdmp.arrayValues([98.5, 98.3, 98.9]);
+fn.count(seq2);
+=&gt; 3
+
+const seq = xdmp.arrayValues([98.5, 98.3, 98.9]);
+const seq2 = new Array();
+for (const x in seq) {
+  if (x &gt; 100) {
+    seq2.push(x);
+  }
+};
+fn.count(xdmp.arrayValues(seq2)); 
+=&gt; 0
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="avg" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the average of the values in the input sequence $arg, that is, the sum
+of the values divided by the number of values.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg contains values of type xs:untypedAtomic they are cast to xs:double.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Duration values must either all be xs:yearMonthDuration values or must all be
+xs:dayTimeDuration values. For numeric values, the numeric promotion rules
+defined in 6.2 Operators on Numeric Values are used to promote all values to
+a single common type. After these operations, $arg must contain items of a
+single type, which must be one of the four numeric
+types,xs:yearMonthDuration or xs:dayTimeDuration or one if its subtypes.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the above conditions are not met, then a type error is raised [err:FORG0006].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, returns the average of the values computed as sum($arg) div
+count($arg).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_aggregates">Section
+7.2.10 The fn:min, fn:max, fn:avg, and fn:sum functions[FS]</a>.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:anyAtomicType*" class="xquery">
+  The sequence of values to average.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence | Array" class="javascript">
+  The sequence of values to average.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume:
+$d1 = xs:yearMonthDuration("P20Y")
+$d2 = xs:yearMonthDuration("P10M")
+$seq3 = (3, 4, 5)
+
+Then:
+
+fn:avg($seq3) returns 4.0.
+
+fn:avg(($d1, $d2))
+returns a yearMonthDuration with value 125 months.
+
+fn:avg(($d1, $seq3)) raises a type error [err:FORG0006].
+
+fn:avg(()) returns ().
+
+fn:avg((xs:float('INF')), xs:float('-INF')) returns NaN.
+
+fn:avg(($seq3, xs:float('NaN')) returns NaN.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const seq3 = [3, 4, 5];
+fn.avg(seq3);
+=&gt; 4.0
+
+fn.avg(null);
+=&gt; ()
+
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="max" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Selects an item from the input sequence $arg whose value is greater than or
+equal to the value of every other item in the input sequence. If there are
+two or more such items, then the specific item whose value is returned is
+implementation dependent.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The following rules are applied to the input sequence:
+</p>
+<ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>Values of type xs:untypedAtomic in $arg are cast to xs:double.</li>
+	<li>For numeric values, the numeric promotion rules defined in 6.2 Operators on
+Numeric Values are used to promote all values to a single common type.
+</li>
+      </ul>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The items in the resulting sequence may be reordered in an arbitrary order. The
+resulting sequence is referred to below as the converted sequence.This
+function returns an item from the converted sequence rather than the input
+sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence is empty, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+All items in $arg must be numeric or derived from a single base type for which
+the ge operator is defined. In addition, the values in the sequence must
+have a total order. If date/time values do not have a timezone, they are
+considered to have the implicit timezone provided by the dynamic context for
+purposes of comparison. Duration values must either all be
+xs:yearMonthDuration values or must all be xs:dayTimeDuration values.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If any of these conditions is not met, then a type error is raised
+  [err:FORG0006].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains the value NaN, the value NaN is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the items in the value of $arg are of type xs:string or types derived by
+restriction from xs:string, then the determination of the item with the
+largest value is made according to the collation that is used. If the type
+of the items in $arg is not xs:string and $collation is specified, the
+collation is ignored.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The collation used by the invocation of this function is determined according
+to the rules in 7.3.1 Collations.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, the result of the function is the result of the expression:
+</p><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   if (every $v in $c satisfies $c[1] ge $v)
+   then $c[1]
+   else fn:max(fn:subsequence($c, 2))
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">
+evaluated with $collation as the default collation if specified, and with $c as
+the converted sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_aggregates">Section
+7.2.10 The fn:min, fn:max, fn:avg, and fn:sum functions[FS]</a>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Notes:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains exactly one value then that value is
+returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The default type when the fn:max function is applied to xs:untypedAtomic
+values is xs:double. This differs from the default type for operators such as
+gt, and for sorting in XQuery and XSLT, which is xs:string.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:anyAtomicType*" class="xquery">
+  The sequence of values whose maximum will be returned.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence | Array" class="javascript">
+  The sequence of values whose maximum will be returned.
+  </apidoc:param>
+      <apidoc:param name="collation" type="xs:string" optional="true">
+  The optional name of a valid collation URI.  For information on the
+  collation URI syntax, see the <em xmlns="http://www.w3.org/1999/xhtml">Search Developer's Guide</em>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:max((3,4,5)) returns 5.
+fn:max((5, 5.0e0)) returns 5.0e0.
+fn:max((3,4,"Zero")) raises a type error [err:FORG0006].
+fn:max((fn:current-date(), xs:date("2001-01-01")))
+typically returns the current date.
+fn:max(("a", "b", "c")) returns "c" under a typical
+                                default collation.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.max([3,4,5])
+=&gt; 5
+
+fn.max([5, 5.0e0])
+=&gt; 5.0e0
+
+fn.max([3,4,"Zero"])
+=&gt; raises a type error [err:FORG0006]
+
+fn.max([fn.currentDate(), xs.date("2001-01-01")])
+=&gt; typically returns the current date
+
+fn.max(["a", "b", "c"])
+=&gt; "c" under a typical default collation
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="min" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Selects an item from the input sequence $arg whose value is less than or
+equal to the value of every other item in the input sequence. If there are
+two or more such items, then the specific item whose value is returned is
+implementation dependent.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The following rules are applied to the input sequence:
+</p>
+<ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>Values of type xs:untypedAtomic in $arg are cast to xs:double.</li>
+	<li>For numeric values, the numeric promotion rules defined in 6.2 Operators on
+Numeric Values are used to promote all values to a single common type.
+</li>
+      </ul>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The items in the resulting sequence may be reordered in an arbitrary order. The
+resulting sequence is referred to below as the converted sequence.This
+function returns an item from the converted sequence rather than the input
+sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence is empty, the empty sequence is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+All items in $arg must be numeric or derived from a single base type for which
+the le operator is defined. In addition, the values in the sequence must
+have a total order. If date/time values do not have a timezone, they are
+considered to have the implicit timezone provided by the dynamic context for
+purposes of comparison. Duration values must either all be
+xs:yearMonthDuration values or must all be xs:dayTimeDuration values.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If any of these conditions is not met, then a type error is raised
+  [err:FORG0006].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains the value NaN, the value NaN is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the items in the value of $arg are of type xs:string or types derived by
+restriction from xs:string, then the determination of the item with the
+largest value is made according to the collation that is used. If the type
+of the items in $arg is not xs:string and $collation is specified, the
+collation is ignored.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The collation used by the invocation of this function is determined according
+to the rules in 7.3.1 Collations.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, the result of the function is the result of the expression:
+</p><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   if (every $v in $c satisfies $c[1] le $v)
+   then $c[1]
+   else fn:min(fn:subsequence($c, 2))
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">
+evaluated with $collation as the default collation if specified, and with $c as
+the converted sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_aggregates">Section
+7.2.10 The fn:min, fn:max, fn:avg, and fn:sum functions[FS]</a>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Notes:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains exactly one value then that value is
+returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The default type when the fn:min function is applied to xs:untypedAtomic
+values is xs:double. This differs from the default type for operators such as
+gt, and for sorting in XQuery and XSLT, which is xs:string.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:anyAtomicType*" class="xquery">
+  The sequence of values whose minimum will be returned.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence | Array" class="javascript">
+  The sequence of values whose minimum will be returned.
+  </apidoc:param>
+      <apidoc:param name="collation" type="xs:string" optional="true">
+  The optional name of a valid collation URI.  For information on the
+  collation URI syntax, see the <em xmlns="http://www.w3.org/1999/xhtml">Search Developer's Guide</em>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:min((3,4,5)) returns 3.
+
+fn:min((5, 5.0e0)) returns 5.0e0.
+
+fn:min((3,4,"Zero")) raises a type error [err:FORG0006].
+
+fn:min(xs:float(0.0E0), xs:float(-0.0E0) can return
+either positive or negative zero.
+[XML Schema Part 2: Datatypes Second Edition] does
+not distinguish between the values positive zero
+and negative zero.
+The result is implementation dependent.
+
+fn:min((fn:current-date(), xs:date("2001-01-01")))
+typically returns xs:date("2001-01-01").
+
+fn:min(("a", "b", "c")) returns "a" under a
+typical default collation.
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.min([2, 7]);
+=&gt; 2
+
+fn.min([fn.currentDate(), xs.date("2001-01-01")]);
+=&gt;
+2001-01-01
+
+fn.min(["a", "b", "c"]);
+=&gt;
+"a"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="sum" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns a value obtained by adding together the values in $arg. If $zero is not
+specified, then the value returned for an empty sequence is the xs:integer
+value 0. If $zero is specified, then the value returned for an empty
+sequence is $zero.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Any values of type xs:untypedAtomic in $arg are cast to xs:double. The items
+in the resulting sequence may be reordered in an arbitrary order. The
+resulting sequence is referred to below as the converted sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence is empty, then the single-argument form of the
+function returns the xs:integer value 0; the two-argument form returns the
+value of the argument $zero.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains the value NaN, NaN is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+All items in $arg must be numeric or derived from a single base type. In
+addition, the type must support addition. Duration values must either all be
+xs:yearMonthDuration values or must all be xs:dayTimeDuration values. For
+numeric values, the numeric promotion rules defined in 6.2 Operators on
+Numeric Values are used to promote all values to a single common type. The
+sum of a sequence of integers will therefore be an integer, while the sum of
+a numeric sequence that includes at least one xs:double will be an
+xs:double.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the above conditions are not met, a type error is raised [err:FORG0006].
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Otherwise, the result of the function, using the second signature, is the
+result of the expression:
+</p><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   if (fn:count($c) eq 0) then
+       $zero
+   else if (fn:count($c) eq 1) then
+       $c[1]
+   else
+       $c[1] + fn:sum(subsequence($c, 2))
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">
+where $c is the converted sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The result of the function, using the first signature, is the result of the
+expression:fn:sum($arg, 0).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+For detailed type semantics, see
+<a href="http://www.w3.org/TR/xquery-semantics/#sec_fn_aggregates">Section
+7.2.10 The fn:min, fn:max, fn:avg, and fn:sum functions[FS]</a>.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Notes:
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+The second argument allows an appropriate value to be defined to represent the
+sum of an empty sequence. For example, when summing a sequence of durations
+it would be appropriate to return a zero-length duration of the appropriate
+type. This argument is necessary because a system that does dynamic typing
+cannot distinguish "an empty sequence of integers", for example, from "an
+empty sequence of durations".
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the converted sequence contains exactly one value then that value is
+returned.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:anyAtomicType*" class="xquery">
+  The sequence of values to be summed.
+  </apidoc:param>
+      <apidoc:param name="arg" type="Sequence | Array" class="javascript">
+  The sequence of values to be summed.
+  </apidoc:param>
+      <apidoc:param name="zero" type="xs:anyAtomicType?" optional="true">
+   The value to return as zero if the input sequence is the empty sequence.
+   This parameter is not available in the 0.9-ml XQuery dialect.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType?</apidoc:return>
+    <apidoc:usage>
+  When running this in the 0.9-ml XQuery dialect, there is no second
+  argument to <code xmlns="http://www.w3.org/1999/xhtml">fn:sum</code>; the second ($zero) argument is available
+  in both the 1.0 and 1.0-ml dialects.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Assume:
+$d1 = xs:yearMonthDuration("P20Y")
+$d2 = xs:yearMonthDuration("P10M")
+$seq1 = ($d1, $d2)
+$seq3 = (3, 4, 5)
+
+fn:sum(($d1, $d2))
+returns an xs:yearMonthDuration with a value of 250 months.
+
+fn:sum($seq1[. &amp;gt; xs:yearMonthDuration('P3M')],
+                 xs:yearMonthDuration('P0M'))
+returns an xs:yearMonthDuration with a value of 0 months.
+
+fn:sum($seq3) returns 12.
+
+fn:sum(()) returns 0.
+
+fn:sum((),()) returns ().
+
+fn:sum((1 to 100)[.&amp;gt;0], 0) returns 0.
+
+fn:sum(($d1, 9E1)) raises an error [err:FORG0006].
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const d1 = xs.yearMonthDuration("P20Y");
+const d2 = xs.yearMonthDuration("P10M")
+const seq1 = [d1, d2];
+fn.sum(seq1);
+=&gt;
+an xs:yearMonthDuration with a value of 250 months (P20Y10M).
+
+*****
+const seq3 = [3, 4, 5];
+fn.sum(seq3);
+=&gt;
+12
+
+*****
+fn.sum(null);
+=&gt;
+0
+
+*****
+fn.sum(null, null);
+=&gt;
+()
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="id" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the sequence of element nodes that have an ID value matching the value
+of one or more of the IDREF values supplied in $arg.
+</p>
+
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:string*">
+The IDs of the elements to return.
+  </apidoc:param>
+      <apidoc:param name="node" type="node()" optional="true">
+The target node.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element()*</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The function returns a sequence, in document order with duplicates eliminated,
+containing every element node E that satisfies all the following conditions:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>E is in the target document. The target document is the document containing
+$node, or the document containing the context node if the second argument is
+omitted. An error is raised [err:FODC0001] if $node, or the context item if
+the second argument is omitted, is a node in a tree whose root is not a
+document node or if the second argument is omitted and there is no context
+item [err:FONC0001], or if the context item is not a node [err:FOTY0011].
+</li>
+	<li>E has an ID value equal to one of the candidate IDREF values, where:
+<ul>
+	    <li>An element has an ID value equal to V if either or both of the following
+conditions are true:
+<ul>
+		<li>The is-id property (See Section 5.5 is-id AccessorDM.) of the element node
+is true, and the typed value of the element node is equal to V under the
+rules of the eq operator using the Unicode code point collation
+  (http://www.w3.org/2005/xpath-functions/collation/codepoint).
+</li>
+		<li>The element has an attribute node whose is-id property (See Section 5.5
+is-id AccessorDM.) is true and whose typed value is equal to V under the
+rules of the eq operator using the Unicode code point collation
+  (http://www.w3.org/2005/xpath-functions/collation/codepoint).
+</li>
+	      </ul>
+</li>
+	    <li>Each xs:string in $arg is parsed as if it were of type IDREFS, that is,
+each xs:string in $arg is treated as a space-separated sequence of tokens,
+each acting as an IDREF. These tokens are then included in the list of
+candidate IDREFs. If any of the tokens is not a lexically valid IDREF (that
+is, if it is not lexically an xs:NCName), it is ignored. Formally, The
+candidate IDREF values are the strings in the sequence given by the
+expression:
+<pre xml:space="preserve">
+for $s in $arg
+return fn:tokenize(fn:normalize-space($s), ' ')
+                 [. castable as xs:IDREF]
+</pre>
+</li>
+	  </ul>
+</li>
+	<li>If several elements have the same ID value, then E is the one that is first
+in document order.
+</li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">Notes:</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If the data model is constructed from an Infoset, an attribute will have the
+is-id property if the corresponding attribute in the Infoset had an attribute
+type of ID: typically this means the attribute was declared as an ID in a DTD.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the data model is constructed from a PSVI, an element or attribute will have
+the is-id property if its schema-defined type is xs:ID or a type derived by
+restriction from xs:ID.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+No error is raised in respect of a candidate IDREF value that does not match
+the ID of any element in the document. If no candidate IDREF value matches the
+ID value of any element, the function returns the empty sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+It is not necessary that the supplied argument should have type xs:IDREF or
+xs:IDREFS, or that it should be derived from a node with the is-idrefs
+property.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+An element may have more than one ID value. This can occur with synthetic data
+models or with data models constructed from a PSVI where an the element and one
+of its attributes are both typed as xs:ID.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If the source document is well-formed but not valid, it is possible for two or
+more elements to have the same ID value. In this situation, the function will
+select the first such element.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+It is also possible in a well-formed but invalid document to have an element or
+attribute that has the is-id property but whose value does not conform to the
+lexical rules for the xs:ID type. Such a node will never be selected by this
+function.
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := document{
+  &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;p id="myID"&gt;hello&lt;/p&gt;
+  &lt;/html&gt; }
+return
+fn:id("myID", $x)
+
+=&gt; &lt;p id="myID" xmlns="http://www.w3.org/1999/xhtml"&gt;hello&lt;/p&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const x = xdmp.unquote('&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;'
+   + '&lt;p id="myID"&gt;hello&lt;/p&gt;' 
+  + '&lt;/html&gt;');
+fn.id("myID", fn.head(x));
+
+=&gt; &lt;p id="myID" xmlns="http://www.w3.org/1999/xhtml"&gt;hello&lt;/p&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+declare namespace xh="http://www.w3.org/1999/xhtml";
+
+let $x := document {
+  &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+    &lt;p id="myID"&gt;hello&lt;/p&gt;
+    &lt;p&gt;hello&lt;/p&gt;
+  &lt;/html&gt; }
+return
+$x/xh:html/xh:p[. is fn:id("myID")]
+
+=&gt; &lt;p id="myID" xmlns="http://www.w3.org/1999/xhtml"&gt;hello&lt;/p&gt;
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="idref" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns the sequence of element or attribute nodes that have an IDREF value
+matching the value of one or more of the ID values supplied in $arg.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:string*">
+The IDREFs of the elements and attributes to return.
+  </apidoc:param>
+      <apidoc:param name="node" type="node()" optional="true">
+The target node.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The function returns a sequence, in document order with duplicates eliminated,
+containing every element or attribute node $N that satisfies all the following
+// conditions:
+</p>
+<ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>$N is in the target document. The target document is the document containing
+$node, or the document containing the context node if the second argument is
+omitted. An error is raised [err:FODC0001] if $node, or the context item if
+the second argument is omitted, is a node in a tree whose root is not a
+document node or if the second argument is omitted and there is no context
+item [err:FONC0001], or if the context item is not a node [err:FOTY0011].
+</li>
+	<li>$N has an IDREF value equal to one of the candidate ID values, where:
+<ul>
+	    <li>A node $N has an IDREF value equal to V if either or both of the following
+conditions are true:
+<ul>
+		<li>The is-idrefs property (See Section 5.6 is-idref AccessorDM.) of $N is true.
+</li>
+		<li>
+The sequence
+fn:tokenize(fn:normalize-space($N), ' ')
+contains a string that is equal to V under the rules of the eq operator using
+the Unicode code point collation
+  (http://www.w3.org/2005/xpath-functions/collation/codepoint).
+</li>
+	      </ul>
+</li>
+	    <li>Each xs:string in $arg is parsed as if it were of type xs:ID.  These
+xs:strings are then included in the list of candidate xs:IDs. If any of the
+xs:strings in $arg is not a lexically valid xs:ID (that
+is, if it is not lexically an xs:NCName), it is ignored. More formally, The
+candidate ID values are the strings in the sequence
+<pre xml:space="preserve">
+$arg[. castable as xs:ID]
+</pre>
+</li>
+	  </ul>
+</li>
+      </ol>
+<p xmlns="http://www.w3.org/1999/xhtml">Notes:</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+An element or attribute typically acquires the is-idrefs property by being
+validated against the schema type xs:IDREF or xs:IDREFS, or (for attributes
+only) by being described as of type IDREF or IDREFS in a DTD.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+No error is raised in respect of a candidate ID value that does not match the
+IDREF value of any element or attribute in the document. If no candidate ID
+value matches the IDREF value of any element or attribute, the function returns
+the empty sequence.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+It is possible for two or more nodes to have an IDREF value that matches a
+given candidate ID value. In this situation, the function will return all such
+nodes. However, each matching node will be returned at most once, regardless
+how many candidate ID values it matches.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+It is possible in a well-formed but invalid document to have a node whose
+is-idrefs property is true but that does not conform to the lexical rules for
+the xs:IDREF type. The effect of the above rules is that ill-formed candidate
+ID values and ill-formed IDREF values are ignored
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(:
+   assume /mydocs/idref.xml has an element named idrefs that is
+   of type xs:IDREF or xs:IDREFS
+:)
+fn:idref("myID", doc("/mydocs/idref.xml"))
+
+=&gt; &lt;idrefs&gt;myID&lt;/idrefs&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+//   assume /mydocs/idref.xml has an element named idrefs that is
+//   of type xs:IDREF or xs:IDREFS
+
+fn.idref("myID", fn.head(fn.doc("/mydocs/idref.xml")));
+
+=&gt; &lt;idrefs&gt;myID&lt;/idrefs&gt;
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="doc" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the document(s) stored in the database at the specified 
+  URI(s).</p>
+  <p class="javascript" xmlns="http://www.w3.org/1999/xhtml">If you are only getting a single document (specifying a 
+  single URI), you can use <code><a href="#cts.doc">cts.doc</a></code>
+  instead (so you do not need to iterate through the Sequence to
+  get to the document).</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string*" optional="true" class="xquery">
+  The URI of the document to retrieve.  If you omit this parameter,
+  returns all of the documents in the database - this is only allowed if
+  you're not using xquery version 1.0 strict. If you specify a list of
+  URIs, returns all of the documents at the URIs specified in the list.
+  </apidoc:param>
+      <apidoc:param name="uri" type="String | String[] | Sequence" optional="true" class="javascript">
+  The URI of the document to retrieve.  If you omit this parameter,
+  returns all of the documents in the database. If you specify an array or
+  a Sequence of URIs, returns all of the documents at the URIs 
+  specified in the list.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>document-node()*</apidoc:return>
+    <apidoc:usage>
+  The <code xmlns="http://www.w3.org/1999/xhtml">document-node()</code> returned for each item in the result
+  contains an <code xmlns="http://www.w3.org/1999/xhtml">element()</code> root node for XML documents, a
+  <code xmlns="http://www.w3.org/1999/xhtml">text()</code> root node for text documents, an 
+  <code xmlns="http://www.w3.org/1999/xhtml">object-node()</code>, <code xmlns="http://www.w3.org/1999/xhtml">array-node()</code>, or another JSON node
+  for a JSON document, and a <code xmlns="http://www.w3.org/1999/xhtml">binary()</code> root node for binary 
+  documents.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:doc("/mydocs/doc.xml")
+
+=&gt; returns the document at the URI /mydocs/doc.xml
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const d = fn.doc("/mydocs/doc.json");
+for (const x of d) {
+x };
+
+=&gt; The variable d holds a Sequence containing the document 
+   at the URI /mydocs/doc.json, and x contains the document, so 
+   this program returns the document.
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const res = [];
+const d = fn.subsequence(fn.doc(), 1, 2);
+for (const x of d) {
+res.push(x); };
+res;
+
+=&gt; The first 2 documents in the Sequence containing the documents
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="doc-available" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">If fn:doc($uri) returns a document node, this function returns true.
+If $uri is not a valid xs:anyURI, an error is raised [err:FODC0005].
+Otherwise, this function returns false.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If this function returns true, then calling fn:doc($uri) within the
+same execution scope must return a document node.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string?">
+The URI of the document to check.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:doc-available("/mydocs/doc.xml")
+
+=&gt; true is /mydocs/doc.xml is a document in the database
+   otherwise false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.docAvailable("/mydocs/doc.xml");
+
+=&gt; true is /mydocs/doc.xml is a document in the database,
+   otherwise false
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="collection" type="builtin" lib="fn" category="SequenceBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns all of the documents that belong to the specified collection(s).
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string*" optional="true">
+  The URI of the collection to retrieve.   If you omit this parameter,
+  returns all of the documents in the database. If you specify a list of
+  URIs, returns all of the documents in all of the collections at the URIs
+  specified in the list.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>document-node()*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:collection("mycollection")[1]
+=&gt; returns the first document in the "mycollection" collection
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(fn.collection("mycollection"));
+=&gt; returns the first document in the "mycollection" collection
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const res = [];
+const d = fn.subsequence(fn.collection("my-collection"), 1, 2);
+for (const x of d) {
+res.push(x); };
+res;
+
+=&gt; The first 2 documents in the Sequence containing the collection
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="document" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the document(s) stored in the database at the specified URI(s).
+  The URI(s) are resolved according to the base-uri of the calling
+  stylesheet or XQuery main module.  </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This is an XSLT function, and it is available in both XSLT and in
+  XQuery 1.0-ml. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uris" type="item()*" optional="false" class="xquery">
+  The $uris is a sequence of the URI(s) of the document(s) to be retrieved.
+  This parameter is mandatory. However you may pass a singleton sequence
+  with an empty string in it. In that case it will return the stylesheet
+  that contains this function call when called from XSLT stylesheet and
+  all the documents in the database when called from XQuery- this is allowed
+  only when you are not using version 1.0 strict. If any URI in this sequence
+  is an absolute URI, then it is used as is. If it is a relative
+  URI, it is resolved against a base URI specified in the second argument.
+  </apidoc:param>
+      <apidoc:param name="uris" type="String | String[] | Sequence" optional="false" class="javascript">
+  The $uris is an array or a Sequence of the URI(s) of the document(s) 
+  to be retrieved.
+  This parameter is mandatory. If any URI in this sequence
+  is an absolute URI, then it is used as is. If it is a relative
+  URI, it is resolved against a base URI specified in the second argument.
+  </apidoc:param>
+      <apidoc:param name="base-node" type="node()" optional="true">
+  If $base-node is supplied, its base URI is used to resolve relative
+  URIs in uri-sequence. If it is not supplied, the base URI of the node
+  that contained the fn:document() call is used.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>document-node()*</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">If no second argument is specified, the URI resolves using the base-uri
+of the calling module.  This can cause surprising results if the URI you are
+resolving is not rooted but the module from which you call it has a base-uri.
+When calling <code>fn:document</code> from an <code>xdmp:eval</code>,
+the calling module is defined to have no base-uri.  When calling from an
+XQuery module or an XSLT stylesheet, the base-uri is the URI of the
+module or stylesheet.  For an example to demonstrate this , see the
+<a href="#document-resolve">second example</a> below.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">For the URI to be exactly what you enter, use
+<a href="#fn:doc"><code>fn:doc</code></a> instead.</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:document(("/product.xml", "/price.xml"),
+            &lt;a xml:base="http://www.marklogic.com" /&gt;)
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.document(["/product.xml", "/price.xml"],
+            xdmp.unquote('&lt;a xml:base="http://www.marklogic.com" /&gt;'));
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><a id="document-resolve" xmlns="http://www.w3.org/1999/xhtml"></a>
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+(:
+  This module should be at the App Server root with a name test.xqy,
+  so it resolves to /test.xqy from the App Server's root.
+:)
+xdmp:set-response-content-type("text/plain"),
+
+xdmp:document-insert("testing.xml", &lt;foo/&gt;);
+xdmp:document-insert("/testing.xml", &lt;bar/&gt;);
+
+declare option xdmp:output "indent-untyped=yes";
+
+&lt;root&gt;
+  &lt;document-from-module&gt;
+     &lt;document&gt;{fn:document("testing.xml")}&lt;/document&gt;
+  &lt;/document-from-module&gt;
+  &lt;document-from-eval&gt;
+     &lt;document&gt;{xdmp:eval('fn:document("testing.xml")')}&lt;/document&gt;
+  &lt;/document-from-eval&gt;
+&lt;/root&gt;
+
+(:
+  From the module, the document cannot find the URI "testing.xml"
+  because the base-uri of the module is its URI relative to the
+  App Server root.  It therefore finds /testing.xml because that is what
+  the URI testing.xml resolves to (testing.xml resolves to /testing.xml when
+  the base-uri is /test.xqy).  From an eval, there is no base-uri, so
+  it can find an unrooted URI (testing.xml resolves to testing.xml when the
+  base-uri is empty).  
+:)
+
+=&gt;
+&lt;root&gt;
+  &lt;document-from-module&gt;
+    &lt;document&gt;
+      &lt;bar/&gt;
+    &lt;/document&gt;
+  &lt;/document-from-module&gt;
+  &lt;document-from-eval&gt;
+    &lt;document&gt;
+      &lt;foo/&gt;
+    &lt;/document&gt;
+  &lt;/document-from-eval&gt;
+&lt;/root&gt;
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="unparsed-text" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Reads a file stored in the database as either text or binary file and
+  returns its contents as a string.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="href" type="xs:string" optional="false">
+  The $href is a string containing a URI reference. It must identify a resource
+  that can be read as text. If the URI is a relative URI then it is resolved
+  relative to the base URI from the static context.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+  If $encoding parameter is present and the URI points to a "text" file, the
+  encoding is ignored since all the files are in UTF-8 in the database. However,
+  if the URI points to a binary file, then an attempt is made to convert
+  it from the specified encoding and the string value of the results of the
+  conversion is returned. If the conversion fails, an exception is returned.
+  The $encoding parameter must be passed when the URI resolves to a binary
+  resource.  An automatic encoding detector will be used if the
+  value <code xmlns="http://www.w3.org/1999/xhtml">auto</code> is specified.  If $encoding is not present, 
+  the encoding defaults to UTF-8.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:unparsed-text("http://marklogic.com/test.xml","UTF-8")
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.unparsedText("http://marklogic.com/test.xml","UTF-8");
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="unparsed-text-available" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns true if a call to unparsed-text would succeed with identical
+  arguments.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="href" type="xs:string" optional="false">
+  The $href is a string containing a URI reference. It must identify a resource
+  that can be read as text. If the URI is a relative URI then it is resolved
+  relative to the base URI from the static context.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+  If $encoding parameter is present and the URI points to a "text" file, the
+  encoding is ignored since all the files are in UTF-8 in the database. However,
+  if the URI points to a binary file, then an attempt will be made to convert
+  it to the specified encoding and if the conversion succeeds it returns true.
+  If the conversion fails, an exception is returned. The $encoding parameter
+  must be passed when the URI resolves to a binary resource.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:unparsed-text-available("http://marklogic.com/test.xml","UTF-8");
+=&gt; true if the document is available as unparsed text
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.unparsedTextAvailable("http://marklogic.com/test.xml","UTF-8");
+=&gt; true if the document is available as unparsed text
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

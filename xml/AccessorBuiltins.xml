@@ -1,0 +1,354 @@
+<apidoc:module name="AccessorBuiltins" category="AccessorBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+The accessor built-in functions are XQuery functions to access node properties.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="node-kind" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  [0.9-ml only, use <code xmlns="http://www.w3.org/1999/xhtml">xdmp:node-kind</code> in 1.0 and 1.0-ml]
+  Returns an <code xmlns="http://www.w3.org/1999/xhtml">xs:string</code> representing the node's kind: either
+  "document", "element", "attribute", "text", "namespace",
+  "processing-instruction", "binary", or "comment".
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()?">
+  The node whose kind is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := &lt;hello&gt;&lt;goodbye&gt;1&lt;/goodbye&gt;&lt;/hello&gt;
+return
+fn:node-kind($x/node())
+
+=&gt; element
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="node-kind" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+  Returns an <code>xs:string</code> representing the node's kind: either
+  "document", "element", "attribute", "text", "namespace",
+  "processing-instruction", "binary", or "comment".
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+  The <code>fn:node-kind</code> builtin was dropped from the final XQuery 1.0
+  spec.  This is the equivalent function in the <code>xdmp:</code> namespace
+  carried over for MarkLogic 1.0 dialects.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()">
+  The node whose kind is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := &lt;hello&gt;&lt;goodbye&gt;1&lt;/goodbye&gt;&lt;/hello&gt;
+return
+xdmp:node-kind($x/node())
+
+=&gt; element
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = {hello: "goodbye"};
+xdmp.nodeKind(x);
+
+=&gt; object
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="node-name" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns an expanded-QName for node kinds that can have names.
+For other kinds of nodes it returns the empty sequence. If $arg is the
+empty sequence, the empty sequence is returned.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?">
+The node whose name is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:QName?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := &lt;hello&gt;&lt;goodbye&gt;1&lt;/goodbye&gt;&lt;/hello&gt;
+return
+fn:node-name($x/child::element())
+
+=&gt; goodbye
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;hello&gt;&lt;goodbye&gt;1&lt;/goodbye&gt;&lt;/hello&gt;'));
+fn.nodeName(x.xpath("/child::element()"));
+
+=&gt; hello (because the xdmp.unquote produces a Sequence 
+          containing a document node, and the xpath starts at the
+	  document node and selects the sequence of child elements,
+	  which in this case is the root node named "hello")
+</pre>
+
+</apidoc:example>
+  </apidoc:function><apidoc:function name="nilled" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Summary: Returns an xs:boolean indicating whether the argument node is
+"nilled". If the argument is not an element node, returns the empty sequence.
+If the argument is the empty sequence, returns the empty sequence.
+For element nodes, true() is returned
+if the element is nilled, otherwise false().</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Elements may be defined in a schema as nillable, which allows an empty
+instance of an element to a appear in a document even though its type
+requires that it always have some content.  Nilled elements should always be
+empty but an element is not considered nilled just because it's empty.
+It must also have the type annotation attribute xsi:nil="true".
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?">
+The node to test for nilled status.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean?</apidoc:return>
+    <apidoc:usage>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:nilled(&lt;foo/&gt;)
+=&gt; false
+
+fn:nilled(&lt;foo xsi:nil="true"/&gt;)
+=&gt; true, if the schema for foo allows nillable
+
+fn:nilled(&lt;foo xsi:nil="false"/&gt;)
+=&gt; false
+
+fn:nilled(())
+=&gt; ()
+
+fn:nilled(text { "foo" })
+=&gt; ()
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.nilled(fn.head(xdmp.unquote('&lt;foo/&gt;')).xpath("/foo"));
+=&gt; false
+
+var node = fn.head(xdmp.unquote(
+  '&lt;foo xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/&gt;')
+    ).xpath("/foo")
+fn.nilled(node);
+
+=&gt; true, if the schema for foo allows nillable
+
+var node = fn.head(xdmp.unquote(
+ '&lt;foo xsi:nil="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/&gt;')
+    ).xpath("/foo")
+fn.nilled(node);
+
+=&gt; false
+
+fn.nilled(null)
+=&gt; ()
+
+var node = new NodeBuilder();
+node.addText("text node");
+node.toNode();
+fn.nilled(node);
+
+=&gt; ()
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="string" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+ Returns the value of $arg represented as an <code xmlns="http://www.w3.org/1999/xhtml">xs:string</code>. If no
+ argument is supplied, this function returns the string value of the
+ context item (.).
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()?" optional="true">
+The item to be rendered as a string.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:usage>
+If no argument is supplied and the context item is undefined, an error is
+raised.
+<p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, the zero-length string is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is a node, the function returns the string-value of the node, as
+obtained using the dm:string-value accessor.
+</p>
+If $arg is an atomic value, then the function returns the same string as is
+returned by the expression:<br xmlns="http://www.w3.org/1999/xhtml"/><br xmlns="http://www.w3.org/1999/xhtml"/><code xmlns="http://www.w3.org/1999/xhtml">$arg cast as xs:string</code>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := &lt;hello&gt;hello&lt;goodbye&gt;goodbye&lt;/goodbye&gt;&lt;/hello&gt;
+return
+fn:string($x)
+
+=&gt; hellogoodbye
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;hello&gt;hello&lt;goodbye&gt;goodbye&lt;/goodbye&gt;&lt;/hello&gt;')
+    ).xpath("/hello");
+fn.string(x);
+
+=&gt; hellogoodbye
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="data" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+ <p xmlns="http://www.w3.org/1999/xhtml">Takes a sequence of items and returns a sequence of atomic values. </p>
+ <p xmlns="http://www.w3.org/1999/xhtml">The <code>fn:data</code> function returns the sequence of atomic values
+ produced by applying the following rules to each item in $arg: </p>
+<ul xmlns="http://www.w3.org/1999/xhtml">
+	<li>If the item is an atomic value, it is returned.</li>
+	<li>If the item is a node:
+  <ul>
+	    <li>If the node does not have a typed value an error is
+  raised [err:FOTY0012].</li>
+	    <li>Otherwise, <code>fn:data</code> returns the typed value of the node as
+  defined by the accessor function dm:typed-value in Section 5.15
+  typed-value Accessor[DM].</li>
+	  </ul></li>
+      </ul>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The items whose typed values are to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyAtomicType*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := &lt;hello&gt;hello
+            &lt;goodbye&gt;goodbye&lt;/goodbye&gt;
+          &lt;/hello&gt;
+return
+fn:data($x)
+
+=&gt; hello goodbye
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = fn.head(xdmp.unquote('&lt;hello&gt;hello &lt;goodbye&gt;goodbye&lt;/goodbye&gt;&lt;/hello&gt;')
+    ).xpath("/hello");
+fn.data(x);
+
+=&gt; hello goodbye
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="base-uri" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns the value of the base-uri property for the specified node.  If the
+  node is part of a document and does not have a base-uri attribute explicitly
+  set, <code xmlns="http://www.w3.org/1999/xhtml">fn:base-uri</code> typically  returns the URI of the document
+  in which the node resides.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?" optional="true">
+   The node whose base-uri is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+for $x in xdmp:directory("/myDirectory/", "1")
+return
+base-uri($x)
+
+=&gt; a list of URIs for all of the documents in the
+   directory "/myDirectory/"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = cts.doc("/bar.json");
+fn.baseUri(x);
+
+=&gt; "/bar.json"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="document-uri" type="builtin" lib="fn" category="AccessorBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+ Returns the value of the document-uri property for the specified node.
+ If the node is a document node, then the value returned is the URI of the
+ document. If the node is not a document node, then
+ <code xmlns="http://www.w3.org/1999/xhtml">fn:document-uri</code> returns the empty sequence.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="node()?">
+  The node whose document-uri is to be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI?</apidoc:return>
+    <apidoc:usage>
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:document-uri</code> will only return the URI of a document
+  when a document node is passed into it.  If you want to return the URI
+  of a node that is not a document node, but has a document node ancestor,
+  use <a href="#fn:base-uri" xmlns="http://www.w3.org/1999/xhtml"><code>fn:base-uri</code></a> or 
+  <a href="#xdmp:node-uri" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp:node-uri</code></a>.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+for $x in xdmp:directory("/myDirectory/", "1")
+return
+fn:document-uri($x)
+
+=&gt; a list of URIs for all of the documents in the
+   directory "/myDirectory/"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var x = cts.doc("/bar.json");
+fn.documentUri(x);
+
+=&gt; "/bar.json"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="atomizable" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Returns true if a value could be atomized without error.
+  If no argument is supplied, this function checks
+  whether the context item can be atomized without error.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="item" type="item()" optional="true">
+    The item to be tested for atomizability.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:atomizable(&lt;x xsi:type="xs:integer"&gt;a&lt;/x&gt;)
+
+=&gt; false()
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var node = xdmp.unquote('&lt;x xsi:type="xs:integer" \
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" \
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;a&lt;/x&gt;');
+node = fn.head(node).xpath("/x");
+xdmp.atomizable(node);
+
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="is-whitespace-node" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Returns true if the node is a text node containing only whitespace.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="text" type="node()" optional="true">
+  The node to be tested.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:is-whitespace-node(&lt;x&gt;a&lt;/x&gt;)
+
+=&gt; false()
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var node = xdmp.unquote('&lt;x&gt;a&lt;/x&gt;');
+node = fn.head(node).xpath("/x");
+xdmp.isWhitespaceNode(node);
+
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

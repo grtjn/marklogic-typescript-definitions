@@ -1,0 +1,316 @@
+<apidoc:module name="Management" category="Configuration Management API" lib="manage" bucket="REST Resources API"
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc" xmlns="http://www.w3.org/1999/xhtml">
+
+  <apidoc:summary category="Configuration Management API" bucket="REST Resources API">
+    <p>
+      The Configuration Management API is a RESTful API that allows retrieving, generating, and applying
+      configurations for MarkLogic clusters, databases, and application servers.      
+    </p>	
+  </apidoc:summary>
+
+
+<apidoc:function name="/manage/v3" http-verb="GET"
+       	lib="manage" category="Configuration Management API" bucket="REST Resources API">
+  <apidoc:summary> 
+	  This endpoint enables retrieving configuration of an individual resource, a set of resources, or a full cluster.
+	  It also enables generating new configurations from scenarios.  
+  </apidoc:summary>
+  
+  <apidoc:params>
+    <apidoc:param name="name" type="string">
+      The configuration profile name, for example <code>"myClusterTestConfig"</code>.
+    </apidoc:param>
+    <apidoc:param name="desc" type="string">
+      The configuration description, for example <code>"Test configuration for my cluster"</code>.
+    </apidoc:param>
+    <apidoc:param name="embed-tokens" type="boolean">
+      Embed replacement tokens (ex. %%sometoken%%) in configuration. 
+	  The allowed values are <code>true</code> or <code>false</code>. 
+	  The default value is <code>false</code> for <code>xml|json</code> format 
+	  and <code>true</code> for <code>zip</code> format. 
+    </apidoc:param>
+    <apidoc:param name="include-properties" type="boolean">
+      Include resource properties in the configuration. By default, all resource properties are provided. 
+	  If set <code>false</code> - only resource name and identifier are provided. 
+	  The allowed values are <code>true</code> or <code>false</code>. 
+	  The default value is <code>true</code>.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The response format. 
+	  The allowed values are <code>xml | json | zip</code>.
+	  The default value is <code>xml</code>.
+    </apidoc:param>
+    <apidoc:param name="scenario" type="string">
+      The scenario to generate configuration from. 
+	  The allowed values are: <code>"ha-local", "ha-shared"</code>. 
+    </apidoc:param>
+    <apidoc:param name="installer" type="string">
+      The type of the installer script to include (with a configuration in <code>zip</code> format). 
+	  Currently the only supported value is <code>"ml-gradle"</code>.
+    </apidoc:param>
+<!-- Commented out temporarily, as not implemented in 9.0-5; to be uncommented in 9.0-6.
+    <apidoc:param name="export-database" type="string*">
+      The export database (with a configuration in <code>zip</code> format) controls if a database's content 
+      is included in the zip. Example of usage: Modules database.
+      As the best practice, you shall NOT use it for large databases that contain production data.
+      The value is string array: <code>["database-name", "database-id", ...]</code>.
+    </apidoc:param>
+-->
+    <apidoc:param name="resource-type" type="string">
+      The resource type - for selecting/filtering resources by type. 
+      The allowed values are: <code>"forest", "database", "server", "group", "user", "role"</code>.
+    </apidoc:param>
+    <apidoc:param name="resource-id" type="string*">
+      The list of resources' identifiers to select specific resources. 
+      The value is string array, for example: <code>["resource-id1", "resource-id2", ...]</code>.
+    </apidoc:param>
+    <apidoc:param name="resource-name" type="string">
+      The regular expression to select specific resources by their names, for example <code>"ha-*"</code>.
+    </apidoc:param>
+    <apidoc:param name="params" type="string">
+      The serialized JSON object with scenario-specific default values for parameters to be embedded into the configuration.
+      For more details and the list of available parameters, see Usage Notes in <code><a href="cma:generate-config">cma:generate-config</a></code>.	  
+    </apidoc:param>
+  </apidoc:params>
+  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+      The allowed values are <code>application/xml, application/json, application/zip</code>.
+	  The default value is <code>application/xml</code>.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, can be
+      <code>application/xml</code>, <code>application/json</code>, or <code>application/zip</code>.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, can be
+      <code>application/xml</code>, <code>application/json</code>, or <code>application/zip</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  
+  <apidoc:response>
+        <blockquote><dl>
+          <dt>200 (OK)</dt>
+          <dd>Returned upon successful completion of the operation. 
+		  The response body contains the requested data.
+          </dd>
+          <dt>401 (Unauthorized)</dt>
+          <dd>Returned if the user does not have the necessary privileges to perform the operation.
+          </dd>
+        </dl></blockquote>
+  </apidoc:response>
+  
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+	<p>The user <code>username</code> in Example sections below shall have the above role and/or privilege.</p>
+  </apidoc:privilege>  
+
+    <apidoc:usage schema="manage-cma.xsd" element-name="configuration" print-intro="false">
+      <p>The structure of the data in the response body is as shown below.</p>
+    </apidoc:usage>
+  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password --header "Accept: application/json" http://localhost:8002/manage/v3
+
+   ==> Returns full cluster configuration in json format. 
+    ]]></pre>
+  </apidoc:example>
+  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password --header "Accept: application/json" http://localhost:8002/manage/v3?format=xml
+
+   ==> Returns full cluster configuration in xml format. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password http://localhost:8002/manage/v3?format=xml&include-properties=true
+
+   ==> Returns all resources with properties. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password http://localhost:8002/manage/v3?format=xml&include-properties=true&resource-type=database,forest
+
+   ==> Returns resources with properties, where resources are filtered by type. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password --header "Accept: application/xml" http://localhost:8002/manage/v3?format=xml&include-properties=true&resource-id=123123123123
+
+   ==> Returns resources with properties, where resources are filtered by id. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password http://localhost:8002/manage/v3?format=json&scenario=ha-local
+
+   ==> Generates ha-local configuration. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password http://localhost:8002/manage/v3?format=zip&scenario=ha-local
+
+   ==> Generates ha-local configuration and retrieves standalone installable zip. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password --header "Accept: application/xml" http://localhost:8002/manage/v3?scenario=ha-local&embed-tokens=true&params={"number-of-master-forests":2,"replica-same-zone-as-master":false,"prefix":"ha-local-"}
+
+   ==> Creates configuration from ha-local scenario (xml). 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -X GET --anyauth --user username:password --header "Accept: application/zip" http://localhost:8002/manage/v3?scenario=ha-local&embed-tokens=true&params={"number-of-forests-per-host":2,"replica-same-zone-as-master":true,"prefix":"ha-local-"}
+
+   ==> Creates configuration from ha-local scenario (zip). 
+    ]]></pre>
+  </apidoc:example>
+  
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v3" http-verb="POST"
+       	lib="manage" category="Configuration Management API" bucket="REST Resources API">
+  <apidoc:summary>
+    This endpoint enables applying named configurations to MarkLogic resources, overriding parameters and setting options.
+	The configurations may be applied to an individual resource, a set of resources, or a full cluster.
+  </apidoc:summary>
+  
+  <apidoc:params>
+    <apidoc:param name="name" type="string">
+      The configuration profile name to be run, for example <code>"myClusterTestConfig"</code>.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The configuration format. 
+	  The allowed values are <code>xml | json</code>.
+	  The default value is <code>xml</code>.
+    </apidoc:param>
+<!-- Commented out temporarily, as not implemented in 9.0-5; to be uncommented in 9.0-6.
+    <apidoc:param name="require-params" type="string">
+      Include parameter values to override default values when the configuration is applied. 
+	  The allowed values are <code>true</code> or <code>false</code>. 
+	  The default value is <code>false</code>. 
+	  When set to <code>true</code>, all parameters must be overriden, 
+	  i.e. provided either in <code>params</code> URL parameter or in <code>params</code> object of the request body;
+	  otherwise the endpoint will return HTTP response code 400 Bad Request with error message set to CMA-INVALIDPARAMS.
+    </apidoc:param>
+-->	
+    <apidoc:param name="resource-type" type="string">
+      The resource type the configuration applies to. 
+      The allowed values are: <code>"forest", "database", "server", "group", "user", "role"</code>.
+    </apidoc:param>
+    <apidoc:param name="resource-id" type="string">
+      The list of specific resources' identifiers to apply the configuration to. 
+      The value is string array, for example <code>["resource-id1", "resource-id2", ...]</code>.
+    </apidoc:param>
+    <apidoc:param name="resource-name" type="string">
+      The regular expression to select specific resources by their names, for example <code>"ha-*"</code>.
+    </apidoc:param>
+    <apidoc:param name="params" type="string">
+      The serialized JSON object with scenario-specific values for parameters to override default values when the configuration is applied.
+      For more details and the list of available parameters, see Usage Notes in <code><a href="cma:apply-config">cma:apply-config</a></code>.
+      As the best practice, pass scenario-specific parameters to this endpoint in the <code>params</code> object of the request body, rather than in this URL parameter, 
+    </apidoc:param>	
+  </apidoc:params>
+  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+      The allowed values are <code>application/xml, application/json</code>.
+	  The default value is <code>application/xml</code>.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, can be
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, can be
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  
+  <apidoc:response>
+        <blockquote><dl>
+          <dt>200 (OK)</dt>
+          <dd>Returned upon successful completion of the operation. 
+		  The response body contains the requested data.
+          </dd>
+<!--		  
+          <dt>202 (Accepted)</dt>
+          <dd>Returned in case of asynchronous process. Indicates that request parameters and request body 
+		  were validated successfully, and the operation has started, but it has not been completed yet. 
+          </dd>
+-->		  
+<!-- Commented out temporarily, as not implemented in 9.0-5; to be uncommented in 9.0-6.
+          <dt>400 (Bad Request)</dt>
+          <dd>Returned  when <code>require-params</code> is set to <code>true</code>, but <code>params</code> not provided.
+          </dd>
+-->
+          <dt>401 (Unauthorized)</dt>
+          <dd>Returned if the user does not have the necessary privileges to perform the operation.
+          </dd>
+        </dl></blockquote>
+  </apidoc:response>
+  
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage-admin</code></p>
+	<p>The user <code>username</code> in Example sections below shall have the above role and/or privilege.</p>
+  </apidoc:privilege>  
+
+    <apidoc:usage schema="manage-cma.xsd" element-name="configuration" print-intro="false">
+      <p>The structure of the data in the request body and response body is as shown below.</p>
+    </apidoc:usage>
+  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -v -X POST --anyauth --user username:password --header "Content-Type:application/json" -d'{"config": [{"forest": [{"forest-name":"f1"}, {"forest-name":"f2"}, {"forest-name":"f3"}]}]}' http://localhost:8002/manage/v3
+
+   ==> Apply json configuration, creating three forests with a single HTTP request. 
+    ]]></pre>
+  </apidoc:example>
+  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -v -X POST --anyauth --user username:password --header "Content-Type:application/json" -d'{"name":"myConfig","param":[],"config":[{"forest": ["dhf1"],"database":[{"database-name":"dhdb1"}],"server":[{"server-name":"dhf1","server-type":"http","root":"/","port":8100,"content-database":"dhdb1"}]}]}' http://node1:8002/manage/v3
+
+   ==> Apply json configuration, creating a forest, a database, and an HTTP application server. 
+    ]]></pre>
+  </apidoc:example>
+
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   curl -v -X POST --anyauth --user username:password --header "Content-Type:application/zip" -d@myconfig.zip "http://node1:8002/manage/v3"
+
+   ==> Apply zip configuration. 
+    ]]></pre>
+  </apidoc:example>
+  
+</apidoc:function>
+
+</apidoc:module>

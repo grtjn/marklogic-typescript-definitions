@@ -1,0 +1,48 @@
+<apidoc:module name="PowerpointModule" category="Powerpoint Conversion" 
+  bucket="CPF Functions" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="ppt" class="xquery"
+>
+<apidoc:summary access="public">
+<p>The Powerpoint module is part of the conversion processing pipeline.
+These functions are used to manipulate XHTML derived by converting Microsoft
+Powerpoint spreadsheets, as part of conversion processing.
+</p>
+<p>To use the Powerpoint module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace ppt = "http://marklogic.com/cpf/powerpoint"
+         at "/MarkLogic/conversion/powerpoint.xqy";</code></p>
+<p>You will need to ensure that the Powerpoint module is loaded into the same modules
+database as the importing module.</p>
+<p>The library namespace prefix <code>ppt</code> is <em>not</em> predefined in
+the server.</p>
+</apidoc:summary>
+
+<apidoc:function name="clean" type="powerpoint" lib="ppt" 
+	subcategory="Powerpoint Conversion" category="CPF Functions"
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Clean up any conversion artifacts or other infelicities, putting each 
+  slide into its own div element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+    The source URI of the converted presentation.
+    </apidoc:param>
+    <apidoc:param name="doc" type="node()?">
+    The XHTML produced by conversion of a Microsoft Powerpoint presentation.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace ppt = "http://marklogic.com/cpf/powerpoint" 
+		  at "/MarkLogic/conversion/powerpoint.xqy";
+
+  ppt:clean("my_ppt.xhtml",fn:doc("my_ppt.xhtml"))
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

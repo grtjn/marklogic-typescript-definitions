@@ -1,0 +1,58 @@
+<apidoc:module name="OOXML" category="WordProcessingML" lib="ooxml" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	bucket="XQuery Library Modules" class="xquery">
+  <apidoc:summary>
+      <p>The WordProcessingML function module is installed as the following 
+		  file:</p>
+    <ul>
+	    <li><code><em>install_dir</em>/Modules/MarkLogic/openxml/word-processing-ml.xqy</code></li>
+    </ul>
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+	    MarkLogic Server is installed.</p>
+    <p>To use the <code>word-processing-ml.xqy</code> module in your own 
+    XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+    <pre xml:space="preserve">
+import module namespace ooxml="http://marklogic.com/openxml" 
+	    at "/MarkLogic/openxml/word-processing-ml.xqy";</pre>
+    <p>The WordProcessingML functions are used with the Word 2007 documents.</p>
+  </apidoc:summary>
+
+  <apidoc:function name="runs-merge" lib="ooxml" category="WordProcessingML"
+	   bucket="XQuery Library Modules">
+	  <apidoc:summary>This function updates document or paragraph node(s)
+		  (from a Word 2007 document) so that all similar runs are 
+		  merged, retaining formatting, and removing text split 
+		  across elements.</apidoc:summary>
+    <apidoc:params>
+	    <apidoc:param name="nodes" type="node()*">The nodes to 
+		    merge.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace ooxml= "http://marklogic.com/openxml" 
+          at "/MarkLogic/openxml/word-processing-ml.xqy";
+declare namespace w=
+	  "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+
+let $runs := <w:p w:rsidR="00D203FD" w:rsidRDefault="00423AEC">
+           <w:r><w:t>This is a de</w:t></w:r>
+           <w:r><w:t xml:space="preserve">monstration </w:t></w:r>
+            <w:r><w:t>of merging runs</w:t></w:r>
+        </w:p>
+return	  
+ooxml:runs-merge($runs)
+=>
+<w:p w:rsidR="00D203FD" w:rsidRDefault="00423AEC" 
+ xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+ <w:r>
+	 <w:t xml:space="preserve">This is a demonstration of merging runs</w:t>
+  </w:r>
+</w:p>
+  ]]></pre>
+  </apidoc:example>
+  </apidoc:function>
+
+</apidoc:module>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/cpf-config/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://marklogic.com/manage/cpf-config/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="http://marklogic.com/cts" schemaLocation="cts.xsd"/>
+  <xs:simpleType name="name">
+    <xs:annotation>
+      <xs:documentation>
+                A domain name.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="root">
+    <xs:annotation>
+      <xs:documentation>
+                The root path under which to find imported modules.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="capability">
+    <xs:annotation>
+      <xs:documentation>
+        The action permitted on an object.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="update"/>
+      <xs:enumeration value="insert"/>
+      <xs:enumeration value="execute"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="role-name">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="permission" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A permission.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="role-name"/>
+      <xs:element ref="capability" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="permissions" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of permissions
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="permission" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="cpf-config-properties" abstract="false">
+    <xs:all>
+      <xs:element ref="domain-name" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="restart-user-name" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="eval-module" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="eval-root" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="conversion-enabled" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="permissions" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="cpf-config-properties" type="cpf-config-properties" abstract="false" nillable="false"/>
+  <xs:element name="capability" type="capability" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The action/task permitted by a permission
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permission" type="permission" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	Permission representation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permissions" type="permissions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The default set of permissions used in document creation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="role-name" type="role-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The Role name (unique)
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="domain-name" type="name" abstract="false" nillable="false"/>
+  <xs:element name="restart-user-name" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="eval-module" type="xs:string" abstract="false" nillable="false"/>
+  <xs:element name="eval-root" type="root" abstract="false" nillable="false"/>
+  <xs:element name="conversion-enabled" type="xs:boolean" abstract="false" nillable="false"/>
+</xs:schema>

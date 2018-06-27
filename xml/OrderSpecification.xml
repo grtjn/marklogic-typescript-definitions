@@ -1,0 +1,236 @@
+<apidoc:module name="SearchBuiltins" category="SearchBuiltins" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary/><apidoc:function name="index-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a index-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="index" type="cts:reference">
+  A reference to a range index.
+  </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options.  The default is ().
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Results should be returned in descending order of index.</dd>
+        <dt>"ascending"</dt>
+        <dd>Results should be returned in ascending order of index.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:index-order(cts:element-reference(xs:QName("TITLE")))
+
+(: returns the following:
+cts:index-order(cts:element-reference(fn:QName("","TITLE"),
+  ("type=string","collation=http://marklogic.com/collation/")), "ascending")
+:)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.indexOrder(cts.elementReference(xs.QName("TITLE")));
+
+// returns the following:
+// cts.indexOrder(cts.elementReference(fn.QName("","TITLE"),
+//   ["type=string","collation=http://marklogic.com/collation/"]), "ascending")
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="score-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a score-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Return results in descending order of score.</dd>
+        <dt>"ascending"</dt>
+        <dd>Return results in ascending order of score.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:score-order("descending")
+
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.scoreOrder("descending");
+
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="fitness-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a fitness-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Return results in descending order of fitness.</dd>
+        <dt>"ascending"</dt>
+        <dd>Return results in ascending order of fitness.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:fitness-order("descending")
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.fitnessOrder("descending");
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="confidence-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a confidence-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options. 
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Results should be returned in descending order of confidence.</dd>
+        <dt>"ascending"</dt>
+        <dd>Results should be returned in ascending order of confidence.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:confidence-order("descending")
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.confidenceOrder("descending");
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="quality-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a quality-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Results should be returned in descending order of quality.</dd>
+        <dt>"ascending"</dt>
+        <dd>Results should be returned in ascending order of quality.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:quality-order("descending")
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.qualityOrder("descending");
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="document-order" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Creates a document-based ordering clause, for use as an option to
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+    Options.
+    <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"descending"</dt>
+        <dd>Results should be returned in descending order of document.</dd>
+        <dt>"ascending"</dt>
+        <dd>Results should be returned in ascending order of document.</dd>
+     </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">Only one of "ascending" or "descending" may be specified
+  in the options parameter.  If neither "ascending" nor "descending"
+  is specified, then the default is "ascending".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:document-order("descending")
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.documentOrder("descending");
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="unordered" type="builtin" lib="cts" category="SearchBuiltins" subcategory="cts:order Constructors">
+    <apidoc:summary>
+  Specifies that results should be unordered, for use with
+  <code xmlns="http://www.w3.org/1999/xhtml">
+  <span class="xquery">cts:search</span><span class="javascript">cts.search</span>
+  </code>.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>cts:order</apidoc:return>
+    <apidoc:usage>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:unordered()
+(: Returns the specified opaque cts:order object :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.unordered();
+// Returns the specified opaque cts.order object
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

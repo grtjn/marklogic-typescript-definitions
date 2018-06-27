@@ -1,0 +1,219 @@
+<apidoc:module name="ContextBuiltins" category="ContextBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="ContextBuiltins" bucket="W3C-Standard Functions">
+The context built-in functions are XQuery functions defined to obtain information from the dynamic context.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="position" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+Returns the context position from the dynamic context. (See
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components" xmlns="http://www.w3.org/1999/xhtml">Section C.2 Dynamic
+Context Components[XP]</a>.) If the context item is undefined, an error is
+raised [err:FONC0001].
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := (10, 20, 30, 40, 50)
+return
+$x[position() eq 2]
+
+=&gt; 20, which is in the second position in the sequence
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="last" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+Returns the context size from the dynamic context. (See
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components" xmlns="http://www.w3.org/1999/xhtml">Section C.2 Dynamic
+Context Components[XP]</a>.) If the context item is undefined, an error is
+raised [err:FONC0001].
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml"><code>fn:last()</code> returns the exact context position of the
+  last item in the current context, so it must count all the items to do
+  this. It is as much work as <code>fn:count()</code>.
+  <code>fn:last()</code> is therefore best used to find the last item in
+  a short context sequence.  For example, it is useful in a path
+  expression predicate to find the last child node of a particular
+  element node in a particular document.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">Using <code>fn:last()</code> in a predicate expression is not an
+  efficient way to extract a subsequence of large item sequence. Its use
+  for this purpose is strongly discouraged. It is much more efficient to
+  use <code>fn:tail()</code> or <code>fn:subsequence()</code> instead.</p>
+</apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $x := (10, 20, 30, 40, 50)
+return
+$x[last()]
+
+=&gt; 50, which is the last item in the sequence
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="current-dateTime" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns the current dateTime value (with timezone) from the dynamic context.
+  (See
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components" xmlns="http://www.w3.org/1999/xhtml">Section C.2 Dynamic
+Context Components[XP]</a>.) This is an
+  <code xmlns="http://www.w3.org/1999/xhtml">xs:dateTime</code> that is current at some time during the
+  evaluation of a query or transformation in which
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-dateTime()</code> is executed. This function is
+  *stable*. The precise instant during the query or transformation
+  represented by the value of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-dateTime()</code> is
+  *implementation dependent*.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return class="xquery">xs:dateTime</apidoc:return>
+    <apidoc:return class="javascript">xs.dateTime</apidoc:return>
+    <apidoc:usage>
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-dateTime()</code> returns an <code xmlns="http://www.w3.org/1999/xhtml">xs:dateTime</code>
+  corresponding to the current date and time. For example, an invocation
+  of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-dateTime()</code> might return
+  <code xmlns="http://www.w3.org/1999/xhtml">2004-05-12T18:17:15.125Z</code> corresponding to the current
+  time on May 12, 2004 in timezone Z.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:current-dateTime()
+
+=&gt; 2014-05-25T18:21:24.454-07:00
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.currentDateTime()
+
+=&gt; 2014-10-29T21:13:49.437147
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="current-date" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns <code xmlns="http://www.w3.org/1999/xhtml">xs:date(fn:current-dateTime())</code>. This is an
+  <code xmlns="http://www.w3.org/1999/xhtml">xs:date</code> (with timezone) that is current at some time
+  during the evaluation of a query or transformation in which
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-date()</code> is executed. This function is *stable*.
+  The precise instant during the query or transformation represented
+  by the value of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-date()</code> is
+  *implementation dependent*.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return class="xquery">xs:date</apidoc:return>
+    <apidoc:return class="javascript">xs.date</apidoc:return>
+    <apidoc:usage>
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-date()</code> returns an <code xmlns="http://www.w3.org/1999/xhtml">xs:date</code>
+  corresponding to the current date and time.  For example, an
+  invocation of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-date()</code> might return
+  <code xmlns="http://www.w3.org/1999/xhtml">2004-05-12+01:00</code>.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:current-date()
+
+=&gt; 2006-05-25-07:00
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.currentDate()
+
+=&gt; 2014-10-29T07:00:00
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="current-time" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns <code xmlns="http://www.w3.org/1999/xhtml">xs:time(fn:current-dateTime())</code>. This is an
+  <code xmlns="http://www.w3.org/1999/xhtml">xs:time</code> (with timezone) that is current at some time
+  during the evaluation of a query or transformation in which
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-time()</code> is executed. This function is
+  *stable*. The precise instant during the query or transformation
+  represented by the value of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-time()</code> is
+  *implementation dependent*.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:time</apidoc:return>
+    <apidoc:usage>
+  <code xmlns="http://www.w3.org/1999/xhtml">fn:current-time()</code> returns an <code xmlns="http://www.w3.org/1999/xhtml">xs:time</code>
+  corresponding to the current date and time.  For example, an
+  invocation of <code xmlns="http://www.w3.org/1999/xhtml">fn:current-time()</code> might return
+  <code xmlns="http://www.w3.org/1999/xhtml">23:17:00.000-05:00</code>.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:current-time()
+
+=&gt; 18:24:06-07:00
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.currentTime()
+
+=&gt; 14:15:55-07:00
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="implicit-timezone" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns the value of the implicit timezone property from the dynamic context.
+Components of the dynamic context are discussed in
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components" xmlns="http://www.w3.org/1999/xhtml">Section C.2 Dynamic
+Context Components[XP]</a>.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:dayTimeDuration</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:implicit-timezone()
+
+=&gt; -PT7H
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.implicitTimezone()
+
+=&gt; -PT7H
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="default-collation" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns the value of the default collation property from the static context.
+Components of the static context are discussed in 
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components">Section C.1 Static Context Components[XP]</a>.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">The default collation property can never be undefined. If it is not
+explicitly defined, a system defined default codepoint is used.
+In the <code>1.0</code> XQuery dialect, if this is not provided, the Unicode
+code point collation
+(<code>http://www.w3.org/2005/xpath-functions/collation/codepoint</code>) is used.  In the <code>1.0-ml</code> and <code>0.9-ml</code> XQuery dialects,
+the MarkLogic-defined codepoint URI is used
+(<code>http://marklogic.com/collation/codepoint</code>).
+</p>
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+  For details about collations in MarkLogic Server, see the "Encodings and
+  Collations" chapter of the <em xmlns="http://www.w3.org/1999/xhtml">Developer's Guide</em>.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+declare default collation "http://marklogic.com/collation/codepoint";
+fn:default-collation()
+
+=&gt; http://marklogic.com/collation/codepoint
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.defaultCollation()
+
+=&gt; http://marklogic.com/collation/
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0";
+declare default collation "http://marklogic.com/collation/codepoint";
+fn:default-collation()
+
+=&gt; http://www.w3.org/2005/xpath-functions/collation/codepoint
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="static-base-uri" type="builtin" lib="fn" category="ContextBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns the value of the base-uri property from the static context. If the
+base-uri property is undefined, the empty sequence is returned. Components of
+the static context are discussed in 
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components" xmlns="http://www.w3.org/1999/xhtml">Section C.1 Static Context Components[XP]</a>.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:anyURI?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:static-base-uri()
+
+=&gt; ()
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.staticBaseUri()
+
+=&gt; ()
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

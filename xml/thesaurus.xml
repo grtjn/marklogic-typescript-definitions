@@ -1,0 +1,535 @@
+<apidoc:module name="ThesaurusModule" category="Thesaurus" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="thsr">
+  <apidoc:summary access="public">
+  <p>The thesaurus functions are designed to help you manage thesaurus 
+  documents and then use those thesaurus documents to lookup synonyms 
+  for words used in queries. Thesaurus documents are XML documents.  
+  <span class="javascript">The JavaScript API allows you to update
+  existing thesaurus documents with a JSON representation of the thesaurus 
+  entries, so you do not have to specify XML. The load and insert functions
+  do require XML, however. </span>
+  The thesaurus function module is installed as the following file:</p>
+  <ul><li><code><em>install_dir</em>/Modules/MarkLogic/thesaurus.xqy</code></li></ul>
+  <p>where <code><em>install_dir</em></code> is the directory in which 
+	  MarkLogic Server is installed.</p>
+  <span class="xquery">  
+  <p>To use the <code>thesaurus.xqy</code> module in your own XQuery modules, 
+  include the following line in your XQuery prolog:</p>
+  <p><code>import module namespace thsr="http://marklogic.com/xdmp/thesaurus" 
+		  at "/MarkLogic/thesaurus.xqy";</code></p>
+  </span>
+
+  <span class="javascript">  
+  <p>To use the <code>thesaurus</code> module in your own Server-Side 
+  JavaScript modules, include the following line in your Javascript
+  program:</p>
+  <p><code>var thsr = require("/MarkLogic/thesaurus");</code></p>
+  </span>
+  </apidoc:summary>
+
+<apidoc:function name="load" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Load the file specified in $path to the thesaurus at $uri.
+  Exisiting documents at $uri are overwritten.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="path" type="xs:string">
+    The path to a file containing thesaurus entries.
+    </apidoc:param>
+    <apidoc:param name="uri" type="xs:string">
+    The URI of a thesaurus document.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  If $path contains XML that does not conform to the thesaurus schema, an 
+  error is raised.
+  </apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+  thsr:load("c:\thesaurus\roget.xml", "/myThsrDocs/roget.xml")
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var spell = require("/MarkLogic/thesaurus");
+  declareUpdate();
+  
+  thsr.load("c:\thesaurus\roget.xml", "/myThsrDocs/roget.xml")
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="insert" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Load the entries in $thsr into the thesaurus at $uri. If there is no
+  document at $uri a new one will be created.  If there is a document
+  at $uri it will be overwritten.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+    The URI of a thesaurus document.
+    </apidoc:param>
+    <apidoc:param name="thsr" type="element(thsr:thesaurus)">
+    A thesaurus document.  
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  If $thsr contains XML that does not conform to the thesaurus schema, an 
+  error is raised.
+  </apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+  thsr:insert("/myThsrDocs/roget.xml", 
+               xdmp:document-get("c:\thesaurus\roget.xml")/thsr:thesaurus )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.insert("/myThsrDocs/roget.xml",  cts.doc("c:\thesaurus\roget.xml").root)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="set-entry" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Adds the entry $entry to the thesaurus at $uri.  
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+    The URI of a thesaurus document.
+    </apidoc:param>
+    <apidoc:param name="entry" type="item()" class="xquery">
+    An entry to add to the thesaurus, can either be an xml element or javascript object.
+    </apidoc:param>
+    <apidoc:param name="entry" type="element(thsr:entry)|Object" class="javascript">
+    An entry to add to the thesaurus, can either be an xml element or javascript object.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:usage>
+    set the entry $entry in the thesaurus at $uri.  If $entry does not
+    contain a valid entry node, an error will be raised.  If an entry
+    matching $entry does not exist in the thesaurus, $entry is added to
+    the thesaurus.
+    If $entry contains XML that does not conform to the thesaurus schema 
+    (located in
+    <code><em>install_dir</em>/Config/thesaurus.xsd</code>), an error
+    is raised.
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+  thsr:set-entry("/myThsrDocs/roget.xml", 
+   <entry xmlns="http://marklogic.com/xdmp/thesaurus">
+      <term>Car</term>
+      <part-of-speech>noun</part-of-speech>
+      <synonym>
+        <term>Ford</term>
+        <part-of-speech>noun</part-of-speech>
+      </synonym>
+      <synonym>
+        <term>automobile</term>
+        <part-of-speech>noun</part-of-speech>
+      </synonym>
+      <synonym>
+        <term>Fiat</term>
+        <part-of-speech>noun</part-of-speech>
+      </synonym>
+   </entry>)
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.setEntry("/myThsrDocs/roget.xml", 
+    { 
+      "term":"Car",
+      "synonyms":[
+        {"term":"Ford",
+         "partOfSpeech":"noun"
+        },
+        {"term":"automobile",
+         "partOfSpeech":"noun"
+        },
+        {"term":"Fiat",
+         "partOfSpeech":"noun"
+        }
+      ]
+    })
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-term" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Removes all entries with term $term from the thesaurus document(s) at $uri.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string*">
+    The URI of the thesaurus document(s).
+    </apidoc:param>
+    <apidoc:param name="term" type="xs:string">
+    A term to remove from the thesaurus.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+  thsr:remove-term("/myThsrDocs/roget.xml", "Car")
+
+   => removes all entries for "Car" from the thesaurus with the 
+      specified URI 
+   
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.removeTerm("/myThsrDocs/roget.xml", "Car")
+
+   => removes all entries for "Car" from the thesaurus with the 
+      specified URI 
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-entry" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Removes all entries that exactly match $entry from the thesaurus 
+  documents(s) at $uri.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string*">
+    The URI of the thesaurus document(s).
+    </apidoc:param>
+    <apidoc:param name="entry" type="item()" class="xquery">
+    A thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+    <apidoc:param name="entry" type="element(thsr:entry)|Object" class="javascript">
+    A thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+   (: removes the second "Car" entry from the thesaurus document :)
+  thsr:remove-entry("/myThsrDocs/roget.xml", 
+            thsr:lookup("/myThsrDocs/roget.xml","Car")[2])
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.removeEntry("/myThsrDocs/roget.xml", 
+            thsr.lookup("/myThsrDocs/roget.xml","Car")[2])
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="add-synonym" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Adds a synonym to the specified thesaurus entry. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="entry" type="element(thsr:entry)">A thesaurus entry.
+    </apidoc:param>
+    <apidoc:param name="synonym" type="item()" class="xquery">
+    A synonym to add to a thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+    <apidoc:param name="synonym" type="element(thsr:synonym)|Object" class="javascript">
+    A synonym to add to a thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  The synonym and the entry specified must conform to the thesaurus 
+  schema and must be namespace-qualified with the 
+  "http://marklogic.com/xdmp/thesaurus" namespace.
+  </apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+  thsr:add-synonym(thsr:lookup("/myThsrDocs/roget.xml", 
+                               "car")[1],
+                 <thsr:synonym>
+                    <thsr:term>Alfa Romeo</thsr:term>
+                 </thsr:synonym>)
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.addSynonym(thsr.lookup("/myThsrDocs/roget.xml", 
+                               "car")[1],
+                 {"term":"Alfa Romeo"})
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="remove-synonym" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Removes synonym $synonym from thesaurus entry $entry.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="entry" type="element(thsr:entry)">A thesaurus entry.
+    </apidoc:param>
+    <apidoc:param name="synonym" type="item()" class="xquery">
+    A synonym to be removed from  a thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+    <apidoc:param name="synonym" type="element(thsr:synonym)|Object" class="javascript">
+    A synonym to be removed from a thesaurus entry, can either be an xml element or javascript object.
+    </apidoc:param>
+
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	   thsr="http://marklogic.com/xdmp/thesaurus" 
+                             at "/MarkLogic/thesaurus.xqy";
+
+  thsr:remove-synonym(thsr:lookup("/myThsrDocs/roget.xml",  
+                                   "car")[1],
+                           <thsr:synonym>
+                                <thsr:term>Fiat</thsr:term>
+                           </thsr:synonym>)
+   
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  declareUpdate();
+
+  thsr.removeSynonym(thsr.lookup("/myThsrDocs/roget.xml", 
+                               "car")[1],
+                 {"term":"Fiat"})
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="lookup" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns all entries for term $term in the thesaurus document(s) at $uri.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string*">
+    The URI of the thesaurus document(s).
+    </apidoc:param>
+    <apidoc:param name="term" type="xs:string">
+    A term to lookup in the thesaurus.
+    </apidoc:param>
+    <apidoc:param name="output-kind" type="xs:string" optional="true">
+    The kind of the returned items. If "elements", xml elements are 
+    returned; if "objects", javascript objects are returned.
+    <p class="xquery">The default value is "elements".</p>
+    <p class="javascript">The default value is "objects".</p>
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>item()*</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+   thsr:lookup("/myThsrDocs/thesaurus.xml", "weary")
+   => returns the thesaurus entry for the term "weary"
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  
+  thsr.lookup("/myThsrDocs/thesaurus.xml", "weary")
+   => returns the thesaurus entry for the term "weary"
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="query-lookup" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns a <span class="xquery">sequence</span><span class="javascript">Sequence</span> 
+  of all entries that are found by looking up terms in the query and/or subqueries of $query 
+  in the thesaurus document(s) at $uri.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string*">
+    The URI of the thesaurus document(s).
+    </apidoc:param>
+    <apidoc:param name="query" type="cts:query">
+    A <span class="xquery">cts:query</span><span class="javascript">cts.query</span> item from any of the 
+    <code class="xquery">cts:*-query</code><code class="javascript">cts.*Query</code> functions (
+    <code class="xquery">cts:word-query</code><code class="javascript">cts.wordQuery</code>, 
+    <code class="xquery">cts:and-query</code><code class="javascript">cts.andQuery</code>, etc.).
+    </apidoc:param>
+    <apidoc:param name="output-kind" type="xs:string" optional="true">
+    The kind of the returned items. If "elements", xml elements are 
+    returned; if "objects", javascript objects are returned.
+    <p class="xquery">The default value is "elements".</p>
+    <p class="javascript">The default value is "objects".</p>
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>item()*</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	   thsr="http://marklogic.com/xdmp/thesaurus" 
+                           at "/MarkLogic/thesaurus.xqy";
+
+  let $query := cts:word-query("weary")
+  return 
+      thsr:query-lookup("/myThsrDocs/thesaurus.xml", 
+                        $query)
+
+   => All entries for the term "weary" in the specified 
+      thsesaurus document
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  
+  thsr.queryLookup("/myThsrDocs/thesaurus.xml", cts.wordQuery("weary"))
+   => returns the thesaurus entry for the term "weary"
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="expand" type="thesaurus" lib="thsr" 
+                 category="Thesaurus" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns a query that searches for all the query strings specified in $query 
+  and their synonyms as found in $entries. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="query" type="cts:query">
+    A <span class="xquery">cts:query</span><span class="javascript">cts.query</span> item from any of the 
+    <code class="xquery">cts:*-query</code><code class="javascript">cts.*Query</code> functions (
+    <code class="xquery">cts:word-query</code><code class="javascript">cts.wordQuery</code>, 
+    <code class="xquery">cts:and-query</code><code class="javascript">cts.andQuery</code>, and so on). 
+    Thesaurus expansion only occurs on an "unwildcarded"
+    <code class="xquery">cts:query</code><code class="javascript">cts.query</code>;
+    it cannot expand "wildcarded" queries.
+    </apidoc:param>
+    <apidoc:param name="entries" type="item()*">
+      <p class="xquery">A sequence of thesaurus entries, can be xml elements or javascript objects.</p>
+      <p class="javascript">An array of thesaurus entries, can be xml elements or javascript objects.</p>
+    
+    </apidoc:param>
+    <apidoc:param name="entries" type="(element() | Object)*" 
+	    class="javascript">
+    <p>An array of thesaurus entries, can be XML elements or javascript 
+    objects.</p>
+    </apidoc:param>
+    <apidoc:param name="new-weight" type="xs:double?">
+    A new weight for the relevance ranking. If $new-weight is the empty 
+    sequence, then the relevance ranking is inherited from the parent query.
+    </apidoc:param>
+    <apidoc:param name="min-weight" type="xs:double?">
+    A minimum weight for the relevance ranking. If $min-weight is not the 
+    empty sequence then only queries with weight less than or equal to 
+    $min-weight will be expanded.  Otherwise, all queiries are expanded.
+    </apidoc:param>
+    <apidoc:param name="filter" type="node()*">
+    <span class="xquery">A sequence</span><span class="javascript">An array</span> 
+    of node restrictions. These restrictions must be nodes that can be found in a 
+    thesaurus entry (for example, 
+    <code>&lt;thsr:qualifier&gt;birds&lt;/thsr:qualifier&gt;</code>). Only entries that have nodes that are deep equal to a filter node will be returned.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:query </apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+   <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace 
+	   thsr="http://marklogic.com/xdmp/thesaurus" 
+                           at "/MarkLogic/thesaurus.xqy";
+
+  cts:search(
+   doc("/Docs/hamlet.xml")//LINE,
+   thsr:expand(
+     cts:word-query("weary"), 
+     thsr:lookup("/myThsrDocs/thesaurus.xml", 
+     "weary"),
+     (), 
+     (), 
+     () )
+   )
+
+   (: This query returns all of the lines in Shakespeare's 
+      Hamlet that have the word "weary" or any of the 
+      synonyms of the word "weary"  :)
+
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+  var thsr = require("/MarkLogic/thesaurus");
+  
+  cts.search(
+   cts.doc("/Docs/hamlet.xml").root.xpath("//LINE"),
+   thsr.expand(
+     cts.wordQuery("weary"), 
+     thsr.lookup("/myThsrDocs/thesaurus.xml", 
+     "weary"),
+     (), 
+     (), 
+     () )
+   )
+
+   => This query returns all of the lines in Shakespeare's 
+      Hamlet that have the word "weary" or any of the 
+      synonyms of the word "weary"  :)
+
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

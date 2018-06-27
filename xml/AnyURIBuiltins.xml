@@ -1,0 +1,153 @@
+<apidoc:module name="AnyURIBuiltins" category="AnyURIBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="AnyURIBuiltins" bucket="W3C-Standard Functions">
+  The anyURI built-in function is the XQuery function that applies
+  to xs:anyURI instances.  It is defined in
+  <a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+  and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="resolve-uri" type="builtin" lib="fn" category="AnyURIBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Resolves a relative URI against an absolute URI.  If $base is specified,
+  the URI is resolved relative to that base.  If $base is not specified, the
+  base is set to the base-uri property from the static context, if the
+  property exists; if it does not exist, an error is thrown.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="relative" type="xs:string?">
+  A URI reference to resolve against the base.
+  </apidoc:param>
+      <apidoc:param name="base" type="xs:string" optional="true">
+  An absolute URI to use as the base of the resolution.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI?</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If $base is specified, it is assumed to be an absolute URI and
+$relative is assumed to be an absolute or a relative URI reference.
+If $relative is a relative URI reference, it is resolved against $base,
+using an algorithm such as the ones described in
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc2396">RFC 2396</a>] or
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc3986">RFC 3986</a>], and
+the resulting absolute URI reference is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $relative is the zero-length string, <code>fn:resolve-uri</code> returns
+the value of $base, or the base-uri property from the static context
+if there is no $base value specified (if the base-uri property is
+not initialized in the static context, an error is raised).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Resolving a URI does not dereference it. This is merely a syntactic operation
+on two character strings.
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:resolve-uri("hello/goodbye.xml",
+     "http://mycompany/default.xqy")
+
+=&gt;  http://mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.resolveUri("hello/goodbye.xml",
+     "http://mycompany/default.xqy");
+
+=&gt;  http://mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="resolve-uri" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Resolves a relative URI against an absolute URI.  If $base is specified,
+  the URI is resolved relative to that base.  If $base is not specified, the
+  base is set to the base-uri property from the static context, if the
+  property exists; if it does not exist, an error is thrown.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="relative" type="xs:string?">
+  A URI reference to resolve against the base.
+  </apidoc:param>
+      <apidoc:param name="base" type="xs:string" optional="true">
+  An absolute URI to use as the base of the resolution.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI?</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+This function is the same as fn:resolve-uri(), but always accepts a relative
+base URI. The fn:resolve-uri() function raises an error in this case in
+standards compatible dialects.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $base is specified, it is assumed to be an absolute URI and
+$relative is assumed to be an absolute or a relative URI reference.
+If $relative is a relative URI reference, it is resolved against $base,
+using an algorithm such as the ones described in
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc2396">RFC 2396</a>] or
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc3986">RFC 3986</a>], and
+the resulting absolute URI reference is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $relative is the zero-length string, <code>fn:resolve-uri</code> returns
+the value of $base, or the base-uri property from the static context
+if there is no $base value specified (if the base-uri property is
+not initialized in the static context, an error is raised).
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Resolving a URI does not dereference it. This is merely a syntactic operation
+on two character strings.
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:resolve-uri("hello/goodbye.xml",
+     "/mycompany/default.xqy")
+
+=&gt;  /mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.resolveUri("hello/goodbye.xml",
+     "/mycompany/default.xqy");
+
+=&gt;  /mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="resolve-iri" type="builtin" lib="sem" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Resolves a relative URI against an absolute URI.  If $base is specified,
+  the URI is resolved relative to that base.  If $base is not specified, the
+  base is set to the base-uri property from the static context, if the
+  property exists; if it does not exist, an error is thrown.
+  This XQuery function backs up the SPARQL IRI() function.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="relative" type="xs:string">
+  A URI reference to resolve against the base.
+  </apidoc:param>
+      <apidoc:param name="base" type="xs:string" optional="true">
+  An absolute URI to use as the base of the resolution.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>sem:iri</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+If $base is specified, it is assumed to be an absolute URI and
+$relative is assumed to be an absolute or a relative URI reference.
+If $relative is a relative URI reference, it is resolved against $base,
+using an algorithm such as the ones described in
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc2396">RFC 2396</a>] or
+[<a href="http://www.w3.org/TR/xpath-functions/#rfc3986">RFC 3986</a>], and
+the resulting absolute URI reference is returned.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+Resolving a URI does not dereference it. This is merely a syntactic operation
+on two character strings.
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sem:resolve-iri("hello/goodbye.xml",
+     "/mycompany/default.xqy")
+
+=&gt;  /mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sem.resolveIri("hello/goodbye.xml",
+     "/mycompany/default.xqy");
+
+=&gt;  /mycompany/hello/goodbye.xml
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,1662 @@
+<apidoc:module name="StatusBuiltins" category="Server Monitoring" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+  The Server Monitoring built-in functions include functions that provide
+  monitoring information about internal conditions of MarkLogic Server and
+  includes the <code xmlns="http://www.w3.org/1999/xhtml">xdmp:request-cancel</code> function which is used to
+  cancel a running request.
+</apidoc:summary><apidoc:function name="host-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns the status of a host<span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a JSON node</span>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong*">
+    A host ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(host-status)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:usage schema="host-status.xsd" camel-case="true">
+   <p xmlns="http://www.w3.org/1999/xhtml">The information returned from
+   <span class="xquery"><code>xdmp:host-status</code></span>
+   <span class="javascript"><code>xdmp.hostStatus</code></span> is always
+   computed on the host specified in the <code>$host-id</code> parameter,
+   even if the call is evaluated on an App Server running on a different host.
+   That is, when the API call is issued, MarkLogic Server communicates with
+   the specified host for the its status and returns the status from the
+   perspective of the specified host (not from the perspective of the host
+   in which the XQuery API is evaluated).
+   <span class="javascript">The individual statuses are of type ObjectNode.</span>
+</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:host-status(xdmp:host("engrlab-130-234.engrlab.marklogic.com"))
+=&gt;
+&lt;host-status xmlns="http://marklogic.com/xdmp/status/host"&gt;
+  &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+  &lt;host-name&gt;engrlab-130-234.engrlab.marklogic.com&lt;/host-name&gt;
+  &lt;group-id&gt;12157953645839352663&lt;/group-id&gt;
+  &lt;zone/&gt;
+  &lt;current-time&gt;2017-11-17T09:49:05.846703-08:00&lt;/current-time&gt;
+  &lt;bind-port&gt;7999&lt;/bind-port&gt;
+  &lt;connect-port&gt;7999&lt;/connect-port&gt;
+  &lt;ssl-fips-enabled&gt;true&lt;/ssl-fips-enabled&gt;
+  &lt;foreign-bind-port&gt;7998&lt;/foreign-bind-port&gt;
+  &lt;foreign-connect-port&gt;7998&lt;/foreign-connect-port&gt;
+  &lt;background-io-limit&gt;0&lt;/background-io-limit&gt;
+  &lt;metering-enabled&gt;true&lt;/metering-enabled&gt;
+  &lt;meters-database&gt;1564550402179869619&lt;/meters-database&gt;
+  &lt;performance-metering-enabled&gt;true&lt;/performance-metering-enabled&gt;
+  &lt;performance-metering-period&gt;60&lt;/performance-metering-period&gt;
+  &lt;performance-metering-retain-raw&gt;7&lt;/performance-metering-retain-raw&gt;
+  &lt;performance-metering-retain-hourly&gt;30&lt;/performance-metering-retain-hourly&gt;
+  &lt;performance-metering-retain-daily&gt;90&lt;/performance-metering-retain-daily&gt;
+  &lt;last-startup&gt;2017-11-10T17:28:13.487467-08:00&lt;/last-startup&gt;
+  &lt;version&gt;9.0-20171107&lt;/version&gt;
+  &lt;effective-version&gt;9000400&lt;/effective-version&gt;
+  &lt;software-version&gt;9000400&lt;/software-version&gt;
+  &lt;os-version&gt;Linux 3.10.0-327.4.5.el7.x86_64 (Red Hat Enterprise Linux Server release 7.2 (Maipo))&lt;/os-version&gt;
+  &lt;converters-version&gt;9.0-4&lt;/converters-version&gt;
+  &lt;host-mode&gt;normal&lt;/host-mode&gt;
+  &lt;host-mode-description/&gt;
+  &lt;architecture&gt;x86_64&lt;/architecture&gt;
+  &lt;platform&gt;linux&lt;/platform&gt;
+  &lt;license-key/&gt;
+  &lt;licensee/&gt;
+  &lt;license-key-cpus&gt;0&lt;/license-key-cpus&gt;
+  &lt;license-key-cores&gt;0&lt;/license-key-cores&gt;
+  &lt;license-key-size&gt;0&lt;/license-key-size&gt;
+  &lt;license-key-options&gt;
+    &lt;license-key-option&gt;English&lt;/license-key-option&gt;
+  &lt;/license-key-options&gt;
+  &lt;pre-release-expires&gt;2018-02-05T01:43:29-08:00&lt;/pre-release-expires&gt;
+  &lt;edition&gt;Essential Enterprise&lt;/edition&gt;
+  &lt;environment&gt;developer&lt;/environment&gt;
+  &lt;cpus&gt;1&lt;/cpus&gt;
+  &lt;cores&gt;2&lt;/cores&gt;
+  &lt;core-threads&gt;2&lt;/core-threads&gt;
+  &lt;total-cpu-stat-user&gt;7.11657&lt;/total-cpu-stat-user&gt;
+  &lt;total-cpu-stat-nice&gt;0.0083626&lt;/total-cpu-stat-nice&gt;
+  &lt;total-cpu-stat-system&gt;0.367955&lt;/total-cpu-stat-system&gt;
+  &lt;total-cpu-stat-idle&gt;92.2813&lt;/total-cpu-stat-idle&gt;
+  &lt;total-cpu-stat-iowait&gt;0.209065&lt;/total-cpu-stat-iowait&gt;
+  &lt;total-cpu-stat-irq&gt;0&lt;/total-cpu-stat-irq&gt;
+  &lt;total-cpu-stat-softirq&gt;0.0083626&lt;/total-cpu-stat-softirq&gt;
+  &lt;total-cpu-stat-steal&gt;0.0083626&lt;/total-cpu-stat-steal&gt;
+  &lt;total-cpu-stat-guest&gt;0&lt;/total-cpu-stat-guest&gt;
+  &lt;total-cpu-stat-guest-nice&gt;0&lt;/total-cpu-stat-guest-nice&gt;
+  &lt;memory-process-size&gt;56193&lt;/memory-process-size&gt;
+  &lt;memory-process-rss&gt;36283&lt;/memory-process-rss&gt;
+  &lt;memory-process-anon&gt;33061&lt;/memory-process-anon&gt;
+  &lt;memory-process-rss-hwm&gt;36283&lt;/memory-process-rss-hwm&gt;
+  &lt;memory-process-swap-size&gt;0&lt;/memory-process-swap-size&gt;
+  &lt;memory-process-huge-pages-size&gt;0&lt;/memory-process-huge-pages-size&gt;
+  &lt;memory-system-total&gt;64333&lt;/memory-system-total&gt;
+  &lt;memory-system-free&gt;1823&lt;/memory-system-free&gt;
+  &lt;memory-system-pagein-rate&gt;0&lt;/memory-system-pagein-rate&gt;
+  &lt;memory-system-pageout-rate&gt;443.883&lt;/memory-system-pageout-rate&gt;
+  &lt;memory-system-swapin-rate&gt;0&lt;/memory-system-swapin-rate&gt;
+  &lt;memory-system-swapout-rate&gt;0&lt;/memory-system-swapout-rate&gt;
+  &lt;memory-size&gt;65536&lt;/memory-size&gt;
+  &lt;memory-file-size&gt;19749&lt;/memory-file-size&gt;
+  &lt;memory-forest-size&gt;23358&lt;/memory-forest-size&gt;
+  &lt;memory-unclosed-size&gt;0&lt;/memory-unclosed-size&gt;
+  &lt;memory-cache-size&gt;14830&lt;/memory-cache-size&gt;
+  &lt;memory-registry-size&gt;1&lt;/memory-registry-size&gt;
+  &lt;memory-join-size&gt;3190&lt;/memory-join-size&gt;
+  &lt;host-size&gt;144382&lt;/host-size&gt;
+  &lt;host-large-data-size&gt;0&lt;/host-large-data-size&gt;
+  &lt;log-device-space&gt;2201877&lt;/log-device-space&gt;
+  &lt;data-dir-space&gt;2201877&lt;/data-dir-space&gt;
+  &lt;config-file-timestamps&gt;
+    &lt;groups-timestamp&gt;15100971420126390&lt;/groups-timestamp&gt;
+    &lt;hosts-timestamp&gt;15100960196086510&lt;/hosts-timestamp&gt;
+    &lt;databases-timestamp&gt;15100967861496740&lt;/databases-timestamp&gt;
+    &lt;assignments-timestamp&gt;15100967789608320&lt;/assignments-timestamp&gt;
+    &lt;tokenizer-timestamp&gt;0&lt;/tokenizer-timestamp&gt;
+    &lt;mimetypes-timestamp&gt;0&lt;/mimetypes-timestamp&gt;
+  &lt;/config-file-timestamps&gt;
+  &lt;http-servers&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;12822528143234461636&lt;/http-server-id&gt;
+      &lt;port&gt;8009&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;1121943410553840519&lt;/http-server-id&gt;
+      &lt;port&gt;8002&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;5078523763460022581&lt;/http-server-id&gt;
+      &lt;port&gt;8008&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;11023473990212849141&lt;/http-server-id&gt;
+      &lt;port&gt;8001&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;1286398711478654471&lt;/http-server-id&gt;
+      &lt;port&gt;8003&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;10685799440368759035&lt;/http-server-id&gt;
+      &lt;port&gt;7997&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+    &lt;http-server&gt;
+      &lt;http-server-id&gt;18226655600726107841&lt;/http-server-id&gt;
+      &lt;port&gt;8000&lt;/port&gt;
+      &lt;webDAV&gt;false&lt;/webDAV&gt;
+    &lt;/http-server&gt;
+  &lt;/http-servers&gt;
+  &lt;xdbc-servers/&gt;
+  &lt;odbc-servers/&gt;
+  &lt;task-server&gt;
+    &lt;task-server-id&gt;13196790179928447953&lt;/task-server-id&gt;
+  &lt;/task-server&gt;
+  &lt;assignments&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Documents&lt;/forest-name&gt;
+      &lt;forest-id&gt;4239838981215574051&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;App-Services&lt;/forest-name&gt;
+      &lt;forest-id&gt;15345731627272000339&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Triggers&lt;/forest-name&gt;
+      &lt;forest-id&gt;17382220451822022492&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;OpsDirector-1&lt;/forest-name&gt;
+      &lt;forest-id&gt;13455432679337797727&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Fab&lt;/forest-name&gt;
+      &lt;forest-id&gt;7699747605762304543&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Modules&lt;/forest-name&gt;
+      &lt;forest-id&gt;7053508655703491157&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Security&lt;/forest-name&gt;
+      &lt;forest-id&gt;13229527886916569961&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Extensions&lt;/forest-name&gt;
+      &lt;forest-id&gt;12910059319482156324&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Last-Login&lt;/forest-name&gt;
+      &lt;forest-id&gt;10471487239899418477&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Meters&lt;/forest-name&gt;
+      &lt;forest-id&gt;11904294896473497471&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;Schemas&lt;/forest-name&gt;
+      &lt;forest-id&gt;6771691731658160035&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+    &lt;assignment&gt;
+      &lt;forest-name&gt;OpsDirector-2&lt;/forest-name&gt;
+      &lt;forest-id&gt;6267645658628944817&lt;/forest-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+    &lt;/assignment&gt;
+  &lt;/assignments&gt;
+  &lt;hosts&gt;
+    &lt;host&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+      &lt;host-name&gt;engrlab-130-234.engrlab.marklogic.com&lt;/host-name&gt;
+      &lt;connect-port&gt;7999&lt;/connect-port&gt;
+      &lt;online&gt;true&lt;/online&gt;
+      &lt;secure&gt;false&lt;/secure&gt;
+    &lt;/host&gt;
+  &lt;/hosts&gt;
+  &lt;transactions&gt;
+    &lt;transaction&gt;
+      &lt;transaction-id&gt;12182946210591614111&lt;/transaction-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+      &lt;server-id&gt;18226655600726107841&lt;/server-id&gt;
+      &lt;transaction-name/&gt;
+      &lt;transaction-mode&gt;query&lt;/transaction-mode&gt;
+      &lt;transaction-timestamp&gt;15109409436054590&lt;/transaction-timestamp&gt;
+      &lt;transaction-state&gt;active&lt;/transaction-state&gt;
+      &lt;database-id&gt;14941551758299859725&lt;/database-id&gt;
+      &lt;canceled&gt;false&lt;/canceled&gt;
+      &lt;start-time&gt;2017-11-17T09:49:05-08:00&lt;/start-time&gt;
+      &lt;time-limit&gt;600&lt;/time-limit&gt;
+      &lt;max-time-limit&gt;3600&lt;/max-time-limit&gt;
+      &lt;join-size&gt;0&lt;/join-size&gt;
+      &lt;join-size-strings&gt;0&lt;/join-size-strings&gt;
+      &lt;user&gt;7071164303237443533&lt;/user&gt;
+      &lt;admin&gt;true&lt;/admin&gt;
+    &lt;/transaction&gt;
+    &lt;transaction&gt;
+      &lt;transaction-id&gt;4138644243492626532&lt;/transaction-id&gt;
+      &lt;host-id&gt;4085572759432954311&lt;/host-id&gt;
+      &lt;server-id&gt;18226655600726107841&lt;/server-id&gt;
+      &lt;transaction-name/&gt;
+      &lt;transaction-mode&gt;query&lt;/transaction-mode&gt;
+      &lt;transaction-timestamp&gt;15109409436054590&lt;/transaction-timestamp&gt;
+      &lt;transaction-state&gt;active&lt;/transaction-state&gt;
+      &lt;database-id&gt;8741033773445629119&lt;/database-id&gt;
+      &lt;canceled&gt;false&lt;/canceled&gt;
+      &lt;start-time&gt;2017-11-17T09:49:05-08:00&lt;/start-time&gt;
+      &lt;time-limit&gt;600&lt;/time-limit&gt;
+      &lt;max-time-limit&gt;3600&lt;/max-time-limit&gt;
+      &lt;join-size&gt;0&lt;/join-size&gt;
+      &lt;join-size-strings&gt;0&lt;/join-size-strings&gt;
+      &lt;user&gt;7071164303237443533&lt;/user&gt;
+      &lt;admin&gt;true&lt;/admin&gt;
+    &lt;/transaction&gt;
+  &lt;/transactions&gt;
+  &lt;backup-jobs/&gt;
+  &lt;restore-jobs/&gt;
+  &lt;native-plugins/&gt;
+  &lt;query-read-bytes&gt;59305472&lt;/query-read-bytes&gt;
+  &lt;query-read-time&gt;PT0.255131S&lt;/query-read-time&gt;
+  &lt;query-read-rate&gt;0.00266336&lt;/query-read-rate&gt;
+  &lt;query-read-load&gt;0&lt;/query-read-load&gt;
+  &lt;journal-write-bytes&gt;12580590240&lt;/journal-write-bytes&gt;
+  &lt;journal-write-time&gt;PT4M51.515096S&lt;/journal-write-time&gt;
+  &lt;journal-write-rate&gt;0.5734316&lt;/journal-write-rate&gt;
+  &lt;journal-write-load&gt;0&lt;/journal-write-load&gt;
+  &lt;save-write-bytes&gt;3729918931&lt;/save-write-bytes&gt;
+  &lt;save-write-time&gt;PT48.463044S&lt;/save-write-time&gt;
+  &lt;save-write-rate&gt;0&lt;/save-write-rate&gt;
+  &lt;save-write-load&gt;0&lt;/save-write-load&gt;
+  &lt;merge-read-bytes&gt;6308755584&lt;/merge-read-bytes&gt;
+  &lt;merge-read-time&gt;PT7.519165S&lt;/merge-read-time&gt;
+  &lt;merge-read-rate&gt;0&lt;/merge-read-rate&gt;
+  &lt;merge-read-load&gt;0&lt;/merge-read-load&gt;
+  &lt;merge-write-bytes&gt;10506325617&lt;/merge-write-bytes&gt;
+  &lt;merge-write-time&gt;PT1M5.113213S&lt;/merge-write-time&gt;
+  &lt;merge-write-rate&gt;0&lt;/merge-write-rate&gt;
+  &lt;merge-write-load&gt;0&lt;/merge-write-load&gt;
+  &lt;backup-read-bytes&gt;0&lt;/backup-read-bytes&gt;
+  &lt;backup-read-time&gt;PT0S&lt;/backup-read-time&gt;
+  &lt;backup-read-rate&gt;0&lt;/backup-read-rate&gt;
+  &lt;backup-read-load&gt;0&lt;/backup-read-load&gt;
+  &lt;backup-write-bytes&gt;0&lt;/backup-write-bytes&gt;
+  &lt;backup-write-time&gt;PT0S&lt;/backup-write-time&gt;
+  &lt;backup-write-rate&gt;0&lt;/backup-write-rate&gt;
+  &lt;backup-write-load&gt;0&lt;/backup-write-load&gt;
+  &lt;restore-read-bytes&gt;0&lt;/restore-read-bytes&gt;
+  &lt;restore-read-time&gt;PT0S&lt;/restore-read-time&gt;
+  &lt;restore-read-rate&gt;0&lt;/restore-read-rate&gt;
+  &lt;restore-read-load&gt;0&lt;/restore-read-load&gt;
+  &lt;restore-write-bytes&gt;0&lt;/restore-write-bytes&gt;
+  &lt;restore-write-time&gt;PT0S&lt;/restore-write-time&gt;
+  &lt;restore-write-rate&gt;0&lt;/restore-write-rate&gt;
+  &lt;restore-write-load&gt;0&lt;/restore-write-load&gt;
+  &lt;large-read-bytes&gt;0&lt;/large-read-bytes&gt;
+  &lt;large-read-time&gt;PT0S&lt;/large-read-time&gt;
+  &lt;large-read-rate&gt;0&lt;/large-read-rate&gt;
+  &lt;large-read-load&gt;0&lt;/large-read-load&gt;
+  &lt;large-write-bytes&gt;0&lt;/large-write-bytes&gt;
+  &lt;large-write-time&gt;PT0S&lt;/large-write-time&gt;
+  &lt;large-write-rate&gt;0&lt;/large-write-rate&gt;
+  &lt;large-write-load&gt;0&lt;/large-write-load&gt;
+  &lt;external-binary-read-bytes&gt;0&lt;/external-binary-read-bytes&gt;
+  &lt;external-binary-read-time&gt;PT0S&lt;/external-binary-read-time&gt;
+  &lt;external-binary-read-rate&gt;0&lt;/external-binary-read-rate&gt;
+  &lt;external-binary-read-load&gt;0&lt;/external-binary-read-load&gt;
+  &lt;webDAV-server-receive-bytes&gt;0&lt;/webDAV-server-receive-bytes&gt;
+  &lt;webDAV-server-receive-time&gt;PT0S&lt;/webDAV-server-receive-time&gt;
+  &lt;webDAV-server-receive-rate&gt;0&lt;/webDAV-server-receive-rate&gt;
+  &lt;webDAV-server-receive-load&gt;0&lt;/webDAV-server-receive-load&gt;
+  &lt;webDAV-server-send-bytes&gt;0&lt;/webDAV-server-send-bytes&gt;
+  &lt;webDAV-server-send-time&gt;PT0S&lt;/webDAV-server-send-time&gt;
+  &lt;webDAV-server-send-rate&gt;0&lt;/webDAV-server-send-rate&gt;
+  &lt;webDAV-server-send-load&gt;0&lt;/webDAV-server-send-load&gt;
+  &lt;http-server-receive-bytes&gt;161432668&lt;/http-server-receive-bytes&gt;
+  &lt;http-server-receive-time&gt;PT20.616955S&lt;/http-server-receive-time&gt;
+  &lt;http-server-receive-rate&gt;0.04341966&lt;/http-server-receive-rate&gt;
+  &lt;http-server-receive-load&gt;0&lt;/http-server-receive-load&gt;
+  &lt;http-server-send-bytes&gt;0&lt;/http-server-send-bytes&gt;
+  &lt;http-server-send-time&gt;PT0S&lt;/http-server-send-time&gt;
+  &lt;http-server-send-rate&gt;0&lt;/http-server-send-rate&gt;
+  &lt;http-server-send-load&gt;0&lt;/http-server-send-load&gt;
+  &lt;xdbc-server-receive-bytes&gt;0&lt;/xdbc-server-receive-bytes&gt;
+  &lt;xdbc-server-receive-time&gt;PT0S&lt;/xdbc-server-receive-time&gt;
+  &lt;xdbc-server-receive-rate&gt;0&lt;/xdbc-server-receive-rate&gt;
+  &lt;xdbc-server-receive-load&gt;0&lt;/xdbc-server-receive-load&gt;
+  &lt;xdbc-server-send-bytes&gt;0&lt;/xdbc-server-send-bytes&gt;
+  &lt;xdbc-server-send-time&gt;PT0S&lt;/xdbc-server-send-time&gt;
+  &lt;xdbc-server-send-rate&gt;0&lt;/xdbc-server-send-rate&gt;
+  &lt;xdbc-server-send-load&gt;0&lt;/xdbc-server-send-load&gt;
+  &lt;odbc-server-receive-bytes&gt;0&lt;/odbc-server-receive-bytes&gt;
+  &lt;odbc-server-receive-time&gt;PT0S&lt;/odbc-server-receive-time&gt;
+  &lt;odbc-server-receive-rate&gt;0&lt;/odbc-server-receive-rate&gt;
+  &lt;odbc-server-receive-load&gt;0&lt;/odbc-server-receive-load&gt;
+  &lt;odbc-server-send-bytes&gt;0&lt;/odbc-server-send-bytes&gt;
+  &lt;odbc-server-send-time&gt;PT0S&lt;/odbc-server-send-time&gt;
+  &lt;odbc-server-send-rate&gt;0&lt;/odbc-server-send-rate&gt;
+  &lt;odbc-server-send-load&gt;0&lt;/odbc-server-send-load&gt;
+  &lt;xdqp-client-receive-bytes&gt;0&lt;/xdqp-client-receive-bytes&gt;
+  &lt;xdqp-client-receive-time&gt;PT0S&lt;/xdqp-client-receive-time&gt;
+  &lt;xdqp-client-receive-rate&gt;0&lt;/xdqp-client-receive-rate&gt;
+  &lt;xdqp-client-receive-load&gt;0&lt;/xdqp-client-receive-load&gt;
+  &lt;xdqp-client-send-bytes&gt;0&lt;/xdqp-client-send-bytes&gt;
+  &lt;xdqp-client-send-time&gt;PT0S&lt;/xdqp-client-send-time&gt;
+  &lt;xdqp-client-send-rate&gt;0&lt;/xdqp-client-send-rate&gt;
+  &lt;xdqp-client-send-load&gt;0&lt;/xdqp-client-send-load&gt;
+  &lt;xdqp-server-receive-bytes&gt;0&lt;/xdqp-server-receive-bytes&gt;
+  &lt;xdqp-server-receive-time&gt;PT0S&lt;/xdqp-server-receive-time&gt;
+  &lt;xdqp-server-receive-rate&gt;0&lt;/xdqp-server-receive-rate&gt;
+  &lt;xdqp-server-receive-load&gt;0&lt;/xdqp-server-receive-load&gt;
+  &lt;xdqp-server-send-bytes&gt;0&lt;/xdqp-server-send-bytes&gt;
+  &lt;xdqp-server-send-time&gt;PT0S&lt;/xdqp-server-send-time&gt;
+  &lt;xdqp-server-send-rate&gt;0&lt;/xdqp-server-send-rate&gt;
+  &lt;xdqp-server-send-load&gt;0&lt;/xdqp-server-send-load&gt;
+  &lt;foreign-xdqp-client-receive-bytes&gt;0&lt;/foreign-xdqp-client-receive-bytes&gt;
+  &lt;foreign-xdqp-client-receive-time&gt;PT0S&lt;/foreign-xdqp-client-receive-time&gt;
+  &lt;foreign-xdqp-client-receive-rate&gt;0&lt;/foreign-xdqp-client-receive-rate&gt;
+  &lt;foreign-xdqp-client-receive-load&gt;0&lt;/foreign-xdqp-client-receive-load&gt;
+  &lt;foreign-xdqp-client-send-bytes&gt;0&lt;/foreign-xdqp-client-send-bytes&gt;
+  &lt;foreign-xdqp-client-send-time&gt;PT0S&lt;/foreign-xdqp-client-send-time&gt;
+  &lt;foreign-xdqp-client-send-rate&gt;0&lt;/foreign-xdqp-client-send-rate&gt;
+  &lt;foreign-xdqp-client-send-load&gt;0&lt;/foreign-xdqp-client-send-load&gt;
+  &lt;foreign-xdqp-server-receive-bytes&gt;0&lt;/foreign-xdqp-server-receive-bytes&gt;
+  &lt;foreign-xdqp-server-receive-time&gt;PT0S&lt;/foreign-xdqp-server-receive-time&gt;
+  &lt;foreign-xdqp-server-receive-rate&gt;0&lt;/foreign-xdqp-server-receive-rate&gt;
+  &lt;foreign-xdqp-server-receive-load&gt;0&lt;/foreign-xdqp-server-receive-load&gt;
+  &lt;foreign-xdqp-server-send-bytes&gt;0&lt;/foreign-xdqp-server-send-bytes&gt;
+  &lt;foreign-xdqp-server-send-time&gt;PT0S&lt;/foreign-xdqp-server-send-time&gt;
+  &lt;foreign-xdqp-server-send-rate&gt;0&lt;/foreign-xdqp-server-send-rate&gt;
+  &lt;foreign-xdqp-server-send-load&gt;0&lt;/foreign-xdqp-server-send-load&gt;
+  &lt;read-lock-count&gt;2231497&lt;/read-lock-count&gt;
+  &lt;read-lock-wait-time&gt;PT4.969228S&lt;/read-lock-wait-time&gt;
+  &lt;read-lock-hold-time&gt;P10DT15H2M4.3654596S&lt;/read-lock-hold-time&gt;
+  &lt;read-lock-rate&gt;12.21794&lt;/read-lock-rate&gt;
+  &lt;read-lock-wait-load&gt;0&lt;/read-lock-wait-load&gt;
+  &lt;read-lock-hold-load&gt;5.186479&lt;/read-lock-hold-load&gt;
+  &lt;write-lock-count&gt;557532&lt;/write-lock-count&gt;
+  &lt;write-lock-wait-time&gt;PT0.903263S&lt;/write-lock-wait-time&gt;
+  &lt;write-lock-hold-time&gt;P2DT9H22M48.3008447S&lt;/write-lock-hold-time&gt;
+  &lt;write-lock-rate&gt;3.242629&lt;/write-lock-rate&gt;
+  &lt;write-lock-wait-load&gt;0&lt;/write-lock-wait-load&gt;
+  &lt;write-lock-hold-load&gt;1.335788&lt;/write-lock-hold-load&gt;
+  &lt;deadlock-count&gt;0&lt;/deadlock-count&gt;
+  &lt;deadlock-wait-time&gt;PT0S&lt;/deadlock-wait-time&gt;
+  &lt;deadlock-rate&gt;0&lt;/deadlock-rate&gt;
+  &lt;deadlock-wait-load&gt;0&lt;/deadlock-wait-load&gt;
+&lt;/host-status&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.hostStatus(xdmp.host("engrlab-130-234.engrlab.marklogic.com"));
+=&gt;
+{
+	"hostId" : "4085572759432954311",
+	"hostName" : "engrlab-130-234.engrlab.marklogic.com",
+	"groupId" : "12157953645839352663",
+	"zone" : "",
+	"currentTime" : "2017-11-17T11:50:49.572635-08:00",
+	"bindPort" : 7999,
+	"connectPort" : 7999,
+	"sslFipsEnabled" : true,
+	"foreignBindPort" : 7998,
+	"foreignConnectPort" : 7998,
+	"backgroundIoLimit" : 0,
+	"meteringEnabled" : true,
+	"metersDatabase" : "1564550402179869619",
+	"performanceMeteringEnabled" : true,
+	"performanceMeteringPeriod" : 60,
+	"performanceMeteringRetainRaw" : 7,
+	"performanceMeteringRetainHourly" : 30,
+	"performanceMeteringRetainDaily" : 90,
+	"lastStartup" : "2017-11-10T17:28:13.487467-08:00",
+	"version" : "9.0-20171107",
+	"effectiveVersion" : 9000400,
+	"softwareVersion" : 9000400,
+	"convertersVersion" : "9.0-4",
+	"mode" : "normal",
+	"modeDescription" : "",
+	"architecture" : "x86_64",
+	"platform" : "linux",
+	"licenseKey" : "",
+	"licensee" : "",
+	"licenseKeyCpus" : 0,
+	"licenseKeyCores" : 0,
+	"licenseKeySize" : 0,
+	"licenseKeyOptions" : ["English"],
+	"preReleaseExpires" : "2018-02-05T01:43:29-08:00",
+	"edition" : "Essential Enterprise",
+	"environment" : "developer",
+	"cpus" : 1,
+	"cores" : 2,
+	"coreThreads" : 2,
+	"totalCpuStatUser": 19.767053604126, 
+	"totalCpuStatNice": 0.00208858377300203, 
+	"totalCpuStatSystem": 1.08049404621124, 
+	"totalCpuStatIdle": 78.9707489013672, 
+	"totalCpuStatIowait": 0, 
+	"totalCpuStatIrq": 0.116960689425468, 
+	"totalCpuStatSoftirq": 0.0626575127243996, 
+	"totalCpuStatSteal": 0, 
+	"totalCpuStatGuest": 0, 
+	"totalCpuStatGuestNice": 0, 
+	"memoryProcessSize": 50723, 
+	"memoryProcessRss": 30049, 
+	"memoryProcessAnon": 26819, 
+	"memoryProcessRssHwm": 30049, 
+	"memoryProcessSwapSize": 0, 
+	"memoryProcessHugePagesSize": 0, 
+	"memorySystemTotal": 64333, 
+	"memorySystemFree": 16071, 
+	"memorySystemPageinRate": 0.0668033957481384, 
+	"memorySystemPageoutRate": 9.15206527709961, 
+	"memorySystemSwapinRate": 0, 
+	"memorySystemSwapoutRate": 0,
+	"memorySize": 65536, 
+	"memoryFileSize": 19749, 
+	"memoryForestSize": 23358, 
+	"memoryUnclosedSize": 1, 
+	"memoryCacheSize": 14431, 
+	"memoryRegistrySize": 1, 
+	"memoryJoinSize": 17552, 
+	"hostSize": 144382, 
+	"hostLargeDataSize": 0, 
+	"logDeviceSpace": 2201876, 
+	"dataDirSpace": 2201876, 
+	"configFileTimestamps" : {
+		"groupsTimestamp" : "15100971420126390",
+		"hostsTimestamp" : "15100960196086510",
+		"databasesTimestamp" : "15100967861496740",
+		"assignmentsTimestamp" : "15100967789608320",
+		"tokenizerTimestamp" : 0,
+		"mimetypesTimestamp" : 0
+	},
+	"httpServers" : [{
+			"httpServerId" : "12822528143234461636",
+			"port" : 8009,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "1121943410553840519",
+			"port" : 8002,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "5078523763460022581",
+			"port" : 8008,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "11023473990212849141",
+			"port" : 8001,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "1286398711478654471",
+			"port" : 8003,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "10685799440368759035",
+			"port" : 7997,
+			"webDAV" : false
+		}, {
+			"httpServerId" : "18226655600726107841",
+			"port" : 8000,
+			"webDAV" : false
+		}
+	],
+	"xdbcServers" : [],
+	"odbcServers" : [],
+	"taskServer" : {
+		"taskServerId" : "13196790179928447953"
+	},
+	"assignments" : [{
+			"forestName" : "Documents",
+			"forestId" : "4239838981215574051",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "App-Services",
+			"forestId" : "15345731627272000339",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Triggers",
+			"forestId" : "17382220451822022492",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "OpsDirector-1",
+			"forestId" : "13455432679337797727",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Fab",
+			"forestId" : "7699747605762304543",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Modules",
+			"forestId" : "7053508655703491157",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Security",
+			"forestId" : "13229527886916569961",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Extensions",
+			"forestId" : "12910059319482156324",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Last-Login",
+			"forestId" : "10471487239899418477",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Meters",
+			"forestId" : "11904294896473497471",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "Schemas",
+			"forestId" : "6771691731658160035",
+			"hostId" : "4085572759432954311"
+		}, {
+			"forestName" : "OpsDirector-2",
+			"forestId" : "6267645658628944817",
+			"hostId" : "4085572759432954311"
+		}
+	],
+	"hosts" : [{
+			"hostId" : "4085572759432954311",
+			"hostName" : "engrlab-130-234.engrlab.marklogic.com",
+			"connectPort" : 7999,
+			"online" : true,
+			"secure" : false
+		}
+	],
+	"transactions" : [{
+			"transactionId" : "16396290563812779980",
+			"hostId" : "4085572759432954311",
+			"serverId" : "18226655600726107841",
+			"transactionName" : "",
+			"transactionMode" : "query",
+			"transactionTimestamp" : "15109482457852770",
+			"transactionState" : "active",
+			"databaseId" : "8741033773445629119",
+			"canceled" : false,
+			"startTime" : "2017-11-17T11:50:49-08:00",
+			"timeLimit" : 600,
+			"maxTimeLimit" : 3600,
+			"joinSize" : 0,
+			"joinSizeStrings" : 0,
+			"user" : "7071164303237443533",
+			"admin" : true
+		}, {
+			"transactionId" : "9253497387517357741",
+			"hostId" : "4085572759432954311",
+			"serverId" : "18226655600726107841",
+			"transactionName" : "",
+			"transactionMode" : "update",
+			"transactionTimestamp" : 0,
+			"transactionState" : "active",
+			"databaseId" : "14941551758299859725",
+			"canceled" : false,
+			"startTime" : "2017-11-17T11:50:49-08:00",
+			"timeLimit" : 600,
+			"maxTimeLimit" : 3600,
+			"joinSize" : 0,
+			"joinSizeStrings" : 0,
+			"user" : "7071164303237443533",
+			"admin" : true
+		}
+	],
+	"backupJobs" : [],
+	"restoreJobs" : [],
+	"nativePlugins" : [],
+	"queryReadBytes" : 59672576,
+	"queryReadTime" : "PT0.255806S",
+	"queryReadRate" : 0.00544838001951575,
+	"queryReadLoad" : 0,
+	"journalWriteBytes" : 12742375588,
+	"journalWriteTime" : "PT4M55.185753S",
+	"journalWriteRate" : 0.0308803580701351,
+	"journalWriteLoad" : 0,
+	"saveWriteBytes" : 3752009824,
+	"saveWriteTime" : "PT48.880503S",
+	"saveWriteRate" : 0,
+	"saveWriteLoad" : 0,
+	"mergeReadBytes" : 6319897024,
+	"mergeReadTime" : "PT7.530605S",
+	"mergeReadRate" : 0,
+	"mergeReadLoad" : 0,
+	"mergeWriteBytes" : 10551679171,
+	"mergeWriteTime" : "PT1M5.724851S",
+	"mergeWriteRate" : 0,
+	"mergeWriteLoad" : 0,
+	"backupReadBytes" : 0,
+	"backupReadTime" : "PT0S",
+	"backupReadRate" : 0,
+	"backupReadLoad" : 0,
+	"backupWriteBytes" : 0,
+	"backupWriteTime" : "PT0S",
+	"backupWriteRate" : 0,
+	"backupWriteLoad" : 0,
+	"restoreReadBytes" : 0,
+	"restoreReadTime" : "PT0S",
+	"restoreReadRate" : 0,
+	"restoreReadLoad" : 0,
+	"restoreWriteBytes" : 0,
+	"restoreWriteTime" : "PT0S",
+	"restoreWriteRate" : 0,
+	"restoreWriteLoad" : 0,
+	"largeReadBytes" : 0,
+	"largeReadTime" : "PT0S",
+	"largeReadRate" : 0,
+	"largeReadLoad" : 0,
+	"largeWriteBytes" : 0,
+	"largeWriteTime" : "PT0S",
+	"largeWriteRate" : 0,
+	"largeWriteLoad" : 0,
+	"externalBinaryReadBytes" : 0,
+	"externalBinaryReadTime" : "PT0S",
+	"externalBinaryReadRate" : 0,
+	"externalBinaryReadLoad" : 0,
+	"webDAVServerReceiveBytes" : 0,
+	"webDAVServerReceiveTime" : "PT0S",
+	"webDAVServerReceiveRate" : 0,
+	"webDAVServerReceiveLoad" : 0,
+	"webDAVServerSendBytes" : 0,
+	"webDAVServerSendTime" : "PT0S",
+	"webDAVServerSendRate" : 0,
+	"webDAVServerSendLoad" : 0,
+	"httpServerReceiveBytes" : 163478036,
+	"httpServerReceiveTime" : "PT20.908924S",
+	"httpServerReceiveRate" : 0.00312820496037602,
+	"httpServerReceiveLoad" : 0,
+	"httpServerSendBytes" : 0,
+	"httpServerSendTime" : "PT0S",
+	"httpServerSendRate" : 0,
+	"httpServerSendLoad" : 0,
+	"xdbcServerReceiveBytes" : 0,
+	"xdbcServerReceiveTime" : "PT0S",
+	"xdbcServerReceiveRate" : 0,
+	"xdbcServerReceiveLoad" : 0,
+	"xdbcServerSendBytes" : 0,
+	"xdbcServerSendTime" : "PT0S",
+	"xdbcServerSendRate" : 0,
+	"xdbcServerSendLoad" : 0,
+	"odbcServerReceiveBytes" : 0,
+	"odbcServerReceiveTime" : "PT0S",
+	"odbcServerReceiveRate" : 0,
+	"odbcServerReceiveLoad" : 0,
+	"odbcServerSendBytes" : 0,
+	"odbcServerSendTime" : "PT0S",
+	"odbcServerSendRate" : 0,
+	"odbcServerSendLoad" : 0,
+	"xdqpClientReceiveBytes" : 0,
+	"xdqpClientReceiveTime" : "PT0S",
+	"xdqpClientReceiveRate" : 0,
+	"xdqpClientReceiveLoad" : 0,
+	"xdqpClientSendBytes" : 0,
+	"xdqpClientSendTime" : "PT0S",
+	"xdqpClientSendRate" : 0,
+	"xdqpClientSendLoad" : 0,
+	"xdqpServerReceiveBytes" : 0,
+	"xdqpServerReceiveTime" : "PT0S",
+	"xdqpServerReceiveRate" : 0,
+	"xdqpServerReceiveLoad" : 0,
+	"xdqpServerSendBytes" : 0,
+	"xdqpServerSendTime" : "PT0S",
+	"xdqpServerSendRate" : 0,
+	"xdqpServerSendLoad" : 0,
+	"foreignXdqpClientReceiveBytes" : 0,
+	"foreignXdqpClientReceiveTime" : "PT0S",
+	"foreignXdqpClientReceiveRate" : 0,
+	"foreignXdqpClientReceiveLoad" : 0,
+	"foreignXdqpClientSendBytes" : 0,
+	"foreignXdqpClientSendTime" : "PT0S",
+	"foreignXdqpClientSendRate" : 0,
+	"foreignXdqpClientSendLoad" : 0,
+	"foreignXdqpServerReceiveBytes" : 0,
+	"foreignXdqpServerReceiveTime" : "PT0S",
+	"foreignXdqpServerReceiveRate" : 0,
+	"foreignXdqpServerReceiveLoad" : 0,
+	"foreignXdqpServerSendBytes" : 0,
+	"foreignXdqpServerSendTime" : "PT0S",
+	"foreignXdqpServerSendRate" : 0,
+	"foreignXdqpServerSendLoad" : 0,
+	"readLockCount" : 2259711,
+	"readLockWaitTime" : "PT5.039021S",
+	"readLockHoldTime" : "P10DT18H16M20.7365357S",
+	"readLockRate" : 1.46194648742676,
+	"readLockWaitLoad" : 0,
+	"readLockHoldLoad" : 0.329852998256683,
+	"writeLockCount" : 564978,
+	"writeLockWaitTime" : "PT0.912597S",
+	"writeLockHoldTime" : "P2DT10H7M31.9426108S",
+	"writeLockRate" : 0.279558062553406,
+	"writeLockWaitLoad" : 0,
+	"writeLockHoldLoad" : 0.0683934390544891,
+	"deadlockCount" : 0,
+	"deadlockWaitTime" : "PT0S",
+	"deadlockRate" : 0,
+	"deadlockWaitLoad" : 0
+}
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="host-get-ssl-fips-enabled" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns whether fips mode is enabled.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong*">
+    Host IDs.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean*</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:usage>
+   <p xmlns="http://www.w3.org/1999/xhtml">The information returned from <code>xdmp:host-get-ssl-fips-enabled</code>
+   is always computed on the host specified in the <code>$host-id</code>
+   parameter, even if the call is evaluated on an App Server running on a
+   different host. That is, when the API call is issued, MarkLogic Server
+   communicates with the specified host for the boolean value whether fips mode
+   is enabled in it and returns the boolean value from the perspective of the
+   specified host (not from the perspective of the host in which the XQuery API
+   is evaluated).  </p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:host-get-ssl-fips-enabled(xdmp:host("raymond.marklogic.com"))
+=&gt; true
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.hostGetSslFipsEnabled(xdmp.host("raymond.marklogic.com"));
+=&gt; true
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="cache-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns the status of the caches<span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a Sequence of ObjectNodes</span>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong*" optional="true">
+    A host ID. Default value is the local host.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(cache-status)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:cache-status()
+=&gt;
+&lt;cache-status xmlns="http://marklogic.com/xdmp/status/cache"&gt;
+  &lt;host-id&gt;13264574555735898770&lt;/host-id&gt;
+  &lt;host-name&gt;raymond.marklogic.com&lt;/host-name&gt;
+  &lt;compressed-tree-cache-partitions&gt;
+    &lt;compressed-tree-cache-partition&gt;
+      &lt;partition-size&gt;32&lt;/partition-size&gt;
+      &lt;partition-table&gt;53.9&lt;/partition-table&gt;
+      &lt;partition-used&gt;46.2&lt;/partition-used&gt;
+      &lt;partition-free&gt;53&lt;/partition-free&gt;
+      &lt;partition-overhead&gt;0.8&lt;/partition-overhead&gt;
+    &lt;/compressed-tree-cache-partition&gt;
+  &lt;/compressed-tree-cache-partitions&gt;
+  &lt;expanded-tree-cache-partitions&gt;
+    &lt;expanded-tree-cache-partition&gt;
+      &lt;partition-size&gt;32&lt;/partition-size&gt;
+      &lt;partition-table&gt;81.2&lt;/partition-table&gt;
+      &lt;partition-busy&gt;0&lt;/partition-busy&gt;
+      &lt;partition-used&gt;89.7&lt;/partition-used&gt;
+      &lt;partition-free&gt;6.2&lt;/partition-free&gt;
+      &lt;partition-overhead&gt;4.1&lt;/partition-overhead&gt;
+    &lt;/expanded-tree-cache-partition&gt;
+  &lt;/expanded-tree-cache-partitions&gt;
+  &lt;list-cache-partitions&gt;
+    &lt;list-cache-partition&gt;
+      &lt;partition-size&gt;32&lt;/partition-size&gt;
+      &lt;partition-table&gt;0.1&lt;/partition-table&gt;
+      &lt;partition-busy&gt;0&lt;/partition-busy&gt;
+      &lt;partition-used&gt;0.1&lt;/partition-used&gt;
+      &lt;partition-free&gt;99.9&lt;/partition-free&gt;
+      &lt;partition-overhead&gt;0&lt;/partition-overhead&gt;
+    &lt;/list-cache-partition&gt;
+  &lt;/list-cache-partitions&gt;
+&lt;/cache-status&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.cacheStatus();
+=&gt;
+{
+  "hostId":"2485368722774099257",
+  "hostName":"danny-1.marklogic.com",
+  "compressedTreeCachePartitions":[
+    {
+      "partitionSize":64,
+      "partitionTable":1.89999997615814,
+      "partitionUsed":4,
+      "partitionFree":96,
+      "partitionOverhead":0
+    }
+  ],
+  "expandedTreeCachePartitions":[
+    {
+      "partitionSize":128,
+      "partitionTable":5.40000009536743,
+      "partitionBusy":0,
+      "partitionUsed":91,
+      "partitionFree":8.69999980926514,
+      "partitionOverhead":0.300000011920929
+    }
+  ],
+  "listCachePartitions":[
+    {
+      "partitionSize":128,
+      "partitionTable":1,
+      "partitionBusy":0,
+      "partitionUsed":1.20000004768372,
+      "partitionFree":98.8000030517578,
+      "partitionOverhead":0
+    }
+  ],
+  "tripleCache":{
+    "tripleCachePartitions":[
+      {
+        "partitionSize":128,
+        "partitionBusy":0,
+        "partitionUsed":0,
+        "partitionFree":99.9000015258789
+      }
+    ]
+  },
+  "tripleValueCache":{
+    "tripleValueCachePartitions":[
+      {
+        "partitionSize":64,
+        "partitionBusy":0,
+        "partitionUsed":0,
+        "partitionFree":99.8000030517578
+      }
+    ]
+  }
+}
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="forest-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns the status of a forest<span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a Sequence of ObjectNodes</span>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forest-id" type="xs:unsignedLong*">
+    One or more forest IDs.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(forest-status)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:usage schema="forest-status.xsd" camel-case="true">
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:forest-status(xdmp:forest("Documents"))
+=&gt;
+&lt;forest-status xmlns="http://marklogic.com/xdmp/status/forest"&gt;
+  &lt;forest-id&gt;12434840716430044697&lt;/forest-id&gt;
+  &lt;forest-name&gt;Documents&lt;/forest-name&gt;
+  &lt;state&gt;open&lt;/state&gt;
+  &lt;host-id&gt;13264574555735898770&lt;/host-id&gt;
+  &lt;database-id&gt;2634450243966805432&lt;/database-id&gt;
+  &lt;last-state-change&gt;2007-02-16T18:39:31.267-08:00&lt;/last-state-change&gt;
+  &lt;journals-size&gt;57&lt;/journals-size&gt;
+  &lt;stands&gt;
+    &lt;stand&gt;
+      &lt;stand-id&gt;15174447282968484759&lt;/stand-id&gt;
+      &lt;path&gt;c:\Program Files\MarkLogic\Data\Forests\Documents\00000016&lt;/path&gt;
+      &lt;stand-kind&gt;Active&lt;/stand-kind&gt;
+      &lt;label-version&gt;50397184&lt;/label-version&gt;
+      &lt;disk-size&gt;11&lt;/disk-size&gt;
+      &lt;memory-size&gt;1&lt;/memory-size&gt;
+      &lt;list-cache-hits&gt;158&lt;/list-cache-hits&gt;
+      &lt;list-cache-misses&gt;105&lt;/list-cache-misses&gt;
+      &lt;list-cache-hit-rate&gt;0&lt;/list-cache-hit-rate&gt;
+      &lt;list-cache-miss-rate&gt;0&lt;/list-cache-miss-rate&gt;
+      &lt;compressed-tree-cache-hits&gt;0&lt;/compressed-tree-cache-hits&gt;
+      &lt;compressed-tree-cache-misses&gt;0&lt;/compressed-tree-cache-misses&gt;
+      &lt;compressed-tree-cache-hit-rate&gt;0&lt;/compressed-tree-cache-hit-rate&gt;
+      &lt;compressed-tree-cache-miss-rate&gt;0&lt;/compressed-tree-cache-miss-rate&gt;
+    &lt;/stand&gt;
+  &lt;/stands&gt;
+  &lt;current-time&gt;2007-02-16T18:44:06.154-08:00&lt;/current-time&gt;
+  &lt;merges/&gt;
+  &lt;reindexing&gt;false&lt;/reindexing&gt;
+  &lt;device-space&gt;3592&lt;/device-space&gt;
+  &lt;backups/&gt;
+  &lt;transaction-coordinators/&gt;
+  &lt;transaction-participants/&gt;
+&lt;/forest-status&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.forestStatus(
+  xdmp.databaseForests(
+    xdmp.database("Documents")));
+=&gt;
+{
+   "forestId":"3199975194245760821",
+   "forestName":"Documents",
+   "hostId":"16691872130013704340",
+   "state":"open",
+   "enabled":true,
+   "availability":"online",
+   "updatesAllowed":"all",
+   "rebalancerEnable":true,
+   "lowerBound":"1",
+   "upperBound":"100",
+   "masterForest":"3199975194245760821",
+   "replicaForests":[
+   ],
+   "currentMasterForest":"3199975194245760821",
+   "currentMasterPreciseTime":"2014-11-24T16:58:05.766563-08:00",
+   "currentMasterFsn":144,
+   "databaseId":"1137197755037514772",
+   "lastStateChange":"2014-11-25T18:13:16.300032-08:00",
+   "nonblockingTimestamp":"14169680666077180",
+   "dataDir":"/space/trunk-xdmp/src/Data",
+   "journalsSize":0,
+   "largeDataSize":0,
+   "orphanedBinaries":0,
+   "stands":[
+      {
+         "standId":"6976269206355638804",
+         "path":"/space/trunk-xdmp/src/Data/Forests/Documents/00000002",
+         "standKind":"Active",
+         "isFast":false,
+         "labelVersion":50397184,
+         "diskSize":0,
+         "memorySize":1,
+         "listCacheHits":122,
+         "listCacheMisses":308,
+         "listCacheHitRate":0.0244068801403046,
+         "listCacheMissRate":0.0506149381399155,
+         "compressedTreeCacheHits":0,
+         "compressedTreeCacheMisses":0,
+         "compressedTreeCacheHitRate":0,
+         "compressedTreeCacheMissRate":0,
+         "tripleCacheHits":0,
+         "tripleCacheMisses":0,
+         "tripleCacheHitRate":0,
+         "tripleCacheMissRate":0,
+         "tripleValueCacheHits":0,
+         "tripleValueCacheMisses":0,
+         "tripleValueCacheHitRate":0,
+         "tripleValueCacheMissRate":0
+      }
+   ],
+   "forestReserve":0,
+   "currentTime":"2014-11-25T18:14:53.211604-08:00",
+   "merges":[
+   ],
+   "rebalancing":false,
+   "reindexing":false,
+   "deviceSpace":223489,
+   "backups":[
+   ],
+   "transactionCoordinators":[
+   ],
+   "transactionParticipants":[
+   ],
+   "transactionJournalSize":0,
+   "transactionJournalLimit":134152192,
+   "queryReadBytes":17360,
+   "queryReadTime":"PT0.000046S",
+   "queryReadRate":0,
+   "queryReadLoad":0,
+   "journalWriteBytes":0,
+   "journalWriteTime":"PT0S",
+   "journalWriteRate":0,
+   "journalWriteLoad":0,
+   "saveWriteBytes":0,
+   "saveWriteTime":"PT0S",
+   "saveWriteRate":0,
+   "saveWriteLoad":0,
+   "mergeReadBytes":0,
+   "mergeReadTime":"PT0S",
+   "mergeReadRate":0,
+   "mergeReadLoad":0,
+   "mergeWriteBytes":0,
+   "mergeWriteTime":"PT0S",
+   "mergeWriteRate":0,
+   "mergeWriteLoad":0,
+   "backupReadBytes":0,
+   "backupReadTime":"PT0S",
+   "backupReadRate":0,
+   "backupReadLoad":0,
+   "backupWriteBytes":0,
+   "backupWriteTime":"PT0S",
+   "backupWriteRate":0,
+   "backupWriteLoad":0,
+   "restoreReadBytes":0,
+   "restoreReadTime":"PT0S",
+   "restoreReadRate":0,
+   "restoreReadLoad":0,
+   "restoreWriteBytes":0,
+   "restoreWriteTime":"PT0S",
+   "restoreWriteRate":0,
+   "restoreWriteLoad":0,
+   "largeReadBytes":0,
+   "largeReadTime":"PT0S",
+   "largeReadRate":0,
+   "largeReadLoad":0,
+   "largeWriteBytes":0,
+   "largeWriteTime":"PT0S",
+   "largeWriteRate":0,
+   "largeWriteLoad":0,
+   "databaseReplicationReceiveBytes":0,
+   "databaseReplicationReceiveTime":"PT0S",
+   "databaseReplicationReceiveRate":0,
+   "databaseReplicationReceiveLoad":0,
+   "databaseReplicationSendBytes":0,
+   "databaseReplicationSendTime":"PT0S",
+   "databaseReplicationSendRate":0,
+   "databaseReplicationSendLoad":0,
+   "readLockCount":0,
+   "readLockWaitTime":"PT0S",
+   "readLockHoldTime":"PT0S",
+   "readLockRate":0,
+   "readLockWaitLoad":0,
+   "readLockHoldLoad":0,
+   "writeLockCount":0,
+   "writeLockWaitTime":"PT0S",
+   "writeLockHoldTime":"PT0S",
+   "writeLockRate":0,
+   "writeLockWaitLoad":0,
+   "writeLockHoldLoad":0,
+   "deadlockCount":0,
+   "deadlockWaitTime":"PT0S",
+   "deadlockRate":0,
+   "deadlockWaitLoad":0,
+   "largeBinaryCacheHits":0,
+   "largeBinaryCacheMisses":0,
+   "largeBinaryCacheHitRate":0,
+   "largeBinaryCacheMissRate":0
+}
+//----------------
+{
+   "forestId":"9838038749549278946",
+   "forestName":"forest1",
+   "hostId":"16691872130013704340",
+   "state":"unmounted",
+   "enabled":true,
+   "availability":"offline",
+   "databaseId":"1137197755037514772",
+   "fragmentCount":99,
+   "dataSize":15,
+   "forestValueRange":{
+      "elementReference":{
+         "namespaceURI":"",
+         "localname":"longfield",
+         "scalarType":"long",
+         "nullable":true
+      }
+   },
+   "range":{
+      "minimum":{
+         "type":"long",
+         "value":"1"
+      },
+      "maximum":{
+         "type":"long",
+         "value":"99"
+      },
+      "lowerBound":{
+         "type":"long",
+         "value":"1"
+      },
+      "upperBound":{
+         "type":"long",
+         "value":"100"
+      }
+   }
+}
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="forest-online" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns true if the specified forest is online with a state of
+  <code xmlns="http://www.w3.org/1999/xhtml">open</code>, <code xmlns="http://www.w3.org/1999/xhtml">open replica</code> or
+  <code xmlns="http://www.w3.org/1999/xhtml">sync replicating</code> if isReplica is true, or
+  <code xmlns="http://www.w3.org/1999/xhtml">syncing replica</code> if syncingOk is true,
+  otherwise returns false.  For a remote forest, returns false if
+  the cached forest online status is older than the specified timestamp.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forestID" type="xs:unsignedLong">
+    ID of the forest.
+  </apidoc:param>
+      <apidoc:param name="timestamp" type="xs:unsignedLong" optional="true">
+    If the forest online status is older than the specified timestamp,
+    consider it offline.
+  </apidoc:param>
+      <apidoc:param name="isReplica" type="xs:boolean" optional="true">
+    Whether the forest is a replica.
+  </apidoc:param>
+      <apidoc:param name="syncingOk" type="xs:boolean" optional="true">
+    Whether to return true if the forest is in "syncing replica" state.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:forest-online(xdmp:forest("Documents"))
+  =&gt; true
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.forestOnline(xdmp.forest("Documents"));
+  =&gt; true
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:forest-online(xdmp:forest("Documents"),
+    xdmp:wallclock-to-timestamp(fn:current-dateTime()), fn:true())
+  =&gt; true if a forest is in open or sync-replicating state.
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.forestOnline(xdmp.forest("Documents"),
+     xdmp.wallclockToTimestamp(fn.currentDateTime()), true);
+  =&gt; true if a forest is in open or sync-replicating state.
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="forest-state" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns state of the forests
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forestID" type="xs:unsignedLong">
+    ID of the forest.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:forest-state(xdmp:forest("Documents"))
+  =&gt; open
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.forestState(xdmp.forest("Documents"));
+  =&gt; open
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="server-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns the status of an app-server on a host<span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a Sequence of ObjectNodes</span>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong">
+    A host ID.
+  </apidoc:param>
+      <apidoc:param name="server-id" type="xs:unsignedLong*">
+    One or more server IDs (HTTP, XDBC, ODBC, webDAV, or Task).
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(server-status)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:usage schema="server-status.xsd" camel-case="true">
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:server-status(xdmp:host(),xdmp:server("Admin"))
+=&gt;
+
+&lt;server-status xmlns="http://marklogic.com/xdmp/status/server"&gt;
+  &lt;server-id&gt;4492507232107144149&lt;/server-id&gt;
+  &lt;server-name&gt;Admin&lt;/server-name&gt;
+  &lt;host-id&gt;13264574555735898770&lt;/host-id&gt;
+  &lt;server-kind&gt;http-server&lt;/server-kind&gt;
+  &lt;port&gt;8009&lt;/port&gt;
+  &lt;root&gt;Admin\&lt;/root&gt;
+  &lt;modules&gt;0&lt;/modules&gt;
+  &lt;database&gt;5496769417926491762&lt;/database&gt;
+  &lt;ssl-certificate-template&gt;0&lt;/ssl-certificate-template&gt;
+  &lt;last-login&gt;9823948029384029384&lt;/last-login&gt;
+  &lt;display-last-login&gt;true&lt;/display-last-login&gt;
+  &lt;backlog&gt;512&lt;/backlog&gt;
+  &lt;threads&gt;2&lt;/threads&gt;
+  &lt;max-threads&gt;32&lt;/max-threads&gt;
+  &lt;request-timeout&gt;30&lt;/request-timeout&gt;
+  &lt;keep-alive-timeout&gt;5&lt;/keep-alive-timeout&gt;
+  &lt;session-timeout&gt;3600&lt;/session-timeout&gt;
+  &lt;max-time-limit&gt;3600&lt;/max-time-limit&gt;
+  &lt;default-time-limit&gt;600&lt;/default-time-limit&gt;
+  &lt;collation&gt;http://marklogic.com/collation/&lt;/collation&gt;
+  &lt;max-inference-size&gt;500&lt;/max-inference-size&gt;
+  &lt;default-inference-size&gt;100&lt;/default-inference-size&gt;
+  &lt;authentication&gt;basic&lt;/authentication&gt;
+  &lt;default-user&gt;8216129598321388485&lt;/default-user&gt;
+  &lt;privilege&gt;0&lt;/privilege&gt;
+  &lt;default-xquery-version&gt;1.0-ml&lt;/default-xquery-version&gt;
+  &lt;current-time&gt;2007-03-29T14:43:00.819-07:00&lt;/current-time&gt;
+  &lt;request-statuses&gt;
+    &lt;request-status&gt;
+      &lt;request-id&gt;15629296310429871822&lt;/request-id&gt;
+      &lt;server-id&gt;4492507232107144149&lt;/server-id&gt;
+      &lt;host-id&gt;13264574555735898770&lt;/host-id&gt;
+      &lt;canceled&gt;false&lt;/canceled&gt;
+      &lt;modules&gt;0&lt;/modules&gt;
+      &lt;database&gt;5496769417926491762&lt;/database&gt;
+      &lt;root&gt;Admin\&lt;/root&gt;
+      &lt;request-kind&gt;invoke&lt;/request-kind&gt;
+      &lt;request-text&gt;/cluster-status.xqy&lt;/request-text&gt;
+      &lt;update&gt;false&lt;/update&gt;
+      &lt;start-time&gt;2007-03-29T14:42:52.905-07:00&lt;/start-time&gt;
+      &lt;user&gt;8216129598321388485&lt;/user&gt;
+      &lt;client-address&gt;127.0.0.1&lt;/client-address&gt;
+      &lt;trigger-depth&gt;0&lt;/trigger-depth&gt;
+      &lt;expanded-tree-cache-hits&gt;0&lt;/expanded-tree-cache-hits&gt;
+      &lt;expanded-tree-cache-misses&gt;0&lt;/expanded-tree-cache-misses&gt;
+      &lt;request-state&gt;running&lt;/request-state&gt;
+      &lt;profiling-allowed&gt;false&lt;/profiling-allowed&gt;
+      &lt;profiling-enabled&gt;false&lt;/profiling-enabled&gt;
+      &lt;debugging-allowed&gt;false&lt;/debugging-allowed&gt;
+      &lt;debugging-status&gt;detached&lt;/debugging-status&gt;
+    &lt;/request-status&gt;
+  &lt;/request-statuses&gt;
+  &lt;request-rate&gt;0.0639857&lt;/request-rate&gt;
+  &lt;expanded-tree-cache-hits&gt;759&lt;/expanded-tree-cache-hits&gt;
+  &lt;expanded-tree-cache-misses&gt;185&lt;/expanded-tree-cache-misses&gt;
+  &lt;expanded-tree-cache-hit-rate&gt;0.272918&lt;/expanded-tree-cache-hit-rate&gt;
+  &lt;expanded-tree-cache-miss-rate&gt;0&lt;/expanded-tree-cache-miss-rate&gt;
+  &lt;fs-program-cache-hits&gt;9&lt;/fs-program-cache-hits&gt;
+  &lt;fs-program-cache-misses&gt;40&lt;/fs-program-cache-misses&gt;
+  &lt;db-program-cache-hits&gt;0&lt;/db-program-cache-hits&gt;
+  &lt;db-program-cache-misses&gt;0&lt;/db-program-cache-misses&gt;
+  &lt;env-program-cache-hits&gt;0&lt;/env-program-cache-hits&gt;
+  &lt;env-program-cache-misses&gt;0&lt;/env-program-cache-misses&gt;
+  &lt;fs-main-module-seq-cache-hits&gt;0&lt;/fs-main-module-seq-cache-hits&gt;
+  &lt;fs-main-module-seq-cache-misses&gt;19&lt;/fs-main-module-seq-cache-misses&gt;
+  &lt;db-main-module-seq-cache-hits&gt;0&lt;/db-main-module-seq-cache-hits&gt;
+  &lt;db-main-module-seq-cache-misses&gt;0&lt;/db-main-module-seq-cache-misses&gt;
+  &lt;fs-lib-module-cache-hits&gt;412&lt;/fs-lib-module-cache-hits&gt;
+  &lt;fs-lib-module-cache-misses&gt;23&lt;/fs-lib-module-cache-misses&gt;
+  &lt;db-lib-module-cache-hits&gt;0&lt;/db-lib-module-cache-hits&gt;
+  &lt;db-lib-module-cache-misses&gt;0&lt;/db-lib-module-cache-misses&gt;
+&lt;/server-status&gt; 
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.serverStatus(xdmp.host(), xdmp.server("Admin"));
+=&gt;
+{
+ "serverId": "16410760008133871361",
+ "serverName": "Admin",
+ "hostId": "2485368722774099257",
+ "serverKind": "http-server",
+ "enabled": true,
+ "port": 8001,
+ "root": "Admin/",
+ "modules": 0,
+ "database": "6302398542082263257",
+ "sslCertificateTemplate": 0,
+ "lastLogin": 0,
+ "displayLastLogin": false,
+ "backlog": 256,
+ "threads": 1,
+ "maxThreads": 32,
+ "requestTimeout": 30,
+ "keepAliveTimeout": 5,
+ "sessionTimeout": 3600,
+ "staticExpires": 3600,
+ "maxTimeLimit": 10800,
+ "defaultTimeLimit": 600,
+ "maxInferenceSize": 500,
+ "defaultInferenceSize": 100,
+ "collation": "http://marklogic.com/collation/",
+ "multiVersionConcurrencyControl": "contemporaneous",
+ "distributeTimestamps": "fast",
+ "authentication": "digest",
+ "defaultUser": "10306463041007996463",
+ "privilege": 0,
+ "concurrentRequestLimit": 0,
+ "defaultXqueryVersion": "0.9-ml",
+ "currentTime": "2014-12-17T19:57:46.218358-08:00",
+ "requestStatuses": [],
+ "requestRate": 0,
+ "expandedTreeCacheHits": 4196,
+ "expandedTreeCacheMisses": 547,
+ "expandedTreeCacheHitRate": 0,
+ "expandedTreeCacheMissRate": 0,
+ "fsProgramCacheHits": 275,
+ "fsProgramCacheMisses": 275,
+ "dbProgramCacheHits": 0,
+ "dbProgramCacheMisses": 0,
+ "envProgramCacheHits": 0,
+ "envProgramCacheMisses": 0,
+ "fsMainModuleSeqCacheHits": 10,
+ "fsMainModuleSeqCacheMisses": 10,
+ "dbMainModuleSeqCacheHits": 0,
+ "dbMainModuleSeqCacheMisses": 0,
+ "fsLibModuleCacheHits": 1167,
+ "fsLibModuleCacheMisses": 1167,
+ "dbLibModuleCacheHits": 0,
+ "dbLibModuleCacheMisses": 0,
+ "hosts": [],
+ "outputSgmlCharacterEntities": "none",
+ "outputEncoding": "UTF-8",
+ "errorHandler": "/error-switch.xqy",
+ "urlRewriter": "rewriter.xqy",
+ "requestTime": 0.195662498474121
+}
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="forest-counts" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns detailed forest statistics for a given forest
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a Sequence of ObjectNodes</span>.
+  This built-in may require significantly more processing
+  time than <code xmlns="http://www.w3.org/1999/xhtml">xdmp:forest-status</code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="forest-id" type="xs:unsignedLong*">
+     A sequence of forest IDs.
+  </apidoc:param>
+      <apidoc:param name="show-elements" type="xs:string*" optional="true">
+     The names of elements to be returned (the element names are listed
+     in the Usage Notes below). Only the top-level elements that show
+     counts are allowed (for example, <code xmlns="http://www.w3.org/1999/xhtml">stands-counts</code> or
+     <code xmlns="http://www.w3.org/1999/xhtml">document-count</code>).
+     The function will only perform the computations necessary to return the
+     nodes specified.  If this parameter is not specified or is the empty
+     sequence, then all statistics are calculated and returned for the forest.
+     For each element name, you can specify a trailing * for wildcard matching.
+     Specifying a * with no other text forces all calculations and
+     returns all of the nodes.
+  </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+     <p xmlns="http://www.w3.org/1999/xhtml">
+      Options include:</p>
+      <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+        <dt>"preview-reindexer"</dt>
+        <dd>return elements associated with reindexing even if
+        the reindexer is not running.</dd>
+        <dt>"preview-rebalancer"</dt>
+        <dd>return elements associated with rebalancing even if
+        the rebalancer is not running.</dd>
+     </dl></blockquote>
+     NOTE: these two options apply only when "show-elements" is empty.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(forest-counts)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+   <p xmlns="http://www.w3.org/1999/xhtml"><code>http://marklogic.com/xdmp/privileges/counts</code></p>
+</apidoc:privilege>
+    <apidoc:usage schema="forest-status.xsd" camel-case="true">
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:forest-counts(xdmp:forest("Documents"))
+=&gt;
+&lt;forest-counts xmlns="http://marklogic.com/xdmp/status/forest"&gt;
+  &lt;forest-id&gt;12434840716430044697&lt;/forest-id&gt;
+  &lt;current-time&gt;2007-02-16T19:00:00.708-08:00&lt;/current-time&gt;
+  &lt;stands-counts&gt;
+    &lt;stand-counts&gt;
+      &lt;stand-id&gt;15174447282968484759&lt;/stand-id&gt;
+      &lt;path&gt;c:\Program Files\MarkLogic\Data\Forests\Documents\00000016&lt;/path&gt;
+      &lt;active-fragment-count&gt;146&lt;/active-fragment-count&gt;
+      &lt;nascent-fragment-count&gt;0&lt;/nascent-fragment-count&gt;
+      &lt;deleted-fragment-count&gt;0&lt;/deleted-fragment-count&gt;
+    &lt;/stand-counts&gt;
+  &lt;/stands-counts&gt;
+  &lt;document-count&gt;67&lt;/document-count&gt;
+  &lt;directory-count&gt;3&lt;/directory-count&gt;
+&lt;/forest-counts&gt;
+ </pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.forestCounts(xdmp.forest("Documents"));
+=&gt;
+{
+  "forestId": "18080252238750949856",
+  "forestName": "Documents",
+  "currentTime": "2015-01-09T11:08:36.008846-08:00",
+  "standsCounts":
+  [
+   {
+    "standId": "10599000637920689925",
+    "path": "/var/opt/MarkLogic/Forests/Documents/00000026",
+    "activeFragmentCount": 32,
+    "nascentFragmentCount": 0,
+    "deletedFragmentCount": 4
+   }
+  ],
+  "documentCount": 16,
+  "directoryCount": 0
+}
+
+ </pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: only calculate the document count :)
+xdmp:forest-counts(xdmp:forest("Documents"), ("document-count"))
+=&gt;
+&lt;forest-counts xmlns="http://marklogic.com/xdmp/status/forest"&gt;
+  &lt;forest-id&gt;11656884323633926637&lt;/forest-id&gt;
+  &lt;forest-name&gt;Documents&lt;/forest-name&gt;
+  &lt;current-time&gt;2008-03-18T16:22:34.082-07:00&lt;/current-time&gt;
+  &lt;document-count&gt;1070&lt;/document-count&gt;
+&lt;/forest-counts&gt;
+
+ </pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// only calculate the document count
+xdmp.forestCounts(xdmp.forest("Documents"), ["document-count"]);
+=&gt;
+{
+  "forestId": "18080252238750949856",
+  "forestName": "Documents",
+  "currentTime": "2015-01-09T11:13:35.642748-08:00",
+  "documentCount": 16
+}
+
+ </pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: force everything to be calculated :)
+xdmp:forest-counts(xdmp:forest("Documents"), "*")
+=&gt;
+ the full output of xdmp:forest-counts
+
+ </pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// force everything to be calculated
+xdmp.forestCounts(xdmp.forest("Documents"), "*");
+=&gt;
+ the full output of xdmp:forest-counts
+
+{
+  "forestId": "18080252238750949856",
+  "forestName": "Documents",
+  "currentTime": "2015-01-09T11:14:19.665315-08:00",
+  "standsCounts":
+  [
+   {
+    "standId": "10599000637920689925",
+    "path": "/var/opt/MarkLogic/Forests/Documents/00000026",
+    "activeFragmentCount": 32,
+    "nascentFragmentCount": 0,
+    "deletedFragmentCount": 4
+   }
+  ],
+  "documentCount": 16,
+  "directoryCount": 0,
+  ......
+  ..... all of the other reindex counts
+  ......
+}
+
+ </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="request-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">
+  Returns the status of a running request <span class="javascript">as
+  a Sequence of ObjectNodes</span>.  If the request ID is that of
+  the calling request, then no special permission is required.  If the
+  ID is for another request, then the calling request needs
+  <code>http://marklogic.com/xdmp/privileges/status</code> permission.
+  </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">
+  The result of this builtin is exactly equivalent to
+  <code>xdmp:server-status(xdmp:host(), xdmp:server())//*:request-status[*:request-id = $req]</code>,
+  where <code>$req</code> is the ID of the request
+  you are interested in.
+  </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">
+  In the 3.2 release this builtin is not cluster-aware, the
+  first argument (host ID) must be the same as the value returned
+  by <code>xdmp:host()</code>.  If you wish to obtain the status of a request
+  running on a remote host, use the code snippet above to obtain
+  the request status using <code>xdmp:server-status()</code>.
+  </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong">
+    A host ID.  Must be the ID of the local host.
+  </apidoc:param>
+      <apidoc:param name="server-id" type="xs:unsignedLong">
+    A server ID (HTTP, XDBC, ODBC, webDAV, or Task).
+  </apidoc:param>
+      <apidoc:param name="request-id" type="xs:unsignedLong*">
+    One or more request IDs.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(request-status)*</apidoc:return>
+    <apidoc:return class="javascript">Sequence</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/status
+</apidoc:privilege>
+    <apidoc:usage schema="server-status.xsd" camel-case="true">
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:request-status(xdmp:host(), xdmp:server(), xdmp:request())
+=&gt;
+&lt;request-status xmlns="http://marklogic.com/xdmp/status/server"&gt;
+  &lt;request-id&gt;17571547553153953696&lt;/request-id&gt;
+  &lt;server-id&gt;6979985792045178484&lt;/server-id&gt;
+  &lt;host-id&gt;2612493919508853477&lt;/host-id&gt;
+  &lt;transaction-id&gt;2978550460365092692&lt;/transaction-id&gt;
+  &lt;canceled&gt;false&lt;/canceled&gt;
+  &lt;modules&gt;0&lt;/modules&gt;
+  &lt;database&gt;13419866041652476886&lt;/database&gt;
+  &lt;root&gt;Apps/&lt;/root&gt;
+  &lt;request-kind&gt;invoke&lt;/request-kind&gt;
+  &lt;request-text&gt;/qconsole/endpoints/eval.xqy&lt;/request-text&gt;
+  &lt;request-rewritten-text&gt;/qconsole/endpoints/eval.xqy?sid=
+     6693979901326946703&amp;amp;resulttype=text&amp;amp;qid=
+     2507225313416696807&amp;amp;cache=1363814207307&lt;/request-rewritten-text&gt;
+  &lt;update&gt;false&lt;/update&gt;
+  &lt;start-time&gt;2013-03-20T14:16:47.326-07:00&lt;/start-time&gt;
+  &lt;time-limit&gt;600&lt;/time-limit&gt;
+  &lt;max-time-limit&gt;1440&lt;/max-time-limit&gt;
+  &lt;user&gt;893641342095093063&lt;/user&gt;
+  &lt;client-address&gt;127.0.0.1&lt;/client-address&gt;
+  &lt;trigger-depth&gt;0&lt;/trigger-depth&gt;
+  &lt;expanded-tree-cache-hits&gt;2&lt;/expanded-tree-cache-hits&gt;
+  &lt;expanded-tree-cache-misses&gt;0&lt;/expanded-tree-cache-misses&gt;
+  &lt;request-state&gt;running&lt;/request-state&gt;
+  &lt;profiling-allowed&gt;true&lt;/profiling-allowed&gt;
+  &lt;profiling-enabled&gt;false&lt;/profiling-enabled&gt;
+  &lt;debugging-allowed&gt;true&lt;/debugging-allowed&gt;
+  &lt;debugging-status&gt;detached&lt;/debugging-status&gt;
+  &lt;retry-count&gt;0&lt;/retry-count&gt;
+&lt;/request-status&gt;
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.requestStatus(xdmp.host(), xdmp.server(), xdmp.request());
+=&gt;
+{
+ "requestId": "9833232389754205407",
+ "serverId": "536121115905064034",
+ "hostId": "2485368722774099257",
+ "transactionId": "6714524514889161071",
+ "canceled": false,
+ "modules": 0,
+ "database": "12466402192567279933",
+ "root": "Apps/",
+ "requestKind": "invoke",
+ "requestText": "/qconsole/endpoints/evaljs.sjs",
+ "requestRewrittenText": "/qconsole/endpoints/evaljs.sjs?sid=
+	 18127344729549022960&amp;qid=4268464128679030683&amp;crid=
+	 9862289152&amp;querytype=javascript&amp;action=eval&amp;cache=1418875622481",
+ "update": false,
+ "startTime": "2014-12-17T20:07:02.496789-08:00",
+ "timeLimit": 600,
+ "maxTimeLimit": 3600,
+ "user": "7071164303237443533",
+ "clientAddress": "172.16.19.129",
+ "triggerDepth": 0,
+ "expandedTreeCacheHits": 0,
+ "expandedTreeCacheMisses": 0,
+ "requestState": "running",
+ "profilingAllowed": true,
+ "profilingEnabled": false,
+ "debuggingAllowed": true,
+ "debuggingStatus": "detached",
+ "retryCount": 0
+}
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="foreign-cluster-status" type="builtin" lib="xdmp" category="Server Monitoring">
+    <apidoc:summary>
+  Returns the status of a foreign cluster from a host's point of view<span class="javascript" xmlns="http://www.w3.org/1999/xhtml"> as a JSON node</span>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="host-id" type="xs:unsignedLong">
+    A bootstrap host ID on the local cluster.
+  </apidoc:param>
+      <apidoc:param name="foreign-cluster-id" type="xs:unsignedLong">
+    A foreign cluster ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(foreign-cluster-status)</apidoc:return>
+    <apidoc:return class="javascript">ObjectNode</apidoc:return>
+    <apidoc:privilege>
+   <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/status</code>
+</apidoc:privilege>
+    <apidoc:usage schema="foreign-cluster-status.xsd" camel-case="true">
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+xdmp:foreign-cluster-status(xdmp:bootstrap-hosts()[1],xdmp:cluster("SanFrancisco"))
+=&gt;
+
+&lt;foreign-cluster-status
+  xmlns="http://marklogic.com/xdmp/status/foreign-cluster"&gt;
+&lt;/foreign-cluster-status&gt; 
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.foreignClusterStatus(fn.head(xdmp.bootstrapHosts()),xdmp.cluster("SanFrancisco"));
+=&gt;
+
+{
+ "foreignClusterId": "5850052649270525451", 
+ "foreignClusterName": "SanFrancisco",
+ ...
+}
+
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

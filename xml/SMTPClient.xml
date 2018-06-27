@@ -1,0 +1,263 @@
+<apidoc:module name="SMTPClient" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+Implements the send function.
+</apidoc:summary><apidoc:function name="email" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary class="xquery">
+  Send an email in an XQuery program.  A valid SMTP Relay must be
+  configured in the Groups page of the Admin Interface for the email to be
+  sent. The format of the email message can be an XML file that
+  complies with the schema files listed below, or it can be a JavaScript
+  object that follows our definition of JSON email format
+  (please see <a href="#xdmp.email" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp.email</code></a>).
+</apidoc:summary>
+    <apidoc:summary class="javascript">
+  Send an email in a JavasCript program.  A valid SMTP Relay must be
+  configured in the Groups page of the Admin Interface for the email to be
+  sent. The format of the email message can be a JavaScript object that
+  follows the format as below, or it can be an XML file that complies with
+  the schema files for email (see <a href="#xdmp:email" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp:email</code></a>).
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="message" type="element()" class="xquery">
+  An XML representation of an email message to send.  The message must
+  comply with the XML schemas defined in the following schema files:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li><code><em>install_dir</em>/Config/email-xml.xsd</code></li>
+	  <li><code><em>install_dir</em>/Config/rfc822.xsd</code></li>
+	</ul>
+  where <code xmlns="http://www.w3.org/1999/xhtml"><em>install_dir</em></code> is the directory in which
+  MarkLogic Server is installed.
+</apidoc:param>
+      <apidoc:param name="message" type="Object" class="javascript">
+  A JSON presentation of an email message to send.  The message must
+  comply with the following format:
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+{
+  "cc" : {"user@yourdomain.com"},
+  "comments" : "This is comment",
+  "from" : {"name" : "sender", "address" : admin@marklogic.com},
+  "reply-to" : {"group" : "team", "addresses": [ address1, address2]},
+  "subject"  :  "JSON Email Format",
+  "to" : {"addresses": [ address 1, address 2]},
+  "content-type" : "multipart/mixed; boundary = blablabla",
+  ...
+  "content" : { "boundary" : "blablabla",
+                "parts" : [
+                            "Text part",
+                            {
+                             "Content-Type" : "image/jpeg",
+                             "Disposition" : "attachment",
+                             "filename": "sample_attachement_1.jpg",
+                             "Content-Transfer-Encoding": "base64",
+                             "attachment": encoded attachement 1
+                             },
+
+                             {
+                               "Content-Type" : "image/jpeg",
+                               "Disposition" : "attachment",
+                               "filename": "sample_attachement_2.gif",
+                               "Content-Transfer-Encoding": "base64",
+                               "attachment": encoded attachement 2
+                             }
+                           ]
+              }
+}
+</pre>
+</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/xdmp-email
+</apidoc:privilege>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+This example demonstrates sending a message with
+HTML content.
+  
+xdmp:email(
+&lt;em:Message
+ xmlns:em="URN:ietf:params:email-xml:"
+ xmlns:rf="URN:ietf:params:rfc822:"&gt;
+  &lt;rf:subject&gt;Sample HTML Email&lt;/rf:subject&gt;
+  &lt;rf:from&gt;
+    &lt;em:Address&gt;
+      &lt;em:name&gt;MarkLogic&lt;/em:name&gt;
+      &lt;em:adrs&gt;marklogic@yourdomain&lt;/em:adrs&gt;
+    &lt;/em:Address&gt;
+  &lt;/rf:from&gt;
+  &lt;rf:to&gt;
+    &lt;em:Address&gt;
+      &lt;em:name&gt;System Administrator&lt;/em:name&gt;
+      &lt;em:adrs&gt;admin@yourdomain&lt;/em:adrs&gt;
+    &lt;/em:Address&gt;
+  &lt;/rf:to&gt;
+  &lt;em:content&gt;
+    &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+      &lt;head&gt;
+        &lt;title&gt;Test HTML message&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;h1&gt;Test HTML message&lt;/h1&gt;
+        &lt;p&gt;Here is a simple paragraph&lt;/p&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/em:content&gt;
+&lt;/em:Message&gt;)
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// This example demonstrates sending a message with
+// HTML content.
+  
+var from = {"name":"Administrator", "address":"admin@marklogic.com"};
+var address1 = {"name":"user1", "address":"user1@yourdomain.com"};
+var address2 = {"name":"user2", "address": "user2@yourdomain.com"};
+var address3 = {"name":"user3","address":"user3@yourdomain.com"};
+var contentType = "html"
+var html = '&lt;html&gt;
+              &lt;head&gt;
+                &lt;title&gt;HTML message&lt;/title&gt;
+              &lt;/head&gt;
+              &lt;body&gt;
+                &lt;h1&gt;Test Header&lt;/h1&gt;
+                &lt;p&gt;This is a sample paragraph&lt;/p&gt;
+              &lt;/body&gt;
+            &lt;/html&gt;';
+var message = {"from":from,
+               "to":{"addresses":[address1, address2, address3]},
+               "subject":"Test HTML email from ML Server",
+               "content-type":contentType,
+               "content":html
+               };
+xdmp.email(message);
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+This example demonstrates sending a message with
+plain text content.
+
+xdmp:email(
+&lt;em:Message
+ xmlns:em="URN:ietf:params:email-xml:"
+ xmlns:rf="URN:ietf:params:rfc822:"&gt;
+  &lt;rf:subject&gt;Sample Plain Text Email&lt;/rf:subject&gt;
+  &lt;rf:from&gt;
+    &lt;em:Address&gt;
+      &lt;em:name&gt;MarkLogic&lt;/em:name&gt;
+      &lt;em:adrs&gt;marklogic@yourdomain&lt;/em:adrs&gt;
+    &lt;/em:Address&gt;
+  &lt;/rf:from&gt;
+  &lt;rf:to&gt;
+    &lt;em:Address&gt;
+      &lt;em:name&gt;System Administrator&lt;/em:name&gt;
+      &lt;em:adrs&gt;admin@yourdomain&lt;/em:adrs&gt;
+    &lt;/em:Address&gt;
+  &lt;/rf:to&gt;
+  &lt;em:content xml:space="preserve"&gt;
+This is a sample email with a plain text body.
+&lt;/em:content&gt;
+&lt;/em:Message&gt;)
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// This example demonstrates sending a message with
+// plain text content.
+
+var message = {"from":{"name":"Administrator", "address":"admin@marklogic.com"},
+               "to":{"name":"username", "address":"user@yourdomain.com"},
+               "subject":"Plain Text Message",
+               "content":"Plain text content."};
+xdmp.email(message);
+
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+This example demonstrates sending a message with
+attachments.
+
+let $newline := "&amp;#13;&amp;#10;"
+let $boundary := concat("blah", xdmp:random())
+let $content-type := concat("multipart/mixed; boundary=",$boundary)
+let $attachment1 := xs:base64Binary(doc("/space/binaries/testdata1/Bon-Jovi.jpeg"))
+let $attachment2 := xs:base64Binary(doc("/space/binaries/testdata1/logo.gif"))
+let $content := concat(
+  "--",$boundary,$newline,
+  $newline,
+  "This is a test email with two images attached.", $newline,
+  "--",$boundary,$newline,
+  "Content-Type: image/jpeg", $newline,
+  "Content-Disposition: attachment; filename=Bon-Jovi.jpeg", $newline,
+  "Content-Transfer-Encoding: base64", $newline,
+  $newline,
+  $attachment1, $newline,
+  "--",$boundary,$newline,
+  "Content-Type: image/gif", $newline,
+  "Content-Disposition: attachment; filename=logo.gif", $newline,
+  "Content-Transfer-Encoding: base64", $newline,
+  $newline,
+  $attachment2, $newline,
+  "--",$boundary,"--", $newline)
+
+return
+  xdmp:email(
+  &lt;em:Message
+    xmlns:em="URN:ietf:params:email-xml:"
+    xmlns:rf="URN:ietf:params:rfc822:"&gt;
+    &lt;rf:subject&gt;Sample Email&lt;/rf:subject&gt;
+    &lt;rf:from&gt;
+      &lt;em:Address&gt;
+        &lt;em:name&gt;MarkLogic&lt;/em:name&gt;
+        &lt;em:adrs&gt;marklogic@yourdomain&lt;/em:adrs&gt;
+      &lt;/em:Address&gt;
+    &lt;/rf:from&gt;
+    &lt;rf:to&gt;
+      &lt;em:Address&gt;
+        &lt;em:name&gt;System Administrator&lt;/em:name&gt;
+        &lt;em:adrs&gt;admin@yourdomain&lt;/em:adrs&gt;
+      &lt;/em:Address&gt;
+    &lt;/rf:to&gt;
+    &lt;rf:content-type&gt;{$content-type}&lt;/rf:content-type&gt;
+    &lt;em:content xml:space="preserve"&gt;
+      {$content}
+    &lt;/em:content&gt;
+  &lt;/em:Message&gt;)
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// This example demonstrates sending a message with
+// attachments.
+  
+var boundary = "blahblahblah" + xdmp.random();
+var contentType = "multipart/mixed; boundary=" + boundary;
+var att1 = xs.base64Binary(fn.head(xdmp.documentGet("/path/to/the file1.jpeg")));
+var att2 = xs.base64Binary(fn.head(xdmp.documentGet("/path/to/the file2.jpeg")));
+var part1 = "This is a sample multipart message in JSON format";
+var part2 = {
+             "Content-Type": "image/jpeg",
+             "Content-Disposition":"attachment",
+             "filename":"file1.jpeg",
+             "Content-Transfer-Encoding":"base64",
+             "attachment":att1
+            };
+var part3 = {
+             "Content-Type": "image/jpeg",
+             "Content-Disposition":"attachment",
+             "filename":"file2.jpeg",
+             "Content-Transfer-Encoding":"base64",
+             "attachment":att2
+            };
+var from = {"name":"Administrator", "address":"admin@marklogic.com"};
+var to ={"address":"username@yourdomain.com"};
+var subject = "Test JSON Multipart Message with Attachments!";
+var message = {
+               "from":from,
+               "to":to,
+               "subject": subject,
+               "content-type":contentType,
+               "content":{
+                          "boundary":boundary,
+                          "parts":[part1, part2, part3]
+                         }
+};
+xdmp.email(message);
+
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

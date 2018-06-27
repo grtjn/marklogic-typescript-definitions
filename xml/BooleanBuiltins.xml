@@ -1,0 +1,83 @@
+<apidoc:module name="BooleanBuiltins" category="BooleanBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="BooleanBuiltins" bucket="W3C-Standard Functions">
+The boolean built-in functions are XQuery functions to manipulate xs:boolean
+values.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" xmlns="http://www.w3.org/1999/xhtml">XQuery 1.0
+and XPath 2.0 Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="true" type="builtin" lib="fn" category="BooleanBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns the <code xmlns="http://www.w3.org/1999/xhtml">xs:boolean</code> value <code xmlns="http://www.w3.org/1999/xhtml">true</code>.
+  Equivalent to <code xmlns="http://www.w3.org/1999/xhtml">xs:boolean("1")</code>.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:true()
+
+=&gt; true
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.true()
+
+=&gt; true
+
+fn.true() == true
+
+=&gt; true
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="false" type="builtin" lib="fn" category="BooleanBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns the <code xmlns="http://www.w3.org/1999/xhtml">xs:boolean</code> value <code xmlns="http://www.w3.org/1999/xhtml">false</code>.
+  Equivalent to <code xmlns="http://www.w3.org/1999/xhtml">xs:boolean("0")</code>.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:false()
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.false()
+
+=&gt; false
+
+fn.false() == false
+
+=&gt; true
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="not" type="builtin" lib="fn" category="BooleanBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns <code xmlns="http://www.w3.org/1999/xhtml">true</code> if the
+  effective boolean value is <code xmlns="http://www.w3.org/1999/xhtml">false</code>, and <code xmlns="http://www.w3.org/1999/xhtml">false</code>
+  if the effective boolean value is <code xmlns="http://www.w3.org/1999/xhtml">true</code>.
+  The <code xmlns="http://www.w3.org/1999/xhtml">$arg</code> parameter is first reduced to an effective
+  boolean value by applying the <code xmlns="http://www.w3.org/1999/xhtml">fn:boolean</code> function.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="item()*">
+  The expression to negate.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:not(fn:true())
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.not(true)
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:not("false")
+
+=&gt; false
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.not("false")
+
+=&gt; false
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>
