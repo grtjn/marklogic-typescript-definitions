@@ -1,5 +1,27 @@
 # Change Log
 
+## [0.5.0](https://github.com/grtjn/marklogic-typescript-definitions/tree/0.5.0) (2018-06-27)
+[Full Changelog](https://github.com/grtjn/marklogic-typescript-definitions/compare/0.3.0...0.5.0)
+
+**Implemented enhancements:**
+
+- Sort libraries and function declarations [\#21](https://github.com/grtjn/marklogic-typescript-definitions/issues/21)
+- Release for ML 9 [\#20](https://github.com/grtjn/marklogic-typescript-definitions/issues/20)
+- Cannot Find Name 'xs' [\#17](https://github.com/grtjn/marklogic-typescript-definitions/issues/17)
+
+**Fixed bugs:**
+
+- Skip deprecated functions [\#22](https://github.com/grtjn/marklogic-typescript-definitions/issues/22)
+- Type mismatch is xdmp.login -- null is not assignable to undefined [\#18](https://github.com/grtjn/marklogic-typescript-definitions/issues/18)
+- Add the Iterator Symbol to functions which return nodes \(ex. cts.search\) [\#16](https://github.com/grtjn/marklogic-typescript-definitions/issues/16)
+
+## [0.3.0](https://github.com/grtjn/marklogic-typescript-definitions/tree/0.3.0) (2015-10-10)
+[Full Changelog](https://github.com/grtjn/marklogic-typescript-definitions/compare/0.0.1...0.3.0)
+
+**Implemented enhancements:**
+
+- Add interfaces for core/built-in datatypes [\#10](https://github.com/grtjn/marklogic-typescript-definitions/issues/10)
+
 ## [0.0.1](https://github.com/grtjn/marklogic-typescript-definitions/tree/0.0.1) (2015-09-21)
 **Implemented enhancements:**
 
