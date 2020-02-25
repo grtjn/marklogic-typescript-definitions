@@ -1,0 +1,9 @@
+# ignore (almost) everything
+*
+# don't ignore the following
+!.npmignore
+!gulpfile.js
+!package-lock.json
+!package.json
+!qconsole
+!tsconfig.json
