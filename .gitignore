@@ -6,3 +6,4 @@ npm-debug.log
 MarkLogic_*
 old
 ts/functions.d.ts
+xml/
