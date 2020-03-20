@@ -26,10 +26,11 @@ var options = {
 };
 
 var createAddHeader = function(){
-  return through.obj(function(file){
-    file.contents = new Buffer('///<reference path="./types.d.ts" />\n' + file.contents.toString())
-    this.push(file)
-  })
+  return through.obj(function(file, enc, cb){
+    file.contents = new Buffer('///<reference path="./types.d.ts" />\n' + file.contents.toString());
+    this.push(file);
+    cb();
+  });
 }
 
 var cleanupDefinitions = function(){
@@ -57,8 +58,8 @@ var cleanupDefinitions = function(){
         body = body && body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
 
         if (err || httpResponse.statusCode !== 200) {
-          console.log(file.path)
-          cb(body ? new Error(body) : err)
+          console.log(file.path);
+          cb(body ? new Error(body) : err);
         } else {
           cb(null, new File({
             base: file.base,
@@ -98,8 +99,8 @@ var createProcessXML = function(){
         body = body && body.replace(/^([^\r]*\r\n){5}/, '').replace(/\r\n[^\r]*\r\n$/, '');
 
         if (err || httpResponse.statusCode !== 200) {
-          console.log(file.path)
-          cb(body ? new Error(body) : err)
+          console.log(file.path);
+          cb(body ? new Error(body) : err);
         } else {
           cb(null, new File({
             base: file.base,
@@ -114,7 +115,7 @@ var createProcessXML = function(){
   });
 }
 
-gulp.task('generate', function(){
+function generate(){
   return gulp.src(['xml/**/*.xml'])
     .pipe(concat('definitions.xml'))
     .pipe(cleanupDefinitions())
@@ -123,12 +124,12 @@ gulp.task('generate', function(){
     .pipe(concat('functions.d.ts'))
     .pipe(createAddHeader())
     .pipe(gulp.dest('./ts/'));
-});
+};
 
-gulp.task('validate', ['generate'], function(){
-  gulp.src(['ts/**/*.ts'])
+function validate(){
+  return gulp.src(['ts/**/*.ts'])
   .pipe(typescript({emitError: false}));
-});
+};
 
 // Default Task
-gulp.task('default', ['validate']);
+exports.default = gulp.series(generate, validate);
