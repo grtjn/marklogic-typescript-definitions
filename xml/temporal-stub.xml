@@ -1,0 +1,14 @@
+<apidoc:module name="temporal-lib" category="Temporal Library" 
+	bucket="XQuery Library Modules" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" 
+	xmlns="http://www.w3.org/1999/xhtml" lib="sem">
+	<apidoc:summary category="Temporal Library">
+		The temporal library module documentation is with the rest of
+		the <a href="temporal/temporal">temporal functions</a>.  
+	</apidoc:summary>
+	<apidoc:function name="" lib="temporal" 
+		category="Temporal Library" 
+		bucket="XQuery Library Modules">
+      <apidoc:summary/>
+    </apidoc:function>
+</apidoc:module>

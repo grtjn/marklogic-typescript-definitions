@@ -1,0 +1,59 @@
+<apidoc:module name="DocBookModule" subcategory="DocBook Conversion" 
+  category="CPF Functions" bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="dbk" class="xquery"
+>
+<apidoc:summary access="public">
+<p>The DocBook conversion module is part of the conversion processing pipeline.
+These functions are used to manipulate DocBook as part
+of conversion processing.
+</p>
+<p>To use the DocBook module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace dbk = "http://marklogic.com/cpf/docbook"
+         at "/MarkLogic/conversion/docbook.xqy";</code></p>
+<p>You will need to ensure that the DocBook module is loaded into the same
+modules database as the importing module.</p>
+<p>The library namespace prefix <code>dbk</code> is <em>not</em> predefined in
+the server.</p>
+</apidoc:summary>
+
+<apidoc:function name="convert" type="docbook" lib="dbk" 
+	subcategory="DocBook Conversion" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Convert XHTML to DocBook lite vocabulary, if possible. The section
+  structuring depends on the presence of div elements with mlsection markers,
+  as produced by xhtml:restructure.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="doc" type="node()?">
+    The contents of the XHTML document.
+    </apidoc:param>
+    <apidoc:param name="options" type="element()?">
+    Conversion options in the "dbk:docbook" namespace. 
+    There are two options are defined:
+    "wrap-text", a boolean value which causes "phrase" elements to be inserted
+    where XHTML "span" elements were found. The default is false.
+    "preserve-styles", a boolean value which causes the XHTML "class" attributes
+    to be mapped to "role" attributes in the output.  The default is false.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> node()* </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dbk = "http://marklogic.com/cpf/docbook" 
+		  at "/MarkLogic/conversion/docbook.xqy";
+
+  let $options := 
+     <options xmlns="dbk:convert">
+       <wrap-text>false</wrap-text>
+       <preserve-styles>true</preserve-styles>
+     </options>
+  return dbk:convert(fn:doc("http://example.com/mydoc.xhtml"), $options) 
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

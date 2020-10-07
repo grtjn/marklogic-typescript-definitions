@@ -1,0 +1,855 @@
+<apidoc:module name="GeoJSON" subcategory="GeoJSON" bucket="XQuery Library Modules" category="Geospatial Supporting Functions" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="geojson"
+>
+<apidoc:summary class="xquery" access="public" subcategory="GeoJSON" 
+	bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+<p>The GeoJSON module provides support for geospatial queries using GeoJSON. 
+</p>
+<p>To use the GeoJSON module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";</code></p>
+<p>The library namespace prefix <code>geojson</code> is <em>not</em> predefined
+in the server.</p>
+</apidoc:summary>
+<apidoc:summary class="javascript" access="public" subcategory="GeoJSON" 
+	bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+<p>The GeoJSON module provides support for geospatial queries using GeoJSON.</p>
+<p>To use the GeoJSON in your JavaScript code, include a <code>require</code>
+  statement similar to the following in your code:
+</p>
+<p><code>var geojson = require('/MarkLogic/geospatial/geojson.xqy');</code></p>
+<p>The library namespace prefix <code>geojson</code> is <em>not</em> 
+  predefined in the server.</p>
+</apidoc:summary>
+
+<apidoc:function name="point" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:point value from a GeoJSON "Point" type geometry object.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="point" type="object-node()">
+    A GeoJSON Point node.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:point </apidoc:return>
+  <apidoc:usage>The GeoJSON Point node includes additional
+  information that is not retained in the cts:point value.  In particular, the
+  altitude part of the point value will be dropped.  Therefore two GeoJSON 
+  points at the same latitude and longitude with different altitude will
+  nevertheless have equal cts:point values.</apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:point(
+    object-node { "type" : "Point", "coordinates" : array-node {100.00, 0.0} }
+  )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+geojson.point(
+  {type: 'Point', coordinates: [100.0,0.0]}
+);
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="multi-point" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a set of cts:point values from a GeoJSON "MultiPoint" type 
+	  geometry object.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="multi-point" type="object-node()">
+    A GeoJSON MultiPoint node.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:point* </apidoc:return>
+  <apidoc:usage>The GeoJSON MultiPoint node includes additional
+  information that is not retained in the cts:point values.  In particular, the
+  altitude part of each point value will be dropped.</apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:multi-point( object-node { 
+    "type" : "MultiPoint", 
+    "coordinates" : array-node { array-node {100.0, 0.0}, 
+                                 array-node {101.0, 1.0} }
+  )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.multiPoint(
+  { type: 'MultiPoint', coordinates: [ [100.0, 0.0], [101.0, 1.0] ] }
+)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="box" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:box value from GeoJSON bbox property.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="box" type="object-node()">
+    A GeoJSON node that has a bbox property.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:box</apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:box(object-node { 
+    "type": "Feature",
+    "bbox": array-node {-180.0, -90.0, 180.0, 90.0},
+    "geometry": object-node {
+      "type": "Polygon",
+      "coordinates": array-node { array-node {
+        array-node {-180.0, 10.0}, 
+        array-node {20.0, 90.0}, 
+        array-node {180.0, -5.0},
+        array-node {-30.0, -90.0}
+      }}
+    }
+  })
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.box(
+  { type: 'Feature',
+    bbox: [-180.0, -90.0, 180.0, 90.0],
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[
+        [-180.0, 10.0], [20.0, 90.0], [180.0, -5.0], [-30.0, -90.0]
+      ]]
+  }}
+)
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="circle" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+    Create a cts:circle value from a radius and a GeoJSON "Point" type 
+    geometry object.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="radius" type="xs:double">
+    The radius of the circle, in miles.
+    </apidoc:param>
+    <apidoc:param name="center" type="object-node()">
+    A GeoJSON Point node representing the center of the circle.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:circle </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:circle(1,
+    object-node { "type" : "Point", "coordinates" : array-node {100.00, 0.0} }
+  )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.circle(1, {type: 'Point', coordinates: [100.0,0.0]});
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="linestring" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a cts:linestring value from a GeoJSON "LineString" type 
+	  geometry object.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="linestring" type="object-node()">
+    A GeoJSON LineString node.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:linestring </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:linestring(
+    object-node { 
+      "type": "LineString",
+      "coordinates": array-node { array-node {100.0, 0.0}, array-node {101.0, 1.0} }
+    }
+  )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.linestring(
+  { type: 'LineString', coordinates: [ [100.0, 0.0], [101.0, 1.0] ] }
+);
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="multi-linestring" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a set of cts:linestring values from a GeoJSON 
+	  "MultiLineString" type geometry object.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="multi-linestring" type="object-node()">
+    A GeoJSON MultiLineString node.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:linestring* </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:multi-linestring(
+    object-node { 
+      "type": "LineString",
+      "coordinates": array-node {
+        array-node { array-node {100.0, 0.0}, array-node {101.0, 1.0} },
+        array-node { array-node {102.0, 2.0}, array-node {103.0, 3.0} }
+      }
+    }
+  )
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.multiLinestring(
+  { type: 'MultiLineString',
+    coordinates: [
+        [ [100.0, 0.0], [101.0, 1.0] ],
+        [ [102.0, 2.0], [103.0, 3.0] ]
+  ] }
+);
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="polygon" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:polygon value from a GeoJSON "Polygon" type geometry object or 
+  a sequence of GeoJSON "Point" type geometry objects.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="polygon-or-points" type="object-node()+">
+    A sequence of Point node representing the vertices of the 
+    polygon or a Polygon node itself. 
+    Note that if it is a Polygon node, the return from this function
+    represents the exterior polygon.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:polygon </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:polygon((
+    object-node { "type" : "Point", "coordinates" : array-node {100.0, 0.0} },
+    object-node { "type" : "Point", "coordinates" : array-node {101.0, 0.0} },
+    object-node { "type" : "Point", "coordinates" : array-node {101.0, 1.0} },
+    object-node { "type" : "Point", "coordinates" : array-node {100.0, 1.0} },
+    object-node { "type" : "Point", "coordinates" : array-node {100.0, 0.0} }
+  ))
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:polygon(object-node {
+    "type": "Polygon",
+    "coordinates": array-node {
+      array-node { 
+        array-node {100.0, 0.0}, 
+        array-node {101.0, 0.0}, 
+        array-node {101.0, 1.0}, 
+        array-node {100.0, 1.0},
+        array-node {100.0, 0.0}
+      },
+      array-node { 
+        array-node {100.2, 0.2}, 
+        array-node {100.8, 0.2}, 
+        array-node {100.8, 0.8}, 
+        array-node {100.2, 0.8}, 
+        array-node {100.2, 0.2} 
+      }
+     }
+   })
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Create a cts.polygon from a set of GeoJSON points
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.polygon([
+  {type: 'Point', coordinates: [100.0,0.0]},
+  {type: 'Point', coordinates: [101.0,0.0]},
+  {type: 'Point', coordinates: [101.0,1.0]},
+  {type: 'Point', coordinates: [100.0,1.0]},
+  {type: 'Point', coordinates: [100.0,0.0]}
+])
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Create a cts.polygon from a GeoJSON polygon
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.polygon(
+  { type: 'Polygon', 
+    coordinates: [
+      [[100.0,0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]]
+  ] }
+)
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="interior-polygon" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a sequence of cts:polygon values from a GeoJSON "Polygon" 
+	  type geometry object.  The returned polygons represent the 
+	  interior polygons, if any.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="polygon" type="object-node()">
+    A GeoJSON Polygon node representing the polygon.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:polygon* </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:interior-polygon(object-node {
+    "type": "Polygon",
+    "coordinates": array-node {
+      array-node { 
+        array-node {100.0, 0.0}, 
+        array-node {101.0, 0.0}, 
+        array-node {101.0, 1.0}, 
+        array-node {100.0, 1.0},
+        array-node {100.0, 0.0}
+      },
+      array-node { 
+        array-node {100.2, 0.2}, 
+        array-node {100.8, 0.2}, 
+        array-node {100.8, 0.8}, 
+        array-node {100.2, 0.8}, 
+        array-node {100.2, 0.2} 
+      }
+     }
+   })
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.interiorPolygon(
+  { type: 'Polygon', 
+    coordinates: [
+      [[100.0,0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+      [[100.2,0.2], [100.8, 0.2], [100.8, 1.8], [100.2, 1.8], [100.2, 0.2]]
+  ] }
+)
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="complex-polygon" type="kml" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a <code>cts:complex-polygon</code> value from a 
+	  GeoJSON "Polygon" type geometry object. The polygon returned 
+	  represents the combination of 
+	  the exterior polygon and the interior polygons.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="complex-polygon" type="node()">
+    A Polygon node representing the complex polygon.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:complex-polygon </apidoc:return>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:complex-polygon(object-node {
+    "type": "Polygon",
+    "coordinates": array-node {
+      array-node { 
+        array-node {100.0, 0.0}, 
+        array-node {101.0, 0.0}, 
+        array-node {101.0, 1.0}, 
+        array-node {100.0, 1.0},
+        array-node {100.0, 0.0}
+      },
+      array-node { 
+        array-node {100.2, 0.2}, 
+        array-node {100.8, 0.2}, 
+        array-node {100.8, 0.8}, 
+        array-node {100.2, 0.8}, 
+        array-node {100.2, 0.2} 
+      }
+     }
+   })
+   ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.complexPolygon(
+  { type: 'Polygon', 
+    coordinates: [
+      [[100.0,0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+      [[100.2,0.2], [100.8, 0.2], [100.8, 1.8], [100.2, 1.8], [100.2, 0.2]]
+  ] }
+)
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="geospatial-query" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Returns a cts:query matching points within given regions.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="regions" type="cts:region*">
+	    One or more geographic boxes, circles, polygons, linestrings 
+	    or points. Where multiple boxes, circles, polygons, linestrings 
+	    or points are specified, the query matches if any box, circle, 
+	    polygon, linestring or point matches.
+    </apidoc:param>
+    <apidoc:param name="options" type="xs:string*" optional="true">
+    Options to this query.  The default is ().
+    <p>Options include:</p>
+      <blockquote>
+        <dl>
+        <dt>"coordinate-system=<var>string</var>"</dt>
+        <dd>Use the given coordinate system. Valid values are:
+          <dl>
+          <dt>wgs84</dt><dd>The WGS84 coordinate system.</dd>
+          <dt>wgs84/double</dt><dd>The WGS84 coordinate system at double precision.</dd>
+          <dt>etrs89</dt><dd>The ETRS89 coordinate system.</dd>
+          <dt>etrs89/double</dt><dd>The ETRS89 coordinate system at double precision.</dd>
+          <dt>raw</dt><dd>The raw (unmapped) coordinate system.</dd>
+          <dt>raw/double</dt><dd>The raw coordinate system at double precision.</dd>
+          </dl>
+        </dd>
+        <dt>"units=<em>value</em>"</dt>
+        <dd>Measure distance and the radii of circles in the specified units.
+         Allowed values: <code>miles</code> (default), <code>km</code>,
+         <code>feet</code>, <code>meters</code>.</dd>
+        <dt>"precision=<em>value</em>"</dt>
+        <dd>Use the coordinate system at the given precision. Allowed values:
+         <code>float</code> and <code>double</code>.</dd>
+        <dt>"boundaries-included"</dt>
+	<dd>Points on boxes' and circles' boundaries are counted as matching.  
+		This is the default.</dd>
+        <dt>"boundaries-excluded"</dt>
+	<dd>Points on boxes' and circles' boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-latitude-excluded"</dt>
+	<dd>Points on boxes' latitude boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-longitude-excluded"</dt>
+	<dd>Points on boxes' longitude boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-south-excluded"</dt>
+	<dd>Points on the boxes' southern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-west-excluded"</dt>
+	<dd>Points on the boxes' western boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-north-excluded"</dt>
+	<dd>Points on the boxes' northern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-east-excluded"</dt>
+	<dd>Points on the boxes' eastern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-circle-excluded"</dt>
+        <dd>Points on circles' boundary are not counted as matching.</dd>
+      </dl></blockquote>
+    </apidoc:param>
+    <apidoc:param name="weight" type="xs:double?" optional="true">
+    A weight for this query.  The default is 1.0.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:query</apidoc:return>
+<apidoc:usage>
+<p>Point values and boundary specifications of boxes are given in degrees
+relative to the WGS84 coordinate system.  Southern latitudes and Western 
+longitudes take negative values.  Longitudes will be wrapped to the range 
+(-180,+180) and latitudes will be clipped to the range (-90,+90).  
+</p>
+<p>If the northern boundary of a box is south of the southern boundary, no 
+points will  match. However, longitudes wrap around the globe, so that if 
+the western boundary is east of the eastern boundary,
+then the box crosses the anti-meridian.
+</p>
+<p>Special handling occurs at the poles, as all longitudes exist at latitudes 
++90 and -90.
+</p>
+</apidoc:usage>
+<apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+
+(: create a document with test data :)
+xdmp:document-insert("first.json",
+  object-node {  
+    "type": "Feature",  
+     "geometry": object-node {    
+        "type": "Point",    
+         "coordinates": array-node {125.6, 8.1}  },  
+     "properties": object-node {    
+       "name": "Test"  
+      }
+   });
+
+xquery version "1.0-ml";
+import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+let $q := geojson:geospatial-query(cts:box(1, 120, 35, 131), ("uncached"), 2.0)
+return cts:search(fn:doc(), $q)
+(:
+  returns first.json
+:)
+]]></pre></apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Assume you've previously inserted the following document into the database.
+declareUpdate();
+xdmp.documentInsert('example.json',
+  { type: 'Feature',  
+    geometry: {    
+      type: 'Point',    
+      coordinates: [125.6, 8.1]
+     },
+     properties: { name: 'Test' }
+  });
+
+// Then in a separate query, you can perform the following search
+// to match this document.
+const geojson = require('/MarkLogic/geospatial/geojson');
+cts.search(
+  geojson.geospatialQuery(
+    cts.box(1, 120, 35, 131), 
+    ['coordinate-system=wgs84'], 
+    2.0));
+
+// Returns the contents of example.json
+]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="geospatial-query-from-nodes" type="geojson" 
+	lib="geojson" subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Returns a cts:query matching points within given regions.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="regions" type="node()*">
+	    One or more geographic circles, polygons, linestrings or 
+	    points, represented as GeoJSON objects. Where multiple circles, 
+	    polygons, linestrings or points are specified, the query matches 
+	    if any circle, polygon, linestring or point matches.
+    </apidoc:param>
+    <apidoc:param name="options" type="xs:string*" optional="true">
+    Options to this query.  The default is ().
+    <p>Options include:</p>
+      <blockquote>
+        <dl>
+         <dt>"coordinate-system=<var>string</var>"</dt>
+          <dd>Use the given coordinate system. Valid values are:
+            <dl>
+            <dt>wgs84</dt><dd>The WGS84 coordinate system.</dd>
+            <dt>wgs84/double</dt><dd>The WGS84 coordinate system at double precision.</dd>
+            <dt>raw</dt><dd>The raw (unmapped) coordinate system.</dd>
+            <dt>raw/double</dt><dd>The raw coordinate system at double precision.</dd>
+            </dl>
+          </dd>
+        <!--
+        <dt>"unit=miles"</dt>
+        <dd>Distance (for circles) is measured in miles.</dd>
+        -->
+        <dt>"boundaries-included"</dt>
+	<dd>Points on boxes' and circles' boundaries are counted as matching.  
+		This is the default.</dd>
+        <dt>"boundaries-excluded"</dt>
+	<dd>Points on boxes' and circles' boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-latitude-excluded"</dt>
+	<dd>Points on boxes' latitude boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-longitude-excluded"</dt>
+	<dd>Points on boxes' longitude boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-south-excluded"</dt>
+	<dd>Points on the boxes' southern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-west-excluded"</dt>
+	<dd>Points on the boxes' western boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-north-excluded"</dt>
+	<dd>Points on the boxes' northern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-east-excluded"</dt>
+	<dd>Points on the boxes' eastern boundaries are not counted as 
+		matching.</dd>
+        <dt>"boundaries-circle-excluded"</dt>
+        <dd>Points on circles' boundary are not counted as matching.</dd>
+      </dl></blockquote>
+    </apidoc:param>
+    <apidoc:param name="weight" type="xs:double?" optional="true">
+    A weight for this query.  The default is 1.0.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:query </apidoc:return>
+<apidoc:usage>
+<p>Point values and boundary specifications of boxes are given in degrees
+relative to the WGS84 coordinate system.  Southern latitudes and Western 
+longitudes take negative values.  Longitudes will be wrapped to the range 
+(-180,+180) and latitudes will be clipped to the range (-90,+90).  
+</p>
+<p>If the northern boundary of a box is south of the southern boundary, no 
+points will  match. However, longitudes wrap around the globe, so that if 
+the western boundary is east of the eastern boundary,
+then the box crosses the anti-meridian.
+</p>
+<p>Special handling occurs at the poles, as all longitudes exist at latitudes 
++90 and -90.
+</p>
+<p>This function will take into account interior polygons, if any, and properly
+construct the query to account for them.
+</p>
+</apidoc:usage>
+<apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+
+(: create a document with test data :)
+xdmp:document-insert("first.json",
+  object-node {  
+    "type": "Feature",  
+     "geometry": object-node {    
+        "type": "Point",    
+         "coordinates": array-node {125.6, 8.1}  },  
+     "properties": object-node {    
+       "name": "Test"  
+      }
+   });
+
+xquery version "1.0-ml";
+import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+let $q := geojson:geospatial-query-from-nodes(
+  object-node { 
+    "type": "Polygon",
+    "coordinates": array-node {
+      array-node { 
+        array-node {35, 1}, array-node {131, 1}, array-node {131, 120}, 
+        array-node {35, 120}, array-node {35, 1} 
+      }
+    }
+   })
+return cts:search(fn:doc(), $q)
+(:
+  returns first.json
+:)
+ 
+]]></pre></apidoc:example>
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Assume you previously inserted a document into the database, as follows:
+declareUpdate();
+xdmp.documentInsert('example.json',
+  { type: 'Feature',  
+    geometry: {    
+      type: 'Point',    
+      coordinates: [125.6, 8.1]
+     },
+     properties: { name: 'Test' }
+  });
+
+// Then the following search matches the above document.
+const geojson = require('/MarkLogic/geospatial/geojson');
+cts.search(
+  geojson.geospatialQueryFromNodes(
+    { "type": "Polygon",
+      "coordinates": [
+        [ [35, 1], [131, 1], [131, 120], [35, 120], [35, 1] ]
+      ]
+    }
+));
+]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="parse-geojson" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+    Convert GeoJSON object nodes into <code>cts:region</code> values.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="geojson" type="object-node()*">
+      Zero or more JSON object nodes conforming to the GeoJSON specification.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:region*</apidoc:return>
+  <apidoc:usage>
+    The GeoJSON Point node includes additional
+    information that is not retained in the cts:point value.  In particular, the
+    altitude part of the point value will be dropped.  Therefore two GeoJSON 
+    points at the same latitude and longitude with different altitude will
+    nevertheless have equal cts:point values.
+    <p class="javascript">
+      The returned <code>Sequence</code> contains <code>cts:region</code>
+      values.
+    </p>
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/geospatial.xml%2396147'>Converting To and From Common Geospatial Representations</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/dev_guide/json.xml%2311343'>Geospatial Data</a> in the <em>Application Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+geojson:parse-geojson(
+  xdmp:unquote('
+    { "type": "Polygon", 
+      "coordinates": [
+        [[1.0, 5.0], [1.0, 8.0], [6.0, 8.0], [7.0, 5.0], [1.0, 5.0]]
+    ]}
+  ')/object-node()
+)
+
+==> A cts:polygon similar to the following:
+    cts:polygon("5,1 8,1 8,6 5,7 5,1")
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require('/MarkLogic/geospatial/geojson.xqy');
+
+geojson.parseGeojson(
+  { type: 'Polygon', 
+    coordinates: [
+      [[1.0, 5.0], [1.0, 8.0], [6.0, 8.0], [7.0, 5.0], [1.0, 5.0]]
+  ] }
+)
+
+==> A Sequence that contains a cts.polygon equivalent to the input region.
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="to-geojson" type="geojson" lib="geojson" 
+	subcategory="GeoJSON" bucket="XQuery Library Modules" 
+	category="Geospatial Supporting Functions">
+  <apidoc:summary>
+    Convert cts:region values into GeoJSON object nodes.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="regions" type="cts:region*">
+      Zero or more <code>cts:region</code> values to convert to GeoJSON.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>object-node()*</apidoc:return>
+  <apidoc:usage>
+    The GeoJSON Point node includes additional
+    information that is not retained in the cts:point value.  In particular, the
+    altitude part of the point value will be dropped.  Therefore two GeoJSON 
+    points at the same latitude and longitude with different altitude will
+    nevertheless have equal cts:point values.
+    <p class="javascript">
+      The return <code>Sequence</code> contains JSON object nodes
+      conforming to the GeoJSON representation.
+    </p>
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/geospatial.xml%2396147'>Converting To and From Common Geospatial Representations</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/dev_guide/json.xml%2311343'>Geospatial Data</a> in the <em>Application Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace geojson = "http://marklogic.com/geospatial/geojson"
+         at "/MarkLogic/geospatial/geojson.xqy";
+
+  geojson:to-geojson(
+    cts:polygon((
+      cts:point(5.0,1.0), cts:point(8.0,1.0),
+      cts:point(8.0,6.0), cts:point(5.0,7.0)
+    ))
+  )
+
+==> A JSON object node representing a GeoJSON polygon with the given
+    coordinates.
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+var geojson = require("/MarkLogic/geospatial/geojson");
+
+geojson.toGeojson(
+  cts.polygon([
+    cts.point(5.0,1.0), cts.point(8.0,1.0),
+    cts.point(8.0,6.0), cts.point(5.0,7.0)
+  ])
+)
+
+==> A Sequence containing a JSON object node that represents a
+    GeoJSON polygon similar to the following:
+{ "type": "Polygon", 
+  "coordinates": [
+      [[1.0, 5.0], [1.0, 8.0], [6.0, 8.0], [7.0, 5.0], [1.0, 5.0]]
+  ]
+}
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

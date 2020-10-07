@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/protected-collection/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://marklogic.com/manage/protected-collection/properties">
+  <xs:complexType name="protected-collection-properties">
+    <xs:annotation>
+      <xs:documentation>
+	A protected collection.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="collection" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="permissions" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="protected-collection-properties" type="protected-collection-properties">
+    <xs:annotation>
+      <xs:documentation>
+  	A protected collection.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="capability">
+    <xs:annotation>
+      <xs:documentation>
+        The action permitted on an object.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="update"/>
+      <xs:enumeration value="insert"/>
+      <xs:enumeration value="execute"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="role-name">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="collection">
+    <xs:annotation>
+      <xs:documentation>
+        The uri for the collection.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="permission" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A permission.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="role-name"/>
+      <xs:element ref="capability" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="permissions" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of permissions
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="permission" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="capability" type="capability" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The action/task permitted by a permission
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permission" type="permission" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	Permission representation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permissions" type="permissions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The default set of permissions used in document creation.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="role-name" type="role-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The Role name (unique)
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="collection" type="collection" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The collection uri.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>

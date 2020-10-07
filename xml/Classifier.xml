@@ -1,0 +1,1029 @@
+<apidoc:module name="ClassifierBuiltins" category="Classifier" lib="cts" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+<p xmlns="http://www.w3.org/1999/xhtml">The classifier built-in functions perform automatic classification of
+documents using training data. The classifiers that result from
+training are represented in XML. The classifier APIs and the XML output
+from <code><a href="#cts:train">cts:train</a></code> conform to the
+<code>classifier.xsd</code> schema, located in the Config directory
+under the directory in which MarkLogic Server is installed.</p>
+
+</apidoc:summary><apidoc:function name="train" type="builtin" lib="cts" category="Classifier">
+    <apidoc:summary>
+  Produces a set of classifiers from a list of
+  labeled training documents.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="training-nodes" type="node()*">
+    The sequence of training nodes.  These are nodes that represent
+    members of the classes.
+  </apidoc:param>
+      <apidoc:param class="javascript" name="trainingNodes" type="Array">
+    The array of training nodes.  These are nodes that represent
+    members of the classes.
+  </apidoc:param>
+      <apidoc:param name="labels" type="element(cts:label)*" class="xquery">
+    A sequence of labels for the training nodes, in the order corresponding
+    to the training nodes.
+  </apidoc:param>
+      <apidoc:param name="labels" type="Array" class="javascript">
+    An array of labels for the training nodes, in the order corresponding
+    to the training nodes.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">An XML</span><span class="javascript" xmlns="http://www.w3.org/1999/xhtml">A JavaScript</span>
+    representation of the options for defining the training
+    parameters. <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">The options node must be in the 
+    <code>cts:train</code>
+    namespace.</span> The following is a sample options
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">node</span><span class="javascript" xmlns="http://www.w3.org/1999/xhtml">object</span>:<p xmlns="http://www.w3.org/1999/xhtml">
+    <pre class="xquery" xml:space="preserve">
+    &lt;options xmlns="cts:train"&gt;
+      &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+      &lt;kernel&gt;geodesic&lt;/kernel&gt;
+    &lt;/options&gt;</pre>
+    <pre class="javascript" xml:space="preserve">
+
+    {
+      "classifierType": "supports",
+      "kernel": "geodesic"
+    }
+    </pre>
+  </p>
+    <p xmlns="http://www.w3.org/1999/xhtml">The <span class="xquery"><code>cts:train</code></span>
+    <span class="javascript"><code>cts.train</code></span> options include:</p>
+    <dl xmlns="http://www.w3.org/1999/xhtml">
+
+    <dt><p><span class="xquery">&lt;<code>classifier-type</code>&gt;</span>
+    <span class="javascript"><code>classifierType</code></span></p></dt>
+    <dd>A string defining the kind of classifier to produce, either
+    <code>weights</code> or <code>supports</code>. The default is
+    <code>weights</code>.</dd>
+    <dt><p><span class="xquery">&lt;<code>kernel</code>&gt;</span>
+    <span class="javascript"><code>kernel</code></span>
+    </p></dt>
+    <dd>A string defining which function to use for comparing documents.
+    The default is <code>sqrt</code>. Normalization (the values that end in
+    <code>-normalized</code>)
+    brings document vectors into the unit sphere,
+    which may improve the mathematical properties of the calculations.
+    Possible values are:
+      <dl>
+      <dt><p><code>simple</code></p></dt>
+      <dd>Model documents as 1 or 0 for presence or absence of each term.</dd>
+      <dt><p><code>simple-normalized</code></p></dt>
+      <dd>Like <code>simple</code>, but normalized by the square root of
+      the document length.</dd>
+      <dt><p><code>sqrt</code></p></dt>
+      <dd>Model documents using the square root of the term frequencies.</dd>
+      <dt><p><code>sqrt-normalized</code></p></dt>
+      <dd>Like <code>sqrt</code>, but normalized by the sum of the term
+      frequencies.</dd>
+      <dt><p><code>linear-normalized</code></p></dt>
+      <dd>Model documents as the term frequencies normalized by the
+      square root of the sum of the squares of the term frequencies.</dd>
+      <dt><p><code>gaussian</code></p></dt>
+      <dd>Compare documents using the Gaussian of the term frequencies.
+      Requires a <span class="xquery"><code>classifier-type</code></span>
+      <span class="javascript"><code>classifierType</code></span> of
+      <code>supports</code>.</dd>
+      <dt><p><code>geodesic</code></p></dt>
+      <dd>Compare documents using the Riemann geodesic distance over
+      term frequencies. Requires a 
+      <span class="xquery"><code>classifier-type</code></span>
+      <span class="javascript"><code>classifierType</code></span> of
+      <code>supports</code>.</dd>
+      </dl>
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>max-terms</code>&gt;</span>
+    <span class="javascript"><code>maxTerms</code></span></p></dt>
+    <dd>An integer defining the maximum number of terms to use to
+    represent each document. If a positive number M is given, then the
+    M most discriminating terms are used; other terms are dropped.  The
+    default is 0 (unlimited), but for larger documents a value in
+    500 to 1000 range will produce much better results.</dd>
+    <dt><p><span class="xquery">&lt;<code>max-support</code>&gt;</span>
+    <span class="javascript"><code>maxSupport</code></span></p></dt>
+    <dd>A double specifying the maximum influence a single training node
+    can have.  This parameter has a strong influence on performance.
+    The default value of 1.0 should work well in most cases. Larger
+    values means greater sensitivity and may improve accuracy on small
+    datasets, but give longer running times.  Smaller values mean less
+    sensitivity and better resistance to mis-classified documents, and
+    shorter running times.</dd>
+    <dt><p><span class="xquery">&lt;<code>min-weight</code>&gt;</span>
+    <span class="javascript"><code>minWeight</code></span></p></dt>
+    <dd>A double specifying the minimum weight a term can have and still
+    be considered for inclusion in the term vector. This parameter only applies
+    to the term weight form of the classifier. Smaller values mean longer
+    term vectors and as a consequence longer running times and greater memory
+    consumption during classification, but may also improve accuracy. The
+    initial value may be adjusted downwards during training if a class 
+    would otherwise have no terms in its output vector.
+    The default is is 0.01.</dd>
+    <dt><p><span class="xquery">&lt;<code>tolerance</code>&gt;</span>
+    <span class="javascript"><code>tolerance</code></span></p></dt>
+    <dd>How close the final solutions to the constraint equations must be.
+    Smaller values lead to a greater number of iterations and longer
+    running times.  Larger values lead to less precise classification.
+    The default is 0.01.</dd>
+    <dt><p><span class="xquery">&lt;<code>epsilon</code>&gt;</span>
+    <span class="javascript"><code>epsilon</code></span></p></dt>
+    <dd>How close a value must be to 0 to be counted as equal to 0.
+    Since double arithmetic is not precise, setting this value to exactly
+    0 will likely lead to non-convergence of the algorithm.  Smaller
+    values lead to a greater number of iterations and longer running
+    times.  Larger values lead to less precise classification. The initial
+    value may be adjusted downwards during execution if it is too large to
+    be useful. In general the higher the dimensionality (larger documents, 
+    larger limits on the number of terms), the smaller this should be.
+    The default is 0.01.</dd>
+    <dt><p><span class="xquery">&lt;<code>max-iterations</code>&gt;</span>
+    <span class="javascript"><code>maxIterations</code></span></p></dt>
+    <dd>The maximum number of iterations of the constraint satisfaction
+    algorithm to run. The algorithm usually converges very quickly,
+    so this parameter usually has no effect unless it is set very low.
+    The default is 500.</dd>
+    <dt><p><span class="xquery"><code>&lt;thresholds&gt;</code></span>
+    <span class="javascript"><code>defaultThreshold</code>, 
+    <code>classThresholds</code></span></p></dt>
+    <dd>A definition of the thresholds to use in classification.
+    <span class="xquery">This is a complex element with one or more
+    <code>&lt;threshold&gt;</code> children.</span>
+    You can specify both a default value and per-class values
+    (as computed from <span class="xquery"><code>cts:thresholds</code></span>
+    <span class="javascript"><code>cts.thresholds</code></span>).
+    The default value will apply to any classes for which a per-class value
+    is not specified.  For example:<p>
+    <pre class="xquery" xml:space="preserve">
+    &lt;options xmlns="cts:train"&gt;
+      &lt;thresholds&gt;
+        &lt;threshold&gt;-1.0&lt;/threshold&gt;
+        &lt;threshold class="Example 1"&gt;-2.42&lt;/threshold&gt;
+      &lt;/thresholds&gt;
+    &lt;/options&gt;
+    </pre>
+    <pre class="javascript" xml:space="preserve">
+    {
+        ...
+        defaultThreshold: -1.0,
+        classThresholds: {"Example 1": -2.42, "Example 2": 0.41}
+        ...
+    }
+    </pre>
+  </p>
+    <p>For the initial tuning phase of training your data, leave the value
+    of this parameter at its default value which is a very large negative
+    number (-1.0e30).  This will allow you to accurately compute the
+    threshold values when you run 
+    <span class="xquery"><code>cts:thresholds</code></span>
+    <span class="javascript"><code>cts.thresholds</code></span> on the initial
+    training data.  Then you can use the calculated threshold values
+    when you run the secondary pass through the second part of your training
+    data.</p>
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>use-db-config</code>&gt;</span>
+    <span class="javascript"><code>useDbConfig</code></span></p></dt>
+    <dd>A boolean value indicating whether to use the current DB configuration
+    for determining which terms to use.  The default is <code>false</code>,
+    which means that only the indexing options in the options node will be
+    used for calculating the classifier.
+    </dd>
+
+    </dl>
+    <p xmlns="http://www.w3.org/1999/xhtml">The options <span class="xquery">element also includes indexing
+    options in the <code>http://marklogic.com/xdmp/database</code>
+    namespace.</span> <span class="javascript">object also includes 
+    database indexing options.</span>
+    These control which terms to use. Note that the use of certain
+    options, such as 
+    <span class="xquery"><code>fast-case-sensitive-searches</code></span>
+    <span class="javascript"><code>fastCaseSensitiveSearches</code></span>, 
+    will not impact final results unless the term vector size is limited with
+    the <span class="xquery"><code>max-terms</code></span>
+    <span class="javascript"><code>maxTerms</code></span> option.  Other 
+    options, such as 
+    <span class="xquery"><code>phrase-throughs</code></span> 
+    <span class="javascript"><code>phraseThroughs</code></span>, will only
+    generate terms if some other option is also enabled (in this case
+    <span class="xquery"><code>fast-phrase-searches</code></span>
+    <span class="javascript"><code>fastPhraseSearches</code></span>).
+    </p>
+    <p xmlns="http://www.w3.org/1999/xhtml">The database options are the same as the database options shown for
+    <a href="cts:distinctive-terms#db-term-options">
+    <span class="xquery"><code>cts:distinctive-terms</code></span>
+    <span class="javascript"><code>cts.distinctiveTerms</code></span></a>.</p>
+
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(cts:classifier)?</apidoc:return>
+    <apidoc:return class="javascript">Object</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The elements in the label sequence should match one for one with the nodes
+in the training node sequence. The first label element describes the first node
+in the training node sequence, the second label element describes the second
+node in the training node sequence, and so on.
+If there are more labels than training nodes or more training nodes
+than labels, an error is raised.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The format of each label <span class="xquery">element</span>
+<span class="javascript">object</span> is:
+</p>
+<pre class="xquery" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  &lt;cts:label name="Node1"&gt;
+    &lt;cts:class name="Example1"/&gt;
+    &lt;cts:class name="Example2" val="-1"/&gt;
+        :   :
+  &lt;/cts:label&gt;
+</pre>
+<pre class="javascript" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+{
+    "name": "apple doc",
+    "classes": [
+        {
+            "name": "fruit class",
+            "val": 1
+        },
+        {
+            "name": "animal class",
+            "val": -1
+        }
+    ]
+}
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">Each class listed indicates whether the corresponding node in the training
+sequence is in the given class. Examples are taken to be positive examples
+unless specified otherwise (with a <code>val</code> attribute of -1).
+The document is assumed to be a negative example of any classes that are
+not explicitly listed.
+The name <span class="xquery">attribute on the label element</span>
+<span class="javascript">property in the label object</span> 
+is an optional name for the labelled node. It is purely for human 
+consumption to help in tuning the classification parameters.
+</p>
+
+<a id="outputformats" xmlns="http://www.w3.org/1999/xhtml"><b>Output Formats</b></a>
+
+<p xmlns="http://www.w3.org/1999/xhtml">A linear classifier is defined by a weight vector w on terms, and
+an offset value b. The <span class="xquery">&lt;weights/&gt; node</span> 
+<span class="javascript">weights property</span> encodes
+the weight vector directly. Its children are the classes, and each
+class includes a list of terms. The term node uses an internal id to
+identify the term and a term weight:
+</p>
+
+<pre class="xquery" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+&lt;weights&gt;
+  &lt;class name="Example1" offset="2.04"&gt;
+    &lt;term id="43587329645324245" val="0.3423432"/&gt;
+    &lt;term id="47893427895432534" val="-0.12345556"/&gt;
+      :                           :
+  &lt;/class&gt;
+      :
+&lt;/weights&gt;
+</pre>
+<pre class="javascript" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+"weights":[
+  {
+    "name":"animal class",
+    "offset":0.9609375,
+    "terms":[
+      {
+        "id":"3701029877487003077",
+        "val":-0.132582515478134
+      },
+      {
+        "id":"8051590956710175434",
+        "val":0.353553384542465
+      },
+      :            :
+    ]
+  },
+  :                :
+]
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">
+The weight vector w is a linear combination of the documents
+themselves, and it may be more convenient to express the classifier in
+this way. For instance, if the number of terms is not limited, the
+<span class="xquery">&lt;weights/&gt; node</span>
+<span class="javascript">weights property</span> will be extremely large. 
+The weight vector form may not be used if the classifier kernel is
+non-linear, that is, with the Gaussian or geodesic kernel.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">The support vector representation of the classifier includes a
+<span class="xquery">supports node that has &lt;class/&gt; children</span>
+<span class="javascript">supports property that has class children</span> 
+for each class. Here the class <span class="xquery">elements</span>
+<span class="javascript">objects</span> contain a list of doc elements 
+which identify the specific training nodes using an internal key.
+This internal key is valid across queries only for nodes in the
+database.  Each doc <span class="xquery">element</span> <span class="javascript">object</span> has <span class="xquery">an
+attribute</span> <span class="javascript">a property</span> encoding
+the weight of that document and an error <span class="xquery">attribute</span> <span class="javascript">property</span> 
+which shows how well the document fit the classifier. Large positive 
+or negative errors (greater than about 1.5) are potentially 
+mis-classified documents.</p>
+
+<pre class="xquery" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+&lt;supports&gt;
+  &lt;class name="Example1" offset="2.04"&gt;
+    &lt;doc id="155584958759" name="Node102" val="-0.00334163" err="1.4"/&gt;
+    &lt;doc id="594064848864" name="Node57" val="0.025341234" err="-2.3"/&gt;
+      :                             :
+  &lt;/class&gt;
+      :
+&lt;/supports&gt;
+</pre>
+<pre class="javascript" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+"supports":[
+  {
+    "name":"animal",
+    "offset":0.9609375,
+    "docs":[
+      {
+        "id":"10529665449293922777",
+        "name":"apple doc",
+        "val":-0.3125,
+        "err":0
+      },
+      {
+        "id":"95824053707766723",
+        "name":"banana doc",
+        "val":-0.375,
+        "err":0.0078125
+      },
+      :            :
+    ]
+  },
+  :                :
+]
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">Each class is identified by a unique name.</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><a id="trainEx1" xmlns="http://www.w3.org/1999/xhtml"></a>
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $firsthalf := xdmp:directory("/shakespeare/plays/", "1")[1 to 19]
+let $labels := for $x in $firsthalf
+  return
+  &lt;cts:label&gt;
+    &lt;cts:class 
+        name="{xdmp:document-properties(xdmp:node-uri($x))//playtype/text()}"/&gt;
+   &lt;/cts:label&gt;
+return
+cts:train($firsthalf, $labels,
+       &lt;options xmlns="cts:train"&gt;
+         &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+       &lt;/options&gt;)
+
+  =&gt;  
+&lt;classifier xmlns="http://marklogic.com/cts"&gt;
+  &lt;options xmlns="cts:train" xmlns:db="http://marklogic.com/xdmp/database"&gt;
+    &lt;kernel&gt;sqrt&lt;/kernel&gt;
+    &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+    &lt;db:language&gt;en&lt;/db:language&gt;
+    &lt;min-weight&gt;0.01&lt;/min-weight&gt;
+    &lt;max-terms&gt;0&lt;/max-terms&gt;
+    &lt;max-iterations&gt;500&lt;/max-iterations&gt;
+    &lt;max-support&gt;1&lt;/max-support&gt;
+    &lt;tolerance&gt;0.01&lt;/tolerance&gt;
+    &lt;epsilon&gt;0.01&lt;/epsilon&gt;
+    &lt;thresholds&gt;
+      &lt;threshold&gt;-1.0E30&lt;/threshold&gt;
+    &lt;/thresholds&gt;
+  &lt;/options&gt;
+  &lt;supports&gt;
+    &lt;class name="HISTORY" offset="1"/&gt;
+    &lt;class name="COMEDY" offset="1"/&gt;
+    &lt;class name="TRAGEDY" offset="1"/&gt;
+  &lt;/supports&gt;
+&lt;/classifier&gt;
+
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><a id="trainEx1" xmlns="http://www.w3.org/1999/xhtml"></a>
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var firsthalf = fn.subsequence(xdmp.directory("/shakespeare/plays/", "1"), 1, 19);
+var plays = firsthalf.clone();
+var labels = [];
+for (var x of firsthalf) {
+  var singleClass = [{"name": fn.head(xdmp.documentProperties(xdmp.nodeUri(x)))
+                                .xpath("//playtype/fn:string()")
+                     }];
+  labels.push({"classes": singleClass});
+};
+cts.train(plays.toArray(), labels, 
+          {"classifierType": "supports", 
+           epsilon: 0.00001}
+         );
+  =&gt;
+{
+  "options": {
+    "kernel": "sqrt",
+    "classifierType": "supports",
+    "minWeight": 0.01,
+    "maxTerms": 0,
+    "maxIterations": 500,
+    "maxSupport": 1,
+    "tolerance": 0.01,
+    "epsilon": 0.00001,
+    "defaultThreshold": -1e+30,
+    "classThresholds": {}
+  },
+  "supports": [
+    {
+      "name": "HISTORY",
+      "offset": 0.679854154586792,
+      "docs": [
+        { "id": "12231438930115319131",
+          "val": -0.0000109664215415251,
+          "err": 0.00122268195264041
+        },
+        { "id": "15339507384182411064",
+          "val": 0.0000208658457268029,
+          "err": -0.00875759869813919
+        },
+          ...
+      ]
+    },
+    {
+      "name": "COMEDY",
+      "offset": 0.502409636974335,
+      "docs":
+      [
+        { "id": "12231438930115319131",
+          "val": -0.0000158612419909332,
+          "err": 0.000878061284311116
+        },
+        { "id": "17774930858870475928",
+          "val": 0.0000244826205744175,
+          "err": 0.00316164619289339
+        },
+          ...
+      ]
+    },
+    {
+      "name": "TRAGEDY",
+      "offset": -0.179147496819496,
+      "docs":
+      [
+        { "id": "8900580694384751574",
+          "val": 0.0000163165386766195,
+          "err": 0.00214929808862507
+        },
+        { "id": "12231438930115319131",
+          "val": 0.000026724021154223,
+          "err": 0.00388686032965779
+        },
+          ...
+      ]
+    }
+  ]
+}
+
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><a id="trainEx2" xmlns="http://www.w3.org/1999/xhtml"></a>
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+(:
+   this is the same as the previous example, except it uses the
+   use-db-config option
+:)
+let $firsthalf :=
+  xdmp:directory("/shakespeare/plays/", "1")[1 to 19]
+let $labels := for $x in $firsthalf
+  return
+  &lt;cts:label&gt;
+     &lt;cts:class 
+        name="{xdmp:document-properties(xdmp:node-uri($x))
+	          //playtype/fn:string()}"/&gt;
+  &lt;/cts:label&gt;
+return
+cts:train($firsthalf, $labels,
+       &lt;options xmlns="cts:train"&gt;
+         &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+         &lt;use-db-config&gt;true&lt;/use-db-config&gt;
+       &lt;/options&gt;)
+
+  =&gt;  &lt;cts:classifier&gt;...
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><a id="trainEx2" xmlns="http://www.w3.org/1999/xhtml"></a>
+<pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// This example is the same as the first, except that it uses the 
+// useDbConfig option.
+
+var firsthalf = fn.subsequence(xdmp.directory("/shakespeare/plays/", "1"), 1, 19);
+var plays = firsthalf.clone();
+var labels = [];
+for (var x of firsthalf) {
+  var singleClass = [{"name": fn.head(xdmp.documentProperties(xdmp.nodeUri(x))).
+                      xpath("//playtype/fn:string()")
+                     }];
+  labels.push({"classes": singleClass});
+};
+cts.train(plays.toArray(), labels, 
+          {"classifierType": "supports",
+           "useDbConfig": true,
+           "epsilon": 0.00001
+          }
+         );
+=&gt;
+{
+  "options": {
+    "kernel": "sqrt",
+    "classifierType": "supports",
+    "minWeight": 0.01,
+    "maxTerms": 0,
+    "maxIterations": 500,
+    "maxSupport": 1,
+    "tolerance": 0.01,
+    "epsilon": 0.00001,
+    "defaultThreshold": -1e+30,
+    "classThresholds": {
+    },
+    "useDbConfig": true
+  },
+  "supports": [
+    {
+      "name": "HISTORY",
+      "offset": 0.616991937160492,
+      "docs": [
+        { "id": "11719886725627889310",
+          "val": 0.000012535679161374,
+          "err": 0.00515030510723591
+        },
+        { "id": "703569506516702025",
+          "val": 0.0000126165068650153,
+          "err": 3.86468634872017e-13
+        },
+          ...
+      ]
+    },
+    {
+      "name": "COMEDY",
+      "offset": 0.444232106208801,
+      "docs": [
+        { "id": "347003984347788586",
+          "val": -0.0000104659011412878,
+          "err": -0.00548016233369708
+        },
+        { "id": "15822004215638450994",
+          "val": 0.0000148163953781477,
+          "err": -0.00175983365625143
+        },
+          ...
+      ]
+    },
+    {
+      "name": "TRAGEDY",
+      "offset": -0.0621433705091477,
+      "docs": [
+        { "id": "347003984347788586",
+          "val": 0.0000174711658473825,
+          "err": 0.000306207628455013
+        },
+        { "id": "15822004215638450994",
+          "val": -0.0000100835841294611,
+          "err": -0.000551707693375647
+        },
+          ...
+      ]
+    }
+  ]
+}
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="classify" type="builtin" lib="cts" category="Classifier">
+    <apidoc:summary>
+  Classifies <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">a sequence</span>
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">an array</span>
+  of nodes based on training data.  The training data is in the form
+  of a classifier specification, which is generated from the output of
+  <span class="xquery" xmlns="http://www.w3.org/1999/xhtml"><code>cts:train</code>.</span> <span class="javascript" xmlns="http://www.w3.org/1999/xhtml"><code>cts.train</code>.</span> Returns labels for
+  each of the input documents in the same order as the input document.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="data-nodes" type="node()*">
+ The sequence of nodes to be classified.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="dataNodes" type="Array">
+ The array of nodes to be classified.
+ </apidoc:param>
+      <apidoc:param class="xquery" name="classifier" type="element(cts:classifier)">
+ An element node containing the classifier specification.  This is
+ typically the output of <code xmlns="http://www.w3.org/1999/xhtml">cts:train</code>, either run directly
+ or saved in an XML document in the database.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="classifier" type="Object">
+ An object containing the classifier specification.  This is typically
+ the output of <code xmlns="http://www.w3.org/1999/xhtml">cts.train</code>, either run directly or saved in
+ a JSON document in the database.
+ </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+  <p xmlns="http://www.w3.org/1999/xhtml">An options <span class="xquery">element</span>
+  <span class="javascript">object</span>.  The options for classification 
+  are passed automatically from <span class="xquery"><code>cts:train</code></span>
+  <span class="javascript"><code>cts.train</code></span> to the
+  <span class="xquery"><code>cts:classifier</code></span>
+  <span class="javascript"><code>cts.classifier</code></span>
+  specification as part of the classifier <span class="xquery">element</span>
+  <span class="javascript">object</span> so that they are
+  consistent with the parameters used in training.  The following 
+  <span class="xquery">option</span>
+  <span class="javascript">options</span>
+  may be separately passed to 
+  <span class="xquery"><code>cts:classify</code></span>
+  <span class="javascript"><code>cts.classify</code></span>
+  <span class="xquery"> and is in the <code>cts:classify</code> namespace</span>.
+  These options override the options present in the classifier item-by-item.</p>
+   <dl xmlns="http://www.w3.org/1999/xhtml">
+   <dt class="xquery"><p><code>&lt;thresholds&gt;</code></p></dt>
+   <dd class="xquery">A definition of the thresholds to use in 
+   classification. This is
+   a complex element with one or more <code>&lt;threshold&gt;</code> children.
+   You can specify both a global value and per-class values (as computed from
+   <code>cts:thresholds</code>).  The global value will apply to
+   any classes for which a per-class value is not specified.  For example:
+   <pre xml:space="preserve">
+   &lt;options xmlns="cts:classify"&gt;
+     &lt;thresholds&gt;
+       &lt;threshold&gt;-1.0&lt;/threshold&gt;
+       &lt;threshold class="Example 1"&gt;-2.42&lt;/threshold&gt;
+     &lt;/thresholds&gt;
+   &lt;/options&gt;
+   </pre>
+   </dd>
+   <dt class="javascript"><p><code>defaultThreshold</code>,
+     <code>classThresholds</code></p></dt>
+     <dd class="javascript">Definitions of the thresholds to use in
+     classification. <code>classThresholds</code> specify per-class values
+     (as computed from <code>cts.thresholds</code>). 
+     <code>defaultThreshold</code>
+     will apply to any classes for which a per-class value is not specified.
+     For example:
+   <pre xml:space="preserve">
+    {
+        ...
+        defaultThreshold: -1.0,
+        classThresholds: {"Example 1": -2.42, "Example 2": 0.41}
+        ...
+    }
+    </pre>
+    </dd>
+   </dl>
+ </apidoc:param>
+      <apidoc:param class="xquery" name="training-nodes" type="node()*" optional="true">
+ The sequence of training nodes used to train the classifier.
+ Required if the <code xmlns="http://www.w3.org/1999/xhtml">supports</code> form of the classifier is used;
+ ignored if the <code xmlns="http://www.w3.org/1999/xhtml">weights</code> form of the classifier is used.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="trainingNodes" type="Array" optional="true">
+ The array of training nodes used to train the classifier.
+ Required if the <code xmlns="http://www.w3.org/1999/xhtml">supports</code> form of the classifier is used;
+ ignored if the <code xmlns="http://www.w3.org/1999/xhtml">weights</code> form of the classifier is used.
+ </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(cts:label)*</apidoc:return>
+    <apidoc:return class="javascript">Array</apidoc:return>
+    <apidoc:usage>
+
+  <p class="xquery" xmlns="http://www.w3.org/1999/xhtml"><code>cts:classify</code> classifies 
+  a sequence of nodes using the output from <code>cts:train</code>.
+  The <code><span class="xquery">$data-nodes</span> 
+  <span class="javascript">dataNodes</span></code> and 
+  <code><span class="xquery">$classifier</span> 
+  <span class="javascript">classifier</span></code> parameters are
+  respectively the nodes to be classified and the specification output
+  from <code>cts:train</code>.  <code>cts:classify</code> can use
+  either <code>supports</code> or <code>weights</code> forms of the
+  <span class="xquery"><code>$classifier</code></span>
+  <span class="javascript"><code>classifier</code></span> output from 
+  <code>cts:train</code> (see <a href="#outputformats">Output Formats</a>).
+  If the <code>supports</code> form is used, the training nodes must be
+  passed as the 4th parameter.  <span class="xquery">The <code>$options</code> 
+  parameter is an options element in the 
+  <code>cts:classify</code> namespace.</span>
+  </p>
+
+  <p class="javascript" xmlns="http://www.w3.org/1999/xhtml"><code>cts.classify</code> classifies 
+  an array of nodes using the output from <code>cts.train</code>.
+  The <code>dataNodes</code> and <code>classifier</code> parameters 
+  are respectively the nodes to
+  be classified and the specification output from <code>cts.train</code>.
+  <code>cts.classify</code> can use either <code>supports</code> or
+  <code>weights</code> forms of the <code>classifier</code> output
+  from <code>cts.train</code> (see <a href="#outputformats">Output
+  Formats</a>).  If the <code>supports</code> form is used, the training
+  nodes must be passed as the 4th parameter.  The <code>options</code>
+  parameter is an options object.
+  </p>
+
+<p class="xquery" xmlns="http://www.w3.org/1999/xhtml">
+The output is a sequence of label elements of the form:
+</p>
+<pre class="xquery" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+&lt;cts:label&gt;
+  &lt;cts:class name="Example 1" val="-0.003"/&gt;
+  &lt;cts:class name="Example 2" val="1.4556"/&gt;
+  ...
+&lt;/cts:label&gt;
+</pre>
+<p class="javascript" xmlns="http://www.w3.org/1999/xhtml">
+The output is an array of label objects of the form:
+</p>
+<pre class="xquery" xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  {
+    "classes":[
+      {
+        "name":"animal class",
+        "val":-1
+      },
+      {
+        "name":"fruit class",
+        "val":-0.875
+      },
+      {
+        "name":"vegetable class",
+        "val":-1
+      }
+    ]
+  },
+</pre>
+  <p xmlns="http://www.w3.org/1999/xhtml">Each label corresponds to the data node in the corresponding
+  position in the input sequence. There will be <span class="xquery">a
+  <code>&lt;class&gt;</code> child</span><span class="javascript">an
+  object</span> for each class where the document passed the class 
+  threshold. The <code>val</code> <span class="xquery">attribute</span>
+  <span class="javascript">property</span> gives the
+  class membership value for the data node in the given class.  Values
+  greater than zero indicate likely class membership, values less than
+  zero indicate likely non-membership.  Adjusting thresholds can give
+  more or less selective classification. Increasing the threshold
+  leads to a more selective classification (that is, decreases the
+  likelihood of classification in the class). Decreasing the threshold
+  gives less selective classification.
+  </p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $firsthalf := xdmp:directory("/shakespeare/plays/", "1")[1 to 19]
+let $secondhalf := xdmp:directory("/shakespeare/plays/", "1")[20 to 37]
+let $classifier :=
+  let $labels := for $x in $firsthalf
+         return
+         &lt;cts:label&gt;
+           &lt;cts:class name="{xdmp:document-properties(xdmp:node-uri($x))
+                 //playtype/fn:string()}"/&gt;
+         &lt;/cts:label&gt;
+  return
+  cts:train($firsthalf, $labels,
+          &lt;options xmlns="cts:train"&gt;
+            &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+            &lt;use-db-config&gt;true&lt;/use-db-config&gt;
+          &lt;/options&gt;)
+return
+cts:classify($secondhalf, $classifier,
+             &lt;options xmlns="cts:classify"/&gt;,
+             $firsthalf)
+
+  =&gt; ( &lt;label&gt;...&lt;/label&gt;,... )
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var firsthalf = fn.subsequence(
+  xdmp.directory("/shakespeare/plays/", "1"), 1, 19);
+var plays1 = firsthalf.clone();
+var secondhalf = fn.subsequence(
+  xdmp.directory("/shakespeare/plays/", "1"), 20, 37);
+var plays2 = secondhalf.clone();
+var labels = [];
+for (var x of firsthalf) {
+  var singleClass = [{"name": fn.head(xdmp.documentProperties(xdmp.nodeUri(x))).
+                      xpath("//playtype/fn:string()")
+                     }];
+  labels.push({"classes": singleClass});
+}
+var classifier = cts.train(plays1.toArray(), labels,
+                           {"classifierType": "supports",
+                            "useDbConfig": true,
+                            "epsilon": 0.00001
+                           });
+cts.classify(plays2.toArray(), classifier, {}, plays1.toArray());
+=&gt;
+[
+  {
+    "classes": [
+      { "name": "HISTORY",
+        "val": 4.29498338699341
+      },
+      { "name": "COMEDY",
+        "val": 2.83974766731262
+      },
+      { "name": "TRAGEDY",
+        "val": -0.454397678375244
+      }
+    ]
+  },
+  {
+    "classes": [
+      { "name": "HISTORY",
+        "val": 3.70210886001587
+      },
+      { "name": "COMEDY",
+        "val": 2.59831714630127
+      },
+      { "name": "TRAGEDY",
+        "val": -0.404506534337997
+      }
+    ]
+  },
+  ...
+]
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="thresholds" type="builtin" lib="cts" category="Classifier">
+    <apidoc:summary>
+  Compute precision, recall, the F measure, and thresholds for the
+  classes computed by the classifier, by comparing with the labels
+  for the same set.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="computed-labels" type="element(cts:label)*">
+ A sequence of element nodes containing the labels from classification
+ (the output from <code xmlns="http://www.w3.org/1999/xhtml">cts:classify</code>) for a set of documents.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="computedLabels" type="Array">
+ An array of objects containing the labels from classification
+(the output from <code xmlns="http://www.w3.org/1999/xhtml">cts.classify</code>) for
+  a set of documents.
+ </apidoc:param>
+      <apidoc:param class="xquery" name="known-labels" type="element(cts:label)*">
+ A sequence of element nodes containing the known labels for the same set
+ of documents.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="knownLabels" type="Array">
+ An array of objects containing the known labels for the same set
+ of documents.
+ </apidoc:param>
+      <apidoc:param class="xquery" name="recall-weight" type="xs:double?" optional="true">
+ The factor to use in the calculation of the F measure. The number should
+ be non-negative. A value of 0 means F is just precision and a value
+ of +INF means F is just recall. The default is 1, which gives the harmonic
+ mean between precision and recall.
+ </apidoc:param>
+      <apidoc:param class="javascript" name="recallWeight" type="double" optional="true">
+ The factor to use in the calculation of the F measure. The number should
+ be non-negative. A value of 0 means F is just precision and a value
+ of +Infinity means F is just recall. The default is 1, which gives the harmonic
+ mean between precision and recall.
+ </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(cts:thresholds)?</apidoc:return>
+    <apidoc:return class="javascript">Array</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">You use the output of <span class="xquery"><code>cts:thresholds</code></span> <span class="javascript"><code>cts.thresholds</code></span> to determine
+  the best thresholds values for your data, based on the first pass
+  through the first part of your training data.  The output of <span class="xquery"><code>cts:thresholds</code></span> <span class="javascript"><code>cts.thresholds</code></span> provides you
+  with precision and recall measurements at the calculated thresholds
+  for each class.  The following are the definitions of the attributes
+  of the <code>thresholds</code> element returned by
+  <span class="xquery"><code>cts:thresholds</code></span>
+  <span class="javascript"><code>cts.thresholds</code></span>:</p>
+  <dl xmlns="http://www.w3.org/1999/xhtml">
+  <dt><p><code>name</code></p></dt>
+  <dd>The name of the class.</dd>
+  <dt><p><code>threshold</code></p></dt>
+  <dd>The threshold that is computed by the classifier to give the best
+  results.  The threshold is used by
+  <span class="xquery"><code>cts:classify</code></span>
+  <span class="javascript"><code>cts.classify</code></span> when
+  classifying documents, and is defined to be the positive
+  or negative distance from the hyperplane which represents the edge of
+  the class.
+  </dd>
+  <dt><p><code>precision</code></p></dt>
+  <dd> A number which represents the fraction of nodes identified in a
+  class that are actually in that class.  As this aproaches 1, there is
+  a higher probability that you over-classified.</dd>
+  <dt><p><code>recall</code></p></dt>
+  <dd>A number which represents the fraction of nodes in a class that
+  were identified by the classifier as being in that class. As this
+  aproaches 1, there is a higher probability that you under-classified.</dd>
+  <dt><p><code>F</code> (the F-measure)</p></dt>
+  <dd>A measure which represents if the classification at the given
+  threshold is closer to recall or closer to precision.  A value of 1
+  indicates that precision and recall have equal weight.  A value of 0.5
+  indicates that precision is weighted 2x recall.  A value of 2 indicates
+  that recall is weighted 2x precision.  A value of 0 indicates that the
+  weighting is precision only, and a value of <span class="xquery">+INF
+  (<code>xs:double('+INF'))</code></span>
+  <span class="javascript"><code>+Infinity</code></span> indicates
+  that weighting is recall only.</dd>
+  </dl>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $firsthalf := xdmp:directory("/shakespeare/plays/", "1")[1 to 19]
+let $secondhalf := xdmp:directory("/shakespeare/plays/", "1")[20 to 37]
+let $firstlabels := for $x in $firsthalf
+        return
+        &lt;cts:label&gt;
+          &lt;cts:class name="{xdmp:document-properties(xdmp:node-uri($x))
+                                     //playtype/fn:string()}"/&gt;
+        &lt;/cts:label&gt;
+let $secondlabels := for $x in $secondhalf
+        return
+        &lt;cts:label&gt;
+          &lt;cts:class name={xdmp:document-properties(xdmp:node-uri($x))
+                                     //playtype/fn:string()}/&gt;
+        &lt;/cts:label&gt;
+let $classifier :=
+    cts:train($firsthalf, $firstlabels,
+      &lt;options xmlns="cts:train"&gt;
+        &lt;classifier-type&gt;supports&lt;/classifier-type&gt;
+      &lt;/options&gt;)
+let $classifysecond :=
+  cts:classify($secondhalf, $classifier,
+        &lt;options xmlns="cts:classify"/&gt;,
+        $firsthalf)
+return
+cts:thresholds($classifysecond, $secondlabels)
+(:
+   This returns the computed thresholds for the second half of
+   the plays in a Shakespeare database, based on a classifier
+   trained with the first half of the plays.  For example:
+
+&lt;thresholds xmlns="http://marklogic.com/cts"&gt;
+  &lt;class name="TRAGEDY" threshold="0.221948" precision="1"
+         recall="0.666667" f="0.8" count="3"/&gt;
+  &lt;class name="COMEDY" threshold="0.114389" precision="0.916667"
+         recall="1" f="0.956522" count="11"/&gt;
+  &lt;class name="HISTORY" threshold="0.567648" precision="1"
+         recall="1" f="1" count="4"/&gt;
+&lt;/thresholds&gt;
+:)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+//   This returns the computed thresholds for the second half of
+//   the plays in a Shakespeare database, based on a classifier
+//   trained with the first half of the plays.  For example:
+
+var firsthalf = fn.subsequence(xdmp.directory("/shakespeare/plays/", "1"), 1, 19);
+var plays1 = firsthalf.clone();
+var secondhalf = fn.subsequence(xdmp.directory("/shakespeare/plays/", "1"), 20, 37);
+var plays2 = secondhalf.clone();
+
+var firstlabels = [];
+for (var x of firsthalf) {
+  var singleClass = [{"name": xdmp.documentProperties(xdmp.nodeUri(x)).next().
+                                value.xpath("//playtype/fn:string()")
+                     }];
+  firstlabels.push({"classes": singleClass});
+}
+
+var secondlabels = [];
+for (var x of secondhalf) {
+  var singleClass = [{"name": xdmp.documentProperties(xdmp.nodeUri(x)).next().
+                                value.xpath("//playtype/fn:string()")
+                     }];
+  secondlabels.push({"classes": singleClass});
+};
+
+var classifier = cts.train(plays1.toArray(), firstlabels, 
+          {"classifierType": "supports",
+           "useDbConfig": true,
+           "epsilon": 0.00001});
+
+var classifysecond =
+  cts.classify(plays2.toArray(), classifier, {}, plays1.toArray());
+cts.thresholds(classifysecond, secondlabels);
+=&gt;
+[
+  {
+    "name": "HISTORY",
+    "threshold": 4.16419839859009,
+    "precision": 1,
+    "recall": 0.5,
+    "f": 0.666666666666667,
+    "count": 4
+  },
+  {
+    "name": "COMEDY",
+    "threshold": 3.69728088378906,
+    "precision": 0.611111111111111,
+    "recall": 1,
+    "f": 0.758620689655173,
+    "count": 11
+  },
+  {
+    "name": "TRAGEDY",
+    "threshold": 2.37126207351685,
+    "precision": 0.4,
+    "recall": 0.666666666666667,
+    "f": 0.5,
+    "count": 3
+  }
+]
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

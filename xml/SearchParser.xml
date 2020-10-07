@@ -1,0 +1,240 @@
+<apidoc:module name="SearchBuiltins" category="SearchBuiltins" lib="cts" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="SearchBuiltins" subcategory="Search" lib="cts"> 
+</apidoc:summary><apidoc:function name="parse" type="builtin" lib="cts" category="SearchBuiltins" subcategory="Search">
+    <apidoc:summary>
+  Parses a query string
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="query" type="xs:string">
+  The query string. For details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/cts_query.xml%2371878'>Creating a Query From Search Text With cts:parse</a> in the <em>Search Developer's Guide</em>.
+  </apidoc:param>
+      <apidoc:param name="bindings" type="map:map?" optional="true">
+  Bindings for mapping x:y parts of the query string. 
+  The map key can be either a simple string with no embedded spaces or 
+  punctuation or the empty string. The empty string defines the parsing 
+  of untagged words. For details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/cts_query.xml%2313456'>Binding a Tag to a Reference, Field, or Query Generator</a> in the <em>Search Developer's Guide</em>.
+  <p xmlns="http://www.w3.org/1999/xhtml">The map value for the label can be:</p>
+  <dl xmlns="http://www.w3.org/1999/xhtml">
+  <dt>cts:reference</dt>
+  <dd>A reference to the tag in the query corresponds to a query against the indicated index, which constructs a query.
+    <table>
+      <tr>
+		<th>Reference</th>
+		<th>Operator</th>
+		<th>Query</th>
+	      </tr>
+      <tr>
+		<td>cts:element-reference</td>
+		<td>":"</td>
+		<td>cts:element-word-query</td>
+	      </tr>
+      <tr>
+		<td>cts:element-reference</td>
+		<td>"="</td>
+		<td>cts:element-value-query</td>
+	      </tr>
+      <tr>
+		<td>cts:element-attribute-reference</td>
+		<td>":"</td>
+		<td>cts:element-atrribute-word-query</td>
+	      </tr>
+      <tr>
+		<td>cts:element-attribute-reference</td>
+		<td>"="</td>
+		<td>cts:element-attribute-value-query</td>
+	      </tr>
+      <tr>
+		<td>cts:json-property-reference</td>
+		<td>":"</td>
+		<td>cts:json-property-word-query</td>
+	      </tr>
+      <tr>
+		<td>cts:json-property-reference</td>
+		<td>"="</td>
+		<td>cts:json-property-value-query</td>
+	      </tr>
+      <tr>
+		<td>cts:field-reference</td>
+		<td>":"</td>
+		<td>cts:field-word-query</td>
+	      </tr>
+      <tr>
+		<td>cts:field-reference</td>
+		<td>"="</td>
+		<td>cts:field-value-query</td>
+	      </tr>
+      <tr>
+		<td>geospatial reference</td>
+		<td>":"</td>
+		<td>geospatial query, parameter parsed as a region</td>
+	      </tr>
+      <tr>
+		<td>geospatial reference</td>
+		<td>"=" or eq</td>
+		<td>geospatial query, parameter parsed as a region</td>
+	      </tr>
+      <tr>
+		<td>geospatial reference</td>
+		<td>other operator</td>
+		<td>error</td>
+	      </tr>
+      <tr>
+		<td>cts:uri-reference</td>
+		<td>":"</td>
+		<td>cts:document-query</td>
+	      </tr>
+      <tr>
+		<td>cts:uri-reference</td>
+		<td>"="</td>
+		<td>cts:document-query</td>
+	      </tr>
+      <tr>
+		<td>cts:collection-reference</td>
+		<td>":"</td>
+		<td>cts:collection-query</td>
+	      </tr>
+      <tr>
+		<td>cts:collection-reference</td>
+		<td>"="</td>
+		<td>cts:collection-query</td>
+	      </tr>
+      <tr>
+		<td>cts:path-reference</td>
+		<td>":"</td>
+		<td>cts:word-query (no path word-query)</td>
+	      </tr>
+      <tr>
+		<td>cts:path-reference</td>
+		<td>"="</td>
+		<td>cts:path-range-query with operator "=" (no path value-query)</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>eq</td>
+		<td>range-query with operator "="</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>ne</td>
+		<td>range-query with operator "!="</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>lt</td>
+		<td>range-query with operator "&lt;"</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>le</td>
+		<td>range-query with operator "&lt;="</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>ge</td>
+		<td>range-query with operator "&gt;="</td>
+	      </tr>
+      <tr>
+		<td>any</td>
+		<td>gt</td>
+		<td>range-query with operator "&gt;"</td>
+	      </tr>
+    </table>
+  </dd>
+  <dt>function ($operator as xs:string, $values as xs:string*, $options as xs:string*) as cts:query?</dt><dd>A reference to the tag in the query calls the function to produce a query.</dd>
+  <dt>xs:string</dt><dd>A reference to the tag in the query corresponds to a field query against the named field.</dd>
+  </dl>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:query</apidoc:return>
+    <apidoc:see-also-list>
+  <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/cts_query.xml%2371878'>Creating a Query From Search Text With cts:parse</a> in the <em>Search Developer's Guide</em>
+  </apidoc:see-also>
+</apidoc:see-also-list>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+cts:search(fn:doc(), cts:parse("cat AND dog"))
+
+==&gt; all documents containing the words "dog" and "cat"
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+cts:parse("cat NEAR/5 dog AND mouse")
+
+==&gt;
+
+cts:and-query(
+  (cts:near-query(
+     (cts:word-query("cat", ("lang=en"), 1), 
+      cts:word-query("dog", ("lang=en"), 1)), 
+     5, ("unordered"), 1), 
+   cts:word-query("mouse", ("lang=en"), 1)), 
+  ("unordered"))
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+let $bindings := 
+  let $map := map:map()
+  return (
+    map:put($map, "title", cts:element-reference(xs:QName("title"))),
+    map:put($map, "by", "person-field"),
+    map:put($map, "cat", function($operator, $values, $options) {
+            cts:collection-query($values) }),
+    map:put($map, "", function($operator, $values, $options) {
+            cts:json-property-word-query('desc', $values, 'case-sensitive', 2)}),
+    $map
+  )
+return
+cts:parse("title:grapes by:steinbeck cat:classics california", $bindings)
+
+==&gt; 
+
+cts:and-query(
+  (cts:element-word-query(fn:QName("","title"), "grapes", ("lang=en"), 1), 
+   cts:field-word-query("by", "steinbeck", ("lang=en"), 1), 
+   cts:collection-query("classics"), 
+   cts:json-property-word-query("desc", "california", 
+      ("case-sensitive","lang=en"), 2)), 
+  ("unordered"))
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.search(cts.parse('cat AND dog'))
+
+==&gt; all documents containing the words "dog" and "cat"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.parse('cat NEAR/5 dog AND mouse')
+
+==&gt;
+
+cts.andQuery(
+  [cts.nearQuery([cts.wordQuery("cat", ["lang=en"], 1), 
+   cts.wordQuery("dog", ["lang=en"], 1)], 5, ["unordered"], 1), 
+   cts.wordQuery("mouse", ["lang=en"], 1) ], 
+  ["unordered"])
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Using bindings
+var bindings = {
+  title: cts.elementReference('title'),
+  by: 'person-field',
+  cat: function(operator, values, options) {
+    return cts.collectionQuery(values); },
+  '': function(operator, values, options) {
+    return cts.jsonPropertyWordQuery('desc', values, ['case-sensitive'], 2); }
+};
+cts.parse('title:grapes by:steinbeck cat:classics california', bindings)
+
+==&gt;
+
+cts.andQuery(
+  [cts.elementWordQuery(fn.QName("","title"), "grapes", ["lang=en"], 1), 
+   cts.fieldWordQuery("by", "steinbeck", ["lang=en"], 1), 
+   cts.collectionQuery("classics"), 
+   cts.jsonPropertyWordQuery("desc", "california", 
+      ["case-sensitive","lang=en"], 2)],
+  ["unordered"])
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

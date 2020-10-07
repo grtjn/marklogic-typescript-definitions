@@ -1,0 +1,120 @@
+<apidoc:module name="XPointerModule" category="Modular Documents" 
+	subcategory="XPointer" bucket="XQuery Library Modules" 
+	lib="xp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" 
+	xmlns="http://www.w3.org/1999/xhtml" class="xquery">
+	<apidoc:summary category="Modular Documents" 
+		subcategory="XPointer" bucket="XQuery Library Modules">
+		<p>This is the XPointer module, which is used with the 
+			modular documents CPF application.</p>
+		<p>To use the XPointer module as part of your own XQuery 
+			module, include the following line in your 
+			XQuery prolog: </p>
+<p><code>import module namespace xp = "http://marklogic.com/xinclude/xpointer"
+         at "/MarkLogic/xinclude/xpointer.xqy";</code></p>
+<p>The library namespace prefix <code>xp</code> is <em>not</em> predefined
+in the server.</p>
+	</apidoc:summary>
+
+	<apidoc:function name="parse-xpointer" lib="xp" 
+		category="Modular Documents" subcategory="XPointer" 
+		bucket="XQuery Library Modules" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="xpointer" type="xs:string">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(xp:part)*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+ 
+  import module namespace xp = "http://marklogic.com/xdmp/xpointer" 
+      at "/MarkLogic/xpointer.xqy";
+ 
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="path-from-element-scheme" lib="xp" 
+	category="Modular Documents" subcategory="XPointer" 
+	bucket="XQuery Library Modules" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="part" type="xs:string">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+ 
+  import module namespace xp = "http://marklogic.com/xdmp/xpointer" 
+      at "/MarkLogic/xpointer.xqy";
+ 
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="alt-path-from-element-scheme" lib="xp" 
+	category="Modular Documents" subcategory="XPointer" 
+	bucket="XQuery Library Modules" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="part" type="xs:string">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+ 
+  import module namespace xp = "http://marklogic.com/xdmp/xpointer" 
+      at "/MarkLogic/xpointer.xqy";
+ 
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="do-dereference" lib="xp" category="Modular Documents" 
+	subcategory="XPointer" bucket="XQuery Library Modules" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="context" type="node()">Parameter description...</apidoc:param>
+    <apidoc:param name="path" type="xs:string">Parameter description...</apidoc:param>
+    <apidoc:param name="ns-bindings" type="xs:string*">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+ 
+  import module namespace xp = "http://marklogic.com/xdmp/xpointer" 
+      at "/MarkLogic/xpointer.xqy";
+ 
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="dereference" lib="xp" category="Modular Documents" 
+	subcategory="XPointer" bucket="XQuery Library Modules" hidden="false">
+	<apidoc:summary>This function resolves an XPointer in the context of a 
+		particular node.</apidoc:summary>
+    <apidoc:params>
+	    <apidoc:param name="context" type="node()">The node against which 
+		    the XPointer evaluates.</apidoc:param>
+      <apidoc:param name="xpointer" type="xs:string">An XPointer.</apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"
+  import module namespace xp = "http://marklogic.com/xinclude/xpointer" 
+		  at "/MarkLogic/xinclude/xpointer.xqy";
+
+  let $node :=
+     &lt;root xmlns="http://marklogic.com/myns">
+       &lt;this>
+         This is text before the referenced element.
+         &lt;that>The referenced element.&lt;/that>
+         This is text after the referenced element.
+       &lt;/this>
+     &lt;/root>
+  return 
+     xp:dereference($node, 
+        "xmlns(ns=http://marklogic.com/myns) xpath(//ns:this/ns:that)")
+    
+===> &lt;that xmlns="http://marklogic.com/myns">The referenced element.&lt;/that>
+
+  </pre>
+  </apidoc:example>
+  </apidoc:function>
+</apidoc:module>

@@ -1,0 +1,770 @@
+<apidoc:module name="FormatBuiltins" category="FormatBuiltins" bucket="W3C-Standard Functions" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="FormatBuiltins">
+The format-date, format-time, format-dateTime and format-number built-in functions are XSLT functions that operate on date-, time-, dateTime-, number-related values.
+They are defined in
+<a href="http://www.w3.org/TR/xpath-functions/" target="_blank" xmlns="http://www.w3.org/1999/xhtml">XPATH 2.0
+Functions and Operators</a>.
+</apidoc:summary><apidoc:function name="format-dateTime" type="builtin" lib="fn" category="DurationDateTimeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+   Returns a formatted dateTime value based on the picture argument.   This
+   is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and
+   Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="xs:dateTime" optional="false">
+     The given dateTime <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given dateTime
+     <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+          The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#date-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#date-picture-string</a>.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string" optional="true">
+     The desired language for string representation of the dateTime
+     <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+   </apidoc:param>
+      <apidoc:param name="calendar" type="xs:string" optional="true">
+     The only calendar supported at this point is "Gregorian" or "AD".
+   </apidoc:param>
+      <apidoc:param name="country" type="xs:string" optional="true">
+     $country is used the specification to take into account country specific
+     string representation.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+    <p xmlns="http://www.w3.org/1999/xhtml">Dates before October 15, 1582 (the start of the Gregorian calendar) will
+    not return the correct dateTime value.</p>
+    <p xmlns="http://www.w3.org/1999/xhtml">If the specified picture string includes a fractional second width that
+    is seven or more decimal places, then the fractional seconds are truncated
+    (not rounded) on the seventh and greater width.</p>
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn:format-dateTime(fn:current-dateTime(),
+                 "[Y01]/[M01]/[D01] [H01]:[m01]:[s01]:[f01]")
+   =&gt;
+   14/12/05 10:37:25:63
+
+   fn:format-dateTime(fn:current-dateTime(),
+                 "[Y0001]/[M01]/[D01] [H01]:[m01]:[s01]:[f01]","en","AD","US")
+   =&gt;
+   2014/12/05 10:40:02:16
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn.formatDateTime(fn.currentDateTime(),
+                 "[Y01]/[M01]/[D01] [H01]:[m01]:[s01]:[f01]")
+   =&gt;
+   14/12/05 10:37:25:63
+
+  fn.formatDateTime(fn.currentDateTime(),
+                 "[Y0001]/[M01]/[D01] [H01]:[m01]:[s01]:[f01]","en","AD","US")
+   =&gt;
+   2014/12/05 10:40:02:16
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="format-date" type="builtin" lib="fn" category="DurationDateTimeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+   Returns a formatted date value based on the picture argument.  This
+   is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and
+   Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="xs:date" optional="false">
+     The given date <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given date <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#date-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#date-picture-string</a>.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string" optional="true">
+     The desired language for string representation of the date
+     <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+   </apidoc:param>
+      <apidoc:param name="calendar" type="xs:string" optional="true">
+     The only calendar supported at this point is "Gregorian" or "AD".
+   </apidoc:param>
+      <apidoc:param name="country" type="xs:string" optional="true">
+     $country is used the specification to take into account country specific
+     string representation.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+    <p xmlns="http://www.w3.org/1999/xhtml">Dates before October 15, 1582 (the start of the Gregorian calendar) will
+    not return the correct date value.</p>
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn:format-date(fn:current-date(),
+                 "[Y01]/[M01]/[D01]")
+   =&gt;
+   14/12/05
+
+   fn:format-date(fn:current-date(),
+                 "[Y0001]/[M01]/[D01]","en","AD","US")
+   =&gt;
+   2014/12/05
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn.formatDate(fn.currentDate(),
+                 "[Y01]/[M01]/[D01]")
+   =&gt;
+   14/12/05
+
+   fn.formatDate(fn.currentDate(),
+                 "[Y0001]/[M01]/[D01]","en","AD","US")
+   =&gt;
+   2014/12/05
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="format-time" type="builtin" lib="fn" category="DurationDateTimeBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+   Returns a formatted time value based on the picture argument.  This
+   is an XSLT function, and it is available in XSLT, XQuery 1.0-ml, and
+   Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="xs:time" optional="false">
+     The given time <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given time <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+          The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#date-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#date-picture-string</a>.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string" optional="true">
+     The desired language for string representation of the time
+     <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+   </apidoc:param>
+      <apidoc:param name="calendar" type="xs:string" optional="true">
+     The only calendar supported at this point is "Gregorian" or "AD".
+   </apidoc:param>
+      <apidoc:param name="country" type="xs:string" optional="true">
+     $country is used the specification to take into account country specific
+     string representation.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+   <p xmlns="http://www.w3.org/1999/xhtml">If the specified picture string includes a fractional second width that
+    is seven or more decimal places, then the fractional seconds are truncated
+    (not rounded) on the seventh and greater width.</p>
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn:format-time(fn:current-time(),
+                 "[H01]:[m01]:[s01]:[f01]")
+   =&gt;
+   10:52:09:00
+
+   fn:format-time(fn:current-time(),
+                 "[H01]:[m01]:[s01]:[f01]","en","AD","US")
+   =&gt;
+   10:52:33:00
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   fn.formatTime(fn.currentTime(),
+                 "[H01]:[m01]:[s01]:[f01]")
+   =&gt;
+   10:52:09:00
+
+   fn.formatTime(fn.currentTime(),
+                 "[H01]:[m01]:[s01]:[f01]","en","AD","US")
+   =&gt;
+   10:52:33:00
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="parse-dateTime" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+   Parses a string containing date, time or dateTime using the supplied
+   picture argument and returns a dateTime value.  While this function
+   is closely related to other XSLT functions, it is available in XSLT
+   as well as in all XQuery dialects and in Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#date-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#date-picture-string</a>.
+     This follows the specification of
+     <a href="http://www.w3.org/TR/xslt20/#processing-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">picture string</a> in the W3C XSLT 2.0
+     specification for the <code xmlns="http://www.w3.org/1999/xhtml">fn:format-dateTime</code> function.
+     <pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+
+   Symbol         Description
+  -----------------------------------
+     'Y'        year(absolute value)
+     'M'        month in year
+     'D'        day in month
+     'd'        day in year
+     'F'        day of week
+     'W'        week in year
+     'w'        week in month
+     'H'        hour in day
+     'h'        hour in half-day
+     'P'        am/pm marker
+     'm'        minute in hour
+     's'        second in minute
+     'f'        fractional seconds
+     'Z'        timezone as a time offset from UTC
+                for example PST
+     'z'        timezone as an offset using GMT,
+                for example GMT+1
+</pre>
+   </apidoc:param>
+      <apidoc:param name="value" type="xs:string" optional="false">
+     The given string <code xmlns="http://www.w3.org/1999/xhtml">$value</code> representing the dateTime value
+     that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string?" optional="true">
+     The language used in string representation of the date, time or
+     dateTime value.
+   </apidoc:param>
+      <apidoc:param name="calendar" type="xs:string?" optional="true">
+     This argument is reserved for future use. The only calendar supported
+     at this point is "Gregorian" or "AD".
+   </apidoc:param>
+      <apidoc:param name="country" type="xs:string?" optional="true">
+     $country is used to take into account if there any country specific
+     interpretation of the string while converting it into dateTime value.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:dateTime</apidoc:return>
+    <apidoc:usage>
+    <p xmlns="http://www.w3.org/1999/xhtml">Dates before October 15, 1582 (the start of the Gregorian calendar) will
+    not return the correct dateTime value.</p>
+    <p xmlns="http://www.w3.org/1999/xhtml">The <code>xdmp:parse-dateTime</code> function will not parse all dates;
+    if it does not parse a date, it can throw the
+    <code>XDMP-PATTERNVALUEMISMATCH</code> exception.  To help normalize
+    the dates so they can be parsed, you can try using the XSLT functions
+    defined in the following stylesheet:</p>
+    <p xmlns="http://www.w3.org/1999/xhtml"><pre>&lt;marklogic-dir&gt;/Modules/MarkLogic/appservices/utils/normalize-dates.xsl</pre></p>
+    <p xmlns="http://www.w3.org/1999/xhtml">In particular xdmp:parse-dateTime does not support parsing names of days or months.</p>
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]",
+		   "2014-01-06T17:13:50.873594-08:00")
+   =&gt;
+   2014-01-06T17:13:50.874-08:00
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   xdmp.parseDateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]",
+		   "2014-01-06T17:13:50.873594-08:00")
+   =&gt;
+   2014-01-06T17:13:50.874-08:00
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="parse-yymmdd" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+   Parses a string containing date, time or dateTime using the supplied
+   picture argument and returns a dateTime value.    While this function
+   is closely related to other XSLT functions, it is available in XSLT
+   as well as in all XQuery dialects and in Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     This follows the specification of picture string which is
+     compatible to the format specification in icu. See
+     <a href="http://icu-project.org/apiref/icu4j/com/ibm/icu/text/SimpleDateFormat.html" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://icu-project.org/apiref/icu4j/com/ibm/icu/text/SimpleDateFormat.html</a>
+     for more details.
+
+     <p xmlns="http://www.w3.org/1999/xhtml">The following is the summary of the formatting symbols:
+     <pre xml:space="preserve">
+
+     Symbol     Description
+  ----------------------------
+     "y"       year(absolute value)
+     "M"       month in year
+     "d"       day in month
+     "D"       day in year
+     "E"       day of week
+     "w"       week in year
+     "W"       week in month
+     "H"       hour in day
+     "K"       hour in half-day
+     "a"       am/pm marker
+     "s"       second in minute
+     "S"       fractional seconds
+     "Z"       timezone as a time offset from UTC
+               for example PST
+     "ZZZZ"    timezone as an offset using GMT,
+               for example GMT+1
+
+             </pre>  </p>
+   </apidoc:param>
+      <apidoc:param name="value" type="xs:string" optional="false">
+     The given string <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string?" optional="true">
+     The language used in string representation of the date, time or
+     dateTime value.
+   </apidoc:param>
+      <apidoc:param name="calendar" type="xs:string?" optional="true">
+     This argument is reserved for future use. The only calendar supported
+     at this point is "Gregorian" or "AD".
+   </apidoc:param>
+      <apidoc:param name="country" type="xs:string?" optional="true">
+     $country is used to take into account if there any country specific
+     interpretation of the string while converting it into dateTime value.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:dateTime</apidoc:return>
+    <apidoc:usage>
+    Dates before October 15, 1582 (the start of the Gregorian calendar) will
+    not return the correct dateTime value.
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   xdmp:parse-yymmdd("yyyy-MM-ddThh:mm:ss.Sz",
+      "2014-01-06T17:13:50.873594-8.00")
+   =&gt;
+   2014-01-06T17:13:50.874-08:00
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+   xdmp.parseYymmdd("yyyy-MM-ddThh:mm:ss.Sz",
+      "2014-01-06T17:13:50.873594-8.00")
+   =&gt;
+   2014-01-06T17:13:50.874-08:00
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="format-number" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+   Returns a formatted string representation of value argument based
+   on the supplied picture. An optional decimal format name may also
+   be supplied for interpretation of the picture string.  This
+   is an XSLT function, and it is available in XSLT, XQuery 1.0-ml,
+   and Server-Side JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="xs:double" optional="false">
+     The given numeric <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="picture" type="xs:string" optional="false">
+     The desired string representation of the given number <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the format-number
+     picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#function-format-number" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#function-format-number</a>.
+   </apidoc:param>
+      <apidoc:param name="decimal-format-name" type="xs:string" optional="true">
+     Represents a named <code xmlns="http://www.w3.org/1999/xhtml">&lt;xsl:decimal-format&gt;</code> instruction.
+     It is used to assign values to the variables mentioned above
+     based on the picture string.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+fn:format-number(xs:integer("1000000"),"#,##0.00")
+=&gt;
+1,000,000.00
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.formatNumber(xs.integer("1000000"),"#,##0.00");
+=&gt;
+1,000,000.00
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+let $stylesheet :=
+&lt;xsl:stylesheet version="2.0"
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+    &lt;xsl:decimal-format name="testformat" decimal-separator="."/&gt;
+    &lt;xsl:template match="foo"&gt;
+      &lt;xsl:sequence select="format-number(xs:float('1234.5'), '#,##0.00',
+                            'testformat')"/&gt;
+    &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+return
+xdmp:xslt-eval($s, document{&lt;foo/&gt;})
+=&gt;
+1,234.50
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var stylesheet = fn.head(xdmp.unquote(
+'&lt;xsl:stylesheet version="2.0"\n\
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"\n\
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;\n\
+    &lt;xsl:decimal-format name="testformat" decimal-separator="."/&gt;\n\
+    &lt;xsl:template match="foo"&gt;\n\
+      &lt;xsl:sequence select="format-number(xs:float('
+        + "'1234.5'), '#,##0.00', 'testformat')"
+        + '"/&gt;\n\
+    &lt;/xsl:template&gt;\n\
+&lt;/xsl:stylesheet&gt;'));
+xdmp.xsltEval(stylesheet, fn.head(xdmp.unquote('&lt;foo/&gt;')));
+=&gt;
+1,234.50
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="format-number" type="builtin" lib="xdmp" category="Extension" subcategory="XSLT">
+    <apidoc:summary>
+   Returns a formatted number value based on the picture argument.
+   The difference between this function and the W3C standards
+   <code xmlns="http://www.w3.org/1999/xhtml">fn:format-number</code> function is that this function imitates
+   the XSLT <code xmlns="http://www.w3.org/1999/xhtml">xsl:number</code> instruction, which has richer
+   formatting options than the <code xmlns="http://www.w3.org/1999/xhtml">fn:format-number</code> function.
+   This function can be used for spelled-out and ordinal numbering
+   in many languages.  This function is
+   available in XSLT as well as in all dialects of XQuery and Server-Side
+   JavaScript.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="xs:numeric*" optional="false">
+     The given numeric <code xmlns="http://www.w3.org/1999/xhtml">$value</code> that needs to be formatted.
+   </apidoc:param>
+      <apidoc:param name="picture" type="xs:string?" optional="true">
+     The desired string representation of the given numeric <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     The picture string is a sequence of characters, in which the
+     characters represent variables such as, decimal-separator-sign,
+     grouping-sign, zero-digit-sign, digit-sign, pattern-separator,
+     percent sign and per-mille-sign.  For details on the picture string, see
+     <a href="http://www.w3.org/TR/xslt20/#date-picture-string" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xslt20/#date-picture-string</a>.
+     Unlike fn:format-number(), here the picture string allows
+     spelled-out (uppercase, lowercase and Capitalcase) formatting.
+   </apidoc:param>
+      <apidoc:param name="language" type="xs:string?" optional="true">
+     The desired language for string representation of the numeric
+     <code xmlns="http://www.w3.org/1999/xhtml">$value</code>.
+     An empty sequence must be passed in even if a user doesn't want to
+     specifiy this argument.
+   </apidoc:param>
+      <apidoc:param name="letter-value" type="xs:string?" optional="true">
+     Same as letter-value attribute in xsl:number. This argument is
+     ignored during formatting as of now. It may be used in future.
+     An empty sequence must be passed in even if a user doesn't want to
+     specifiy this argument.
+   </apidoc:param>
+      <apidoc:param name="ordchar" type="xs:string?" optional="true">
+     If $ordchar is "yes" then ordinal numbering is attempted. If this
+     is any other string, including an empty string, then then cardinal
+     numbering is generated.
+     An empty sequence must be passed in even if a user doesn't want to
+     specifiy this argument.
+   </apidoc:param>
+      <apidoc:param name="zero-padding" type="xs:string?" optional="true">
+     Value of $zero-padding is used to pad integer part of a number on
+     the left and fractional part on the right, if needed.
+     An empty sequence must be passed in even if a user doesn't want to
+     specifiy this argument.
+   </apidoc:param>
+      <apidoc:param name="grouping-separator" type="xs:string?" optional="true">
+     Value of $grouping-separator is a character, used to groups of digits,
+     especially useful in making long sequence of digits more readable.
+     For example, 10,000,000- here "," is used as a separator after
+     each group of three digits.
+     An empty sequence must be passed in even if a user doesn't want to
+     specify this argument.
+   </apidoc:param>
+      <apidoc:param name="grouping-size" type="xs:integer?" optional="true">
+     Represents size of the group, i.e. the number of digits before after
+     which grouping separator is inserted.
+     An empty sequence must be passed in even if a user doesn't want to
+     specifiy this argument.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+   <p xmlns="http://www.w3.org/1999/xhtml">Most, but not all formatting combinations work. The following table
+   shows formatting options by language, and lists what is supported and
+   what is not.</p>
+   <table border="1" xmlns="http://www.w3.org/1999/xhtml">
+   <tr>
+	  <th>Language</th>
+	  <th>Numeric Cardinals</th>
+	  <th>Numeric Ordinals</th>
+	  <th>Spelled Out Cardinals</th>
+	  <th>Spelled Out Ordinals</th>
+	</tr>
+       <tr>
+	  <td>en</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>fr</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>it</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>de</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>ru</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>es</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>ar</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>zh</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>ko</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>fa</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+       <tr>
+	  <td>nl</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>ja</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	</tr>
+       <tr>
+	  <td>pt</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>Yes</td>
+	  <td>No</td>
+	</tr>
+
+
+   </table>
+ </apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:format-number(29,"01","en","",(),'0',",",3),
+xdmp:format-number(09,"W","en","",(),'"',",",3),
+xdmp:format-number((5),"w","es",(),(),"0",",",3)
+=&gt;
+29
+NINE
+cinco
+ </pre>
+ </apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var res = new Array();
+res.push(xdmp.formatNumber(29,"01","en","",null,'0',",",3));
+res.push(xdmp.formatNumber(09,"W","en","",null,'"',",",3));
+res.push(xdmp.formatNumber((5),"w","es",null,null,"0",",",3));
+res.push(xdmp.formatNumber((5),"w","fr",null,null,"0",",",3));
+res;
+=&gt;
+["29", "NINE", "cinco", "cinq"]
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="month-name-from-date" type="builtin" lib="xdmp" category="DurationDateTimeBuiltins">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns month name, calculated from the localized value of $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, returns the empty sequence.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:date?">
+The date whose month-name will be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:month-name-from-date(xs:date("1999-05-31"))
+=&gt;
+May
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.monthNameFromDate(xs.date("1999-05-31"));
+=&gt;
+May
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:month-name-from-date(xs:date("2000-01-01"))
+=&gt;
+January
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.monthNameFromDate(xs.date("2000-01-01"));
+=&gt;
+January
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="monthname" type="builtin" lib="sql" category="SQL">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">
+Returns month name, calculated from the localized value of $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, returns the empty sequence.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:genericDateTimeArg?">
+The date whose month-name will be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:month-name(xs:date("1999-05-31"))
+=&gt;
+May
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql.monthName(xs.date("1999-05-31"));
+=&gt;
+May
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:month-name(xs:date("2000-01-01"))
+=&gt;
+January
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql.monthName(xs.date("2000-01-01"));
+=&gt;
+January
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="dayname-from-date" type="builtin" lib="xdmp" category="DurationDateTimeBuiltins">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns an xs:string representing the dayname
+value in the localized value of $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, returns the empty sequence.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:date?">
+The date whose dayname value will be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:dayname-from-date(xs:date("1997-07-20"))
+=&gt;
+Sunday
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.daynameFromDate(xs.date("1997-07-20"));
+=&gt;
+Sunday
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:dayname-from-date(xs:date("2012-05-16"))
+=&gt;
+Wednesday
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.daynameFromDate(xs.date("2012-05-16"));
+=&gt;
+Wednesday
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="dayname" type="builtin" lib="sql" category="SQL">
+    <apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">Returns an xs:string representing the dayname
+value in the localized value of $arg.
+</p><p xmlns="http://www.w3.org/1999/xhtml">
+If $arg is the empty sequence, returns the empty sequence.
+</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="arg" type="xs:genericDateTimeArg?">
+The date whose dayname value will be returned.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:dayname(xs:date("1997-07-20"))
+=&gt;
+Sunday
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql.dayname(xs.date("1997-07-20"));
+=&gt;
+Sunday
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:dayname("2012-05-16")
+=&gt;
+Wednesday
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql.dayname("2012-05-16");
+=&gt;
+Wednesday
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

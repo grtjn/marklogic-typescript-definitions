@@ -1,0 +1,322 @@
+<apidoc:module name="XSLTBuiltins" category="XSLTBuiltins" bucket="W3C-Standard Functions" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="XSLTBuiltins">
+The XSLT functions.  These functions are available in XSLT only.
+They are defined in
+<a href="http://www.w3.org/TR/xslt20/" target="_blank" xmlns="http://www.w3.org/1999/xhtml">XSL Transformations (XSLT) Version 2.0</a>.
+</apidoc:summary><apidoc:function name="regex-group" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">While the <code>xsl:matching-substring</code>  instruction is active,
+  a set of current captured substrings is available, corresponding to the
+  parenthesized sub-expressions of the regular expression. These captured
+  substrings are accessible using the function regex-group. This function
+  takes an integer argument to identify the group, and returns a string
+  representing the captured substring.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery or JavaScript. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="group-number" type="xs:integer">
+  The group number to return.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">The function returns the zero-length string if there is no captured
+  substring with the relevant number. This can occur for a number of
+  reasons:</p>
+  <ol xmlns="http://www.w3.org/1999/xhtml">
+	<li>The number is negative.</li>
+	<li>The regular expression does not contain a parenthesized
+   sub-expression with the given number.</li>
+	<li>The parenthesized sub-expression exists, and did not match any
+   part of the input string.</li>
+	<li>The parenthesized sub-expression exists, and matched a zero-length
+   substring of the input string.</li>
+      </ol>
+</apidoc:usage>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See the examples in the <code>xsl:analyze-string</code> section of
+  the <a href="http://www.w3.org/TR/xslt20/#analyze-string" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="current" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the item that was the context item at the point where the
+  expression was invoked from the XSLT stylesheet.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery. </p>
+</apidoc:summary>
+    <apidoc:return>item()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+ &lt;xsl:template match="/"&gt;
+   &lt;xsl:value-of select="node-name(current()/element())"/&gt;
+ &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;,
+document{&lt;foo&gt;hello there&lt;/foo&gt;})
+
+=&gt; foo
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="current-position" type="builtin" lib="xdmp" category="Extension" subcategory="XSLT" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the position of the current item.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery. </p>
+</apidoc:summary>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xdmp="http://marklogic.com/xdmp"&gt;
+ &lt;xsl:template match="/"&gt;
+   &lt;xsl:value-of select="xdmp:current-position()"/&gt;
+ &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;,
+document{&lt;foo&gt;hello there&lt;/foo&gt;})
+
+=&gt; 1
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="current-last" type="builtin" lib="xdmp" category="Extension" subcategory="XSLT" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the size of the current node list.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery. </p>
+</apidoc:summary>
+    <apidoc:return>xs:integer</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xdmp="http://marklogic.com/xdmp"&gt;
+ &lt;xsl:template match="foo"&gt;
+   &lt;xsl:value-of select="xdmp:current-last()"/&gt;
+ &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;,
+document{&lt;foo&gt;
+           &lt;a&gt;hello&lt;/a&gt;
+           &lt;b&gt;there&lt;/b&gt;
+         &lt;/foo&gt;})
+
+
+=&gt; 1
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="system-property" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns a string representing the value of the system property
+  identified by the name. If there is no such system property, the
+  zero-length string is returned.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="property-name" type="xs:string">
+  The name of the property whose value is to be returned.  Valid names are:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>xsl:version</li>
+	  <li>xsl:vendor</li>
+	  <li>xsl:vendor-url</li>
+	  <li>xsl:product-name</li>
+	  <li>xsl:product-version</li>
+	  <li>xsl:is-schema-aware</li>
+	  <li>xsl:supports-serialization</li>
+	  <li>xsl:supports-backwards-compatibility</li>
+	  <li>xsl:supports-namespace-axis</li>
+	</ul>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+ &lt;xsl:template match="foo"&gt;
+   &lt;xsl:value-of select="system-property('xsl:is-schema-aware')"/&gt;
+ &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;,
+document{&lt;foo&gt;hello there&lt;/foo&gt;})
+
+=&gt; yes
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="element-available" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml"></p>Returns true if and only if the name of an XSLT instruction is passed
+  in.<p xmlns="http://www.w3.org/1999/xhtml">  
+  This function is only available in XSLT; it is not available
+  in XQuery. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="element-name" type="xs:string">
+  The name of the element to test.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+ &lt;xsl:template match="foo"&gt;
+   &lt;xsl:value-of
+        select="element-available('xsl:apply-templates')"/&gt;
+ &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;,
+document{&lt;foo&gt;hello there&lt;/foo&gt;})
+
+=&gt; true
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="key" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">The key function does for keys what the id function does for IDs.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery or JavaScript. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="key-name" type="xs:string">
+  The name of the key.
+  </apidoc:param>
+      <apidoc:param name="key-value" type="xs:string">
+  The value of the key.
+  </apidoc:param>
+      <apidoc:param name="top" type="node()" optional="true">
+  The subtree to limit the results to.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See the examples in the Keys section of
+  the <a href="http://www.w3.org/TR/xslt20/#key" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="current-group" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the current regex group.  </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery or JavaScript. </p>
+</apidoc:summary>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See the examples in the Grouping section of
+  the <a href="http://www.w3.org/TR/xslt20/#grouping" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="current-grouping-key" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the current regex grouping key.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function is only available in XSLT; it is not available
+  in XQuery or JavaScript. </p>
+</apidoc:summary>
+    <apidoc:return>xs:anyAtomicType?</apidoc:return>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See the examples in the Grouping section of
+  the <a href="http://www.w3.org/TR/xslt20/#grouping" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="type-available" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns true if and only if there is a type whose name matches the value of
+  the $type-name argument is present in the static context.   This
+   is an XSLT function, and it is available in both XSLT and in XQuery 1.0-ml.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="type-name" type="xs:string" optional="false">
+  The $type-name is a string containing a lexical QName. It may be a name of
+  a builtin-type, type imported using xsl:import-schema, or an extension type.
+  This parameter is mandatory. The lexical QName is expanded using the
+  namespace declarations in scope for the expression. If the lexical QName is
+  unprefixed, then the default namespace is used in the expanded QName.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:type-available("xs:integer")
+=&gt; true
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.typeAvailable("xs:integer")
+=&gt; true
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="function-available" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns true if and only if there is an XQuery or XSLT function whose name
+  and optionally arity matches the value of the $function-name and the optional
+  $arity arguments.  This
+   is an XSLT function, and it is available in both XSLT and XQuery 1.0-ml.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="function-name" type="xs:string" optional="false">
+  The $function-name is a string containing a lexical QName. It may be a name
+  of a builtin-type, type imported using xsl:import-schema, or an extension
+  type. This parameter is mandatory. The lexical QName is expanded using the
+  namespace declarations in scope for the expression. If the lexical QName
+  is unprefixed, then the standard function namespace is used in the expanded
+  QName.
+  </apidoc:param>
+      <apidoc:param name="arity" type="xs:integer" optional="true">
+  If $arity parameter is present, then the function returns true if and only if
+  the function specified by the first argument has a signature that takes $arity
+  number of arguments.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+fn:function-available("fn:doc")
+=&gt;
+true
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="unparsed-entity-uri" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  Always returns the zero length string. This function is only available in
+  XSLT; it is not available in XQuery or JavaScript.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="entity-name" type="xs:string">
+  The entity name.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:anyURI</apidoc:return>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See
+  the <a href="http://www.w3.org/TR/xslt20/#unparsed-entity-uri" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="unparsed-entity-public-id" type="builtin" lib="fn" category="XSLTBuiltins" bucket="W3C-Standard Functions" class="xquery">
+    <apidoc:summary>
+  Returns the public identifier of the unparsed entity specified by the
+  $entity-name parameter. If no such entity exists or if the entity has no
+  public identifier, this function returns the empty string.
+  This function is only available in
+  XSLT; it is not available in XQuery or JavaScript.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="entity-name" type="xs:string">
+  The entity name.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example>
+  <p xmlns="http://www.w3.org/1999/xhtml">See
+  the <a href="http://www.w3.org/TR/xslt20/#unparsed-entity-public-id" target="_blank">XSLT Specification</a>.
+  </p>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

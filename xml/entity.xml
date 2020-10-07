@@ -1,0 +1,729 @@
+<apidoc:module name="EnityEnrichModule" category="Entity Enrichment" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="entity">
+  <apidoc:summary access="public">
+    <p>Use the entity enrichment library to manage entity dictionaries
+     and perform dictionary-based entity extraction and enrichment.
+     For details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2364092'>Entity Extraction and Enrichment</a> in the <em>Search Developer's Guide</em>.
+    </p>
+    <p>The entity enrichment library module is installed as the following 
+		  file:</p>
+    <ul><li><code><em>install_dir</em>/Modules/MarkLogic/entity.xqy</code></li></ul>
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+	    MarkLogic Server is installed.</p>
+    <span class="xquery"><p>To use this module in your own XQuery modules, 
+     include the following line in your XQuery prolog:</p>
+     <p><code>import module namespace entity="http://marklogic.com/entity" 
+		    at "/MarkLogic/entity.xqy"</code></p>
+    </span><span class="javascript"><p>To use this module in your 
+     JavaScript code, include a <code>require</code> statement similar to 
+     the following in your code:</p>
+     <p><code>const entity = require('/MarkLogic/entity');</code></p>
+    </span>
+  </apidoc:summary>
+
+  <apidoc:function name="dictionary-insert" type="entity" lib="entity"
+                   category="Entity Enrichment" bucket="XQuery Library Modules">
+    <apidoc:summary>
+      Put an entity dictionary into the database in the appropriate format.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string">
+        The URI of the dictionary.
+      </apidoc:param>
+      <apidoc:param name="dictionary" type="cts:entity-dictionary">
+        The entity dictionary to insert.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:usage>
+      Important: When inserting a dictionary created from a SKOS graph,
+      do not use the source graph URI for the dictionary URI. Doing so
+      interferes with subsequent use of the graph.
+    </apidoc:usage>
+    <apidoc:see-also-list>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2330564'>Persisting an Entity Dictionary</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2357701'>Creating an Entity Dictionary</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#entity:dictionary-load">entity:dictionary-load</a>
+        <a class="javascript" href="#entity.dictionaryLoad">entity.dictionaryLoad</a>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#cts:entity-dictionary">cts:entity-dictionary</a>
+        <a class="javascript" href="#cts.entityDictionary">cts.entityDictionary</a>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#cts:entity-dictionary-parse">cts:entity-dictionary-parse</a>
+        <a class="javascript" href="#cts.entityDictionaryParse">cts.entityDictionaryParse</a>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#entity:skos-dictionary">entity:skos-dictionary</a>
+        <a class="javascript" href="#entity.skosDictionary">entity.skosDictionary</a>
+      </apidoc:see-also>
+    </apidoc:see-also-list>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+import module namespace entity="http://marklogic.com/entity"
+  at "/MarkLogic/entity.xqy";
+
+let $dictionary :=
+  cts:entity-dictionary(
+    for $code in //medical-code
+    for $subcode in $code/subcode
+    return
+      cts:entity($code/@id, $code/@code, $subcode/@code, $code/description),
+      "case-sensitive")
+return entity:dictionary-insert("/ontology/medical", $dictionary);
+    ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+declareUpdate();
+const entity = require('/MarkLogic/entity');
+
+const entries = [];
+for (let alt of ['ACA', 'Obamacare', 'Affordable Care Act']) {
+  entries.push(cts.entity('E1', 'ACA', alt, 'Law'));
+}
+entity.dictionaryInsert('/ontology/ACA', cts.entityDictionary(entries));
+
+// The new dictionary is inserted with the URI '/onotology/ACA'.
+    ]]></pre></apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="dictionary-load" type="entity" lib="entity"
+                   category="Entity Enrichment" bucket="XQuery Library Modules">
+    <apidoc:summary>
+      Load an entity dictionary from the filesystem into the database in the 
+      appropriate format.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="path" type="xs:string">
+       The path to a text file containing the dictionary entries.
+       For format details, see the Usage Notes.
+      </apidoc:param>
+      <apidoc:param name="uri" type="xs:string">
+       The URI of the dictionary to be created.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+       Options with which you can control the behavior of the entity dictionary.
+       You can specify the following options. It is strongly recommended that
+       you use the default option settings.
+       <ul>
+         <li><code>"case-sensitive"</code> or <code>"case-insensitive"</code>:
+          Perform case-sensitive or case-insensitive matching of entities names.
+          Specify one or the other. Default: <code>"case-sensitive"</code>.</li>
+         <li><code>"remove-overlaps"</code> or <code>"allow-overlaps"</code>: 
+          Either eliminate entities with the overlapping names or allow them.
+          Specify one or the other. Default: <code>"allow-overlaps"</code>.</li>
+         <li><code>"whole-words"</code> or <code>"partial-words"</code>: 
+          Either require matches to align with token boundares, or allow
+          matches to fall within token boundaries. Specify one or the other. 
+          Default: <code>"whole-words"</code>.</li>
+       </ul>
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:usage>
+     The entity dictionary should be a text file containing one line per
+     dictionary entry. Each line (entry) must consist of the following
+     tab delimited fields, in the order shown: identifier, normalized text, 
+     matching text, entity type. For more details on the meaning of each
+     field, see
+     <a class="xquery" href="#cts:entity">cts:entity</a><a class="javascript" href="#cts.entity">cts.entity</a>.
+    </apidoc:usage>
+    <apidoc:see-also-list>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2330564'>Persisting an Entity Dictionary</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2364182'>Creating a Dictionary From Text</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#entity:dictionary-insert">entity:dictionary-insert</a>
+        <a class="javascript" href="#entity.dictionaryInsert">entity.dictionaryInsert</a>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#cts:entity-dictionary-parse">cts:entity-dictionary-parse</a>
+        <a class="javascript" href="#cts.entityDictionaryParse">cts.entityDictionaryParse</a>
+      </apidoc:see-also>
+    </apidoc:see-also-list>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+(:
+Assuming "/data/example.txt" contains
+
+11208172	Nixon	Nixon	person:head of state
+11208172	Nixon	Richard Nixon	person:head of state
+11208172	Nixon	Richard M. Nixon	person:head of state
+11208172	Nixon	Richard Milhous Nixon	person:head of state
+11208172	Nixon	President Nixon	person:head of state:person
+08932568	Paris	Paris	administrative district:national capital
+09145751	Paris	Paris	administrative district:town
+09500217	Paris	Paris	imaginary being:mythical being
+
+The URI "/ontology/people" will contain an entity dictionary with 
+four entities (11208172 with 5 alternative matching texts, and the three 
+entities 08932568, 09145751, and 09500217 with the same matching text).
+:)
+import module namespace entity="http://marklogic.com/entity"
+  at "/MarkLogic/entity.xqy";
+
+entity:dictionary-load("/data/example.txt","/ontology/people")
+    ]]></pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Assume "/data/example.txt" contains the following data:
+//
+// 11208172	Nixon	Nixon	person:head of state
+// 11208172	Nixon	Richard Nixon	person:head of state
+// 11208172	Nixon	Richard M. Nixon	person:head of state
+// 11208172	Nixon	Richard Milhous Nixon	person:head of state
+// 11208172	Nixon	President Nixon	person:head of state:person
+// 08932568	Paris	Paris	administrative district:national capital
+// 09145751	Paris	Paris	administrative district:town
+// 09500217	Paris	Paris	imaginary being:mythical being
+
+declareUpdate();
+const entity = require('/MarkLogic/entity');
+
+entity.dictionaryLoad('/space/rest/ent-dict.txt','/ontology/people');
+
+// The URI "/ontology/people" now contain an entity dictionary with 
+// four entities (11208172 with 5 alternative matching texts, and the 
+// three entities 08932568, 09145751, and 09500217 with the same matching text.
+    ]]></pre></apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="skos-dictionary" type="entity" lib="entity"
+                   category="Entity Enrichment" bucket="XQuery Library Modules">
+    <apidoc:summary>
+      Construct an entity dictionary from a SKOS ontology loaded into the
+      database as triples. The mapping from a SKOS ontology is as follows:
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="graph" type="xs:string">
+        The URI of the graph containing the triples of the ontology.
+      </apidoc:param>
+      <apidoc:param name="lang" type="xs:string" optional="true">
+        If labels occur in more than one language, use the ones in
+        this language. Default: "en".
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+       Options with which you can control the behavior of the entity dictionary.
+       You can specify the following options. It is strongly recommended that
+       you use the default option settings.
+       <ul>
+         <li><code>"case-sensitive"</code> or <code>"case-insensitive"</code>:
+          Perform case-sensitive or case-insensitive matching of entities labels.
+          Specify one or the other. Default: <code>"case-sensitive"</code>.</li>
+         <li><code>"remove-overlaps"</code> or <code>"allow-overlaps"</code>: 
+          Either eliminate entities with the overlapping labels or allow them.
+          Specify one or the other. Default: <code>"allow-overlaps"</code>.</li>
+         <li><code>"whole-words"</code> or <code>"partial-words"</code>: 
+          Either require matches to align with token boundares, or allow
+          matches to fall within token boundaries. Specify one or the other. 
+          Default: <code>"whole-words"</code>.</li>
+       </ul>
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>cts:entity-dictionary</apidoc:return>
+    <apidoc:usage>
+      To take advantage of caching, insert dictionaries into the database 
+      once they have been created. Dictionaries formed from large ontologies 
+      can be quite expensive to construct. Do not insert SKOS dictionaries 
+      using the graph URI as this will interfere with use of that graph.
+      <p>For best results it is strongly recommended you construct 
+       ontologies using <code>skos:ConceptScheme</code> with explicit 
+       <code>skos:inScheme</code> properties.</p>
+      <p>The following list describes the mapping from a SKOS ontology to
+       entity dictionary entries. NOTE: The "skos" prefix here is shorthand
+       for the namespace "http://www.w3.org/2004/02/skos/core#".</p>
+      <ul>
+        <li>Each <code>skos:Concept</code> becomes an entity.</li>
+        <li>Each <code>skos:ConceptScheme</code> provides an entity type.</li>
+        <li>The concept's IRI becomes the entity's ID.</li>
+        <li>The concept's <code>skos:prefLabel</code> becomes the entity's 
+          normalized text.</li>
+        <li>The concept's <code>skos:prefLabel</code> plus any additional 
+          labels (<code>skos:altLabel</code>, <code>skos:hiddenLabel</code>) 
+          become entity text that will be used to match.</li>
+        <li>If the concept is in a <code>skos:ConceptScheme</code> then that 
+          scheme will provide the entity type; otherwise the graph URI will 
+          be used as the entity type.</li>
+        <li>The <code>rdfs:label</code> or <code>dc:title</code> of the 
+          concept scheme is used as the entity type, if one is available; 
+          otherwise, the IRI of the concept scheme is used.</li>
+        <li>A concept <em>C</em> is considered in a scheme <em>S</em> if 
+          any of the following conditions (expressed as triples) are met:
+          <ul>
+            <li><em>C</em> <code>skos:inScheme</code> <em>S</em></li>
+            <li><em>S</em> <code>skos:hasTopConcept</code> <em>C</em></li>
+            <li><em>S</em> <code>skos:hasTopConcept</code> <em>C2</em> AND
+              <em>C2</em> <code>skos:narrowerTransitive</code> <em>C</em></li>
+            <li><em>C</em> <code>skos:topConceptOf</code> <em>S</em></li>
+            <li><em>C</em> <code>skos:broaderTransitive</code> <em>C2</em>
+              AND <em>C2</em> <code>skos:topConceptOf</code> <em>S</em></li>
+          </ul>
+          <p><code>skos:broaderTransitive</code> will be inferred from
+            <code>skos:broader</code> if needed.
+            <code>skos:narrowerTransitive</code> will be inferred 
+            from <code>skos:narrower</code> if needed.</p>
+        </li>
+      </ul>
+      <p>If this function cannot derive an entity dictionary entries from the
+       graph, MarkLogic throws the exception <code>XDMP-EMPTYEDICT</code>.</p>
+    </apidoc:usage>
+    <apidoc:see-also-list>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2341490'>Creating a Dictionary From a SKOS Ontology</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2357701'>Creating an Entity Dictionary</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#entity:dictionary-insert">entity:dictionary-insert</a>
+        <a class="javascript" href="#entity.dictionaryInsert">entity.dictionaryInsert</a>
+      </apidoc:see-also>
+    </apidoc:see-also-list>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+import module namespace entity="http://marklogic.com/entity"
+  at "/MarkLogic/entity.xqy";
+
+entity:dictionary-insert("/ontology/people",
+  entity:skos-dictionary("http://example.com/people"))  
+    ]]></pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+'use strict';
+declareUpdate();
+const entity = require('/MarkLogic/entity');
+
+entity.dictionaryInsert('/ontology/people',
+  entity.skosDictionary('http://example.com/people')); 
+    ]]></pre></apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="extract" type="entity" lib="entity"
+                   category="Entity Enrichment" bucket="XQuery Library Modules">
+    <apidoc:summary>
+      Extract entities from a document using the provided entity dictionary. 
+      The matching entities are returned.
+    </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()">
+        The node from which to extract entities. The node must be an
+        XML document node or an XML element node.
+      </apidoc:param>
+      <apidoc:param name="dictionaries" type="cts:entity-dictionary*" optional="true">
+        The entity dictionaries to use to extract entities. If you do not
+        specify any dictionaries, built-in entity dictionaries are applied. 
+        (Currently there are no built-in dictionaries.) If you specify multiple 
+        dictionaries, they are applied sequentially, in the order given.
+      </apidoc:param>
+      <apidoc:param name="options" type="xs:string*" optional="true">
+        A list of options that control processing. The options are:
+        <ul>
+          <li><code>"full"</code>: Emit full entities, which include the 
+           normalized text, entity ID, path to text node, starting offset 
+           within that text node. If omitted, the default is to emit minimal 
+           entities with just the entity type and matching text.</li>
+        </ul>
+      </apidoc:param>
+      <apidoc:param name="map" type="map:map" optional="true">
+        A mapping from entity type to the QName of the element to use to 
+        create the entity. If you do not provide a mapping, the default 
+        mapping is used. Entities whose types are not matched in the map will 
+        not be emitted.
+      </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element()*</apidoc:return>
+    <apidoc:usage>
+      <p>Mapping can be done piecemeal. The type of an entity is split into
+       segments, delimited by a colon, and then each segment is matched in
+       turn against <code>map</code> until a match is found. If the value of
+       a segment matches a mapping entry whose value is itself a map, then that
+       submap is used to match subsequent segments of the type. If the submap
+       contains no match, then the empty string is used to find a match within
+       the submap.</p>
+      <p>The default map defines a set of default recommended entity names:</p>
+      <dl>
+        <dt><code>e:credit-card-number</code></dt>
+        <dd>A number representing a credit card number. 
+          (<code>IDENTIFIER:CREDIT_CARD_NUM</code>)</dd>
+        <dt><code>e:coordinate</code></dt>
+        <dd>Latitude and longitude coordinates. 
+          (<code>IDENTIFIER:LATITUDE_LONGITUDE</code>)</dd>
+        <dt> <code>e:date</code></dt>
+        <dd>Date-related. (<code>TEMPORAL:DATE</code>)</dd>
+        <dt> <code>e:distance</code></dt>
+        <dd>A distance. (<code>IDENTIFIER:DISTANCE</code>)</dd>
+        <dt> <code>e:email</code></dt>
+        <dd>An email address. (<code>IDENTIFIER:EMAIL</code>) </dd>
+        <dt> <code>e:gpe</code></dt>
+        <dd>Geo-political entity. Differs from location in that it has a 
+          person-made aspect to it. For example, California is a GPE because 
+          its boundaries were defined by a government). (<code>GPE</code>)</dd>
+        <dt> <code>e:facility</code></dt>
+        <dd>A place used as a facility. (<code>FACILITY</code>) </dd>
+        <dt> <code>e:id</code></dt>
+        <dd>A number identifying a social security number or other ID number. 
+          (<code>IDENTIFIER</code>) </dd>
+        <dt> <code>e:location</code></dt>
+        <dd>A geographic location. For example, Mount Everest. 
+          (<code>LOCATION</code>) </dd>
+        <dt> <code>e:money</code></dt>
+        <dd>Currency, such as dollars, euros, and so on. 
+          (<code>IDENTIFIER:MONEY</code>) </dd>
+        <dt> <code>e:nationality</code></dt>
+        <dd>The nationality of someone or something. For example, American. 
+          (<code>NATIONALITY</code>) </dd>
+        <dt> <code>e:number</code></dt>
+        <dd>A number. (<code>IDENTIFIER:NUMBER</code>)</dd>
+        <dt> <code>e:organization</code></dt>
+        <dd>An organization. (<code>ORGANIZATION</code>)</dd>
+        <dt> <code>e:person</code></dt>
+        <dd>A person. (<code>PERSON</code>)</dd>
+        <dt> <code>e:phone-number</code></dt>
+        <dd>A number identifying a telephone number. 
+          (<code>IDENTIFIER:PHONE_NUMBER</code>) </dd>
+        <dt> <code>e:religion</code></dt>
+        <dd>A religion. (<code>RELIGION</code>)</dd>
+        <dt> <code>e:title</code></dt>
+        <dd>A title or honorific. (<code>TITLE</code>)</dd>
+        <dt> <code>e:url</code></dt>
+        <dd>A URL on the world wide web. (<code>IDENTIFIER:URL</code>)</dd>
+        <dt> <code>e:utm</code></dt>
+        <dd>A point in the Universal Transverse Mercator (UTM) coordinate 
+          system. (<code>IDENTIFIER:UTM</code>)</dd>
+        <dt> <code>e:time</code></dt>
+        <dd>Time-related. (<code>TEMPORAL:TIME</code>)</dd>
+      </dl>
+    </apidoc:usage>
+    <apidoc:see-also-list>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2322788'>Dictionary-Based Entity Extraction</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2349240'>Using an Entity Type Map for Extraction or Enrichment</a> in the <em>Search Developer's Guide</em>
+      </apidoc:see-also>
+      <apidoc:see-also>
+        <a class="xquery" href="#cts:entity-walk">cts:entity-walk</a>
+        <a class="javascript" href="#cts.entityWalk">cts.entityWalk</a>
+      </apidoc:see-also>
+    </apidoc:see-also-list>
+    <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+(: extract entities, using the people ontology from the 
+ : entity:dictionary-load example
+ :)
+import module namespace entity="http://marklogic.com/entity"
+  at "/MarkLogic/entity.xqy";
+
+let $map :=
+  map:new((
+    map:entry("",xs:QName("entity:entity")),
+    map:entry("administrative district",xs:QName("entity:gpe")),
+    map:entry("facilty",xs:QName("entity:facility")),
+    map:entry("person",xs:QName("entity:person")),
+    map:entry("land",xs:QName("entity:location")),
+    map:entry("location",xs:QName("entity:location")),
+    map:entry("organization",xs:QName("entity:organization")),
+    map:entry("region",xs:QName("entity:gpe"))
+  ))
+return
+  entity:extract(<p>Nixon went to Paris</p>,
+    cts:entity-dictionary-get("/ontology/people"), (), $map)
+
+(: Returns the extracted entity(s). For example:
+ :
+ : <entity:person xmlns:entity="http://marklogic.com/entity">Nixon</entity:person>
+ : <entity:gpe xmlns:entity="http://marklogic.com/entity">Paris</entity:gpe>
+ : <entity:gpe xmlns:entity="http://marklogic.com/entity">Paris</entity:gpe>
+ : <entity:entity type="imaginary being:mythical being" xmlns:entity="http://marklogic.com/entity">Paris</entity:entity>
+ :)
+    ]]></pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Extract entities using the people onotology from the 
+// entity.dictionaryLoad example.
+
+'use strict';
+const entity = require('/MarkLogic/entity');
+
+const mapping = {
+  '' : fn.QName('http://marklogic.com/entity', 'entity:entity'),
+  'administrative district': fn.QName('http://marklogic.com/entity', 'entity:gpe'),
+  facility: fn.QName('http://marklogic.com/entity', 'entity:facility'),
+  person: fn.QName('http://marklogic.com/entity', 'entity:person'),
+  land: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  location: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  organization: fn.QName('http://marklogic.com/entity', 'entity:organization'),
+  region: fn.QName('http://marklogic.com/entity', 'entity:gpe')
+};
+const node = new NodeBuilder()
+                   .addElement('p', 'Nixon went to Paris')
+                   .toNode();
+entity.extract(node, cts.entityDictionaryGet('/ontology/people'), null, mapping);
+
+// Returns the extracted entity. For example:
+//
+// <entity:person xmlns:entity="http://marklogic.com/entity">Nixon</entity:person>
+// <entity:gpe xmlns:entity="http://marklogic.com/entity">Paris</entity:gpe>
+// <entity:gpe xmlns:entity="http://marklogic.com/entity">Paris</entity:gpe>
+// <entity:entity type="imaginary being:mythical being" xmlns:entity="http://marklogic.com/entity">Paris</entity:entity>
+    ]]></pre></apidoc:example>
+  </apidoc:function>
+
+  <apidoc:function name="enrich" type="entity" lib="entity" 
+                 category="Entity Enrichment" bucket="XQuery Library Modules">
+  <apidoc:summary>
+	Returns the entity-enriched XML for the given XML node using the 
+    provided dictionary. If a text node that is being enriched has a parent 
+    element with a schema definition that does not allow element children, 
+    then that text node is not enriched. Entity markup is not added
+    within other entities.
+  </apidoc:summary>
+  <apidoc:params>
+	<apidoc:param name="node" type="node()">The XML node to be enriched.
+	</apidoc:param>
+    <apidoc:param name="dictionaries" type="cts:entity-dictionary*" optional="true">
+      The entity dictionaries to use to identify entities. If you do not
+      specify any dictionaries, built-in entity dictionaries are applied. 
+      (Currently there are no built-in dictionaries.) If you specify multiple 
+      dictionaries, they are applied sequentially, in the order given.
+    </apidoc:param>
+    <apidoc:param name="options" type="xs:string*" optional="true">
+      A list of options that control processing. The following options 
+      are available:
+      <ul>
+        <li><code>"full"</code>: Construct full entity markup, which 
+          includes the normalized text and entity ID. If omitted, the 
+          default is to emit minimal entities with just the entity type 
+          and matching text.</li>
+      </ul>
+    </apidoc:param>
+    <apidoc:param name="map" type="map:map" optional="true">
+      A mapping from entity type to the QName of the element to use to 
+      create the entity. If no mapping is provided, the default mapping 
+      is used. Entities whose types are not matched in the map will 
+      not be emitted.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>node()</apidoc:return>
+  <apidoc:usage>
+    <p>Mapping can be done piecemeal. The type of an entity is split into
+     segments, delimited by a colon, and then each segment is matched in
+     turn against <code>map</code> until a match is found. If the value of
+     a segment matches a mapping entry whose value is itself a map, then that
+     submap is used to match subsequent segments of the type. If the submap
+     contains no match, then the empty string is used to find a match within
+     the submap.</p>
+    <p>The default map defines a set of default recommended entity names:</p>
+    <dl>
+      <dt><code>e:credit-card-number</code></dt>
+      <dd>A number representing a credit card number. 
+        (<code>IDENTIFIER:CREDIT_CARD_NUM</code>)</dd>
+      <dt><code>e:coordinate</code></dt>
+      <dd>Latitude and longitude coordinates. 
+        (<code>IDENTIFIER:LATITUDE_LONGITUDE</code>)</dd>
+      <dt> <code>e:date</code></dt>
+      <dd>Date-related. (<code>TEMPORAL:DATE</code>)</dd>
+      <dt> <code>e:distance</code></dt>
+      <dd>A distance. (<code>IDENTIFIER:DISTANCE</code>)</dd>
+      <dt> <code>e:email</code></dt>
+      <dd>An email address. (<code>IDENTIFIER:EMAIL</code>) </dd>
+      <dt> <code>e:gpe</code></dt>
+      <dd>A geo-political entity. Differs from location because it has a 
+        person-made aspect to it. For example, California is a GPE because 
+        its boundaries were defined by a government). (<code>GPE</code>)</dd>
+      <dt> <code>e:facility</code></dt>
+      <dd>A place used as a facility. (<code>FACILITY</code>) </dd>
+      <dt> <code>e:id</code></dt>
+      <dd>A number identifying a social security number or other ID number. 
+        (<code>IDENTIFIER</code>) </dd>
+      <dt> <code>e:location</code></dt>
+      <dd>A geographic location (Mount Everest, for example). 
+        (<code>LOCATION</code>) </dd>
+      <dt> <code>e:money</code></dt>
+      <dd>Currency, such as dollars, euros, and so on. 
+        (<code>IDENTIFIER:MONEY</code>) </dd>
+      <dt> <code>e:nationality</code></dt>
+      <dd>The nationality of someone or something. For example, American. 
+        (<code>NATIONALITY</code>) </dd>
+      <dt> <code>e:number</code></dt>
+      <dd>A number. (<code>IDENTIFIER:NUMBER</code>)</dd>
+      <dt> <code>e:organization</code></dt>
+      <dd>An organization. (<code>ORGANIZATION</code>)</dd>
+      <dt> <code>e:person</code></dt>
+      <dd>A person. (<code>PERSON</code>)</dd>
+      <dt> <code>e:phone-number</code></dt>
+      <dd>A number identifying a telephone number. 
+        (<code>IDENTIFIER:PHONE_NUMBER</code>) </dd>
+      <dt> <code>e:religion</code></dt>
+      <dd>A religion. (<code>RELIGION</code>)</dd>
+      <dt> <code>e:title</code></dt>
+      <dd>A title or honorific. (<code>TITLE</code>)</dd>
+      <dt> <code>e:url</code></dt>
+      <dd>A URL on the world wide web. (<code>IDENTIFIER:URL</code>)</dd>
+      <dt> <code>e:utm</code></dt>
+      <dd>A point in the Universal Transverse Mercator (UTM) coordinate 
+        system. (<code>IDENTIFIER:UTM</code>)</dd>
+      <dt> <code>e:time</code></dt>
+      <dd>Time-related. (<code>TEMPORAL:TIME</code>)</dd>
+    </dl>
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2355061'>Dictionary-Based Entity Enrichment</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/entity.xml%2349240'>Using an Entity Type Map for Extraction or Enrichment</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+    <apidoc:see-also>
+      <a class="xquery" href="#cts:entity-highlight">cts:entity-highlight</a>
+      <a class="javascript" href="#cts.entityHighlight">cts.entityHighlight</a>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+(: Enrich content using the people ontology from the 
+ : entity:dictionary-load example.
+ :)
+
+xquery version "1.0-ml";
+
+import module namespace entity="http://marklogic.com/entity" 
+    at "/MarkLogic/entity.xqy";
+
+let $map :=
+  map:new((
+    map:entry("",xs:QName("entity:entity")),
+    map:entry("administrative district",xs:QName("entity:gpe")),
+    map:entry("facilty",xs:QName("entity:facility")),
+    map:entry("person",xs:QName("entity:person")),
+    map:entry("land",xs:QName("entity:location")),
+    map:entry("location",xs:QName("entity:location")),
+    map:entry("organization",xs:QName("entity:organization")),
+    map:entry("region",xs:QName("entity:gpe"))
+    ))
+let $myxml := <node>Richard Nixon visited Paris.</node>
+return
+  entity:enrich($myxml, cts:entity-dictionary-get("/ontology/wordnet"), (), $map)
+
+(: Returns the enriched node. For example:
+ :
+ : <node xmlns:entity="http://marklogic.com/entity">
+ :   <entity:person>Richard Nixon</entity:person> visited <entity:gpe>Paris</entity:gpe>.
+ : </node>
+ :)
+   ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Enrich content using the people ontology from the 
+// entity:dictionary-load example.
+
+'use strict';
+const entity = require('/MarkLogic/entity');
+
+const mapping = {
+  '' : fn.QName('http://marklogic.com/entity', 'entity:entity'),
+  'administrative district': fn.QName('http://marklogic.com/entity', 'entity:gpe'),
+  facility: fn.QName('http://marklogic.com/entity', 'entity:facility'),
+  person: fn.QName('http://marklogic.com/entity', 'entity:person'),
+  land: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  location: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  organization: fn.QName('http://marklogic.com/entity', 'entity:organization'),
+  region: fn.QName('http://marklogic.com/entity', 'entity:gpe')
+};
+const node = new NodeBuilder()
+                   .addElement('node', 'Nixon visited Paris')
+                   .toNode();
+entity.enrich(node, cts.entityDictionaryGet("/ontology/people"), null, mapping);
+
+// Returns the enriched node. For example:
+//
+// <node xmlns:entity="http://marklogic.com/entity">
+//   <entity:person>Richard Nixon</entity:person> visited <entity:gpe>Paris</entity:gpe>.
+// </node>
+  ]]></pre></apidoc:example>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+(: Enrich content using the people ontology from the 
+ : entity:dictionary-load example.
+ :)
+xquery version "1.0-ml";
+
+import module namespace entity="http://marklogic.com/entity" 
+    at "/MarkLogic/entity.xqy";
+
+let $map :=
+  map:new((
+    map:entry("",xs:QName("entity:entity")),
+    map:entry("administrative district",xs:QName("entity:gpe")),
+    map:entry("facilty",xs:QName("entity:facility")),
+    map:entry("person",xs:QName("entity:person")),
+    map:entry("land",xs:QName("entity:location")),
+    map:entry("location",xs:QName("entity:location")),
+    map:entry("organization",xs:QName("entity:organization")),
+    map:entry("region",xs:QName("entity:gpe"))
+    ))
+let $myxml := 
+<message xmlns="URN:ietf:params:email-xml"                                      
+         xmlns:rfc822="URN:ietf:params:rfc822:">                                
+  <rfc822:subject>Paris Visit</rfc822:subject>
+  <content>Richard Nixon visited Paris for secret talks.</content>
+</message>
+return
+  entity:enrich($myxml, cts:entity-dictionary-get("/ontology/people"), (), $map)
+
+(: Returns markup similar to following. Notice that the text inside
+ : the rfc822:subject element is not enriched because the email schema
+ : does not allow child elements in the subject.
+ :
+ : <message xmlns="URN:ietf:params:email-xml" 
+ :          xmlns:entity="http://marklogic.com/entity" 
+ :          xmlns:rfc822="URN:ietf:params:rfc822:">
+ :   <rfc822:subject>Paris Visit</rfc822:subject>
+ :   <content>
+ :     <entity:person>Richard Nixon</entity:person> visited <entity:gpe>Paris</entity:gpe> for secret talks.
+ :   </content>
+ : </message>
+ :)
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+// Enrich content using the people ontology from the 
+// entity:dictionary-load example.
+
+'use strict';
+const entity = require('/MarkLogic/entity');
+
+const mapping = {
+  '' : fn.QName('http://marklogic.com/entity', 'entity:entity'),
+  'administrative district': fn.QName('http://marklogic.com/entity', 'entity:gpe'),
+  facility: fn.QName('http://marklogic.com/entity', 'entity:facility'),
+  person: fn.QName('http://marklogic.com/entity', 'entity:person'),
+  land: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  location: fn.QName('http://marklogic.com/entity', 'entity:location'),
+  organization: fn.QName('http://marklogic.com/entity', 'entity:organization'),
+  region: fn.QName('http://marklogic.com/entity', 'entity:gpe')
+};
+const node = fn.head(xdmp.unquote(
+  '<message xmlns="URN:ietf:params:email-xml" xmlns:rfc822="URN:ietf:params:rfc822:">' + 
+    '<rfc822:subject>Paris Visit</rfc822:subject>' +
+    '<content>Richard Nixon visited Paris for secret talks.</content>' +
+  '</message>'
+));
+
+entity.enrich(node, cts.entityDictionaryGet("/ontology/people"), null, mapping);
+
+// Returns markup similar to following. Notice that the text inside
+// the rfc822:subject element is not enriched because the email schema
+// does not allow child elements in the subject.
+//
+// <message xmlns="URN:ietf:params:email-xml" 
+//          xmlns:entity="http://marklogic.com/entity" 
+//          xmlns:rfc822="URN:ietf:params:rfc822:">
+//   <rfc822:subject>Paris Visit</rfc822:subject>
+//   <content>
+//     <entity:person>Richard Nixon</entity:person> visited <entity:gpe>Paris</entity:gpe> for secret talks.
+//   </content>
+// </message>
+    ]]></pre></apidoc:example>
+  </apidoc:function>
+</apidoc:module>

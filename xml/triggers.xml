@@ -1,0 +1,1252 @@
+<apidoc:module name="TriggersModule" category="Triggers" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="trgr" class="xquery">
+  <apidoc:summary access="public">
+    <p>The triggers function module is installed as the following file:</p>
+    <ul><li><code><em>install_dir</em>/Modules/MarkLogic/triggers.xqy</code></li></ul>
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+    MarkLogic Server is installed.</p>
+    <p>To use the <code>triggers.xqy</code> module in your own XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+    <p><code>import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+		    at "/MarkLogic/triggers.xqy";</code></p>
+    <p>The triggers module is used for manually creating and managing triggers.
+    If you use the Content Processing Framework, it automatically creates 
+    and manages the triggers.</p>
+    <p>The function to create a new trigger,  
+    <code><a href="#trgr:create-trigger">trgr:create-trigger</a></code>, uses 
+    the other trigger functions to construct the trigger XML document and insert
+    it into the triggers database.  The trigger functions should all be run 
+    against the triggers database of the database in which the content is 
+    stored. </p>
+    <p>For more information on using triggers, see "Using Triggers to 
+    Spawn Actions" in the <em>Application Developer's Guide</em>.</p>
+  </apidoc:summary>
+
+<apidoc:function name="create-trigger" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Creates a new trigger in the context database. 
+  Returns the trigger ID of the created trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> A unique name. 
+    If $trigger-name is not unique, an error is returned. </apidoc:param>
+    <apidoc:param name="description" type="xs:string?">A description of the 
+    trigger.
+    </apidoc:param>
+    <apidoc:param name="event" type="element()">The definition of an
+    event that invokes the trigger module. Use 
+    <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code> or
+    <code><a href="#trgr:trigger-database-online-event">trgr:trigger-database-online-event</a></code> 
+    to construct this element.
+    </apidoc:param>
+    <apidoc:param name="module" type="element(trgr:module)">
+    The module to execute when the triggering event occurs.  Use 
+    <code><a href="#trgr:trigger-module">trgr:trigger-module</a></code>
+    to construct this element.
+    </apidoc:param>
+    <apidoc:param name="enabled" type="xs:boolean">
+    Set to true if the trigger is enabled.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">
+    A sequence of permissions for the trigger.  These permissions will determine
+    which roles are permitted to modify the trigger.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array
+    of Objects.
+    </apidoc:param>
+    <apidoc:param name="recursive" type="xs:boolean?" optional="true">
+	    Set to true if the trigger should be allowed to trigger itself for 
+	    recursive changes on the same document.  Set to false to prevent
+	    the trigger from triggering itself.  If this parameter is not
+	    present, then its value is true.
+    </apidoc:param>
+    <apidoc:param name="task-priority" type="xs:string" optional="true">
+    The task priority for post-commit triggers. 
+    Either "normal" or "higher".
+    If this parameter is not present, the value is "normal".
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:unsignedLong</apidoc:return>
+  <apidoc:privilege>
+  <p><code>http://marklogic.com/xdmp/privileges/create-trigger</code></p>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>Triggers must be created in the triggers database associated with the
+     content database to which the triggers apply. To determine the
+     triggers database programatically, use <code>xdmp:triggers-database</code>
+     in the evaluation context of the content database, or 
+     <code>xdmp:database</code> with the database name listed as the
+     <code>triggers database</code> value in the Admin Interface under 
+     Databases &gt; <em>content_db_name</em>.</p>
+  <p>Triggers are created in the 
+	  <code>http://marklogic.com/xdmp/triggers/</code> directory, with 
+	  the trigger ID completing the URI. This is the ID returned by
+      <code>trgr:create-trigger</code>.</p>
+  <p>If a trigger named $trigger-name already exists, the exception
+     <code>TRGR-TNEXISTS</code> is raised. You must use 
+     <code><a href="#trgr:remove-trigger">trgr:remove-trigger</a></code> 
+     to delete an existing trigger before recreating it.</p>
+  <p>Once a trigger is created, you can view it in the Admin Interface
+	  under the content database, in the Triggers Summary page 
+      (Databases &gt; <em>content_db_name</em> &gt; Triggers). If your
+      trigger does not appear in Triggers Summary, 
+      <code>trgr:create-trigger</code> was probably evaluated in the
+      wrong database context.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+(: Run in the context of the triggers database of the content database :)
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:create-trigger("myTrigger", "Simple trigger example", 
+  trgr:trigger-data-event(
+      trgr:directory-scope("/myDir/", "1"),
+      trgr:document-content("create"),
+      trgr:post-commit()),
+  trgr:trigger-module(xdmp:database("test"), "/modules/", "log.xqy"),
+  fn:true(), xdmp:default-permissions() )
+
+  =&gt; The ID of the newly created trigger. This
+     trigger fires whenever a document is created in the
+     /myDir/ directory. The action module, /modules/log.xqy,
+     is stored in the modules database of the App Server
+     against which the content document is created.  When 
+     the trigger fires, a task to evaluate /modules/log.xqy 
+     is spawned on the task server queue.
+  </pre></apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="trigger-set-name" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Changes the name of a trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> 
+    The current trigger name. </apidoc:param>
+    <apidoc:param name="new-trigger-name" type="xs:string">
+    The new trigger name.</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>Changes the name of a trigger from $trigger-name to $new-trigger-name.</p>
+  <p>This function must be run in the context of the database containing
+     the trigger whose name is to be changed.</p>
+  <p>If no trigger trigger named $trigger-name exists, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: In the context of the database containing the trigger :)
+trgr:trigger-set-name("currentName", "newName")
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-set-description" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Sets the description of the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. 
+    </apidoc:param>
+    <apidoc:param name="description" type="xs:string">The new trigger description.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger whose description is to be changed.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-set-description("currentName", "the new description")
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-enable" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Enables the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger to be enabled. If no trigger named $trigger-name
+     exists, the exception <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-enable("the_trigger_name")
+  </pre></apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="trigger-disable" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Disables the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger to be disabled. If no trigger named $trigger-name
+     exists, the exception <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-disable("the_trigger_name")
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-set-module" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Sets or replaces the action module associated with the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+    <apidoc:param name="module" type="element(trgr:module)">A module definition.
+    Use <code><a href="#trgr:trigger-module">trgr:trigger-data-event</a></code>
+    to construct this parameter.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>When $trigger fires, $module is evaluated. Any module previously
+     associated with $trigger is replaced when this function is called.</p>
+  <p>This function must be run in the context of the database containing
+     the trigger to be modified.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-set-module(
+  "myTrigger", 
+  trgr:trigger-module(
+    xdmp:database("trigger_module_database"), 
+    "/modules/",
+    "the-new-action.xqy") )
+
+  =&gt; Empty sequence. When "myTrigger" fires, "the-new-action.xqy" 
+    is evaluated.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-set-event" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Assigns a triggering event to the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+    <apidoc:param name="event" type="element()">An event definition.  Use 
+    <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code> or
+    <code><a href="#trgr:trigger-database-online-event">trgr:trigger-database-online-event</a></code> 
+    to construct this element.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>A trigger event describes the conditions under which the trigger
+     fires. After calling this function, any previous event associated 
+     with the trigger is replaced.</p>
+  <p>This function must be run in the context of the database containing
+     the trigger to be modified.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-set-event(
+  "myTrigger", 
+  trgr:trigger-data-event(
+    trgr:directory-scope("/myDir/", "1"),
+    trgr:document-content("create"),
+    trgr:post-commit()) )
+
+  =&gt; Empty sequence. The trigger "myTrigger" is set to fire 
+     whenever a document is created in "/myDir/". The trigger 
+     module runs after the creating transaction is committed.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-set-permissions" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Sets the permissions that determine which roles are permitted to modify
+  the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">A sequence of permissions.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>Any permissions previously associated with the trigger are replaced.</p>
+  <p>This function must be run in the context of the database containing
+     the trigger to be modified.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-set-permissions(
+  "myTrigger", 
+  xdmp:default-permissions() )
+
+  =&gt; Empty sequence. The trigger "myTrigger" may be modified 
+     roles which have the default permissions.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-get-permissions" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the permissions for the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(sec:permission)*</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>The permissions on a trigger determine which roles may modify the 
+     trigger. This function must be run in the context of the database 
+     containing the trigger to be examined.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-get-permissions("myTrigger")
+
+  =&gt; &lt;sec:permission xmlns:sec="http://marklogic.com/xdmp/security"&gt;
+       &lt;sec:capability&gt;update&lt;/sec:capability&gt;
+       &lt;sec:role-id>6991745490888355329&lt;/sec:role-id&gt;
+     &lt;/sec:permission&gt;
+     &lt;sec:permission xmlns:sec="http://marklogic.com/xdmp/security"&gt;
+       &lt;sec:capability&gt;read&lt;/sec:capability&gt;
+       &lt;sec:role-id&gt;6991745490888355329&lt;/sec:role-id&gt;
+     &lt;/sec:permission&gt;
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-add-permissions" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Adds permissions to the set of permissions on the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string">The trigger name. </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">A sequence of permissions.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>Any permissions previously associated with the trigger remain intact.
+     This function must be run in the context of the database containing
+     the trigger to be examined.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-add-permissions(
+  "myTrigger",
+  (xdmp:permission("some-role", "read"),
+   xdmp:permission("some-role", "modify"))
+)
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-remove-permissions" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Removes a set of permissions from the set of permissions on the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">A sequence of permissions.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger to be modified.</p>
+  <p>Any permissions on <code>$trigger-name</code> not listed in
+     <code>$permissions</code> are unchanged.</p>
+  <p>Any permissions in <code>$permissions</code> not associated with
+     <code>$trigger-name</code> are ignored.</p>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:trigger-remove-permissions(
+    "myTrigger",
+    (xdmp:permission("some-role", "modify"))
+)
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-trigger" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a trigger with the given name.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:trigger)</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger to be examined. If no trigger with the name $trigger-name
+     exists, the exception <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:get-trigger("myTrigger")
+
+  =&gt; &lt;trgr:trigger xmlns:trgr="http://marklogic.com/xdmp/triggers"&gt;
+       &lt;trgr:trigger-id&gt;7561204940964272849&lt;/trgr:trigger-id&gt;
+       &lt;trgr:trigger-name&gt;myTrigger&lt;/trgr:trigger-name&gt;
+       &lt;trgr:description&gt;Simple trigger example&lt;/trgr:description&gt;
+       &lt;trgr:data-event&gt;
+         &lt;trgr:directory-scope&gt;
+           &lt;trgr:uri&gt;/myDir/&lt;/trgr:uri&gt;
+           &lt;trgr:depth&gt;1&lt;/trgr:depth&gt;
+         &lt;/trgr:directory-scope&gt;
+         &lt;trgr:document-content&gt;
+           &lt;trgr:update-kind&gt;create&lt;/trgr:update-kind&gt;
+         &lt;/trgr:document-content&gt;
+         &lt;trgr:when&gt;post-commit&lt;/trgr:when&gt;
+       &lt;/trgr:data-event&gt;
+       &lt;trgr:module&gt;
+         &lt;trgr:database&gt;10570023054829957732&lt;/trgr:database&gt;
+         &lt;trgr:root&gt;/modules/&lt;/trgr:root&gt;
+         &lt;trgr:path&gt;log.xqy&lt;/trgr:path&gt;
+       &lt;/trgr:module&gt;
+       &lt;trgr:enabled&gt;true&lt;/trgr:enabled&gt;
+       &lt;trgr:recursive&gt;true&lt;/trgr:recursive&gt;
+       &lt;trgr:task-priority&gt;normal&lt;/trgr:task-priority&gt;
+     &lt;/trgr:trigger&gt;
+  </pre></apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="get-trigger-by-id" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of the trigger with the given trigger id.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-id" type="xs:unsignedLong"> The trigger id. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:trigger)</apidoc:return>
+  <apidoc:usage>
+  <p>This function must be run in the context of the database containing
+     the trigger to be examined. If no trigger exists with id $trigger-id,
+     the exception <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+(: Run in the context of the database containing the trigger :)
+trgr:get-trigger-by-id(7561204940964272849)
+
+  =&gt; &lt;trgr:trigger xmlns:trgr="http://marklogic.com/xdmp/triggers"&gt;
+       &lt;trgr:trigger-id&gt;7561204940964272849&lt;/trgr:trigger-id&gt;
+       &lt;trgr:trigger-name&gt;myTrigger&lt;/trgr:trigger-name&gt;
+       &lt;trgr:description&gt;Simple trigger example&lt;/trgr:description&gt;
+       &lt;trgr:data-event&gt;
+         &lt;trgr:directory-scope&gt;
+           &lt;trgr:uri&gt;/myDir/&lt;/trgr:uri&gt;
+           &lt;trgr:depth&gt;1&lt;/trgr:depth&gt;
+         &lt;/trgr:directory-scope&gt;
+         &lt;trgr:document-content&gt;
+           &lt;trgr:update-kind&gt;create&lt;/trgr:update-kind&gt;
+         &lt;/trgr:document-content&gt;
+         &lt;trgr:when&gt;post-commit&lt;/trgr:when&gt;
+       &lt;/trgr:data-event&gt;
+       &lt;trgr:module&gt;
+         &lt;trgr:database&gt;10570023054829957732&lt;/trgr:database&gt;
+         &lt;trgr:root&gt;/modules/&lt;/trgr:root&gt;
+         &lt;trgr:path&gt;log.xqy&lt;/trgr:path&gt;
+       &lt;/trgr:module&gt;
+       &lt;trgr:enabled&gt;true&lt;/trgr:enabled&gt;
+       &lt;trgr:recursive&gt;true&lt;/trgr:recursive&gt;
+       &lt;trgr:task-priority&gt;normal&lt;/trgr:task-priority&gt;
+     &lt;/trgr:trigger&gt;
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-module" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a trigger module which can be used
+  as the <em>module</em> parameter of 
+  <code><a href="#trgr:create-trigger">trgr:create-trigger</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="database-id" type="xs:unsignedLong">A database-id. </apidoc:param>
+    <apidoc:param name="root" type="xs:string">The root path within the database.</apidoc:param>
+    <apidoc:param name="path" type="xs:string">The path to the module relative to $root within the database
+    identified by $database-id.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:module)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers"
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-module(
+  xdmp:database("Documents"), 
+  "/modules/", 
+  "log-create.xqy")
+
+  =&gt; An internal XML representation of the trigger module,
+     usable as the module parameter of trgr:create-trigger().
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-data-event" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a triggering eventa, usable as the
+  <em>event</em> parameter of 
+  <code><a href="#trgr:create-trigger">trgr:create-trigger</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="scope" type="element()"> An event scope, such as
+       is created by
+       <code><a href="#trgr:directory-scope">trgr:directory-scope</a></code>,
+       <code><a href="#trgr:collection-scope">trgr:collection-scope</a></code>,
+       or <code><a href="#trgr:document-scope">trgr:document-scope</a></code>.
+    </apidoc:param>
+    <apidoc:param name="content" type="element()">An event part, such as is
+       created by
+       <code><a href="#trgr:document-content">trgr:document-content</a></code>,
+       <code><a href="#trgr:property-content">trgr:property-content</a></code>,
+       or <code><a href="#trgr:any-property-content">trgr:any-property-content</a></code>.
+    </apidoc:param>
+    <apidoc:param name="when" type="element(trgr:when)">The timing of the 
+	   trigger execution (pre- or post-commit). Use 
+    <code><a href="#trgr:post-commit">trgr:post-commit</a></code> or
+    <code><a href="#trgr:pre-commit">trgr:pre-commit</a></code> 
+    to construct this element.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:data-event)</apidoc:return>
+  <apidoc:usage>
+    <p>The <em>scope</em> parameter describes the set of documents to which 
+       the trigger event applies. The <em>content</em> parameter describes
+       the interesting activity within <em>scope</em>, such as document
+       creation or document property modification. The <em>when</em>
+       parameter describes when the event should be acted on, relative to the
+       triggering transaction. </p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers"
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  trgr:directory-scope("/myDir/", "1"),
+  trgr:document-content("create"),
+  trgr:post-commit()
+)
+
+  =&gt; A trigger event suitable for use with trgr:create-trigger.
+     The triggering event occurs at post-commit whenever a document
+     is created in the database directory "/myDir/".
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-database-online-event" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a database coming online event, usable
+  as the <em>event</em> parameter of 
+  <code><a href="#trgr:create-trigger">trgr:create-trigger</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="user-name" type="xs:string">
+    The user used to execute the trigger module.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:database-online-event)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers"
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-database-online-event("database-admin")
+
+  =&gt; A trigger event suitable for use with trgr:create-trigger.
+     The triggering event occurs whenever a (unspecified) database
+     comes online. The trigger module associated with this event
+     executes as user "database-admin".
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="document-scope" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a document scope, usable as the
+  scope parameter of a trigger event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string"> The document uri. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:document-scope)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  <strong>trgr:document-scope("/myDir/interesting.xml")</strong>,
+  trgr:document-content("modify"),
+  trgr:post-commit())
+
+  =&gt; A collection modification trigger event that may
+     be used to create a trigger which fires whenever the
+     document with URI /myDir/interesting.xml is modified.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="collection-scope" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a collection scope, usable as the
+  scope parameter of a trigger event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string"> The collection uri. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:collection-scope)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  <strong>trgr:collection-scope("/myCollection/")</strong>,
+  trgr:document-content("modify"),
+  trgr:post-commit())
+
+  =&gt; A collection modification trigger event 
+     that can be used to create a trigger which fires
+     whenever the /myCollection/ collection is modified.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="directory-scope" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a directory scope, usable as the
+  scope parameter of a trigger event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+	  <apidoc:param name="uri" type="xs:string"> The directory uri. 
+	  </apidoc:param>
+    <apidoc:param name="depth" type="xs:string"> The depth of descendants 
+    included in the scope. ("1" or "infinity")
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:directory-scope)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  <strong>trgr:directory-scope("/myDir/", "1")</strong>,
+  trgr:document-content("modify"),
+  trgr:post-commit())
+
+  =&gt; A directory modification trigger event that may
+     be used to create a trigger which fires whenever
+     the /myDir/ directory in a database is modified.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="document-content" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a document part of a triggering event, 
+  usable as the content parameter of a trigger event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="update-kind" type="xs:string"> "create", "modify", or 
+	  "delete" </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:document-content)</apidoc:return>
+  <apidoc:usage>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  trgr:directory-scope("/myDir/", "1"),
+  <strong>trgr:document-content("modify")</strong>,
+  trgr:post-commit())
+
+  =&gt; A directory modification trigger event that can
+     be used to create a trigger which fires whenever the
+     /myDir/ directory in the database is modified.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="any-property-content" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of an all-properties part to a triggering 
+  event, usable as the content parameter of a trigger event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+  </apidoc:params>
+  <apidoc:return>element(trgr:any-property-content)</apidoc:return>
+  <apidoc:usage>
+    <p>Adding, changing or removing any document property matches this
+       event part.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  trgr:directory-scope("/myDir/", "1"),
+  <strong>trgr:any-property-content()</strong>,
+  trgr:post-commit())
+
+  =&gt; A property modification trigger event that can
+     be used to create a trigger which fires whenever any
+     property is added, changed or removed on a document 
+     in the /myDir/ directory.
+  </pre></apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="property-content" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a property part to a triggering event,
+  usable as the <em>content</em> parameter of a trigger 
+  event constructor such as 
+  <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="property-name" type="xs:QName"> The QName of the property. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(trgr:property-content)</apidoc:return>
+  <apidoc:usage>
+    <p>Adding, changing or removing the $property-name document property matches
+       this event part.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-data-event(
+  trgr:directory-scope("/myDir/", "1"),
+  <strong>trgr:property-content(
+    fn:qname("", "myInterestingProperty"))</strong>,
+  trgr:post-commit())
+
+  =&gt; A property modification trigger event that can
+     be used to create a trigger which fires whenever 
+     the property myInterestingProperty is added, modified
+     or removed from a document in /myDir/.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="pre-commit" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a pre-commit trigger timing.
+  </apidoc:summary>
+
+  <apidoc:return>element(trgr:when)</apidoc:return>
+  <apidoc:usage>
+	  <p>Use this function with 
+      <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>
+	  to create a pre-commit trigger event. To learn more about pre-commit
+      triggers, see "Using Triggers to Spawn Actions" in the
+      <em>Application Developer's Guide</em>.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:post-commit())
+  trgr:trigger-data-event(
+    trgr:directory-scope("/myDir/", "1"),
+    trgr:document-content("create"),
+    <strong>trgr:pre-commit()</strong>)
+
+  =&gt; A document modification trigger event that can
+     be used to create a trigger which fires whenever 
+     a document is created in /myDir/. The associated
+     trigger module executes before committing the 
+     firing document creation transaction.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="post-commit" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the XML representation of a post-commit trigger timing.
+  </apidoc:summary>
+
+  <apidoc:return>element(trgr:when)</apidoc:return>
+  <apidoc:usage>
+	  <p>Use this function with 
+      <code><a href="#trgr:trigger-data-event">trgr:trigger-data-event</a></code>
+	  to create a post-commit trigger event. To learn more about post-commit
+      triggers, see "Using Triggers to Spawn Actions" in the
+      <em>Application Developer's Guide</em>.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:post-commit())
+  trgr:trigger-data-event(
+    trgr:directory-scope("/myDir/", "1"),
+    trgr:document-content("create"),
+    <strong>trgr:post-commit()</strong>)
+
+  =&gt; A document modification trigger event that can
+     be used to create a trigger which fires whenever 
+     a document is created in /myDir/. The associated
+     trigger module executes after committing the 
+     firing document creation transaction.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-trigger" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Removes the named trigger.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> The trigger name. </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:usage>
+	  <p>This function deletes the specified trigger. You must run this
+		  function to remove a trigger before recreating it.
+		  If the named trigger does not exist, the exception
+		  <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:remove-trigger("myTrigger")
+
+  =&gt; Empty sequence. Removes the specified trigger from the database.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="trigger-set-recursive" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+	  Sets the recursive setting of the identified trigger.  When the
+	  recursive setting is true, the trigger will trigger itself
+	  for recursive changes to the same document.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> 
+    The current trigger name. </apidoc:param>
+    <apidoc:param name="recursive" type="xs:boolean">
+    The new recursive value for the specified trigger.</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-set-recursive("myTrigger", fn:true())
+
+  =&gt; Empty sequence. Sets the named trigger to be recursive.
+  </pre></apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="trigger-set-task-priority" type="triggers" lib="trgr" 
+                 category="Triggers" bucket="XQuery Library Modules">
+  <apidoc:summary>
+	  Sets the task priority setting of the identified trigger.  
+	  The task priority is only applicable to post-commit triggers.
+  </apidoc:summary>
+
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string"> 
+    The current trigger name. </apidoc:param>
+    <apidoc:param name="task-priority" type="xs:string">
+    The new task priority value for the specified trigger.
+    Either "normal" or "higher".
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:privilege>
+  </apidoc:privilege>
+  <apidoc:usage>
+  <p>If the named trigger does not exist, the exception 
+     <code>TRGR-TRIGGERDNE</code> is raised.</p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml";
+import module namespace trgr="http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+
+trgr:trigger-set-task-priority("myTrigger", "higher")
+
+  =&gt; Empty sequence. Sets the named trigger to have higher task priority.
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="triggers-change-modules-database" lib="trgr" 
+	category="Triggers" bucket="XQuery Library Modules">
+	<apidoc:summary>
+		This function changes the trigger definitions of each 
+		trigger definition in the database that has the 
+		database ID $old-db and replaces each database ID
+		with $new-db.  This is useful after restoring a triggers 
+		database to a different cluster that has different 
+		database IDs than the one from which it was backed up.
+	</apidoc:summary>
+    <apidoc:params>
+	    <apidoc:param name="old-db" type="xs:unsignedLong"> 
+		    The old database ID. 
+	     </apidoc:param>
+	     <apidoc:param name="new-db" type="xs:unsignedLong">
+		    The new database ID. 
+	     </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml"; 
+
+(: run this against you triggers database :) 
+import module namespace trgr = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+trgr:triggers-change-modules-database(5184170867299910410, 
+      xdmp:database("Documents") )
+      
+=&gt; Empty sequence. Sets all triggers that reference 5184170867299910410
+    as their modules database to reference the ID of the Documents database.
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="any-custom-property-content" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>element(trgr:any-custom-property-content)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="validate-trigger-name" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="trigger-name" type="xs:string">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+xquery version "1.0-ml"; 
+
+import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+   at "/MarkLogic/triggers.xqy";
+  </pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="validate-data-event" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="event" type="element(trgr:data-event)">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="validate-scope" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>element())</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="validate-content" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>element())</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="validate-when" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>element())</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="validate-database-online-event" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-online-event" type="element(trgr:database-online-event)">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="validate-module" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="module" type="element(trgr:module)">Parameter description...</apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="triggers-uri" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="get-unique-trigger-id" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>xs:unsignedLong</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="triggers-collection" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="triggers-namespace" lib="trgr" category="Triggers" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc" hidden="true">
+  <apidoc:summary>This function....</apidoc:summary>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve">
+  xquery version "1.0-ml"; 
+
+  import module namespace triggers = "http://marklogic.com/xdmp/triggers" 
+      at "/MarkLogic/triggers.xqy";
+
+    </pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

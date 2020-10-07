@@ -1,0 +1,511 @@
+<apidoc:module name="Zip" category="ZipBuiltins" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+  Zip function allow the server to handle .zip files.
+</apidoc:summary><apidoc:function name="zip-manifest" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Return a manifest for this zip file.  The manifest contains information
+  about what is in the zip file.  The form of the manifest is:
+  <pre xml:space="preserve" class="xquery" xmlns="http://www.w3.org/1999/xhtml">
+  &lt;parts xmlns="xdmp:zip"&gt;
+    &lt;part uncompressed-size="[size]" compressed-size="[size]"
+          encrypted="[true/false]"&gt;path1&lt;/part&gt;
+    &lt;part uncompressed-size="[size]" compressed-size="[size]"
+          encrypted="[true/false]"&gt;path2&lt;/part&gt;
+    ...more parts
+  &lt;/parts&gt;   </pre>
+  Each <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">&lt;part&gt;</span> <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">part</span>
+  is a file within the zip.  The attributes specify the
+  uncompressed size for the file, the compressed size for that file, whether
+  or not the file is encrypted, and the last-modified timestamp.  Note that
+  MarkLogic cannot extract encrypted files, attempting to do so will cause an
+  error. Also note that due to a limitation in the zip file format, the
+  last-modified time has a granularity of two seconds (e.g. 10:22:33 becomes
+  10:22:32).
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="zipfile" type="binary()" optional="false">
+    The zip document binary node.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element()</apidoc:return>
+    <apidoc:return class="javascript">Array</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:zip-manifest($myzip)
+=&gt;
+&lt;parts&gt;
+  &lt;part uncompressed-size="89246" compressed-size="4538"
+        encrypted="no" last-modified="2009-03-20T03:30:32"&gt;
+    docProps/app.xml
+  &lt;/part&gt;
+  &lt;part uncompressed-size="2896" compressed-size="634"
+        encrypted="no" last-modified="2009-03-23T19:30:32"&gt;
+    word/fontTable.xml
+  &lt;/part&gt;
+  &lt;part uncompressed-size="139914" compressed-size="12418"
+        encrypted="yes" last-modified="2009-03-23T15:30:32"&gt;
+    word/styles.xml
+  &lt;/part&gt;
+&lt;/parts&gt;
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.zipManifest(xdmp.documentGet("/Documents/corpus.zip"));
+===&gt;
+[
+    {
+      "uncompressedSize":0,
+      "compressedSize":0,
+      "encrypted":false,
+      "lastModified":"2014-10-02T09:50:38",
+      "path":"corpus/"
+    },
+    {
+      "uncompressedSize":7,
+      "compressedSize":7,
+      "encrypted":false,
+      "lastModified":"2014-10-02T09:50:00",
+      "path":"corpus/banana"
+    },
+    {
+      "uncompressedSize":6,
+      "compressedSize":6,
+      "encrypted":false,
+      "lastModified":"2014-10-02T09:50:14",
+      "path":"corpus/apple"
+    },
+...
+]
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="zip-get" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Get a named file from a zip document. Unzips and returns the file in
+  memory as a document node (for XML and JSON formats), a text node (for text formats),
+  or a binary node (for binary).
+  The format is determined either
+  by the mimetype from the file name or by the <code xmlns="http://www.w3.org/1999/xhtml">format</code> option.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="zipfile" type="binary()" optional="false">
+    The zip file.
+  </apidoc:param>
+      <apidoc:param name="name" type="xs:string" optional="false">
+    The path to the zip file as shown in the zip manifest.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+    The options <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">node</span>
+                <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">object</span>
+    for getting this zip file.
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">The default value is (). The node for the xdmp:zip-get
+    options must be in the <code>xdmp:zip-get</code> namespace.</span>
+    <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">The default value is null. </span>
+    <p xmlns="http://www.w3.org/1999/xhtml">The <code class="xquery">xdmp:zip-get</code>
+           <code class="javascript">xdmp.zipGet</code> options include:</p>
+    <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+    <dt><p class="xquery">&lt;default-namespace&gt;</p>
+      <p class="javascript">defaultNamespace</p>
+    </dt>
+    <dd>(XML only) The namespace to use if there is no namespace at the root node of
+    the document. The default value is "".</dd>
+
+    <dt class="xquery"><p>&lt;repair&gt;</p></dt>
+    <dt class="javascript"><p>repair</p></dt>
+    <dd>A value of <code>full</code> specifies that malformed XML
+        content be repaired.  A value of <code>none</code> specifies that
+        malformed XML content is rejected. If no repair option is explicitly specified, 
+        the default is implicitly specified by the 
+        <p class="xquery">version of XQuery of the caller.
+        In XQuery <code>1.0</code> and <code>1.0-ml</code> the default
+        is <code>none</code>.  In XQuery <code>0.9-ml</code> the
+        default is <code>full</code>.</p>
+        <p class="javascript">language of the caller. From JavaScript, 
+        if no repair option is explicitly specified, the default is <code>none</code>.</p>
+        This option has no effect on binary, text or JSON documents.</dd>
+    <dt><p><span class="xquery">&lt;format&gt;</span>
+           <span class="javascript">format</span></p></dt>
+    <dd>A value of <code>text</code> specifies to get the document as a
+        text document, regardless of the URI specified. A value of
+              <code>binary</code> specifies to get the document as a binary
+              document, regardless of the URI specified. A value of <code>xml</code>
+        specifies to get the document as an XML document, regardless of the
+              URI specified. A value of <code>json</code> specifies to get the document
+              as a JSON document, regardless of the URI specified.</dd>
+    <dt><p><span class="xquery">&lt;default-language&gt;</span>
+           <span class="javascript">defaultLanguage</span></p></dt>
+    <dd>(XML only) The language to specify in an <code>xml:lang</code> attribute on the
+    root element node if the root element node does not already have an
+    <code>xml:lang</code> attribute. If 
+    <span class="xquery"><code>default-language</code></span>
+    <span class="javascript"><code>defaultLanguage</code></span> is
+    not specified, then nothing is added to the root element node.</dd>
+    <dt><p><span class="xquery">&lt;encoding&gt;</span>
+           <span class="javascript">encoding</span></p>
+    </dt>
+    <dd>Specifies the encoding to use when reading the document into MarkLogic
+    Server. The value must either be "auto" or match an encoding name 
+    according to the Unicode Charset Alias Matching rules
+    (<a href="http://www.unicode.org/reports/tr22/#Charset_Alias_Matching">http://www.unicode.org/reports/tr22/#Charset_Alias_Matching</a>).
+    When the value is "auto", MarkLogic guesses the encoding from
+    the document content. For a list of character set encodings by language, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/encodings_collations.xml%2340354'>Collations and Character Sets By Language</a> in the <em>Search Developer's Guide</em>. 
+    If you do not set this option, MarkLogic uses the encoding
+    specified in the HTTP headers, if present. If you do not set this option
+    and no encoding is available from HTTP headers, the encoding
+    defaults to UTF-8. For more details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/encodings_collations.xml%2387576'>Character Encoding</a> in the <em>Search Developer's Guide</em>.</dd>
+    </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()+</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">The name of the document you are extracting will determine the default
+  format in which the document is extracted, based on the mimetype settings.
+  For example, if you are extracting a document with the name
+  <code>myDocument.xmlfile</code>, it will by default extract that document
+  as a text document (because it is an unknown mimetype, and unknown
+  mimetypes default to text format).  If you know this is an XML document,
+  then specify a <code>format</code> of <code>xml</code> in the
+  <code>options</code> <span class="xquery">node</span>
+                       <span class="javascript">object</span>
+  (see the <a href="#zipget2">second example</a> below).</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:zip-get(doc("/zip/tmp.zip"), "files/myxmlfile.xml")
+
+=&gt; the "files/myxmlfile.xml" node from the "/zip/tmp.zip" zip file
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.zipGet(doc("/zip/tmp.zip"), "files/myxmlfile.xml")
+
+=&gt; the "files/myxmlfile.xml" node from the "/zip/tmp.zip" zip file
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery">
+<pre xml:space="preserve" id="zipget2" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:zip-get(doc("/zip/tmp.zip"), "myDocument.xmlfile",
+        &lt;options xmlns="xdmp:zip-get"&gt;
+          &lt;format&gt;xml&lt;/format&gt;
+        &lt;/options&gt;)
+
+=&gt; the "myDocument.xmlfile" node from the "/zip/tmp.zip"
+   zip file, as an XML document
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript">
+<pre xml:space="preserve" id="zipget2" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.zipGet(fn.doc("/zip/tmp.zip"), "myDocument.jsonfile",
+    {
+      "format" : "json"
+    })
+=&gt; the "myDocument.jsonfile" node from the "/zip/tmp.zip"
+   zip file, as a JSON document
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: unzip all of the files in the zip archive :)
+xquery version "1.0-ml";
+declare namespace zip="xdmp:zip";
+
+for $x in xdmp:zip-manifest(doc("/zip/tmp.zip"))//zip:part/text()
+return
+xdmp:zip-get(doc("/zip/tmp.zip"), $x)
+
+=&gt; a sequence of all of the unzipped nodes in the "/zip/tmp.zip" zip file
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="zip-create" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Create a zip file from a list of nodes.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="manifest" type="node()" optional="false">
+    The zip manifest, which must be in the <code xmlns="http://www.w3.org/1999/xhtml">xdmp:zip</code> namespace
+    and conform to the <code xmlns="http://www.w3.org/1999/xhtml">zip.xsd</code> schema, located in the
+    <code xmlns="http://www.w3.org/1999/xhtml"><em>marklogic-dir</em>/Schemas</code> directory.
+    The manifest has the following basic form:
+    <blockquote xmlns="http://www.w3.org/1999/xhtml"><pre xml:space="preserve">
+    &lt;parts xmlns="xdmp:zip"&gt;
+      &lt;part last-modified="2009-03-23T19:30:32"&gt;path1&lt;/part&gt;
+      &lt;part&gt;path2&lt;/part&gt;
+      ...more parts
+    &lt;/parts&gt;   </pre></blockquote>
+    Any of the size or encrypted attributes in the manifest are ignored for
+    <code xmlns="http://www.w3.org/1999/xhtml">xdmp:zip-create</code>.  Attributes other than uncompressed-size,
+    compressed-size, encrypted, and last-modified will throw an error. If the
+    last-modified attribute is specified, that date and time will be set for the
+    part. Otherwise, if the node for the part comes from a database that tracks
+    the last modified time of a document, that date and time will be used. The
+    current date and time will be used if no other value is available. Due to
+    a limitation in the zip file format, the time has a granularity of two
+    seconds (e.g. 10:22:33 becomes 10:22:32).
+  </apidoc:param>
+      <apidoc:param class="javascript" name="manifest" type="Array|Node" optional="false">
+  The zip manifest should have the native JavaScript form:
+
+  <blockquote xmlns="http://www.w3.org/1999/xhtml"><pre xml:space="preserve">
+  [
+    {
+      "lastModified": "2015-04-02T09:50:38",
+      "path": "archive/friends.jpg"
+    },
+    {
+      "path": "archive/notes.txt"
+    }
+  ]    </pre></blockquote>
+
+    Any property other than <code xmlns="http://www.w3.org/1999/xhtml">path</code> and <code xmlns="http://www.w3.org/1999/xhtml">lastModified</code>
+    are ignored. If the <code xmlns="http://www.w3.org/1999/xhtml">lastModified</code> property is specified,
+    that date and time will be set for the part. Otherwise, if the
+    node for the part comes from a database that tracks the last
+    modified time of a document, that date and time will be used. The
+    current date and time will be used if no other value is
+    available. Due to a limitation in the zip file format, the time
+    has a granularity of two seconds (e.g. 10:22:33 becomes 10:22:32).
+
+    The element form is accepted but deprecated.
+  </apidoc:param>
+      <apidoc:param class="xquery" name="nodes" type="node()+" optional="false">
+    The nodes that you want to zip up.  The nodes correspond to
+    <code xmlns="http://www.w3.org/1999/xhtml">part</code> elements in the manifest, where the first node
+    corresponds to the first <code xmlns="http://www.w3.org/1999/xhtml">part</code> element specified, the
+    second node to the second <code xmlns="http://www.w3.org/1999/xhtml">part</code> element, and so on.
+    Specifying a different number of &lt;part&gt; elements than nodes
+    will result in an error.
+  </apidoc:param>
+      <apidoc:param class="javascript" name="nodes" type="Array|Sequence" optional="false">
+    The nodes that you want to zip up.  The nodes correspond to the
+    objects in the manifest (named 'part' in the XQuery version),
+    where the first node corresponds to the first part object
+    specified, the second node to the second part object, and so on.
+    Specifying a different number of part objects than nodes will
+    result in an error.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>binary()</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">While you can create a zip file of encrypted content,
+  <code><span class="xquery">xdmp:zip-create</span> <span class="javascript">xdmp.zipCreate</span></code> does not have the
+  capability to encrypt the content to be zipped.</p> <p xmlns="http://www.w3.org/1999/xhtml">The 
+  <span class="xquery"><code>&lt;part&gt;</code> elements</span>
+  <span class="javascript"><code>'part'</code> objects</span> in the
+  manifest should contain relative paths so the zip file can be
+  unpacked into its own directory; do not start the path with a
+  forward slash or a backslash.</p> <p xmlns="http://www.w3.org/1999/xhtml">To support creating Open
+  Container Format archives for the EPUB format, 
+  <span class="xquery"><code>xdmp:zip-create</code></span> 
+  <span class="javascript"><code>xdmp.zipCreate</code></span> will not
+  compress the first part if it is named "mimetype".</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $zip := xdmp:zip-create(
+               &lt;parts xmlns="xdmp:zip"&gt;
+                 &lt;part&gt;mydoc.xml&lt;/part&gt;
+                 &lt;part&gt;mypicture.jpg&lt;/part&gt;
+                &lt;/parts&gt;,
+                (doc("/mydoc.xml"), doc("/mypicture.jpg")))
+return
+xdmp:save("c:/tmp/myzip.zip", $zip,
+     &lt;options xmlns="xdmp:save"&gt;
+        &lt;encoding&gt;utf8&lt;/encoding&gt;
+     &lt;/options&gt;)
+
+=&gt; Creates a zip archive that includes the documents "/mydoc.xml"
+   and "/mypicture.jpg", then saves that to the filesystem.
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var zip = xdmp.zipCreate(
+                [{
+                   "path": "/mydoc.xml"
+                 },
+                 {
+                   "lastModified": "2014-10-02T09:50:00",
+                   "path": "/mypicture.jpg"
+                 }
+                 ],
+                [cts.doc("/mydoc.xml"), cts.doc("/mypicture.jpg")]);
+xdmp.save("/tmp/myzip.zip", zip,
+		{outputEncoding:"utf8"});
+
+=&gt; Creates a zip archive that includes the documents "/mydoc.xml"
+   and "/mypicture.jpg", then saves that to the filesystem.
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: the "mimetype" file will not be compressed, so as to support
+   the EPUB format :)
+let $zip := xdmp:zip-create(
+               &lt;parts xmlns="xdmp:zip"&gt;
+                 &lt;part&gt;mimetype&lt;/part&gt;
+                 &lt;part&gt;META-INF/container.xml&lt;/part&gt;
+                 &lt;part&gt;OEBPS/content.opf&lt;/part&gt;
+                 &lt;part&gt;OEBPS/content.pdf&lt;/part&gt;
+                &lt;/parts&gt;,
+                (document { "application/epub+zip" },
+                 doc("/my-doc/container.xml"),
+                 doc("/my-doc/content.opf"),
+                 doc("/my-doc/content.pdf")
+                 ))
+return
+xdmp:save("c:/tmp/mydoc.epub", $zip,
+     &lt;options xmlns="xdmp:save"&gt;
+        &lt;encoding&gt;utf8&lt;/encoding&gt;
+     &lt;/options&gt;)
+
+=&gt; Creates a zip archive that meets the OCF specification,
+   then saves that to the filesystem.
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+//  the "mimetype" file will not be compressed, so as to support
+//  the EPUB format 
+
+var x = new NodeBuilder();
+var mimedoc = x.startDocument().addText("application/epub+zip").endDocument().toNode();
+
+var zip = xdmp.zipCreate(
+            [{path:"mimetype"},
+             {path:"META-INF/container.xml"},
+             {path:"OEBPS/content.opf"},
+             {path:"OEBPS/content.pdf"}
+            ],
+            [mimedoc,
+             cts.doc("/my-doc/container.xml"),
+             cts.doc("/my-doc/content.opf"),
+             cts.doc("/my-doc/content.pdf")
+             ]);
+xdmp.save("/tmp/mydoc.epub", zip, {outputEncoding:"utf8"});
+
+=&gt; Creates a zip archive that meets the OCF specification,
+   then saves that to the filesystem.
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="gzip" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Create a gzip node from a node.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="node" type="node()" optional="false">
+    The node that you want to gzip up.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>binary()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+let $gzip := xdmp:gzip(doc("/mydoc.xml"))
+return
+xdmp:save("c:/tmp/myzip.gz", $gzip)
+
+=&gt; Creates a gzip file from the document "/mydoc.xml", then
+   saves that to the filesystem.
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var gzip = xdmp.gzip(cts.doc("/mydoc.xml"));
+xdmp.save("/tmp/myzip.gz", gzip);
+
+=&gt; Creates a gzip file from the document "/mydoc.xml", then
+   saves that to the filesystem.
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="gunzip" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Get a node from a gzip node. Gunzips and returns the file in
+  memory as a document node (for XML and JSON formats), a text node (for text formats),
+  or a binary node (for binary formats).
+  The format is determined by the <code xmlns="http://www.w3.org/1999/xhtml">format</code> option.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="gzipnode" type="binary()" optional="false">
+    The gzip node.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="false">
+    The options <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">node</span>
+                <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">object</span>
+    for gunzipping this gzip document.
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">The node for the xdmp:gunzip options must be in the
+    <code>xdmp:zip-get</code> namespace.</span>
+
+    <p xmlns="http://www.w3.org/1999/xhtml">The <code class="xquery">xdmp:gunzip</code>
+           <code class="javascript">xdmp.gunzip</code>
+       options include:
+    </p>
+    <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+    <dt>
+    <p class="xquery">&lt;default-namespace&gt;</p>
+    <p class="javascript">defaultNamespace</p>
+    </dt>
+
+    <dd>(XML only) The namespace to use if there is no namespace at the root node of
+    the document. The default value is "".</dd>
+
+    <dt><p class="xquery">&lt;repair&gt;</p>
+    <p class="javascript">repair</p></dt>
+    <dd>A value of <code>full</code> specifies that malformed XML
+        content be repaired.  A value of <code>none</code> specifies that
+        malformed XML content is rejected. If no repair option is explicitly specified, 
+        the default is implicitly specified by the 
+        <p class="xquery">version of XQuery of the caller.
+        In XQuery <code>1.0</code> and <code>1.0-ml</code> the default
+        is <code>none</code>.  In XQuery <code>0.9-ml</code> the
+        default is <code>full</code>.</p>
+        <p class="javascript">language of the caller. From JavaScript, 
+        if no repair option is explicitly specified, the default is <code>none</code>.</p>
+        This option has no effect on binary, text or JSON documents.</dd>
+
+    <dt><p class="xquery">&lt;format&gt;</p><p class="javascript">format</p></dt>
+    <dd>A value of <code>text</code> specifies to get the document as a
+        text document, regardless of the URI specified. A value of
+        <code>binary</code> specifies to get the document as a binary
+        document, regardless of the URI specified. A value of <code>xml</code>
+        specifies to get the document as an XML document, regardless of the
+         URI specified. A value of <code>json</code> specifies to get the document as
+         a JSON document, regardless of the URI specified.
+    </dd>
+    <dt><p class="xquery">&lt;default-language&gt;</p>
+        <p class="javascript">defaultLanguage</p>
+    </dt>
+    <dd>(XML only) The language to specify in an <code>xml:lang</code> attribute
+    on the root element node if the root element node does not already have
+    an <code>xml:lang</code> attribute. If this option is not specified, then
+    nothing is added to the root element node.</dd>
+    <dt><p class="xquery">&lt;encoding&gt;</p>
+        <p class="javascript">encoding</p>
+    </dt>
+    <dd>Specifies the encoding to use when reading the document into MarkLogic
+    Server. The value must either be "auto" or match an encoding name 
+    according to the Unicode Charset Alias Matching rules
+    (<a href="http://www.unicode.org/reports/tr22/#Charset_Alias_Matching">http://www.unicode.org/reports/tr22/#Charset_Alias_Matching</a>).
+    When the value is "auto", MarkLogic guesses the encoding from
+    the document content. For a list of character set encodings by language, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/encodings_collations.xml%2340354'>Collations and Character Sets By Language</a> in the <em>Search Developer's Guide</em>. 
+    If you do not set this option, MarkLogic uses the encoding
+    specified in the HTTP headers, if present. If you do not set this option
+    and no encoding is available from HTTP headers, the encoding
+    defaults to UTF-8. For more details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/encodings_collations.xml%2387576'>Character Encoding</a> in the <em>Search Developer's Guide</em>.</dd>
+    </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()+</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml"> You must tell the format of the node after gunzipping.
+  You need to specify a <code>format</code> in the <code>options</code>
+  <span class="xquery">node</span><span class="javascript">object</span> </p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:gunzip(fn:doc("/gzip/tmp.gz"),
+  &lt;options xmlns="xdmp:zip-get"&gt;
+    &lt;format&gt;xml&lt;/format&gt;
+  &lt;/options&gt;)
+
+=&gt; the gunzip node from the "/gzip/tmp.gz" gzip node
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.gunzip(fn.doc("/gzip/tmp.gz"),
+  {
+    "format" : "binary"
+  })
+
+=&gt; the gunzip node from the "/gzip/tmp.gz" gzip node
+
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

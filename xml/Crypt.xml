@@ -1,0 +1,55 @@
+<apidoc:module name="Crypt" category="Crypt" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+Builtin functions relating to cryptography.
+</apidoc:summary><apidoc:function name="crypt" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the password hash for the given password and salt.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="password" type="xs:string">
+    String to be hashed.
+  </apidoc:param>
+      <apidoc:param name="salt" type="xs:string">
+    Salt to avoid 1:1 mapping from passwords to hashes. 
+    Only the first 8 characters of the salt are significant; any 
+    characters beyond the eighth are ignored.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">You typically use the username as the salt, which ensures that no two 
+hash values will be the same, even if different users have the same 
+password.</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:crypt("123abc","admin")
+  =&gt; "arQEnpM6JHR8vY4n3e5gr0"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.crypt("123abc","admin");
+  =&gt; "arQEnpM6JHR8vY4n3e5gr0"
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="crypt2" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the password hash for the given plain-text password.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="password" type="xs:string">
+    String to be hashed.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The password is encrypted using sha256 encoding and it is salted. A salt
+ is generated using base-64 representation of a random number. This
+ minimizes the probability of hash collisions even if different users have
+ the same password.</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:crypt2("123abc")
+  =&gt; "$2$aUI4j7YVqvecKkJ7QrK01.$2$ElWEwaxZ"
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.crypt2("123abc");
+  =&gt; "$2$aUI4j7YVqvecKkJ7QrK01.$2$ElWEwaxZ"
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

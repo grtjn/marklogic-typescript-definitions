@@ -1,0 +1,3070 @@
+<apidoc:module name="JavaScriptBuiltins" category="JavaScript Global Object" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" bucket="MarkLogic Built-In Functions" category="JavaScript Global Object">
+  The JavaScript Global Object functions are MarkLogic-specific JavaScript
+  functions that extend the Global Object.  These functions are available
+  in the Global space, without any prefixing.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="Error Object">
+ Methods and properties on the Error Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object">
+ Methods and properties on the xs.yearMonthDuration Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object">
+ Methods and properties on the xs.dayTimeDuration Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.dateTime Object">
+ Methods and properties on the xs.dateTime Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.date Object">
+ Methods and properties on the xs.date Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.time Object">
+ Methods and properties on the xs.time Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.gYearMonth Object">
+ Methods and properties on the xs.gYearMonth Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.gYear Object">
+ Methods and properties on the xs.gYear Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.gMonthDay Object">
+ Methods and properties on the xs.gMonthDay Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.gMonth Object">
+ Methods and properties on the xs.gMonth Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="xs.gDay Object">
+ Methods and properties on the TypeInfo Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="NodeBuilder Object">
+ Methods and properties on the NodeBuilder Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="Value Object">
+ Methods and properties on the Value Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="ValueIterator Object">
+ [DEPRECATED: Only available for type checking; use
+<a href="/js/Sequence" xmlns="http://www.w3.org/1999/xhtml">Sequence</a> instead. For more details,
+ on transitioning your code, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/jsref/api.xml%2390070'>ValueIterator</a> in the <em>JavaScript Reference Guide</em>. ]
+ Methods and properties on the ValueIterator Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="Node Object">
+ Methods and properties on the Node Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="NodeList Object">
+ Methods and properties on the NodeList Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="NamedNodeMap Object">
+ Methods and properties on the NamedNodeMap Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="XMLDocument Object">
+ Methods and properties on the XMLDocument Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="Element Object">
+ Methods and properties on the Element Object (for XML Elements).
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="Attr Object">
+ Methods and properties on the Attr Object (for XML attributes).
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="CharacterData Object">
+ Methods and properties on the CharacterData Object.
+</apidoc:summary><apidoc:summary bucket="MarkLogic Built-In Functions" category="TypeInfo Object">
+ Methods and properties on the TypeInfo Object.
+</apidoc:summary><apidoc:object name="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A representation of an exception.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A builder of node trees.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Value" bucket="MarkLogic Built-In Functions" category="Value Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A wrapped MarkLogic value.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="ValueIterator" subtype-of="Value" bucket="MarkLogic Built-In Functions" category="ValueIterator Object" class="javascript" type="jsobject">
+<apidoc:summary>
+<p xmlns="http://www.w3.org/1999/xhtml">[DEPRECATED: Use <a href="/js/Sequence">Sequence</a> instead.]</p>
+<p xmlns="http://www.w3.org/1999/xhtml">An iterator over MarkLogic values.</p>
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Sequence" subtype-of="Value" bucket="MarkLogic Built-In Functions" category="Sequence Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A JavaScript Iterable object for iterating over MarkLogic values.
+MarkLogic functions that can return multiple items return a Sequence.
+For more details, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/jsref/api.xml%2359096'>Sequence</a> in the <em>JavaScript Reference Guide</em>.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Node" subtype-of="Value" bucket="MarkLogic Built-In Functions" category="Node Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="BinaryNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="BinaryNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="BooleanNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="BooleanNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="NumberNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="NumberNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="NullNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="NullNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Document" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="Document Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A document node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="ObjectNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="ObjectNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node representing a JSON object.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="ArrayNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="ArrayNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A node representing a JSON array.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="NodeList" bucket="MarkLogic Built-In Functions" category="NodeList Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A DOM node list.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="NamedNodeMap" bucket="MarkLogic Built-In Functions" category="NamedNodeMap Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A DOM named node map.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="XMLNode" subtype-of="Node" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" type="jsobject">
+<apidoc:summary>
+Some kind of XML node, such as an element or attribute.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="XMLDocument" subtype-of="Document XMLNode" bucket="MarkLogic Built-In Functions" category="XMLDocument Object" class="javascript" type="jsobject">
+<apidoc:summary>
+A document node that is known to be in an XML document. This is used in the DOM
+API, which only works with XML nodes.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Element" subtype-of="XMLNode" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML element node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Attr" subtype-of="XMLNode" bucket="MarkLogic Built-In Functions" category="Attr Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML attribute node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="CharacterData" subtype-of="XMLNode" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML text or comment node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Text" subtype-of="CharacterData" bucket="MarkLogic Built-In Functions" category="Text Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML text node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="Comment" subtype-of="CharacterData" bucket="MarkLogic Built-In Functions" category="Comment Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML comment node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="ProcessingInstruction" subtype-of="XMLNode" bucket="MarkLogic Built-In Functions" category="ProcessingInstruction Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An XML processing instruction node.
+</apidoc:summary>
+</apidoc:object><apidoc:object name="TypeInfo" subtype-of="Value" bucket="MarkLogic Built-In Functions" category="TypeInfo Object" class="javascript" type="jsobject">
+<apidoc:summary>
+An object representing schema type information.
+</apidoc:summary>
+</apidoc:object><apidoc:method name="data" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+The data passed to the error.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="message" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+The formatted error message.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="name" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+The error name.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="retryable" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+Whether the error can be retried. A retryable exception would be one that may
+be due to some transient condition.
+</apidoc:summary>
+<apidoc:return>Boolean</apidoc:return>
+</apidoc:method><apidoc:method name="stack" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+A string representation of the call stack.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="stackFrames" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+An array of stack frames.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="toString" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="false">
+<apidoc:summary>
+A string representation of the error.
+</apidoc:summary>
+<apidoc:return>String</apidoc:return>
+</apidoc:method><apidoc:method name="code" type="builtin" object="Error" bucket="MarkLogic Built-In Functions" category="Error Object" class="javascript" is-property="true">
+<apidoc:summary>
+For DOM errors, this is the DOM error code.
+</apidoc:summary>
+<apidoc:return>Number</apidoc:return>
+</apidoc:method><apidoc:method name="add" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Adds two xs.yearMonthDuration. Returns an xs.yearMonthDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.yearMonthDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.add(v2)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="subtract" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Subtracts one xs.yearMonthDuration from another. Returns an xs.yearMonthDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.yearMonthDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.subtract(v2)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="multiply" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Multiplies an xs.yearMonthDuration by a number. Returns an xs.yearMonthDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="number">
+  A number.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.yearMonthDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+v1.multiply(2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="divide" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Divides an xs.yearMonthDuration by an number. Returns an xs.yearMonthDuration.
+Or divides an xs.yearMonthDuration by an xs.yearMonthDuration. Returns an number.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="number|xs.yearMonthDuration">
+  A number or year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.yearMonthDuration|number</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.divide(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lt" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Less-than comparison on xs.yearMonthDuration values.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.lt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="le" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Less-than or equal comparison on xs.yearMonthDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.le(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="gt" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Greater-than comparison on xs.yearMonthDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.gt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ge" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Greater-than or equal comparison on xs.yearMonthDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.ge(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.yearMonthDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.yearMonthDuration" bucket="MarkLogic Built-In Functions" category="xs.yearMonthDuration Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.yearMonthDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration">
+  A year month duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.yearMonthDuration("P3Y7M");
+const v2 = xs.yearMonthDuration("P1Y4M");
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="add" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Adds two xs.dayTimeDurations. Returns an xs.dayTimeDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.add(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="subtract" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Subtracts one xs.dayTimeDuration from another. Returns an xs.dayTimeDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.subtract(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="multiply" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Multiplies an xs.dayTimeDuration by a number. Returns an xs.dayTimeDuration.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="number">
+  A number.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+v1.multiply(2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="divide" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Divides an xs.dayTimeDuration by an number. Returns an xs.dayTimeDuration.
+Or divides an xs.dayTimeDuration by an xs.dayTimeDuration. Returns an number.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="number|xs.dayTimeDuration">
+  A number or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration|number</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.divide(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lt" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Less-than comparison on xs.dayTimeDuration values.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.lt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="le" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Less-than or equal comparison on xs.dayTimeDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.le(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="gt" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Greater-than comparison on xs.dayTimeDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.gt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ge" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Greater-than or equal comparison on xs.dayTimeDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.ge(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.dayTimeDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.dayTimeDuration" bucket="MarkLogic Built-In Functions" category="xs.dayTimeDuration Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.dayTimeDuration values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dayTimeDuration("P5DT4H");
+const v2 = xs.dayTimeDuration("P1DT1H");
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="add" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Returns the end of a time period by adding an xs.yearMonthDuration
+to the xs.dateTime that starts the period.
+Returns the end of a time period by adding an xs.dayTimeDuration
+to the xs.dateTime that starts the period.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration|xs.dayTimeDuration">
+  year month duration or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dateTime</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.yearMonthDuration("P3Y3M");
+v1.add(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="subtract" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Returns the difference between two xs.dateTimes as an xs.dayTimeDuration.
+Returns the beginning of a time period by subtracting an xs.yearMonthDuration
+from thexs.dateTime that ends the period.
+Returns the beginning of a time period by subtracting an xs.dayTimeDuration
+from the xs.dateTimethat ends the period.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime|xs.yearMonthDuration|xs.dayTimeDuration">
+  A date time or year month duration or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration|xs.dateTime</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.yearMonthDuration("P3Y3M");
+v1.subtract(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lt" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Less-than comparison on xs.dateTime values.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.lt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="le" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Less-than or equal comparison on xs.dateTime values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.le(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="gt" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Greater-than comparison on xs.dateTime values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.gt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ge" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Greater-than or equal comparison on xs.dateTime values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.ge(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.dateTime values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.dateTime" bucket="MarkLogic Built-In Functions" category="xs.dateTime Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.dateTime values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dateTime">
+  A date time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.dateTime(xs.date('2013-08-15'), xs.time('12:30:45-05:00'));
+const v2 = xs.dateTime(xs.date('2012-04-01'), xs.time('01:10:25-02:00'));
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="add" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Returns the end of a time period by adding an xs.yearMonthDuration
+to the xs.date that starts the period.
+Returns the end of a time period by adding an xs.dayTimeDuration
+to the xs.date that starts the period.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.yearMonthDuration|xs.dayTimeDuration">
+  A year month druation or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.date</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.yearMonthDuration("P3Y3M");
+v1.add(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="subtract" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Returns the difference between two xs.dates as an xs.dayTimeDuration.
+Returns the beginning of a time period by subtracting an xs.yearMonthDuration
+from the xs.datethat ends the period.
+Returns the beginning of a time period by subtracting an xs.dayTimeDuration
+from the xs.date that ends the period.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date|xs.yearMonthDuration|xs.dayTimeDuration">
+  A date or year month druation or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration|xs.date</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.yearMonthDuration("P3Y3M");
+v1.subtract(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lt" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Less-than comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.lt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="le" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Less-than or equal comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.le(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="gt" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Greater-than comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.gt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ge" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Greater-than or equal comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.ge(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.date" bucket="MarkLogic Built-In Functions" category="xs.date Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.date values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.date">
+  A date value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.date('2013-08-15');
+const v2 = xs.date('2012-04-01');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="add" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Adds the value of the hours, minutes and seconds components of
+an xs.dayTimeDuration to an xs.time value.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.dayTimeDuration">
+  A day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.time</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.dayTimeDuration("PT1H");
+v1.add(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="subtract" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Returns the difference between two xs.times as an xs.dayTimeDuration.
+Subtracts the value of the hours, minutes and seconds components of
+an xs.dayTimeDuration to an xs.time value.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time|xs.dayTimeDuration">
+  A time value or day time duration.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>xs.dayTimeDuration|xs.time</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.dayTimeDuration("PT1H");
+v1.subtract(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lt" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Less-than comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.lt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="le" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Less-than or equal comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.le(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="gt" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Greater-than comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.gt(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ge" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Greater-than or equal comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.ge(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.time" bucket="MarkLogic Built-In Functions" category="xs.time Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.time values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.time">
+  A time value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.time('12:30:45-05:00');
+const v2 = xs.time('01:10:25-02:00');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.gYearMonth" bucket="MarkLogic Built-In Functions" category="xs.gYearMonth Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.gYearMonth values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gYearMonth">
+  A year month value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gYearMonth('2013-08');
+const v2 = xs.gYearMonth('2012-04');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.gYearMonth" bucket="MarkLogic Built-In Functions" category="xs.gYearMonth Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.gYearMonth values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gYearMonth">
+  A year month value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gYearMonth('2013-08');
+const v2 = xs.gYearMonth('2012-04');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.gYear" bucket="MarkLogic Built-In Functions" category="xs.gYear Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.gYear values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gYear">
+  A year value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gYear('2013');
+const v2 = xs.gYear('2012');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.gYear" bucket="MarkLogic Built-In Functions" category="xs.gYear Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.gYear values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gYear">
+  A year value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gYear('2013');
+const v2 = xs.gYear('2012');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.gMonthDay" bucket="MarkLogic Built-In Functions" category="xs.gMonthDay Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.gMonthDay values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gMonthDay">
+  A month day value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gMonthDay('--08-20');
+const v2 = xs.gMonthDay('--04-14');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.gMonthDay" bucket="MarkLogic Built-In Functions" category="xs.gMonthDay Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.gMonthDay values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gMonthDay">
+  A month day value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gMonthDay('--08-20');
+const v2 = xs.gMonthDay('--04-14');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.gMonth" bucket="MarkLogic Built-In Functions" category="xs.gMonth Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.gMonth values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gMonth">
+  A month value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gMonth('--08');
+const v2 = xs.gMonth('--04');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.gMonth" bucket="MarkLogic Built-In Functions" category="xs.gMonth Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.gMonth values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gMonth">
+  A month value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gMonth('--08');
+const v2 = xs.gMonth('--04');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="eq" type="builtin" object="xs.gDay" bucket="MarkLogic Built-In Functions" category="xs.gDay Object" class="javascript">
+<apidoc:summary>
+Equality comparison on xs.gDay values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gDay">
+  A day value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gDay('---08');
+const v2 = xs.gDay('---04');
+v1.eq(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ne" type="builtin" object="xs.gDay" bucket="MarkLogic Built-In Functions" category="xs.gDay Object" class="javascript">
+<apidoc:summary>
+Not equal comparison on xs.gDay values
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="xs.gDay">
+  A day value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const v1 = xs.gDay('---08');
+const v2 = xs.gDay('---04');
+v1.ne(v2);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addAttribute" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add an attribute node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The attribute name. This can be either a simple name, if the attribute is in
+  no namespace, or a QName.
+  </apidoc:param>
+      <apidoc:param name="text" type="String">
+  The value of the attribute.
+  </apidoc:param>
+      <apidoc:param name="namespace" type="String?" optional="true">
+  The namespace URI associated with the prefix in the name.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Attribute nodes may only be added to element nodes that have had nothing
+but other attribute nodes added to them.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">To add a namespaced attribute, give a prefixed name as the first argument and
+a namespace URI as the final argument.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('example');
+  builder.addAttribute('xml:lang','en','http://www.w3.org/XML/1998/namespace');
+  builder.addText('English content');
+builder.endElement();
+builder.toNode();
+
+// Returns an XML element node equivalent to the following:
+// &lt;example xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace"&gt;
+//   English content
+// &lt;/example&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addComment" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add an XML comment node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="comment" type="String">
+  The text of the comment.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+Comment nodes may only be added to XML nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('example');
+  builder.addComment('There is no content in this element, just a comment');
+builder.endElement();
+builder.toNode();
+
+// Returns an XML element node equivalent to the following:
+// &lt;example&gt;&lt;!--There is no content in this element, just a comment--&gt;&lt;/example&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addElement" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add an XML element node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The name of the element. This can be either a simple name, if the element
+  has no namespace, or a QName.
+  </apidoc:param>
+      <apidoc:param name="content" type="String|Function" optional="true">
+  The contents of the element. If the argument is a string, the element will
+  content that string as a text node. If the argument is a function, the
+  function will be evaluated with the builder as its argument.
+  </apidoc:param>
+      <apidoc:param name="namespace" type="String?" optional="true">
+  The namespace URI associated with the prefix in the name.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Element nodes may only be added to element nodes or document nodes.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">To add a namespaced element, give a prefixed name as the first argument and
+a namespace URI as the final argument.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addElement('ex:example', 'element content here',
+       'http://example.com/ns1');
+builder.toNode();
+
+// Returns an XML element node equivalent to the following:
+// &lt;ex:example xmlns:ex="http://example.com/ns1"&gt;element content here&lt;/ex:example&gt;
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+function addCommonAttrs(b) {
+  b.addAttribute('class','body');
+  b.addAttribute('xml:lang','en','http://www.w3.org/XML/1998/namespace');
+  b.addAttribute('id', 'id_' + xdmp.random() );
+};
+
+const builder = new NodeBuilder();
+builder.startElement('root');
+  builder.addElement('child', addCommonAttrs);
+  builder.addElement('child', addCommonAttrs);
+builder.endElement();
+builder.toNode();
+
+// Returns the following XML (whitespace added for readability):
+// &lt;root&gt;
+//   &lt;child class="body" xml:lang="en" id="id_14938401739084225878" 
+//       xmlns:xml="http://www.w3.org/XML/1998/namespace"/&gt;
+//   &lt;child class="body" xml:lang="en" id="id_602182576263533813" 
+//       xmlns:xml="http://www.w3.org/XML/1998/namespace"/&gt;
+// &lt;/root&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addDocument" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a document node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="content" type="String|Function">
+  The contents of the document. If the argument is a string, the builder will
+  add a document node containing that string as a text node. If the argument
+  is a function, that function will be executed with the builder as its
+  argument.
+  </apidoc:param>
+      <apidoc:param name="uri" type="String" optional="true">
+  The document URI.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Document nodes may only be added to an empty node tree.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">There is no relationship between the URI of the document and the nodes that
+may be added to that document. In particular, "example.xml" could contain JSON
+nodes, and "example.json" could contain XML nodes.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addDocument('simple text document', 'simple.txt');
+builder.toNode();
+
+// Returns a text document node containing "simple text document".
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+function makeDocument(b) {
+  b.addElement('p','Copyright 2014 Joe\'s House of Tech. All Rights Reserved.');
+};
+
+const builder = new NodeBuilder();
+builder.addDocument(makeDocument);
+builder.toNode();
+
+// Returns a document node with the following contents:
+// &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+// &lt;p&gt;Copyright 2014 Joe's House of Tech. All Rights Reserved.&lt;/p&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addNode" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="node" type="Node">
+  The node to add.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addNode(
+  { lat: 12.2,
+    long: -122.45,
+    handle: '@johnqpublic',
+    text: 'Here is my first tweet!'
+  }
+);
+builder.toNode();
+
+// Returns a JSON object node equivalent to the following:
+//
+// { "lat":12.2, 
+//   "long":-122.45, 
+//   "handle":"@johnqpublic", 
+//   "text":"Here is my first tweet!"
+// }
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addProcessingInstruction" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add an XML processing instruction node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="target" type="String">
+  The processing instruction target.
+  </apidoc:param>
+      <apidoc:param name="text" type="String">
+  The contents of the processing instruction.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Processing instruction nodes may only be added to XML documents.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startDocument();
+  builder.addProcessingInstruction(
+    'xml-stylesheet','href="mystyles.css" type="text/css"');
+  builder.addElement('doc','My simple document with a stylesheet');
+builder.endDocument();
+builder.toNode();
+
+// Returns an XML document node equivalent to the following:
+//
+// ?xml version="1.0" encoding="UTF-8"?&gt;
+// &lt;?xml-stylesheet href="mystyles.css" type="text/css"?&gt;
+// &lt;doc&gt;My simple document with a stylesheet&lt;/doc&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addText" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a text node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="text" type="String">
+  The contents of the text node.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Adjacent text nodes will be merged in the tree produced by the builder</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('para');
+  builder.addText('This is part of my paragraph. ');
+  builder.addText('And this is more of it. ');
+  builder.addText('In the end, there will only be one text node. ');
+builder.endElement();
+builder.toNode();
+
+// Returns an XML element node equivalent to the following:
+// &lt;para&gt;This is part of my paragraph. And this is more of it. In the end, there will only be one text node. &lt;/para&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addBinary" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a binary node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="hex" type="String|xs:hexBinary">
+  The contents of the binary node as a hex-encoded string or
+  xs:hexBinary object.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Binary nodes may only be added to the root of the tree.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addBinary('616263');    // 'abc' as hex
+builder.toNode();
+
+// Returns a binary node containing 3 bytes (0x616263)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addNumber" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a number node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="val" type="Number">
+  The value of the number node.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addNumber(47);
+builder.toNode();
+
+// Returns a JSON number node containing the value 47
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addBoolean" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a boolean node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="val" type="Boolean">
+  The value of the boolean node.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addBoolean(true);
+builder.toNode();
+
+// Returns a JSON boolean node containing the value true
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="addNull" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Add a null node to the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.addNull();
+builder.toNode();
+
+// Returns a JSON null node
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="endDocument" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Close out the current document node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Document nodes must be completed before calling toNode() on the builder; an
+error will be raised if they are not. An error will also be raised if
+endDocument is called when there is an open element node.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startDocument();
+  builder.addNode( ['array','of','strings'] );
+builder.endDocument();
+builder.toNode();
+
+// Returns a JSON array node equivalent to the following:
+//
+// ["array", "of", "strings"]
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startDocument();
+  builder.startElement("dangling")
+  builder.addText("Some content");
+builder.endDocument();
+builder.toNode();
+
+// Throws an exception because the element "dangling" is not terminated.
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="endElement" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Close out the current XML element node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Element nodes must be completed before calling toNode() on the builder; an
+error will be raised if they are not. An error will also be raised if
+endElement is called when there is no open element node.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('p');
+  builder.addText('Some content');
+builder.endElement();
+builder.toNode();
+
+// Returns the following XML element node:
+//
+// &lt;p&gt;Some content&lt;/p&gt;
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('root')
+  builder.addText('Some content');
+builder.endElement();
+builder.endElement();
+builder.toNode();
+
+// throws an XDMP-ENDELEMENT exception
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="startDocument" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Start a new document node in the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String" optional="true">
+  The document URI.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Document nodes may only be added to an empty node tree.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">There is no relationship between the URI of the document and the nodes that
+may be added to that document. In particular, "example.xml" could contain JSON
+nodes, and "example.json" could contain XML nodes.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startDocument('meta.json');
+  builder.addNode(
+    {author: 'Mary', date: '2014-10-06', keywords: ['example','JSON']} )
+builder.endDocument();
+builder.toNode();
+
+// Returns a JSON document node equivalent to the following:
+//
+// {"author":"Mary", "date":"2014-10-06", "keywords":["example", "JSON"]}
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="startElement" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Start a new XML element node in the node tree the builder is building.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The name of the element. This can be either a simple name, if the element
+  has no namespace, or a QName.
+  </apidoc:param>
+      <apidoc:param name="namespace" type="String?" optional="true">
+  The namespace URI associated with the prefix in the name.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>This NodeBuilder object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Element nodes may only be added to element nodes or document nodes.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">To add a namespaced element, give a prefixed name as the first argument and
+a namespace URI as the final argument.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('ex:example','http://example.com/ns1');
+  builder.addText('Some element content here');
+builder.endElement();
+builder.toNode();
+
+// Returns the following XML element node:
+//
+//  &lt;ex:example xmlns:ex="http://example.com/ns1"&gt;
+//    Some element content here
+//  &lt;/ex:example&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="toNode" type="builtin" object="NodeBuilder" bucket="MarkLogic Built-In Functions" category="NodeBuilder Object" class="javascript">
+<apidoc:summary>
+Return the node tree that has been built.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Node</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">It is an error to call toNode on an incomplete node tree, that is, one with
+open XML element or document nodes. Undefined is returned when toNode is called
+on an empty NodeBuilder.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('ex:example','http://example.com/ns1');
+  builder.addText('Some element content here');
+builder.endElement();
+builder.toNode();
+
+// Returns an XML element node equivalent to the following:
+//
+// &lt;ex:example xmlns:ex="http://example.com/ns1"&gt;
+//   Some element content here
+// &lt;/ex:example&gt;
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const builder = new NodeBuilder();
+builder.startElement('ex:example','http://example.com/ns1');
+  builder.addText('Some element content here');
+builder.toNode();
+
+// Throws an exception because the element "ex:example" is not terminated.
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="from" type="builtin" object="Sequence" bucket="MarkLogic Built-In Functions" category="Sequence Object" class="javascript">
+<apidoc:summary>
+  Create a Sequence object from an array-like or iterable object. 
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="srcValue" type="Array | Object">
+   An array, array-like object, or iterable object from which to create
+   a Sequence.
+  </apidoc:param>
+      <apidoc:param name="mapFn" type="Function" optional="true">
+   A map function that will be applied to the values in <code xmlns="http://www.w3.org/1999/xhtml">srcValue</code>
+   in order to generate the values in the new Sequence. The function receives
+   the current value and index in <code xmlns="http://www.w3.org/1999/xhtml">srcValue</code> and returns a value to
+   be included in the new Sequence.
+  </apidoc:param>
+      <apidoc:param name="thisValue" type="Object" optional="true">
+   A value to use as <code xmlns="http://www.w3.org/1999/xhtml">this</code> when executing <code xmlns="http://www.w3.org/1999/xhtml">mapFn</code>.
+   You are not required to supply <code xmlns="http://www.w3.org/1999/xhtml">thisvalue</code> when you supply
+   a <code xmlns="http://www.w3.org/1999/xhtml">mapFn</code>.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Sequence</apidoc:return>
+<apidoc:usage/>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Create a Sequence from an array.
+Sequence.from([1,2]);
+
+// Returns a Sequence containing of 2 items with values 1 and 2.
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Create a Sequence from an array-like object and a map function.
+Sequence.from({length:5},(v,k)=&gt;k);
+
+// =&gt; A Sequence containing 0,1,2,3,4.
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Create a Sequence from a generator
+function* gen() {
+  for (let i = 0; i &lt; 5; i++) yield i;
+}
+Sequence.from(gen());
+
+// =&gt; A Sequence containing 0,1,2,3,4.
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="toObject" type="builtin" object="Value" bucket="MarkLogic Built-In Functions" category="Value Object" class="javascript">
+<apidoc:summary>
+Return a JavaScript object value.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Object</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Array nodes will be returned as JavaScript arrays, object nodes will be
+returned as JavaScript objects, and text, number, or boolean nodes will
+be returned as String, Number, or Boolean values, respectively. Document nodes
+will have their child converted. </p>
+<p xmlns="http://www.w3.org/1999/xhtml">xs:date and xs:dateTime will be returned as JavaScript date objects.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">The method is undefined for other kinds of nodes (XML and binary nodes).
+</p>
+</apidoc:usage>
+<apidoc:example>
+</apidoc:example>
+</apidoc:method><apidoc:method name="valueOf" type="builtin" object="Value" bucket="MarkLogic Built-In Functions" category="Value Object" class="javascript">
+<apidoc:summary>
+The atomic value of the object (for example, of the Node).
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Object</apidoc:return>
+<apidoc:example>
+</apidoc:example>
+</apidoc:method><apidoc:method name="toString" type="builtin" object="Value" bucket="MarkLogic Built-In Functions" category="Value Object" class="javascript">
+<apidoc:summary>
+The atomic value of the object (for example, of the Node).
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Object</apidoc:return>
+<apidoc:example>
+</apidoc:example>
+</apidoc:method><apidoc:method name="toArray" type="builtin" object="ValueIterator" bucket="MarkLogic Built-In Functions" category="ValueIterator Object" class="javascript">
+<apidoc:summary>
+[DEPRECATED: Only available for type checking; use
+<a href="/js/Sequence" xmlns="http://www.w3.org/1999/xhtml">Sequence</a> instead.]
+Return an array containing the values in the value iterator.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Value[]</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Get the lines of a song
+const node = cts.doc("song.xml");
+node.xpath(".//LINE").toArray();
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="clone" type="builtin" object="ValueIterator" bucket="MarkLogic Built-In Functions" category="ValueIterator Object" class="javascript">
+<apidoc:summary>
+[DEPRECATED: Only available for type checking; use
+<a href="/js/Sequence" xmlns="http://www.w3.org/1999/xhtml">Sequence</a> instead.]
+Clone the value iterator. This allows one to run through the sequence of values
+more than once.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>ValueIterator</apidoc:return>
+<apidoc:example>
+</apidoc:example>
+</apidoc:method><apidoc:method name="next" type="builtin" object="ValueIterator" bucket="MarkLogic Built-In Functions" category="ValueIterator Object" class="javascript">
+<apidoc:summary>
+[DEPRECATED: Only available for type checking; use
+<a href="/js/Sequence" xmlns="http://www.w3.org/1999/xhtml">Sequence</a> instead.]
+Advance the iterator to obtain the next value.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Object</apidoc:return>
+<apidoc:usage>
+for...of loop is the recommended way of iterating through a ValueIterator.
+For forward compatibility sake, avoid using ValueIterator.prototype.next()
+in favor of for...of loop.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const hits = cts.search("love");
+const uris = [];
+for (const hit of hits) uris.push(hit.nodeUri);
+uris;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="count" type="builtin" object="ValueIterator" bucket="MarkLogic Built-In Functions" category="ValueIterator Object" class="javascript" is-property="true">
+<apidoc:summary>
+[DEPRECATED: Only available for type checking; use
+<a href="/js/Sequence" xmlns="http://www.w3.org/1999/xhtml">Sequence</a> instead.]
+Return a count of how many
+values are in the iterator.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Number</apidoc:return>
+<apidoc:usage>
+Deprecated.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// How many lines in the song?
+const node = cts.doc("song.xml");
+node.xpath(".//LINE").count;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="prototype.@@iterator" type="builtin" object="Sequence" bucket="MarkLogic Built-In Functions" category="Sequence Object" class="javascript">
+<apidoc:summary>
+Return an iterator object. A Sequence is flattened when iterated through.
+Advancing the returned iterator does not side-effect the Sequence.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Object</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const docs = fn.doc();
+let i = 0;
+for (const doc of docs) i++;
+for (const doc of docs) i++;
+i;
+
+// Returns 2 * the number of documents
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const s = Sequence.from("javascript", x=&gt;x.toUpperCase());
+const it = s[Symbol.iterator]();
+[s, it.next().value];
+
+// Returns: [["J", "A", "V", "A", "S", "C", "R", "I", "P", "T"], "J"]
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="prototype.toArray" type="builtin" object="Sequence" bucket="MarkLogic Built-In Functions" category="Sequence Object" class="javascript">
+<apidoc:summary>
+Return an array containing the values in the Sequence.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Value[]</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+Sequence.from([1,2]).toArray();
+
+// Returns: [1,2]
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="baseURI" type="builtin" object="Node" bucket="MarkLogic Built-In Functions" category="Node Object" class="javascript" is-property="true">
+<apidoc:summary>
+Returns a string representing the base URI of the node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">For XML documents, the base URI may be affected by an xml:base attribute
+on any ancestor of the current node.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const uris = [];
+for (const hit of cts.search("frightening")) {
+  uris.push(hit.baseURI);
+}
+uris;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="nodeType" type="builtin" object="Node" bucket="MarkLogic Built-In Functions" category="Node Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return the DOM code indicating the type of the node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Number</apidoc:return>
+<apidoc:usage>
+MarkLogic supports an extended set of node types in addition to the
+standard XML DOM node node type values. The <code xmlns="http://www.w3.org/1999/xhtml">Node</code> object defines 
+symbolic constants equivalent to these values, such as Node.DOCUMENT_NODE.
+The tables below include both the raw value and constant name for each
+node type.
+<p xmlns="http://www.w3.org/1999/xhtml">The following are the standard DOM node type values. Each type
+ is identified by its symbolic constant, followed by the raw value in
+ parentheses.</p>
+<dl xmlns="http://www.w3.org/1999/xhtml">
+ <dt>Node.ELEMENT_NODE (1)</dt><dd>An element node</dd>
+ <dt>Node.ATTRIBUTE_NODE (2)</dt><dd>An element attribute node</dd>
+ <dt>Node.TEXT_NODE (3)</dt><dd>A text node</dd>
+ <dt>Node.CDATA_SECTION_NODE (4)</dt><dd>A CDATA section node</dd>
+ <dt>Node.ENTITY_REFERENCE_NODE (5)</dt><dd>An entity reference node</dd>
+ <dt>Node.ENTITY_NODE (6)</dt><dd>An entity node</dd>
+ <dt>Node.PROCESSING_INSTRUCTION_NODE (7)</dt><dd>An XML processing instruction node</dd>
+ <dt>Node.COMMENT_NODE (8)</dt><dd>An XML comment node</dd>
+ <dt>Node.DOCUMENT_NODE (9)</dt><dd>A document node</dd>
+ <dt>Node.DOCUMENT_TYPE_NODE (10)</dt><dd>An XML document type node</dd>
+ <dt>Node.DOCUMENT_FRAGMENT_NODE (11)</dt><dd>A document fragment node</dd>
+ <dt>Node.NOTATION_NODE (12)</dt><dd>A notation node</dd>
+</dl>
+<p xmlns="http://www.w3.org/1999/xhtml">The following are MarkLogic's extended node type values.</p>
+<dl xmlns="http://www.w3.org/1999/xhtml">
+ <dt>Node.BINARY_NODE (13)</dt><dd>A binary node (binary documents)</dd>
+ <dt>Node.NULL_NODE (14)</dt><dd>A JSON null node</dd>
+ <dt>Node.BOOLEAN_NODE (15)</dt><dd>A JSON boolean node</dd>
+ <dt>Node.NUMBER_NODE (16)</dt><dd>A JSON number node</dd>
+ <dt>Node.ARRAY_NODE (17)</dt><dd>A JSON array node</dd>
+ <dt>Node.OBJECT_NODE (18)</dt><dd>A JSON object node</dd>
+</dl>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+function firstChildIsText(node) {
+  return (node.nodeType == Node.TEXT_NODE);
+};
+
+firstChildIsText(
+  fn.head(cts.doc("example.xml").xpath("./body/node()"));
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="nodeKind" type="builtin" object="Node" bucket="MarkLogic Built-In Functions" category="Node Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return a string indicating the type of the node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>string</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc('/anyDocument.json').nodeKind;
+
+// returns 'document' because it was applied to a document node
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="documentFormat" type="builtin" object="Document" bucket="MarkLogic Built-In Functions" category="Document Object" class="javascript" is-property="true">
+<apidoc:summary>
+The format of the document node, "JSON", "XML", "TEXT", or "BINARY"
+</apidoc:summary>
+
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc('example.xml').documentFormat;
+
+// Returns: 'XML'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="root" type="builtin" object="Document" bucket="MarkLogic Built-In Functions" category="Document Object" class="javascript" is-property="true">
+<apidoc:summary>
+The root node of the document.
+</apidoc:summary>
+
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Assume the document 'example.xml' has the following contents:
+//   &lt;example&gt;&lt;title&gt;Example document&lt;/title&gt;&lt;/example&gt;
+//
+cts.doc("example.xml").root;
+
+// Returns: &lt;example&gt;&lt;title&gt;Example document&lt;/title&gt;&lt;/example&gt;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="xpath" type="builtin" object="Node" bucket="MarkLogic Built-In Functions" category="Node Object" class="javascript">
+<apidoc:summary>
+Evaluate an XPath using the node as context.
+</apidoc:summary>
+
+<apidoc:params>
+      <apidoc:param name="path" type="String">
+  The XPath to evaluate.
+  </apidoc:param>
+      <apidoc:param name="bindings" type="Object" optional="true">
+  Namespace bindings to use to interpret the XPath. The key is the prefix and
+  the value is the namespace URI.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Sequence</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The path is evaluated in the context of the current node, but it may be
+any valid XPath. Rooted paths will be confined to the current document, but
+they will not be confined to the subtree rooted at the current node.
+For example, the <code>node.xpath("/title")</code> will return the node
+<code>&lt;title&gt;Here&lt;/title&gt;</code> regardless of which child of the
+following document the <code>xpath</code> method is called on:
+</p>
+<pre xmlns="http://www.w3.org/1999/xhtml">
+&lt;article&gt;
+  &lt;title&gt;Here&lt;/title&gt;
+  &lt;subsection&gt;
+     &lt;title&gt;Subtitle&lt;/title&gt;
+     More stuff
+  &lt;/subsection&gt;
+&lt;/article&gt;
+</pre>
+<p xmlns="http://www.w3.org/1999/xhtml">To get the subtitle of the subsection element, one would need to use the
+path <code>./title</code> from the subsection element node.
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">Valid XPaths include more than just path expressions: arithmetic
+expressions, function calls, and so on are valid as well.
+</p>
+</apidoc:usage>
+<apidoc:privilege>
+  <code xmlns="http://www.w3.org/1999/xhtml">http://marklogic.com/xdmp/privileges/xdmp-value</code>
+</apidoc:privilege>
+
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const node = fn.head(cts.search("example"));
+node.xpath("ex:section/ex:title", {"ex":"http://example.com/ns"})
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="length" type="builtin" object="ArrayNode" bucket="MarkLogic Built-In Functions" category="ArrayNode" class="javascript" is-property="true">
+<apidoc:summary>
+Length property on ArrayNode
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const obj = new NodeBuilder();
+obj.addNode([1,2,3]);
+const arrNode = obj.toNode();
+arrNode.length;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="item" type="builtin" object="NodeList" bucket="MarkLogic Built-In Functions" category="NodeList Object" class="javascript">
+<apidoc:summary>
+Return the nth node.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="n" type="Number">
+  The index of the node on the node list.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementsByTagName("para").item(3);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="length" type="builtin" object="NodeList" bucket="MarkLogic Built-In Functions" category="NodeList Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return the number of nodes in the node list.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Number</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+if (cts.doc("example.xml").getElementsByTagName("para").length==0)
+  then "No paragraphs found";
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getNamedItem" type="builtin" object="NamedNodeMap" bucket="MarkLogic Built-In Functions" category="NamedNodeMap Object" class="javascript">
+<apidoc:summary>
+Return the named node, if it exists in the map.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  Name of the node to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced attributes.
+Use <a href="#NamedNodeMap.getNamedItemNS">getNamedItemNS</a> instead.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.attributes.getNamedItem("class");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getNamedItemNS" type="builtin" object="NamedNodeMap" bucket="MarkLogic Built-In Functions" category="NamedNodeMap Object" class="javascript">
+<apidoc:summary>
+Return the node with the given localname and namespace URI, if it exists
+in the map.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the node to return.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the node to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">If the first argument is null, it will match a node with no namespace.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.
+   attributes.getNamedItemNS("http://www.w3.org/XML/1998/namespace","lang");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getElementsByTagName" type="builtin" object="XMLDocument" bucket="MarkLogic Built-In Functions" category="XMLDocument Object" class="javascript">
+<apidoc:summary>
+Return all the elements in the document with the given name.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  Name of the elements to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>NodeList</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced elements.
+Use <a href="#XMLDocument.getElementsByTagNameNS">getElementsByTagNameNS</a> instead.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">See also the <a href="#Node.xpath">Node.xpath</a> method.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementsByTagName("para");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getElementsByTagName" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Return all the elements that are descendants of the current element that
+have the given name.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  Name of the elements to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>NodeList</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced elements.
+Use <a href="#Element.getElementsByTagNameNS">getElementsByTagNameNS</a> instead.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">See also the <a href="#Node.xpath">Node.xpath</a> method.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.getElementsByTagName("para");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getElementsByTagNameNS" type="builtin" object="XMLDocument" bucket="MarkLogic Built-In Functions" category="XMLDocument Object" class="javascript">
+<apidoc:summary>
+Return all the elements in the document with the given localname and namespace
+URI.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the elements to return.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the elements to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>NodeList</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">If the first argument is null, it will match elements with no namespace.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">See also the <a href="#Node.xpath">Node.xpath</a> method.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").
+  getElementsByTagNameNS("http://example.com/ns1","item");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getElementsByTagNameNS" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Return all the elements that are descendants of the current element that have
+the given localname and namespace URI.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the elements to return.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the elements to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>NodeList</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">If the first argument is null, it will match elements with no namespace.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">See also the <a href="#Node.xpath">Node.xpath</a> method.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.
+   getElementsByTagNameNS("http://example.com/ns1","item");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="schemaTypeInfo" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript" is-property="true">
+<apidoc:summary>
+The schema type information associated with this element.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>TypeInfo</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.schemaTypeInfo.typeName;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="nodeName" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The DOM name of the node. For element and attribute nodes this is the string
+value of node name, for processing instructions it is the target, and for
+document, text, or comment nodes it is the literal "#document", "#text", or
+"#comment", respectively.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const node = fn.head(xdmp.unquote(
+  '&lt;ns:parent xmlns:ns="/my/ns"&gt;&lt;ns:child&gt;content&lt;/ns:child&gt;&lt;/ns:parent&gt;')).root;
+node.firstChild.nodeName;
+
+// returns 'ns:child'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="nodeValue" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The DOM value of the node. For document and element nodes, this will be null.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").firstChild.nodeValue;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="data" type="builtin" object="CharacterData" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript" is-property="true">
+<apidoc:summary>
+The character data.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").firstChild.data;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="textContent" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The DOM text value of the node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+The main difference between this and
+<a href="#XMLNode.nodeValue" xmlns="http://www.w3.org/1999/xhtml">nodeValue</a> is that <code xmlns="http://www.w3.org/1999/xhtml">textContent</code>
+of element nodes is the string value of the element rather than null.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild.nodeValue;
+const node = fn.head(xdmp.unquote(
+  '&lt;ns:parent xmlns:ns="/my/ns"&gt;&lt;ns:child&gt;some content&lt;/ns:child&gt;&lt;/ns:parent&gt;'))
+  .root;
+node.textContent;
+
+// returns 'some content'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="parentNode" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The node that is this node's parent.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(cts.doc("example.xml").xpath(".//TITLE")).parentNode;
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="childNodes" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The children of this node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>NodeList</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The result is null except for document and element nodes.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">See also the <a href="#Node.xpath">Node.xpath</a> method.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.childNodes.length
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="firstChild" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The first child of this node, if any.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The result is null except for document and element nodes.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="lastChild" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The last child of this node, if any.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The result is null except for document and element nodes.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.lastChild.nodeName
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="previousSibling" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The node that is the immediately preceding sibling of this node, if any.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.lastChild.previousSibling
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="nextSibling" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The node that is the immediately following sibling of this node, if any.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLNode</apidoc:return>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild.nextSibling
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="attributes" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The attributes of this node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>NamedNodeMap</apidoc:return>
+<apidoc:usage>
+Returns null for non-element nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").documentElement.
+  attributes.getNamedItem("class")
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ownerDocument" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The document node containing this node, if any.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>XMLDocument</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(xdmp.value("//example")).ownerDocument.firstChild.nodeName
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="hasChildNodes" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript">
+<apidoc:summary>
+Whether this node has any children.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+This method is defined for element and document nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").hasChildNodes()
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="namespaceURI" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return the namespace URI of this node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This property is defined for element and attribute nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const node = fn.head(xdmp.unquote(
+  '&lt;ns:parent xmlns:ns="/my/ns"&gt;&lt;ns:child&gt;content&lt;/ns:child&gt;&lt;/ns:parent&gt;')).root;
+node.firstChild.namespaceURI;
+
+// Returns: '/my/ns'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="prefix" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return the namespace prefix of this node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This property is defined for element and attribute nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const node = fn.head(xdmp.unquote(
+  '&lt;ns:parent xmlns:ns="/my/ns"&gt;&lt;ns:child&gt;some content&lt;/ns:child&gt;&lt;/ns:parent&gt;'))
+  .root;
+node.firstChild.prefix
+
+// returns 'ns'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="localName" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+Return the local name of this node.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This property is defined for element and attribute nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const node = fn.head(xdmp.unquote(
+  '&lt;ns:parent xmlns:ns="/my/ns"&gt;&lt;ns:child&gt;content&lt;/ns:child&gt;&lt;/ns:parent&gt;')).root;
+node.localName;
+
+// returns 'parent'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="hasAttributes" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript">
+<apidoc:summary>
+Whether this node has attributes.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This property is false for non-element nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").firstChild.hasAttributes
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isSameNode" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript">
+<apidoc:summary>
+Whether this node is the same exact node as another node.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="node" type="Node">
+  The node to compare this node to.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+This is identity check. For equality, use
+<a href="#XMLNode.isEqualNode" xmlns="http://www.w3.org/1999/xhtml">isEqualNode</a> instead.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Cannot be true, ever: nodes are in only one document
+cts.doc("example.xml").firstChild.isSameNode(
+  cts.doc("example2.xml").firstChild)
+
+==&gt; false
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isEqualNode" type="builtin" object="XMLNode" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript">
+<apidoc:summary>
+Whether this node is equal to another node.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="node" type="Node">
+  The node to compare this node to.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").firstChild.isEqualNode(
+  cts.doc("example2.xml").firstChild)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="documentURI" type="builtin" object="XMLDocument" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript" is-property="true">
+<apidoc:summary>
+The URI of this document.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+Documents constructed using the builder will not have a document URI.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").documentURI
+  ==&gt; "example.xml"
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getElementById" type="builtin" object="XMLDocument" bucket="MarkLogic Built-In Functions" category="XMLNode Object" class="javascript">
+<apidoc:summary>
+Get the element in this document with the given id, if any.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="id" type="String">
+  The id of the element to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Element</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1")
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getAttribute" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Get the value of the attribute of this element with the given name, if any.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced attributes.
+Use <a href="#XMLDocument.getAttributeNS">getAttributeNS</a> instead.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").getAttribute("class")
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getAttributeNode" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Get the attribute of this element with the given name, if any.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Attr</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced attributes.
+Use <a href="#XMLDocument.getAttributeNodeNS">getAttributeNodeNS</a> instead.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  getAttribute("class").nodeValue
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getAttributeNS" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Get the value of the attribute of this element with the given localname and
+namespace URI, if any.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the attribute.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  getAttributeNS("http://www.w3.org/XML/1998/namespace","lang");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="getAttributeNodeNS" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Get the attribute of this element with the given localname and
+namespace URI, if any.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the attribute.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Attr</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  getAttributeNodeNS("http://www.w3.org/XML/1998/namespace","lang").isSpecified
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="hasAttribute" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Whether this element has an attribute with the given name.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="name" type="String">
+  The name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">Since lookup is by the string value of the name, it is best to avoid using
+this method for namespaced attributes.
+Use <a href="#XMLDocument.hasAttributeNS">hasAttributeNS</a> instead.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").hasAttribute("class")
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="hasAttributeNS" type="builtin" object="Element" bucket="MarkLogic Built-In Functions" category="Element Object" class="javascript">
+<apidoc:summary>
+Whether this element has an attribute the given localname and
+namespace URI.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  Namespace URI of the attribute.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  Local name of the attribute.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  hasAttributeNS("http://www.w3.org/XML/1998/namespace","lang");
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isSpecified" type="builtin" object="Attr" bucket="MarkLogic Built-In Functions" category="Attr Object" class="javascript">
+<apidoc:summary>
+Whether this attribute is specified explicitly or was defaulted from a schema.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  getAttributeNS("http://www.w3.org/XML/1998/namespace","lang").isSpecified
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="ownerElement" type="builtin" object="Attr" bucket="MarkLogic Built-In Functions" category="Attr Object" class="javascript">
+<apidoc:summary>
+The element that contains this attribute.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Element</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.head(cts.doc("example.xml").xpath(".//@class")).ownerElement
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isId" type="builtin" object="Attr" bucket="MarkLogic Built-In Functions" category="Attr Object" class="javascript" is-property="true">
+<apidoc:summary>
+Whether this is an ID attribute.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+An ID attribute is defined as one that has a schema declaration of type
+<code xmlns="http://www.w3.org/1999/xhtml">xs:ID</code> (or a subtype of <code xmlns="http://www.w3.org/1999/xhtml">xs:ID</code>). The function
+<a href="#fn.id" xmlns="http://www.w3.org/1999/xhtml">fn.id</a> takes a
+broader view: any attribute named <code xmlns="http://www.w3.org/1999/xhtml">xml:ID</code> is considered an ID
+attribute.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementById("ex1").
+  getAttribute("ID").isID
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="length" type="builtin" object="CharacterData" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript" is-property="true">
+<apidoc:summary>
+The length of the character data (codepoints).
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Number</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild.length
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="substring" type="builtin" object="CharacterData" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript">
+<apidoc:summary>
+A substring of the character data, starting at a given offset and continuing
+for a given length.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="offset" type="Number">
+  The starting position.
+  </apidoc:param>
+      <apidoc:param name="count" type="Number">
+  The length of the substring to return.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>Number</apidoc:return>
+<apidoc:usage>
+<p xmlns="http://www.w3.org/1999/xhtml">The offset and count should be non-negative integers. An error will be raised
+if they are not.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">It is an error for the offset plus the count is more than the size of the
+data.</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild.substring(2,5)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="target" type="builtin" object="ProcessingInstruction" bucket="MarkLogic Built-In Functions" category="ProcessingInstruction Object" class="javascript" is-property="true">
+<apidoc:summary>
+The target of an XML processing instruction.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This method is only defined on processing instruction nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Assume example.xml has contents similar to the following:
+//   &lt;data&gt;
+//     &lt;?myPITarget somePIData?&gt;
+//   &lt;/data&gt;
+
+const node = cts.doc('example.xml').root.firstChild;
+if (node.nodeType === Node.PROCESSING_INSTRUCTION_NODE) {
+  node.target
+} else {
+  'not a processing instruction'
+}
+
+// returns 'myPITarget'
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="wholeText" type="builtin" object="CharacterData" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript" is-property="true">
+<apidoc:summary>
+The text of the text node concatenated with its logically adjacent text nodes.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+This property is defined only for text nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.firstChild.wholeText
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isElementContentWhitespace" type="builtin" object="CharacterData" bucket="MarkLogic Built-In Functions" category="CharacterData Object" class="javascript" is-property="true">
+<apidoc:summary>
+Whether this text node is ignorable whitespace.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>Boolean</apidoc:return>
+<apidoc:usage>
+This property is defined only for text nodes.
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").root.
+  firstChild.isElementContentWhitespace
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="isDerivedFrom" type="builtin" object="TypeInfo" bucket="MarkLogic Built-In Functions" category="TypeInfo Object" class="javascript">
+<apidoc:summary>
+Whether this type is derived from a named type by the selected methods.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="uri" type="String?">
+  The namespace URI of the target type.
+  </apidoc:param>
+      <apidoc:param name="localname" type="String">
+  The local name of the target type.
+  </apidoc:param>
+      <apidoc:param name="flag" type="Number">
+  Flags indicating what derivation methods are permitted. The value should be
+  the or-ing together of:
+  <dl xmlns="http://www.w3.org/1999/xhtml">
+  <dt>1</dt><dd>restriction</dd>
+  <dt>2</dt><dd>extension</dd>
+  <dt>4</dt><dd>union</dd>
+  <dt>8</dt><dd>list</dd>
+  </dl>
+  A flag value of 0 means that all methods are allowed.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementsByTagName("uid").schemaTypeInfo.
+  isDerivedFrom("http://www.w3.org/2001/XMLSchema", "unsignedLong", 1)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="typeName" type="builtin" object="TypeInfo" bucket="MarkLogic Built-In Functions" category="TypeInfo Object" class="javascript" is-property="true">
+<apidoc:summary>
+The local name of the type.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementsByTagName("uid").schemaTypeInfo.
+  typeName
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="typeNamespace" type="builtin" object="TypeInfo" bucket="MarkLogic Built-In Functions" category="TypeInfo Object" class="javascript" is-property="true">
+<apidoc:summary>
+The namespace URI of the type.
+</apidoc:summary>
+<apidoc:params/>
+<apidoc:return>String</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("example.xml").getElementsByTagName("uid").schemaTypeInfo.
+  typeNamespace
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="log" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs an info-level message to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="message" type="xs.anyAtomicType" optional="true">
+  If the first argument contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const count = 5;
+console.log("count: %d", count);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="debug" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs a debug-level message to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="message" type="xs.anyAtomicType" optional="true">
+  If the first argument contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const count = 5;
+console.debug("count: %d", count);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="error" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs an error-level message to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="message" type="xs.anyAtomicType" optional="true">
+  If the first argument contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const count = 5;
+console.error("count: %d", count);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="warn" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs a warning-level message to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="message" type="xs.anyAtomicType" optional="true">
+  If the first argument contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const count = 5;
+console.warn("count: %d", count);
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="dir" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs an object to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="obj" type="xs.anyAtomicType">
+  Convert obj to a string and print the string in the log.
+  </apidoc:param>
+      <apidoc:param name="options" type="xs.anyAtomicType" optional="true">
+  Here are the options:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>depth - controls how many times to recurse while formatting the object.
+        Default is 2. Use null to recurse indefinitely.</li>
+	  <li>colors - not used.</li>
+	</ul>
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const obj = {
+      field1: {
+	field2: {
+          field3: {
+            field4: 'value'
+	  }
+	}
+      }
+    };
+console.dir(obj)
+// output logged is:
+// { field1: { field2: { field3: [Object] } } }
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const obj = {
+      field1: {
+        field2: {
+          field3: {
+            field4: 'value'
+          }
+        }
+      }
+    };
+console.dir(obj, {depth: 1})
+// output logged is:
+// { field1: { field2: [Object] } }
+</pre></apidoc:example>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const obj = {
+      field1: {
+        field2: {
+          field3: {
+            field4: 'value'
+          }
+        }
+      }
+    };
+console.dir(obj, {depth: null})
+// output logged is:
+// { field1: { field2: { field3: { field4: 'value' } } } }
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="trace" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  Logs a message and the JavaScript stack trace to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="message" type="xs.anyAtomicType">
+  If the first argument contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+function a() {
+  console.trace("value=%d ", 123);
+}
+function b() {
+  a();
+}
+function c() {
+  b();
+}
+c();
+// Output similar to the following is logged:
+// 2015-07-31 14:39:14.923 Info: App-Services: Trace: value=123
+// 2015-07-31 14:39:14.923 Info: App-Services:  at a ([anonymous]:2:11)
+// 2015-07-31 14:39:14.923 Info: App-Services:  at b ([anonymous]:7:3)
+// 2015-07-31 14:39:14.923 Info: App-Services:  at c ([anonymous]:11:3)
+// 2015-07-31 14:39:14.923 Info: App-Services:  at  ([anonymous]:14:1)
+</pre></apidoc:example>
+</apidoc:method><apidoc:method name="assert" type="builtin" object="console" bucket="MarkLogic Built-In Functions" category="console Object" class="javascript">
+<apidoc:summary>
+  If value is true, do nothing. 
+  If value is false, logs a message to the App Server log file
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;/Logs/&lt;port&gt;_ErrorLog.txt</code>; where
+  <code xmlns="http://www.w3.org/1999/xhtml">&lt;install_dir&gt;</code> is the MarkLogic install directory,
+  and <code xmlns="http://www.w3.org/1999/xhtml">&lt;port&gt;</code> is the port number of the current App
+  Server or "TaskServer" if the current request is running on the Task
+  Server.
+</apidoc:summary>
+<apidoc:params>
+      <apidoc:param name="value" type="Boolean">
+  the value to be checked
+  </apidoc:param>
+      <apidoc:param name="message" type="xs.anyAtomicType" optional="true">
+  If the message contains any placeholders, each placeholder is replaced with
+  the converted value from its corresponding argument.
+  Here are the placeholders:
+  <ul xmlns="http://www.w3.org/1999/xhtml">
+	  <li>%s - String</li>
+	  <li>%d - Number (both integer and float)</li>
+	  <li>%j - JSON. Replaced with the string '[Circular]' if the argument
+    contains circular references.</li>
+	  <li>% - single percent sign ('%'). This does not consume an argument.</li>
+	</ul>
+  </apidoc:param>
+      <apidoc:param name="valueN" type="xs.anyAtomicType,..." optional="true">
+  A value.
+  </apidoc:param>
+    </apidoc:params>
+<apidoc:return>null</apidoc:return>
+<apidoc:usage>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+const count = 5;
+console.assert(count==5,"hello world");
+</pre></apidoc:example>
+</apidoc:method><apidoc:function name="declareUpdate" type="builtin" lib="Global-Object" category="JavaScript Global Object" class="javascript">
+    <apidoc:summary>
+  Declares the statement to be an update.
+
+  <p xmlns="http://www.w3.org/1999/xhtml">A JavaScript statement is executed as a query unless declareUpdate() is
+  called at the beginning of the statement.  Calling declareUpdate with an
+  options argument where <code>explicitCommit</code> property is set to true
+  starts a multi-statement transaction and requires an explicit commit or
+  rollback to complete the transaction.  If the options argument is omitted,
+  or the property <code>explicitCommit</code> property is set to false, an
+  update is automatically committed.  XDMP-OWNTXN is thrown if the request
+  is in an open transaction. </p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="Object" optional="true">
+    Options to use for this operation.  If "explicitCommit" property is set to
+    true, declareUpdate starts a multi-statement transaction and requires an
+    explicit commit or rollback to complete the transaction.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>Null</apidoc:return>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  declareUpdate();
+  const person = {name:"Jon", age:50};
+  xdmp.documentInsert("p.json", person);
+</pre></apidoc:example>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  declareUpdate({explicitCommit: true});
+  const person = {name:"Jon", age:50};
+  xdmp.documentInsert("p.json", person);
+  // because explicitCommit is true, you must call xdmp.commit (or
+  // call it in another statement that uses the transaction started
+  // in this statement)
+  xdmp.commit();
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="require" type="builtin" lib="Global-Object" category="JavaScript Global Object" class="javascript">
+    <apidoc:summary>
+  Imports a module at the specified location, and returns a JavaScript object.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="location" type="String" optional="false">
+    Location of the module to import.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>Object</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">The location of the module is resolved with the same rules that MarkLogic
+  resolves imported modules in XQuery. </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If the document with the user-specified module name does not end with a
+  file extension, require() will first look for the module with the user-
+  specified name appended with the configured extensions for JavaScript module,
+  and then appended with the configured extensions for XQuery module.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If the user specified module's file extension does not match any of the
+  module path extension found in the MIME type configuration,
+  JS-ILLEGALMODULEPATH is thrown.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If the user does not have execute permission on an existing module, the
+  above logic to resolve a module name applies as if the module is not found
+  and XDMP-MODNOTFOUND is thrown if the module cannot be located.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">Once a module is located, its query language is determined to be XQuery
+  if its name extension matches with any for the XQuery module; otherwise, it
+  is imported as a JavaScript module.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If the imported module is in XQuery, the public functions and variables
+  defined in it are available through the returned JavaScript object as
+  properties, with either the original function name as the property name, or
+  with "-" in the function names removed and the following letter capitalized.
+  </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">In the case where a namespace is shared between built-in functions and
+  XQuery modules (e.g., http://marklogic.com/xdmp/spell), the returned
+  JavaScript object can be used to access both the built-ins and the XQuery
+  functions.  The lookup sequence is function name, followed by variable name
+  then built-in name.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If the imported module is in JavaScript, the exported API of the module
+  defined through <code>exports</code> or <code>module.exports</code> object
+  is returned. </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">You can import JavaScript libraries with either the
+  <code>.js</code> or <code>.sjs</code> extension (with corresponding
+  mimetypes <code>application/javascript</code> and
+  <code>application/vnd.marklogic-javascript</code>). </p>
+  <p xmlns="http://www.w3.org/1999/xhtml">If there is a dependency cycle, the foreign module may not have finished
+  executing at the time it is required by one of its transitive dependencies;
+  in this case, the object returned by "require" must contain at least the
+  exports that the foreign module has prepared before the call to require that
+  led to the current module's execution.</p>
+</apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  lib.sjs:
+  const PI = Math.PI;
+  exports.area = function area(r) {
+    return PI * r * r;
+  };
+  Test.js
+  const circle = require("lib");
+  circle.area(2);
+</pre></apidoc:example>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  const admin = require("/MarkLogic/admin");
+  const conf = admin.getConfiguration();
+  admin.forestGetId(conf, "Documents");
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="doc" type="builtin" lib="cts" category="SearchBuiltins" subcategory="Search" class="javascript">
+    <apidoc:summary>
+  <p xmlns="http://www.w3.org/1999/xhtml">Returns the document stored in the database at the specified URI.</p>
+  <p xmlns="http://www.w3.org/1999/xhtml">To retrieve multiple documents stored at multiple URIs, use
+  <code><a href="#fn.doc">fn.doc</a></code> instead.</p>
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="String">
+  The URI of the document to retrieve.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>document-node()?</apidoc:return>
+    <apidoc:usage>
+  The <code xmlns="http://www.w3.org/1999/xhtml">document-node()</code> returned contains an
+  <code xmlns="http://www.w3.org/1999/xhtml">element()</code> root node for XML documents, a
+  <code xmlns="http://www.w3.org/1999/xhtml">text()</code> root node for text documents, and a
+  <code xmlns="http://www.w3.org/1999/xhtml">binary()</code> root node for binary documents.
+</apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts.doc("/mydocs/doc.xml")
+
+=&gt; returns the document at the URI /mydocs/doc.xml
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

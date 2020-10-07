@@ -1,0 +1,98 @@
+<apidoc:module name="ExsltBuiltins" category="Extension" subcategory="XSLT" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public" category="Extension">
+EXSLT extension functions are extensions to XSLT spec as a community initiative.
+
+They are defined at
+<a href="http://www.exslt.org" target="_blank" xmlns="http://www.w3.org/1999/xhtml">EXSLT Extensions</a>.
+</apidoc:summary><apidoc:function name="node-set" type="builtin" lib="exsl" category="Extension" subcategory="XSLT" class="xquery">
+    <apidoc:summary>
+   Returns a sequence of nodes based on the input object. If the input is 
+   a sequence of nodes, it is returned as it is. If it is a node, 
+   it is simply returned as a singleton sequence. For all other 
+   atomic types, a text node is returned based on the string-value
+   of the type.
+
+   This was a useful function in XSLT 1.0 where "Result
+   Tree Fragments" are returned as a result of xslt instruction.
+   In XSLT 2.0, however, xslt instructions return sequences. This
+   function is simply being provided for backward compatibility
+   to existing applications.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="item()*" optional="false">
+     The given object <code xmlns="http://www.w3.org/1999/xhtml">$value</code> which needs to be converted into
+     sequence.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()*</apidoc:return>
+    <apidoc:usage>This function is based on the EXSLT functions 
+ (<a href="http://www.exslt.org/" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.exslt.org/</a>).
+ </apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                   xmlns:exsl="http://exslt.org/common"
+                   extension-element-prefixes="exsl"
+                   version="2.0"&gt;
+     &lt;xsl:template match="/"&gt;
+       &lt;xsl:value-of select="count(exsl:node-set(//element()))" /&gt;
+     &lt;/xsl:template&gt;
+   &lt;/xsl:stylesheet&gt;
+,
+document{
+ &lt;doc&gt;
+   &lt;one /&gt;
+   &lt;two /&gt;
+   &lt;three /&gt;
+   &lt;four /&gt;
+&lt;/doc&gt;})
+  
+=&gt; 5
+ </pre>
+ </apidoc:example>
+  </apidoc:function><apidoc:function name="object-type" type="builtin" lib="exsl" category="Extension" subcategory="XSLT" class="xquery">
+    <apidoc:summary>
+   Returns a string that contains the type-name of the object passed as the argument.
+ </apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="value" type="item()*" optional="false">
+     The given object <code xmlns="http://www.w3.org/1999/xhtml">$value</code> whose type needs to be found.
+   </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:usage>This function is based on the EXSLT functions 
+ (<a href="http://www.exslt.org/" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.exslt.org/</a>).
+ </apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:xslt-eval(
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                   xmlns:exsl="http://exslt.org/common"
+                   extension-element-prefixes="exsl"
+                   version="2.0"&gt;
+     &lt;xsl:variable name="string" select="'fred'" /&gt;
+     &lt;xsl:variable name="number" select="93.7" /&gt;
+     &lt;xsl:variable name="boolean" select="true()" /&gt;
+     &lt;xsl:variable name="node-set" select="//element()" /&gt;
+     &lt;xsl:template match="/"&gt;
+        ;
+        &lt;xsl:value-of select="exsl:object-type($string)" /&gt;;
+        &lt;xsl:value-of select="exsl:object-type($number)" /&gt;;  
+        &lt;xsl:value-of select="exsl:object-type($boolean)" /&gt;;  
+        &lt;xsl:value-of select="exsl:object-type($node-set)" /&gt;
+     &lt;/xsl:template&gt;
+   &lt;/xsl:stylesheet&gt;
+,
+document{&lt;doc/&gt;})
+ 
+=&gt;
+     ;
+     string;
+     number;  
+     boolean;  
+     node-set
+ </pre>
+ </apidoc:example>
+  </apidoc:function></apidoc:module>

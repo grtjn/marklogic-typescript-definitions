@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/certificate-template/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/certificate-template/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:x509="http://marklogic.com/xdmp/x509">
+  <xs:simpleType name="version">
+    <xs:annotation>
+      <xs:documentation>
+        The X509 version.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt"/>
+  </xs:simpleType>
+  <xs:simpleType name="countryName">
+    <xs:annotation>
+      <xs:documentation>
+        A two character country code (e.g. "US").
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:length value="2" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="organization-name">
+    <xs:annotation>
+      <xs:documentation>An organization name.</xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="name" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+       An X.509 name, used to identify either a subject or an issuer.
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+	<xs:element ref="countryName" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="stateOrProvinceName" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="localityName" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="organizationName" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="organizationalUnitName" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="emailAddress" minOccurs="1" maxOccurs="1"/>
+	<xs:element ref="commonName" minOccurs="1" maxOccurs="1"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="v3ext" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        X.509v3 extensions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:any processContents="lax" minOccurs="1" maxOccurs="1" namespace="##any"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="req" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+       An X.509 certificate request
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="version" minOccurs="0"/>
+      <xs:element ref="subject" minOccurs="0"/>
+      <xs:element ref="v3ext" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="certificate-template-properties">
+    <xs:annotation>
+      <xs:documentation>
+       Certificate template properties.
+     </xs:documentation>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="template-id" minOccurs="0"/>
+      <xs:element ref="template-name" minOccurs="1"/>
+      <xs:element ref="template-description" minOccurs="1"/>
+      <xs:element ref="template-version" minOccurs="0"/>
+      <xs:element ref="key-type" minOccurs="0"/>
+      <xs:element ref="key-options" minOccurs="0"/>
+      <xs:element ref="req" minOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="certificate-template-properties" type="certificate-template-properties">
+    <xs:annotation>
+      <xs:documentation>
+       Certificate template properties.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="template-id" type="xs:unsignedLong">
+    <xs:annotation>
+      <xs:documentation>
+       A certificate template id. The template-id element is not permitted
+       when using HTTP POST to create a new template. It is permitted
+       in HTTP PUT, as a convenience,
+       but must have the same value as returned by HTTP GET.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="template-name" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+       The name of the certificate request template.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="template-description" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+       A description of the certificate request template.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="template-version" type="xs:unsignedInt">
+    <xs:annotation>
+      <xs:documentation>
+        The certificate template's version.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="key-type" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+       The type of key to use (e.g. rsa).
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="key-options">
+    <xs:annotation>
+      <xs:documentation>
+       The options for generating keys.
+     </xs:documentation>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="key-length" minOccurs="0"/>
+      <xs:element ref="pass-phrase" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="key-options" type="key-options">
+    <xs:annotation>
+      <xs:documentation>
+       The options for generating keys.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="pass-phrase" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+       The pass phrase.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="key-length">
+    <xs:annotation>
+      <xs:documentation>
+        The permitted key lengths.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:decimal">
+      <xs:enumeration value="512"/>
+      <xs:enumeration value="1024"/>
+      <xs:enumeration value="2048"/>
+      <xs:enumeration value="4096"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="key-length" type="key-length">
+    <xs:annotation>
+      <xs:documentation>
+       The permitted key lengths.
+     </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="version" type="version" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The X509 version.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="countryName" type="countryName" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       A two character country code (e.g. "US").       
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="stateOrProvinceName" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The state or province your server is in.
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="localityName" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The city your server is in.
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="organizationName" type="organization-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The organization or company your server belongs to (e.g. MarkLogic).
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="organizationalUnitName" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The organizational unit your server belongs to (e.g. Engineering).
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="commonName" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The common name of your server (e.g. www.yourcompany.com). This may be
+       left blank when creating a certificate template, since individual
+       servers will use their own host name.
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="emailAddress" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The email address to contact regarding your server
+       (e.g. webmaster@yourcompany.com).
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="subject" type="name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       The subject for a certificate or certificate request. You should
+       fill in as many of these fields as possible because individual
+       certificate authorities have specific requirements for which fields
+       must have values. If a required field is missing, a certificate
+       authority will typically reject your certificate request with a
+       cryptic error message that your request is bad.
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="v3ext" type="v3ext" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The X509v3 extensions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="req" type="req" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+       An X.509 certificate request
+     </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <?xdmp-annotations?>
+</xs:schema>

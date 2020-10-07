@@ -1,0 +1,128 @@
+<apidoc:module name="TDEModule" category="Template Driven Extraction" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="tde" >
+  <apidoc:summary access="public" category="Template Driven Extraction">
+    <p>The tde (Template-driven Data Extraction) function module is installed 
+    as the following file:</p>
+    <code><em>install_dir</em>/Modules/MarkLogic/tde.xqy</code> 
+    <p>where <code><em>install_dir</em></code> is the directory in which 
+    MarkLogic Server is installed.</p>
+    <p> To use the tde.xqy module in your own XQuery modules, include the 
+    following line in your XQuery prolog:</p>
+    <p><code>import module "http://marklogic.com/xdmp/tde" at 
+             "/MarkLogic/tde.xqy"</code></p>
+    <p>The library uses the <code>tde:</code> namespace, predefined in the 
+    server.</p>
+
+  </apidoc:summary>
+
+<apidoc:function name="template-insert" type="template" lib="tde" 
+                 category="Template Driven Extraction" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    This function validates the template, inserts the template as a document into 
+    the tde collection of the schema database (if executed on the content database) 
+    with the default permissions, and reindexes the database.  
+    <p>
+    Note that, when a template is inserted, only those document fragments affected 
+    by the template are re-indexed.
+ For more information, see <a href='#display.xqy?fname=http://pubs/6.0doc/xml/dev_guide/TDE.xml%2354035'>Validating and Inserting a Template</a> in the <em>Application Developer's Guide</em>.
+    </p>
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="uri" type="xs:string">
+      The URI of the template document to be inserted.
+    </apidoc:param>
+    <apidoc:param name="root" type="node()">
+      The template document.  The template document can be in either
+      JSON or XML format.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*" optional="true">
+      Any permissions to set on the template document.
+    </apidoc:param>
+    <apidoc:param name="collections" type="xs:string*" optional="true">
+      One or more collections in which to insert the template document.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence</apidoc:return>
+  <apidoc:usage>
+   The <code>tde-admin</code> role is required in order to insert a template into the 
+   schema database.
+   <p>
+   Note that, unlike the other <code>tde</code> functions, this is a library function
+   that requires that you import the <code>tde.xqy</code> module.</p>
+  </apidoc:usage>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml"; 
+import module namespace tde = "http://marklogic.com/xdmp/tde" 
+        at "/MarkLogic/tde.xqy";
+
+let $template := 
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>populates patients' data</description>
+  <context>/MedlineCitation/Article</context>
+  <rows>
+    <row>
+      <schema-name>Medical</schema-name>
+      <view-name>Publications</view-name>
+      <columns>
+        <column>
+          <name>ID</name>
+          <scalar-type>long</scalar-type>
+          <val>../MedlineID</val>
+        </column>
+        <column>
+          <name>ISSN</name>
+          <scalar-type>string</scalar-type>
+          <val>Journal/ISSN</val>
+        </column>
+      </columns>
+    </row>
+  </rows>
+</template>
+
+return tde:template-insert("Template.xml", $template)
+
+(: Inserts the template as the Template.xml file. :)
+  ]]></pre></apidoc:example>
+
+<apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+declareUpdate();
+var tde = require("/MarkLogic/tde.xqy");
+
+var template = xdmp.toJSON(
+{
+  "template":{
+    "context":"/MedlineCitation/Article",
+    "rows":[
+      {
+        "schemaName":"Medical",
+        "viewName":"Publications",
+        "columns":[
+          {
+            "name":"ID",
+            "scalarType":"long",
+            "val":"../MedlineID"
+          },
+          {
+            "name":"ISSN",
+            "scalarType":"string",
+            "val":"Journal/ISSN"
+          }
+        ]
+      }
+    ]
+  }
+}
+);
+
+tde.templateInsert("Template.json", template);
+ 
+// Inserts the template as the Template.json file. 
+]]></pre></apidoc:example>
+
+</apidoc:function>
+
+
+
+</apidoc:module>

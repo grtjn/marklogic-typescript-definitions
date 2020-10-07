@@ -1,0 +1,320 @@
+<apidoc:module name="StringBuiltins" category="StringBuiltins" lib="fn" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:function name="matches" type="builtin" lib="fn" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns <code xmlns="http://www.w3.org/1999/xhtml">true</code> if the specified $input matches the specified
+$pattern, otherwise returns <code xmlns="http://www.w3.org/1999/xhtml">false</code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="input" type="xs:string?">
+  The input from which to match.
+  </apidoc:param>
+      <apidoc:param name="pattern" type="xs:string">
+  The regular expression to match.
+  </apidoc:param>
+      <apidoc:param name="flags" type="xs:string" optional="true">
+  The flag representing how to interpret the regular expression. One of
+  "s", "m", "i", or "x", as defined in
+  <a href="http://www.w3.org/TR/xpath-functions/#flags" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#flags</a>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:matches("this is a string", "is")
+
+=&gt; true
+
+fn:matches("this is a string", "zoo")
+
+=&gt; false
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.matches("this is a string", "is");
+
+=&gt; true
+
+fn.matches("this is a string", "zoo");
+
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="like" type="builtin" lib="sql" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns <code xmlns="http://www.w3.org/1999/xhtml">true</code> if the specified $input like the specified
+$pattern, otherwise returns <code xmlns="http://www.w3.org/1999/xhtml">false</code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="input" type="xs:string?">
+  The input from which to match.
+  </apidoc:param>
+      <apidoc:param name="pattern" type="xs:string">
+  The expression to match.
+  '_' matches one character and '%' matches any number of characters.
+  </apidoc:param>
+      <apidoc:param name="escape" type="xs:string">
+  If a '_' ann '%' are preceeded by an escape character then it will be
+  match as the char '-'/'%' themselves.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:like("this string", "id%")
+
+=&gt; false
+
+sql:like("this", "t%i_")
+
+=&gt; true
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql.like("this is a string", "is");
+
+=&gt; true
+
+sql.like("this is a string", "zoo");
+
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="glob" type="builtin" lib="sql" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns <code xmlns="http://www.w3.org/1999/xhtml">true</code> if the specified $input glob the specified
+$pattern, otherwise returns <code xmlns="http://www.w3.org/1999/xhtml">false</code>.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="input" type="xs:string?">
+  The input from which to match.
+  </apidoc:param>
+      <apidoc:param name="pattern" type="xs:string">
+  The expression to match.
+  '?' matches one character and '*' matches any number of characters.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:boolean?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:glob("this string", "id*")
+
+=&gt; false
+
+sql:glob("this", "t*i?")
+
+=&gt; true
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+sql:glob("this", "t*i?")
+
+=&gt; true
+
+sql:glob("this string", "id*")
+
+=&gt; false
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="replace" type="builtin" lib="fn" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+Returns a string constructed by replacing the specified $pattern
+on the $input string with the specified $replacement string.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="input" type="xs:string?">
+  The string to start with.
+  </apidoc:param>
+      <apidoc:param name="pattern" type="xs:string">
+  The regular expression pattern to match.  If the pattern does not match the
+  $input string, the function will return the $input string unchanged.
+  </apidoc:param>
+      <apidoc:param name="replacement" type="xs:string">
+  The regular expression pattern to replace the $pattern with.  It can also
+  be a capture expression (for more details, see
+  <a href="http://www.w3.org/TR/xpath-functions/#func-replace" target="_blank" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#func-replace</a>).
+  </apidoc:param>
+      <apidoc:param name="flags" type="xs:string" optional="true">
+  The flag representing how to interpret the regular expression. One of
+  "s", "m", "i", or "x", as defined in
+  <a href="http://www.w3.org/TR/xpath-functions/#flags" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#flags</a>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:replace("this is a string", "this", "that")
+
+=&gt; that is a string
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.replace("this is a string", "this", "that");
+
+=&gt; that is a string
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="analyze-string" type="builtin" lib="fn" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+The result of the function is a new element node whose string value is the
+original string, but which contains markup to show which parts of the
+input match the regular expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="in" type="xs:string?">
+  The string to start with.
+  </apidoc:param>
+      <apidoc:param name="regex" type="xs:string">
+  The regular expression pattern to match.
+  </apidoc:param>
+      <apidoc:param name="flags" type="xs:string" optional="true">
+  The flag representing how to interpret the regular expression. One of
+  "s", "m", "i", or "x", as defined in
+  <a href="http://www.w3.org/TR/xpath-functions/#flags" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#flags</a>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(s:results)</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:analyze-string('Tom Jim John',"Jim")
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+  &lt;s:match&gt;Jim&lt;/s:match&gt;
+  &lt;s:non-match&gt; John&lt;/s:non-match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.analyzeString('Tom Jim John',"Jim");
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+  &lt;s:match&gt;Jim&lt;/s:match&gt;
+  &lt;s:non-match&gt; John&lt;/s:non-match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:analyze-string('Tom Jim John',"(Jim)")
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+    &lt;s:match&gt;
+      &lt;s:group nr="1"&gt;Jim&lt;/s:group&gt;
+    &lt;/s:match&gt;
+  &lt;s:non-match&gt; John&lt;/s:non-match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.analyzeString('Tom Jim John',"(Jim)");
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+    &lt;s:match&gt;
+      &lt;s:group nr="1"&gt;Jim&lt;/s:group&gt;
+    &lt;/s:match&gt;
+  &lt;s:non-match&gt; John&lt;/s:non-match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:analyze-string('Tom Jim John',"((Jim) John)")
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+  &lt;s:match&gt;
+    &lt;s:group nr="1"&gt;
+    &lt;s:group nr="2"&gt;Jim&lt;/s:group&gt;
+    John
+    &lt;/s:group&gt;
+  &lt;/s:match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.analyzeString('Tom Jim John',"((Jim) John)");
+
+=&gt;
+&lt;s:analyze-string-result&gt;
+  &lt;s:non-match&gt;Tom &lt;/s:non-match&gt;
+  &lt;s:match&gt;
+    &lt;s:group nr="1"&gt;
+    &lt;s:group nr="2"&gt;Jim&lt;/s:group&gt;
+    John
+    &lt;/s:group&gt;
+  &lt;/s:match&gt;
+&lt;/s:analyze-string-result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:analyze-string("http://example.com/", "\w+")
+
+=&gt;
+&lt;result xmlns="http://www.w3.org/2005/xpath-functions"&gt;
+  &lt;match&gt;http&lt;/match&gt;
+  &lt;non-match&gt;://&lt;/non-match&gt;
+  &lt;match&gt;example&lt;/match&gt;
+  &lt;non-match&gt;.&lt;/non-match&gt;
+  &lt;match&gt;com&lt;/match&gt;
+  &lt;non-match&gt;/&lt;/non-match&gt;
+&lt;/result&gt;
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.analyzeString("http://example.com/", "\\w+");
+// note that you have to escape the escape character in JavaScript
+
+=&gt;
+&lt;result xmlns="http://www.w3.org/2005/xpath-functions"&gt;
+  &lt;match&gt;http&lt;/match&gt;
+  &lt;non-match&gt;://&lt;/non-match&gt;
+  &lt;match&gt;example&lt;/match&gt;
+  &lt;non-match&gt;.&lt;/non-match&gt;
+  &lt;match&gt;com&lt;/match&gt;
+  &lt;non-match&gt;/&lt;/non-match&gt;
+&lt;/result&gt;
+</pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="tokenize" type="builtin" lib="fn" category="StringBuiltins" bucket="W3C-Standard Functions">
+    <apidoc:summary>
+  Returns a sequence of strings contructed by breaking the specified
+  input into substrings separated by the specified $pattern.  The
+  specified $pattern is not returned as part of the returned items.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="input" type="xs:string?">
+  The string to tokenize.
+  </apidoc:param>
+      <apidoc:param name="pattern" type="xs:string">
+  The regular expression pattern from which to separate the tokens.
+  </apidoc:param>
+      <apidoc:param name="flags" type="xs:string" optional="true">
+  The flag representing how to interpret the regular expression. One of
+  "s", "m", "i", or "x", as defined in
+  <a href="http://www.w3.org/TR/xpath-functions/#flags" xmlns="http://www.w3.org/1999/xhtml">http://www.w3.org/TR/xpath-functions/#flags</a>.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string*</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn:tokenize("this is a string", " ")
+
+=&gt; returns the sequence ("this", "is", "a", "string")
+
+fn:tokenize("this is a string", " ")[last()]
+
+=&gt; string
+</pre>
+</apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+fn.tokenize("this is a string", " ");
+
+=&gt; returns the Sequence containg:
+   ("this", "is", "a", "string")
+
+var arr = fn.tokenize("this is a string", " ").toArray();
+arr[arr.length-1]
+
+=&gt; string
+</pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

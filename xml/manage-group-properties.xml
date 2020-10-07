@@ -1,0 +1,1297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/group/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/group/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:simpleType name="read-size">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount for block sizes in kilobytes, min 8, max 16384.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="8" fixed="false"/>
+      <xs:maxInclusive value="16384" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="memory-size">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount of system memory in megabytes, min 1, max 73728.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="73728" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="memory-partitions">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of memory partitions, min 1, max 32.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="32" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hostname">
+    <xs:annotation>
+      <xs:documentation>
+        A hostname.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="http-user-agent">
+    <xs:annotation>
+      <xs:documentation>
+        An HTTP User-agent string.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="log-level">
+    <xs:annotation>
+      <xs:documentation>
+        Logging configuration for all logging features. "disabled" prevents logging entirely.
+	disabled, emergency, alert, critical, error, warning, notice, info,
+	config, debug, fine, finer, or finest
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="finest"/>
+      <xs:enumeration value="finer"/>
+      <xs:enumeration value="fine"/>
+      <xs:enumeration value="debug"/>
+      <xs:enumeration value="config"/>
+      <xs:enumeration value="info"/>
+      <xs:enumeration value="notice"/>
+      <xs:enumeration value="warning"/>
+      <xs:enumeration value="error"/>
+      <xs:enumeration value="critical"/>
+      <xs:enumeration value="alert"/>
+      <xs:enumeration value="emergency"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="telemetry-config">
+    <xs:annotation>
+      <xs:documentation>
+        The type of configuration data collected by telemetry.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="frequent"/>
+      <xs:enumeration value="infrequent"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="telemetry-metering">
+    <xs:annotation>
+      <xs:documentation>
+        The type of metering data collected by telemetry.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="raw"/>
+      <xs:enumeration value="hourly"/>
+      <xs:enumeration value="daily"/>
+      <xs:enumeration value="disabled"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="telemetry-session-endpoint">
+    <xs:annotation>
+      <xs:documentation>
+        The REST URI for the Telemetry Session API endpoint.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:list itemType="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="rotate-log-files">
+    <xs:annotation>
+      <xs:documentation>
+        never, daily, saturday, sunday, monday, or monthly
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="never"/>
+      <xs:enumeration value="daily"/>
+      <xs:enumeration value="monday"/>
+      <xs:enumeration value="tuesday"/>
+      <xs:enumeration value="wednesday"/>
+      <xs:enumeration value="thursday"/>
+      <xs:enumeration value="friday"/>
+      <xs:enumeration value="saturday"/>
+      <xs:enumeration value="sunday"/>
+      <xs:enumeration value="monthly"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="keep-log-files">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of log files, min 1, max 365.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+      <xs:maxInclusive value="365" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="timeout">
+    <xs:annotation>
+      <xs:documentation>
+        An integer number of seconds, min 0, max 4294967295.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+      <xs:maxInclusive value="4294967295" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="namespace-uri">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="schema-location">
+    <xs:annotation>
+      <xs:documentation>
+        A URI used to find a schema.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="ssl-ciphers-string">
+    <xs:annotation>
+      <xs:documentation>
+        The id of the certificate template in the security database.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="group-name">
+    <xs:annotation>
+      <xs:documentation>
+        The name of a group of servers.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="io-limit">
+    <xs:annotation>
+      <xs:documentation>
+        An I/O limit in megabytes per second (min 0, no maximum; 0 means unlimited).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="0" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="seconds">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount of seconds
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="performance-metering-retain-days">
+    <xs:annotation>
+      <xs:documentation>
+        An integer amount of days
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedInt">
+      <xs:minInclusive value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="internet-domain-name">
+    <xs:annotation>
+      <xs:documentation>
+        An internet domain name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[^ ].*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="s3-protocol">
+    <xs:annotation>
+      <xs:documentation>
+	http or https
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="http"/>
+      <xs:enumeration value="https"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="s3-server-side-encryption">
+    <xs:annotation>
+      <xs:documentation>
+	none or aes256
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="aes256"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="prefix">
+    <xs:annotation>
+      <xs:documentation>
+        A QName prefix.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NCName"/>
+  </xs:simpleType>
+  <xs:simpleType name="location">
+    <xs:annotation>
+      <xs:documentation>
+        A module location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+  <xs:simpleType name="boolean">
+    <xs:annotation>
+      <xs:documentation>
+        true or false
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+  <xs:simpleType name="audit-event-name">
+    <xs:annotation>
+      <xs:documentation>
+      A string identifier for an audit event.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="server-startup"/>
+      <xs:enumeration value="server-restart"/>
+      <xs:enumeration value="server-shutdown"/>
+      <xs:enumeration value="audit-startup"/>
+      <xs:enumeration value="audit-shutdown"/>
+      <xs:enumeration value="configuration-change"/>
+      <xs:enumeration value="concurrent-request-denial"/>
+      <xs:enumeration value="request-blackout-denial"/>
+      <xs:enumeration value="authentication-failure"/>
+      <xs:enumeration value="external-authentication-failure"/>
+      <xs:enumeration value="user-role-removal"/>
+      <xs:enumeration value="user-role-addition"/>
+      <xs:enumeration value="login-dynamic-roles"/>
+      <xs:enumeration value="role-change-failure"/>
+      <xs:enumeration value="no-privilege"/>
+      <xs:enumeration value="no-permission"/>
+      <xs:enumeration value="amp-usage"/>
+      <xs:enumeration value="exists"/>
+      <xs:enumeration value="estimate"/>
+      <xs:enumeration value="eval"/>
+      <xs:enumeration value="search"/>
+      <xs:enumeration value="permission-change"/>
+      <xs:enumeration value="audit-configuration-change"/>
+      <xs:enumeration value="user-configuration-change"/>
+      <xs:enumeration value="document-read"/>
+      <xs:enumeration value="document-update"/>
+      <xs:enumeration value="document-insert"/>
+      <xs:enumeration value="document-execute"/>
+      <xs:enumeration value="lexicon-read"/>
+      <xs:enumeration value="security-access"/>
+      <xs:enumeration value="TLS-Failure"/>
+      <xs:enumeration value="FIPS-Enabled"/>
+      <xs:enumeration value="FIPS-Disabled"/>
+      <!-- These events have been added in 9.0-1. You may have to fix audit-admin-form.xqy
+       and audit-admin-go.xqy code to accoomdate for rolling upgrade scenario. Older
+       versions of the server should not thrown an error because these events are in
+       present in group.xml.
+  -->
+      <xs:enumeration value="mlcp-copy-export-start"/>
+      <xs:enumeration value="mlcp-copy-export-finish"/>
+      <xs:enumeration value="document-protect"/>
+      <xs:enumeration value="document-wipe"/>
+      <xs:enumeration value="temporal-override"/>
+      <!-- These events have been added in 9.0-4. You may have to fix audit-admin-form.xqy
+       and audit-admin-go.xqy code to accoomdate for rolling upgrade scenario. Older
+       versions of the server should not thrown an error because these events are in
+       present in group.xml.
+  -->
+      <xs:enumeration value="optic"/>
+      <xs:enumeration value="SPARQL"/>
+      <xs:enumeration value="SQL"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="audit-restriction-name">
+    <xs:annotation>
+      <xs:documentation>
+      A string identifier for an audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="outcome"/>
+      <xs:enumeration value="user"/>
+      <xs:enumeration value="role"/>
+      <xs:enumeration value="uri"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="audit-restriction-type">
+    <xs:annotation>
+      <xs:documentation>
+      An exclusion or inclusion identifier for an audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="inclusion"/>
+      <xs:enumeration value="exclusion"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="audit-restriction-items">
+    <xs:annotation>
+      <xs:documentation>
+      A string identifier for an audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="schema" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="schema-location" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="schemas" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The schema binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="schema" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="group-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="group-name" minOccurs="0"/>
+      <xs:element ref="list-cache-size" minOccurs="0"/>
+      <xs:element ref="list-cache-partitions" minOccurs="0"/>
+      <xs:element ref="compressed-tree-cache-size" minOccurs="0"/>
+      <xs:element ref="compressed-tree-cache-partitions" minOccurs="0"/>
+      <xs:element ref="compressed-tree-read-size" minOccurs="0"/>
+      <xs:element ref="expanded-tree-cache-size" minOccurs="0"/>
+      <xs:element ref="expanded-tree-cache-partitions" minOccurs="0"/>
+      <xs:element ref="triple-cache-size" minOccurs="0"/>
+      <xs:element ref="triple-cache-partitions" minOccurs="0"/>
+      <xs:element ref="triple-cache-timeout" minOccurs="0"/>
+      <xs:element ref="triple-value-cache-size" minOccurs="0"/>
+      <xs:element ref="triple-value-cache-partitions" minOccurs="0"/>
+      <xs:element ref="triple-value-cache-timeout" minOccurs="0"/>
+      <xs:element ref="smtp-relay" minOccurs="0"/>
+      <xs:element ref="smtp-timeout" minOccurs="0"/>
+      <xs:element ref="http-user-agent" minOccurs="0"/>
+      <xs:element ref="http-timeout" minOccurs="0"/>
+      <xs:element ref="xdqp-timeout" minOccurs="0"/>
+      <xs:element ref="host-timeout" minOccurs="0"/>
+      <xs:element ref="host-initial-timeout" minOccurs="0"/>
+      <xs:element ref="retry-timeout" minOccurs="0"/>
+      <xs:element ref="module-cache-timeout" minOccurs="0"/>
+      <xs:element ref="system-log-level" minOccurs="0"/>
+      <xs:element ref="file-log-level" minOccurs="0"/>
+      <xs:element ref="rotate-log-files" minOccurs="0"/>
+      <xs:element ref="keep-log-files" minOccurs="0"/>
+      <xs:element ref="failover-enable" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-enabled" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-allow-sslv3" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-allow-tls" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-disable-sslv3" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-disable-tlsv1" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-disable-tlsv1-1" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-disable-tlsv1-2" minOccurs="0"/>
+      <xs:element ref="xdqp-ssl-ciphers" minOccurs="0"/>
+      <xs:element ref="schemas" minOccurs="0"/>
+      <xs:element ref="namespaces" minOccurs="0"/>
+      <xs:element ref="using-namespaces" minOccurs="0"/>
+      <xs:element ref="module-locations" minOccurs="0"/>
+      <xs:element ref="events-activated" minOccurs="0"/>
+      <xs:element ref="events" minOccurs="0"/>
+      <xs:element ref="audit" minOccurs="0"/>
+      <xs:element ref="background-io-limit" minOccurs="0"/>
+      <xs:element ref="metering-enabled" minOccurs="0"/>
+      <xs:element ref="performance-metering-enabled" minOccurs="0"/>
+      <xs:element ref="meters-database" minOccurs="0"/>
+      <xs:element ref="performance-metering-period" minOccurs="0"/>
+      <xs:element ref="performance-metering-retain-raw" minOccurs="0"/>
+      <xs:element ref="performance-metering-retain-hourly" minOccurs="0"/>
+      <xs:element ref="performance-metering-retain-daily" minOccurs="0"/>
+      <xs:element ref="telemetry-log-level" minOccurs="0"/>
+      <xs:element ref="telemetry-metering" minOccurs="0"/>
+      <xs:element ref="telemetry-config" minOccurs="0"/>
+      <xs:element ref="telemetry-session-endpoint" minOccurs="0"/>
+      <xs:element ref="s3-domain" minOccurs="0"/>
+      <xs:element ref="s3-protocol" minOccurs="0"/>
+      <xs:element ref="s3-server-side-encryption" minOccurs="0"/>
+      <xs:element ref="security-database" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="namespace" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="prefix" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="using-namespace" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace path URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        The namespace binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="namespace"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="using-namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        Default namespace bindings.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="using-namespace"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="module-location" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="namespace-uri" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="location" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="module-locations" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The module location specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="module-location" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="event">
+    <xs:annotation>
+      <xs:documentation>
+	A single event name.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="events" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A single event specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="event" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="audit-event" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+      A single audit event specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="audit-event-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="audit-event-enabled" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="audit-events" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+      Audit events specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="audit-event" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="audit-restriction" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+      A single audit restriction specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="audit-restriction-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="audit-restriction-type" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="audit-restriction-items" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="audit-restrictions" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+      Audit restrictions specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="audit-restriction" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="audit" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+      Audit specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="audit-enabled" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="rotate-audit-files" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="keep-audit-files" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="audit-events" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="audit-restrictions" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="list-cache-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The size of the list cache, in megabytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="compressed-tree-cache-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The size of the compressed tree cache, in megabytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="expanded-tree-cache-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The size of the expanded tree cache, in megabytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="compressed-tree-read-size" type="read-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The block size for random-access compressed tree file reads, in kilobytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="list-cache-partitions" type="memory-partitions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of list cache partitions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="compressed-tree-cache-partitions" type="memory-partitions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of compressed tree cache partitions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="expanded-tree-cache-partitions" type="memory-partitions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of expanded tree cache partitions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-cache-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The size of the triple cache, in megabytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-cache-partitions" type="memory-partitions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of triple cache partitions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-value-cache-size" type="memory-size" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The size of the triple value cache, in megabytes.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-value-cache-partitions" type="memory-partitions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of triple value cache partitions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="smtp-relay" type="hostname" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The name of the SMTP mail relay host.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="smtp-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The SMTP response timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="http-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The HTTP response timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The XDQP protocol timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="host-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The host response timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="host-initial-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The host initial response timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="retry-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The request retry timeout, in seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="module-cache-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Flush from caches modules unused after this many seconds.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-cache-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of seconds of inactivity before triple index pages are
+        eligible to be flushed from the cache.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="triple-value-cache-timeout" type="timeout" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The number of seconds of inactivity before triple value index pages are
+        eligible to be flushed from the cache.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="http-user-agent" type="http-user-agent" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The HTTP User-agent string used
+        when making HTTP requests.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="file-log-level" type="log-level" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum log level for log messages in the log file.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="system-log-level" type="log-level" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum log level for log messages sent to the operating system.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="telemetry-log-level" type="log-level" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The minimum log level for log messages collected by telemetry.
+        A value of 'disabled' disables all telemetry use of log data.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="telemetry-session-endpoint" type="telemetry-session-endpoint" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The REST URI for the Telemetry Session API endpoint.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rotate-log-files" type="rotate-log-files" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        When to start a new log file.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rotate-audit-files" type="rotate-log-files" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        When to start a new audit log file.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="keep-log-files" type="keep-log-files" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        How many log files to keep.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="keep-audit-files" type="keep-log-files" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        How many audit files to keep.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespace-uri" type="namespace-uri" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schema-location" type="schema-location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schema" type="schema" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A schema binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="schemas" type="schemas" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The schema binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not SSL is enabled for XDQP.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-allow-sslv3" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not SSLv3 is allowed for XDQP.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-allow-tls" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS is allowed for XDQP.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-disable-sslv3" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not ssl v3 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-disable-tlsv1" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1.0 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-disable-tlsv1-1" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1.1 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-disable-tlsv1-2" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Whether or not TLS v1.2 is disable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="xdqp-ssl-ciphers" type="ssl-ciphers-string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A colon separated list of ciphers (e.g. ALL:!LOW:@STRENGTH)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="group-name" type="group-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The name of a group of servers.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="background-io-limit" type="io-limit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The maximum I/O rate allowable for background operations
+        (merge, backup, restore).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="metering-enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable Usage metering.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="telemetry-metering" type="telemetry-metering" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The type of metering data collected by telemetry.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="telemetry-config" type="telemetry-config" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The type of configuration data collected by telemetry.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="meters-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The metering and performance history database.
+    </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="performance-metering-enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Enable performance monitoring history.
+      </xs:documentation>
+      <xs:appinfo><manage:health equals="false()" state="info" code="HEALTH-GROUP-PERFORMANCE-METERING-DISABLED"/></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="performance-metering-period" type="seconds" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Historic performance metering period (seconds).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="performance-metering-retain-raw" type="performance-metering-retain-days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Retain raw performance metering data in days.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="performance-metering-retain-hourly" type="performance-metering-retain-days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Retain hourly performance metering data in days.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="performance-metering-retain-daily" type="performance-metering-retain-days" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Retain daily performance metering data in days.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="s3-domain" type="internet-domain-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The simple storage service internet domain name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="s3-protocol" type="s3-protocol" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The simple storage service network protocol.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="s3-server-side-encryption" type="s3-server-side-encryption" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Specifies server side encryption for data at rest
+	on the simple storage service.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="security-database" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The security database where global security data are kept for hosts in this group.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="group-properties" type="group-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The server specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="prefix" type="prefix" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A QName prefix.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespace" type="namespace" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace binding specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="using-namespace" type="using-namespace" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A namespace path URI.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="namespaces" type="namespaces" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The namespace binding specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="using-namespaces" type="using-namespaces">
+    <xs:annotation>
+      <xs:documentation>
+        The default namespace bindings.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="location" type="location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="module-location" type="module-location" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        A module location specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="module-locations" type="module-locations" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The module location specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="events-activated" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	Activates the trace event mechanism.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="failover-enable" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	Enable forest assignment to a failover host
+        when the primary host is down.
+      </xs:documentation>
+      <xs:appinfo><admin:optional>true</admin:optional></xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="event" type="event" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The event specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="events" type="events" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The list of events to enable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Enables auditing.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-event-name" type="audit-event-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The string identifier of the audit event.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-event-enabled" type="boolean" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Enables a specified audit event.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-restriction-name" type="audit-restriction-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The string identifier of the audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-restriction-type" type="audit-restriction-type" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The string identifier of the audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-restriction-items" type="audit-restriction-items" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The string identifier of the audit restriction.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-event" type="audit-event" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The audit event specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-events" type="audit-events" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The list of audit events to enable.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-restriction" type="audit-restriction" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The audit restriction specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit-restrictions" type="audit-restrictions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      The list of audit restrictions.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="audit" type="audit" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+      Audit specification.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:annotation>
+    <xs:documentation>
+      Server configuration file schema.
+    </xs:documentation>
+    <xs:appinfo/>
+  </xs:annotation>
+  <?xdmp-annotations?>
+</xs:schema>

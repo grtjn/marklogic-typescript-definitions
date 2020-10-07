@@ -1,0 +1,961 @@
+<apidoc:module name="Packaging" category="Configuration Packaging" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="pkg" class="xquery"
+>
+<apidoc:summary access="public">
+  <p>
+   The Configuration Packaging API module contains functions for scripting
+   the packaging of MarkLogic Server resource configurations, such as
+   database and App Server settings. Use the API to create, compare, and
+   install configuration packages. 
+  </p>
+  <p>
+    The Configuration Packaging API is installed as the following file:
+  </p>
+  <pre><code>
+<em>install_dir</em>/Modules/MarkLogic/manage/package/package.xqy
+  </code></pre>
+  <p>
+   To use the Package module as part of your own XQuery module, include the
+   following line in your XQuery prolog:
+  </p>
+  <p><pre><code>
+import module namespace pkg = "http://marklogic.com/manage/package"
+        at "/MarkLogic/manage/package/package.xqy";
+  </code></pre></p>
+  <p>
+   The library namespace prefix <code>pkg</code> is <em>not</em> predefined
+   in the server.
+  </p>
+</apidoc:summary>
+
+<apidoc:function name="create" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Create an empty configuration for use with other packaging functions.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The name of the package.
+    </apidoc:param>
+    <apidoc:param name="pkgbody" type="node()" optional="true">
+      The contents of the package.
+    </apidoc:param>    
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+   at "/MarkLogic/manage/package/package.xqy";
+
+pkg:create("mypackage")
+  
+  => Creates an empty package, named "mypackage."
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="exists" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Checks to see if the named package exists.  Returns <code>true</code> if
+    the package exists and <code>false</code> if the package does not exist.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The package to check.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:boolean</apidoc:return>
+  <apidoc:privilege>
+    <code>http://marklogic.com/xdmp/privileges/manage</code>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+   at "/MarkLogic/manage/package/package.xqy";
+
+pkg:exists("mypackage")
+  
+  => Returns 'true' if "mypackage" exists.  Otherwise returns 'false.'
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-package-list" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Returns the list of packages.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="start" type="xs:unsignedLong" optional="true">
+      The start position of the list of packages. For example, if there are a total of 
+      50 packages and the <code>pageLength</code> is set to 5, then <code>start=6</code>
+      returns a list of 5 packages, starting with the sixth package (packages 6-10).
+    </apidoc:param> 
+    <apidoc:param name="pageLength" type="xs:unsignedLong" optional="true">
+      The number of packages to return in each list.
+    </apidoc:param> 
+  </apidoc:params>
+  <apidoc:return>element(list:package-list)</apidoc:return>
+  <apidoc:privilege>
+    <code>http://marklogic.com/xdmp/privileges/manage</code>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-package-list()
+  
+  => Returns the list of packages.
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="installable" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Checks to see if the named package can be installed.  Returns <code>true</code> if
+    the package is installable and <code>false</code> if the package is not installable.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The package to check.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:boolean</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+
+import module namespace pkg = "http://marklogic.com/manage/package" 
+   at "/MarkLogic/manage/package/package.xqy";
+
+pkg:installable("mypackage")
+
+  => Returns 'true' if "mypackage" can be installed.  Otherwise returns 'false.' 
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="install" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Install the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The name of the package to install.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>pkgins:install($pkgname)</apidoc:return>
+  <apidoc:usage>
+    <p>
+     Only users with the <code>admin</code> role may install packages.
+    </p>
+    <p>
+     Installing a package creates a ticket. Use <code>info:ticket</code>
+     to check the status of the ticket.
+    </p>
+    <p>
+     Modifying some settings requires a server restart. If package
+     installation requires a server restart to complete, the returned
+     result directs you to restart.
+    </p>
+    <p>
+     The returned status reports success or failure in
+     the <code>pkg:result-status</code> child element. If the installation
+     fails, the live configuration is unchanged and errors are reported.
+    </p>
+    <p>
+     Attempting to install two or more packages concurrently may leave your
+     configuration in an indeterminate state.
+    </p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+(: install a package previously created on the server :)
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:install("mypackage")
+
+  => The settings in "mypackage are applied and a status is
+     returned, indicating success or failure. For example:
+
+  <install-status xmlns="http://marklogic.com/manage/package">
+    <success>true</success>
+    <restart>false</restart>
+    <ticket-id>/tickets/ticket/10368962049703559638</ticket-id>
+    <revert-uri>/manage/v2/tickets/10368962049703559638/revert</revert-uri>
+  </install-status>
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<!-- removed from public API for 5.0-1>
+<apidoc:function name="prettyprint" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    Format package XML for easier reading by humans.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkg" type="element(pkg:package)">
+      The package to format.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:usage>
+    Use this function to facilitate package comparison by text-based
+    comparison tools. For example, if saving a package under source control,
+    store the pretty-printed package so the source control diff can more
+    meaningfully report differences between revisions.
+  </apidoc:usage>
+  <apidoc:return>document-node()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:prettyprint(
+  pkg:add-database(pkg:create(), "samples"))
+  
+  => The well formatted package XML.
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+-->
+
+<apidoc:function name="valid" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Test a package for consistency.  Returns <code>true</code> if
+    the package is valid and <code>false</code> if the package is not valid.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The name of the package to check for validity. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:boolean</apidoc:return>
+  <apidoc:usage>
+    <p>
+     This function returns true if the package is valid and false otherwise.
+     Use <code>pkg:errors</code> to view a list of errors for an invalid
+     package.
+    </p>
+    <p>
+     A package may be invalid for many reasons, including a violation of
+     the package schema (Config/package.xsd), fields with erroneous values,
+     or duplicate settings.
+    </p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:valid("mypackage)
+  
+  => Returns 'true' if "mypackage" is valid.  Otherwise returns 'false.' 
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="errors" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Check a package for errors and, if there are errors, return a
+    description of the errors as <code>err:configuration-error</code> elements.
+    If no errors are detected, an empty sequence is returned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+      The name of the package to check for errors. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(err:configuration-error)*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:errors("mypackage)
+
+  => Returns any detected errors.  If no errors are detected, 
+     an empty sequence is returned.
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="revert" lib="pkg" 
+	category="Configuration Packaging" bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+    Revert configuration settings to those prior to a particular 
+    package installation.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+      The id of a ticket created by a previous successful call to 
+      <code>pkg:install</code>.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>pkgins:revert($ticket)</apidoc:return>
+  <apidoc:usage>
+    <p>
+     Reverting a package installation restores all settings to their state 
+     at the time ticket was created by calling <code>pkg:install</code>.
+     If other configuration changes are applied between the successful
+     install and the attempt to revert, those changes are lost.
+    </p>
+    <p>
+     Successful calls to <code>pkg:install</code> create a ticket 
+     associated with the configuration changes. Use the revert-uri returned by 
+     <code>pkg:install</code> to revert the changes.
+    </p>
+    <p>
+     Reverting an installed package does not remove any forests associated
+     with databases that are removed.	    
+    </p>
+
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+(: install a package :)
+pkg:install("mypackage");
+
+(: Produces the following for some previously saved pkg:
+
+  <install-status xmlns="http://marklogic.com/manage/package">
+    <success>true</success>
+    <restart>false</restart>
+    <ticket-id>/tickets/17841336193093321431</ticket-id>
+    <revert-uri>/manage/v2/tickets/17841336193093321431/revert</revert-uri>
+  </install-status>
+
+:)
+
+(: revert the above install :)
+import module namespace pkg = "http://marklogic.com/manage/package" 
+    at "/MarkLogic/manage/package/package.xqy";
+
+pkg:revert("/tickets/ticket/17841336193093321431")
+
+  
+  => The changes applied by the package are reverted:
+
+  <pkg:revert-status xmlns:pkg="http://marklogic.com/manage/package">
+    <pkg:success>true</pkg:success>
+    <pkg:restart>false</pkg:restart>
+    <pkg:ticket-id>/tickets/ticket/5620889718989064792</pkg:ticket-id>
+    <pkg:revert-uri>/manage/v2/tickets/5620889718989064792/revert</pkg:revert-uri>
+  </pkg:revert-status>
+
+
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="database-configuration" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the configuration (in XML) of the named database.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database" type="xs:string">
+      The name of the database.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(db:package-database)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:database-configuration("Documents")
+
+(: Returns the configuration of the 'Documents' database. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="put-database" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Adds a database configuration to the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package to which to add the database configuration.
+    </apidoc:param>
+    <apidoc:param name="dbxml" type="element(db:package-database)">
+    The database configuration (in XML), such as that returned from the
+    <code>pkg:database-configuration</code> function.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:put-database("mypackage", pkg:database-configuration("Documents"))
+
+(: Add the configuration of the 'Documents' database to the package
+   named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="get-database" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the configuration of the named database from the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package from which to return the database configuration.
+    </apidoc:param>
+    <apidoc:param name="database" type="xs:string">
+    The name of the database for which to return the configuration.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(db:package-database)?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-database("mypackage", "Documents")
+
+(: Returns the configuration of the 'Documents' database from the package
+   named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="remove-database" lib="pkg" category="Configuration Packaging"
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Removes the configuration of the named database from the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package from which to remove the database configuration.
+    </apidoc:param>
+    <apidoc:param name="database" type="xs:string">
+     The name of the database for which to remove the configuration.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:remove-database("mypackage", "Documents")
+
+(: Removes the configuration of the 'Documents' database from the package
+   named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-database-list" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the names of the databases that have configurations  
+  in the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package that contains the database configurations.
+    </apidoc:param>
+    <apidoc:param name="start" type="xs:unsignedLong" optional="true">
+      The start position of the list of databases. For example, if there are a total of 
+      50 databases and the <code>pageLength</code> is set to 5, then <code>start=6</code>
+      returns a list of 5 databases, starting with the sixth database (databases 6-10).
+    </apidoc:param> 
+    <apidoc:param name="pageLength" type="xs:unsignedLong" optional="true">
+      The number of databases to return in each list.
+    </apidoc:param> 
+  </apidoc:params>
+  <apidoc:return>element(list:database-list)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-database-list("mypackage")
+
+(: Returns the names of the databases that have configurations  
+   in the package named, 'mypackage'.
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="server-configuration" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the configuration (in XML) of the named app server, located in the
+  named group.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="group" type="xs:string">
+    The name of the group that contains the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server for which to return the configuration.
+    </apidoc:param>
+    <apidoc:param name="include-modules" type="xs:boolean" optional="true">
+    Whether or not to include any module configurations used by the app server.
+    Specify <code>fn:true()</code> to include module configurations.  Otherwise
+    specify <code>fn:false()</code> or leave empty.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:server-configuration("Default", "dashml")
+
+(: Return the configuration of the 'dashml' app server located in the 'Default'
+   group. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="put-server" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Adds an app server configuration to the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package to which to add the app server configuration.
+    </apidoc:param>
+    <apidoc:param name="srvxml" type="element()">
+    The app server configuration (in XML), such as that returned from the
+    <code>pkg:server-configuration</code> function.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:put-server("mypackage", pkg:server-configuration("Default", "dashml"))
+
+(: Add the configuration of the 'dashml' app server located in the 'Default'
+   group to the package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="get-server" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the configuration of the named app server from the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package from which to return the app server configuration.
+    </apidoc:param>
+    <apidoc:param name="group" type="xs:string">
+    The name of the group that contains the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server for which to return the configuration.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element()?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-server("mypackage", "Default", "dashml")
+
+(: Returns the configuration of the 'dashml' app server located in the 'Default'
+   group from the package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="remove-server" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Removes the configuration of the named app server from the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package from which to remove the app server configuration.
+    </apidoc:param>
+    <apidoc:param name="group" type="xs:string">
+    The name of the group that contains the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server for which to remove the configuration.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:remove-server("mypackage", "Default", "dashml")
+
+(: Removes the configuration of the 'dashml' app server located in the 'Default'
+   group from the package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-server-list" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the names of the app servers that have configurations  
+  in the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package that contains the app server configurations.
+    </apidoc:param>
+    <apidoc:param name="start" type="xs:unsignedLong" optional="true">
+      The start position of the list of app servers. For example, if there are a total of 
+      50 app servers and the <code>pageLength</code> is set to 5, then <code>start=6</code>
+      returns a list of 5 app servers, starting with the sixth app server (app servers 6-10).
+    </apidoc:param> 
+    <apidoc:param name="pageLength" type="xs:unsignedLong" optional="true">
+      The number of databases to return in each list.
+    </apidoc:param> 
+  </apidoc:params>
+  <apidoc:return>element(list:server-list)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-server-list("mypackage")
+
+(: Returns the names of the app servers that have configurations  
+   in the package named, 'mypackage'.
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-package" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the contents of the named package.  By default, the package is
+  returned in ZIP format.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package to return.
+    </apidoc:param>
+    <apidoc:param name="mimetype" type="xs:string?" optional="true">
+    The format in which to return the package. By default the package is returned in ZIP 
+    format.  Specify <code>application/xml</code>
+    to return the package in XML format or <code>application/json</code> to return the 
+    package in JSON format.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string?</apidoc:return>
+  <apidoc:usage>
+  <p>The XML and JSON formats only return the configuration of application
+  servers and databases in the package. Packages may also contain modules,
+  so the only reliable way to transport packages between clusters is
+  with the ZIP format.
+  </p>
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-package("mypackage", "application/xml")
+
+(: Returns the contents of the 'mypackage' package in XML format. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="delete" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Deletes the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package to delete.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:delete("mypackage")
+
+(: Deletes the package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="differences" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Determines the differences between the configuration in the package and the
+  current configuration of the MarkLogic server on which the function is executed. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package containing the configuration to compare with 
+    the MarkLogic server.
+    </apidoc:param>
+    <apidoc:param name="only-diffs" type="xs:boolean" optional="true">
+     By default, all of the configuration settings in the package are returned, 
+     along with what settings are to be deleted and the settings that are to replace them.
+     Specify <code>fn:true()</code> to return only those settings that are to be changed 
+     when the package is installed.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(pkg:package-diff)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:differences("mypackage", fn:true())
+
+(: Compare the configuration in the 'mypackage' package against the current
+   configuration of your MarkLogic server and return only those settings that
+   differ between the packaged and current configurations. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="put-modules" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Puts the content of the modules database used by the named app server
+  into the named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package in which to put the modules data.
+    </apidoc:param>
+    <apidoc:param name="group" type="xs:string">
+    The name of the goup that contains the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server that uses the modules data.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:put-modules("mypackage", "Default", "myserver")
+
+(: Puts the contents of the modules database used by the 'myserver' app server
+   into the package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get-modules" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Returns the modules data for the named app server from the named
+  package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package containing the modules data.
+    </apidoc:param>
+    <apidoc:param name="group" type="xs:string">
+    The name of the goup that contains the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server that uses the modules data.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>binary()?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:get-modules("mypackage", "Default", "myserver")
+
+(: Returns the modules data stored in the 'mypackage' package for the
+   app server named, 'myserver'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-modules" lib="pkg" category="Configuration Packaging" 
+bucket="XQuery Library Modules">
+  <apidoc:summary>
+    <p>
+      [DEPRECATED: use <code><a href="cma:generate-config">cma:generate-config</a></code> and
+      <code><a href="cma:apply-config">cma:apply-config</a></code> instead.]
+    </p>  
+  Removes the modules data for the named app server from the 
+  named package.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="xs:string">
+    The name of the package from which to remove the modules data.
+    </apidoc:param>
+    <apidoc:param name="group" type="xs:string">
+    The name of the group containing the app server.
+    </apidoc:param>
+    <apidoc:param name="server" type="xs:string">
+    The name of the app server from which to remove the modules data.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+xquery version "1.0-ml"; 
+ 
+import module namespace pkg = "http://marklogic.com/manage/package" 
+      at "/MarkLogic/manage/package/package.xqy";
+
+pkg:remove-modules("mypackage", "Default", "myserver")
+
+(: Removes the modules data used by the 'myserver' app server in the
+   package named, 'mypackage'. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

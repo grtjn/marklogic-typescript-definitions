@@ -1,0 +1,25 @@
+<apidoc:module name="Extensions" category="Extension" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:function name="rethrow" type="builtin" lib="xdmp" category="Extension" subcategory="MarkLogic Server">
+    <apidoc:summary>
+  Within the catch section of a try-catch expression,
+  re-throw the currently caught error.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  try {
+    xdmp:document-delete($uri)
+  } catch ($ex) {
+    (: ignore documents that aren't there :)
+    if ($ex/error:code eq 'XDMP-DOCNOTFOUND') then ()
+    else xdmp:rethrow()
+  }
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+declareUpdate();
+try {
+  xdmp.documentDelete("/some-uri") }
+catch (e) {if (e.name =="XDMP-DOCNOTFOUND") {  }
+           else {xdmp.rethrow()}}
+
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

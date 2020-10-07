@@ -1,0 +1,337 @@
+<apidoc:module name="GeoRSS" subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="georss"
+>
+<apidoc:summary access="public" subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions" class="xquery">
+<p>The GeoRSS module provides support for geospatial queries using
+GeoRSS/Simple markup. 
+</p>
+<p>To use the GeoRSS module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";</code></p>
+<p>The library namespace prefix <code>georss</code> is <em>not</em> predefined
+in the server.</p>
+</apidoc:summary>
+<apidoc:summary access="public" subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions" class="javascript">
+<p>The GeoRSS module provides support for geospatial queries using
+GeoRSS/Simple XML markup. 
+</p>
+<p>To use the GeoRSS module in your Server-Side JavaScript code, include a
+<code>require</code> statement similar to following line in your code:
+</p>
+<p><code>var gml = require('/MarkLogic/geospatial/georss.xqy');</code></p>
+<p>The library namespace prefix <code>georss</code> is <em>not</em> predefined
+in the server.</p>
+</apidoc:summary>
+
+<apidoc:function name="point" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:point value from a GeoRSS point element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="point" type="element(georss:point)">
+    A point element.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:point </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";
+
+  georss:point(<georss:point>12.5 -127.24</georss:point>)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="circle" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:circle value from a radius and GeoRSS point element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="radius" type="xs:double">
+    The radius of the circle, in miles.
+    </apidoc:param>
+    <apidoc:param name="center" type="element(georss:point)">
+    A point element representing the center of the circle.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:circle </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";
+
+  georss:circle(47, <georss:point>12.5 -127.24</georss:point>)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="linestring" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Create a cts:linestring value from a GeoRSS line element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="linestring" type="element(georss:line)">
+    A line element.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:linestring </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";
+
+  georss:linestring(<georss:line>45.256 -110.45 46.46 -109.48 43.84 -109.86</georss:line>)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="polygon" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a <code>cts:polygon</code> value from a sequence of GeoRSS 
+	  point elements or a GeoRSS polygon element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="polygon-or-points" type="element()+">
+    A sequence of point elements representing the vertices of the polygon or a polygon element.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:polygon</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";
+
+  georss:polygon((
+    <georss:point>12.5 -127.24</georss:point>,
+    <georss:point>15.25 -127.8</georss:point>,
+    <georss:point>13.45 -126.1</georss:point>,
+    <georss:point>12.5 -127.24</georss:point>
+  ))
+  ]]></pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace georss = "http://www.georss.org/georss"
+         at "/MarkLogic/geospatial/georss.xqy";
+
+  georss:polygon(
+    <georss:polygon>45.256 -110.45 46.46 -109.48 43.84 -109.86 45.256 -110.45</georss:polygon>
+  )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="complex-polygon" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+	  Create a <code>cts:complex-polygon</code> value from a GeoRSS "Polygon" 
+	  element. Given that GeoRSS doesn't have interior polygons, the complex-polygon returned is
+	  equivalent to the polygon returned by <code>polygon</code> as far as queries are concerned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="complex-polygon" type="node()">
+    A Polygon element representing the polygon.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:complex-polygon </apidoc:return>
+</apidoc:function>
+
+<apidoc:function name="geospatial-query" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+  Returns a cts:query matching points within given regions.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="regions" type="cts:region*">
+    One or more geographic boxes, circles, or points. Where multiple boxes,
+    circles, or points are specified, the query matches if any box, circle, or
+    point matches.
+    </apidoc:param>
+    <apidoc:param name="options" type="xs:string*" optional="true">
+    Options to this query.  The default is ().
+    <p>Options include:</p>
+      <blockquote>
+        <dl>
+        <dt>"coordinate-system=<var>string</var>"</dt>
+        <dd>Use the given coordinate system. Valid values are:
+          <dl>
+          <dt>wgs84</dt><dd>The WGS84 coordinate system.</dd>
+          <dt>wgs84/double</dt><dd>The WGS84 coordinate system at double precision.</dd>
+          <dt>etrs89</dt><dd>The ETRS89 coordinate system.</dd>
+          <dt>etrs89/double</dt><dd>The ETRS89 coordinate system at double precision.</dd>
+          <dt>raw</dt><dd>The raw (unmapped) coordinate system.</dd>
+          <dt>raw/double</dt><dd>The raw coordinate system at double precision.</dd>
+          </dl>
+        </dd>
+        <dt>"units=<em>value</em>"</dt>
+        <dd>Measure distance and the radii of circles in the specified units.
+         Allowed values: <code>miles</code> (default), <code>km</code>,
+         <code>feet</code>, <code>meters</code>.</dd>
+        <dt>"precision=<em>value</em>"</dt>
+        <dd>Use the coordinate system at the given precision. Allowed values:
+         <code>float</code> and <code>double</code>.</dd>
+        <dt>"type=<em>value</em>"</dt>
+        <dd>Specify the format of point coordinates, either (lat,long)
+         or (long,lat). Latitude-first order is the default. Allowed values: 
+         <code>point</code> (default) or <code>long-lat-point</code>.</dd>
+        <dt>"boundaries-included"</dt>
+        <dd>Points on boxes' and circles' boundaries are counted as matching.  This is the default.</dd>
+        <dt>"boundaries-excluded"</dt>
+        <dd>Points on boxes' and circles' boundaries are not counted as matching.</dd>
+        <dt>"boundaries-latitude-excluded"</dt>
+        <dd>Points on boxes' latitude boundaries are not counted as matching.</dd>
+        <dt>"boundaries-longitude-excluded"</dt>
+        <dd>Points on boxes' longitude boundaries are not counted as matching.</dd>
+        <dt>"boundaries-south-excluded"</dt>
+        <dd>Points on the boxes' southern boundaries are not counted as matching.</dd>
+        <dt>"boundaries-west-excluded"</dt>
+        <dd>Points on the boxes' western boundaries are not counted as matching.</dd>
+        <dt>"boundaries-north-excluded"</dt>
+        <dd>Points on the boxes' northern boundaries are not counted as matching.</dd>
+        <dt>"boundaries-east-excluded"</dt>
+        <dd>Points on the boxes' eastern boundaries are not counted as matching.</dd>
+        <dt>"boundaries-circle-excluded"</dt>
+        <dd>Points on circles' boundary are not counted as matching.</dd>
+      </dl></blockquote>
+    </apidoc:param>
+    <apidoc:param name="weight" type="xs:double?" optional="true">
+    A weight for this query.  The default is 1.0.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> cts:query </apidoc:return>
+<apidoc:usage>
+<p>The point value is expressed in the content of the element as a pair
+of numbers, separated by whitespace and punctuation (excluding decimal points
+and sign characters).
+</p>
+<p>Point values and boundary specifications of boxes are given in degrees
+relative to the WGS84 coordinate system.  Southern latitudes and Western 
+longitudes take negative values.  Longitudes will be wrapped to the range 
+(-180,+180) and latitudes will be clipped to the range (-90,+90).  
+</p>
+<p>If the northern boundary of a box is south of the southern boundary, no 
+points will  match. However, longitudes wrap around the globe, so that if 
+the western boundary is east of the eastern boundary,
+then the box crosses the anti-meridian.
+</p>
+<p>Special handling occurs at the poles, as all longitudes exist at latitudes 
++90 and -90.
+</p>
+</apidoc:usage>
+<apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+
+(: create a document with test data :)
+xdmp:document-insert("/points.xml",
+<root xmlns:georss="http://www.georss.org/georss">
+  <item><georss:point>10.5 30.0</georss:point></item>
+  <item><georss:point>15.35 35.34</georss:point></item>
+  <item><georss:point>5.11 40.55</georss:point></item>
+</root> );
+
+xquery version "1.0-ml";
+import module namespace georss = "http://www.georss.org/georss"
+   at "/MarkLogic/geospatial/georss.xqy";
+
+cts:search(doc("/points.xml")//item, 
+  georss:geospatial-query(cts:box(10.0, 35.0, 20.0, 40.0)))
+(:
+  returns the following node: 
+  <item><georss:point>15.35 35.34</georss:point></item>
+:)
+ 
+]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="parse-georss" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+    Construct zero or more <code>cts:region</code> values from GeoRSS
+    XML elements.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="georss" type="element()*">
+      A set of GeoRSS elements to be converted into <code>cts:region</code>'s.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>cts:region*</apidoc:return>
+  <apidoc:usage class="javascript">
+    The returned <code>Sequence</code> contains cts:region nodes.
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/geospatial.xml%2396147'>Converting To and From Common Geospatial Representations</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+import module namespace georss="http://www.georss.org/georss"
+  at "/MarkLogic/geospatial/georss.xqy";
+
+georss:parse-georss(
+  <georss:polygon>5.0 1.0 8.0 1.0 8.0 6.0 5.0 7.0 5.0 1.0</georss:polygon>
+)
+(: A cts:polygon with the given coordinates. :)
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="to-georss" type="georss" lib="georss" 
+	subcategory="GeoRSS" bucket="XQuery Library Modules" category="Geospatial Supporting Functions">
+  <apidoc:summary>
+    Convert <code>cts:region</code> values to GeoRSS XML elements.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="regions" type="cts:region*">
+      A sequence of <code>cts:region</code> values to convert to GeoRSS.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element()*</apidoc:return>
+  <apidoc:usage class="javascript">
+    The returned <code>Sequence</code> contains XML elements 
+    conforming to the GeoRSS representation.
+  </apidoc:usage>
+  <apidoc:see-also-list>
+    <apidoc:see-also>
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/search-dev-guide/geospatial.xml%2396147'>Converting To and From Common Geospatial Representations</a> in the <em>Search Developer's Guide</em>
+    </apidoc:see-also>
+  </apidoc:see-also-list>
+  <apidoc:example class="xquery"><pre xml:space="preserve"><![CDATA[
+import module namespace georss="http://www.georss.org/georss"
+  at "/MarkLogic/geospatial/georss.xqy";
+
+georss:to-georss(
+  cts:polygon((
+    cts:point(5.0,1.0),cts:point(8.0,1.0),cts:point(8.0,6.0),cts:point(5.0,7.0)
+  ))
+)
+
+(:
+  A GeoRSS polygon similar to the following:
+  <georss:polygon>5.0 1.0 8.0 1.0 8.0 6.0 5.0 7.0 5.0 1.0</georss:polygon>
+:)
+  ]]></pre></apidoc:example>
+  <apidoc:example class="javascript"><pre xml:space="preserve"><![CDATA[
+const georss = require('/MarkLogic/geospatial/georss');
+
+georss.toGeorss(
+  cts.polygon([
+    cts.point(5.0,1.0),cts.point(8.0,1.0),cts.point(8.0,6.0),cts.point(5.0,7.0)
+  ])
+);
+
+/*
+  Returns a GeoRSS polygon similar to the following:
+  <georss:polygon>5.0 1.0 8.0 1.0 8.0 6.0 5.0 7.0 5.0 1.0</georss:polygon>
+*/
+  ]]></pre></apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

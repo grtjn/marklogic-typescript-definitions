@@ -1,0 +1,906 @@
+<apidoc:module name="SSL" category="Extension" lib="ssl" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary category="SSL" lib="ssl" access="public">
+   <p xmlns="http://www.w3.org/1999/xhtml">The SSL built-in functions are miscellaneous extensions to the
+   XQuery core library that expose SSL functionality.</p>
+ </apidoc:summary><apidoc:function name="rsa-generate" type="builtin" lib="xdmp" category="AppServerBuiltins">
+    <apidoc:summary>
+  Generate a new RSA public/private key pair.
+  Returns a list of two PEM encoded strings. The first is the private key,
+the second is the public key.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="1">
+  <p xmlns="http://www.w3.org/1999/xhtml">Options with which to customize this function. <span class="xquery">
+  You can specify options as either an XML <code>options</code> element in 
+  the "ssl:options" namespace or a <code>map:map</code>. When using a
+  map, replace the hyphens in an option name with camel casing. For example, 
+  "an-option" becomes "anOption" when used a map key.</span> This function 
+  supports the following options: </p>
+  <blockquote xmlns="http://www.w3.org/1999/xhtml">
+  <dl>
+  <dt class="xquery">key-length</dt>
+  <dt class="javascript">keyLength</dt>
+  <dt class="xquery">pass-phrase</dt>
+  <dt class="javascript">passPhrase</dt>
+  </dl>
+  </blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string+</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: Using an options element :)
+xdmp:rsa-generate(
+  &lt;options xmlns="ssl:options"&gt;
+    &lt;key-length&gt;2048&lt;/key-length&gt;
+  &lt;/options&gt;)
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: Using an options map :)
+xdmp:rsa-generate(map:map() =&gt; map:with("keyLength", 2048))
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.rsaGenerate({keyLength:2048})
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="x509-certificate-generate" type="builtin" lib="xdmp" category="Security">
+    <apidoc:summary>
+  Generate a new PEM-encoded X.509 certificate.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="cert" type="element(x509:cert)">
+    The XML representation of the X.509 certificate.
+  </apidoc:param>
+      <apidoc:param class="javascript" name="cert" type="Object">
+    The JSON representation of the X.509 certificate.
+  </apidoc:param>
+      <apidoc:param class="xquery" name="private-key" type="xs:string?" optional="true">
+    The PEM encoded private key. This need not be provided and will be
+    ignored when the credential-id option is used.
+  </apidoc:param>
+      <apidoc:param class="javascript" name="privateKey" type="string?" optional="true">
+    The PEM-encoded private key. This need not be provided and will be
+    ignored when the credentialId option is used.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+  Options with which to customize this function. <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">
+  You can specify options as either an <code>options</code> XML element 
+  in the namespace "ssl:options" or a 
+  <code>map:map</code>. The options names shown below are XML localnames. 
+  When using a map, replace the hyphens in an option name with camel casing. 
+  For example, "an-option" becomes "anOption" when used a map key.</span> 
+  This function supports the following options:
+  <blockquote xmlns="http://www.w3.org/1999/xhtml">
+  <dl>
+  <dt class="xquery">ca-cert</dt>
+  <dt class="javascript">caCert</dt>
+  <dd>The CA certificate.</dd>
+  <dt class="xquery">pass-phrase</dt>
+  <dt class="javascript">passPhrase</dt>
+  <dd>The pass phrase for encrypting/decrypting a private key.</dd>
+  <dt class="xquery">credential-id</dt>
+  <dt class="javascript">credentialId</dt>
+  <dd>The credential to be used to sign the generated certificate.</dd>
+  </dl>
+  </blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">xs:string</apidoc:return>
+    <apidoc:return class="javascript">string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:x509-certificate-generate(
+&lt;cert xmlns="http://marklogic.com/xdmp/x509"&gt;
+  &lt;issuer&gt;
+    &lt;stateOrProvinceName&gt;CA&lt;/stateOrProvinceName&gt;
+    &lt;organizationName&gt;MarkLogic&lt;/organizationName&gt;
+    &lt;localityName&gt;San Carlos&lt;/localityName&gt;
+    &lt;commonName&gt;JGD Certificate Authority&lt;/commonName&gt;
+    &lt;countryName&gt;US&lt;/countryName&gt;
+    &lt;organizationalUnitName&gt;Eng&lt;/organizationalUnitName&gt;
+    &lt;emailAddress&gt;jdonner@marklogic.com&lt;/emailAddress&gt;
+  &lt;/issuer&gt;
+  &lt;publicKey&gt;
+-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEAq79ScXTQ54qrYD1cxLW/X3vLIusYq4PSDkKrWIcrwkeEXOEfAPL0
+WibCYdYi3EE7EqWAFFBxB2OIqC7VxNi3IQXx9b3qdcNKGSjwpBH0bI347IZQJpFw
+e/n80Srwo4vpvlYIuOlHegOmitZsRfdLZq9j5sWf43rY44YWeZ/qSRVIuYOEonGW
+0/hIEseeJss61vpkL0aWdytRvX7D88e58JeqA8498E9vVHGzYMWpbgf/F+6pdIwg
+GdqsI+1/VCy2exAHoSAw/aWVdc/qSMhA5LklcmqsBNOX/5dODnfyp4r8Qrq21KYo
+oZjib4db4iQ7HheuUeURgnGSuLdznCJoVwIDAQAB
+-----END RSA PUBLIC KEY-----
+  &lt;/publicKey&gt;
+  &lt;subject&gt;
+    &lt;stateOrProvinceName&gt;CA&lt;/stateOrProvinceName&gt;
+    &lt;organizationName&gt;MarkLogic&lt;/organizationName&gt;
+    &lt;localityName&gt;San Carlos&lt;/localityName&gt;
+    &lt;commonName&gt;JGD Certificate Authority&lt;/commonName&gt;
+    &lt;countryName&gt;US&lt;/countryName&gt;
+    &lt;organizationalUnitName&gt;Eng&lt;/organizationalUnitName&gt;
+    &lt;emailAddress&gt;jdonner@marklogic.com&lt;/emailAddress&gt;
+  &lt;/subject&gt;
+  &lt;validity&gt;
+    &lt;notAfter&gt;2015-12-15T21:24:50Z&lt;/notAfter&gt;
+    &lt;notBefore&gt;2015-04-09T21:24:50Z&lt;/notBefore&gt;
+  &lt;/validity&gt;
+  &lt;v3ext&gt;
+    &lt;basicConstraints critical="false"&gt;CA:TRUE&lt;/basicConstraints&gt;
+    &lt;keyUsage critical="false"&gt;Certificate Sign, CRL Sign&lt;/keyUsage&gt;
+    &lt;nsCertType critical="false"&gt;SSL Server&lt;/nsCertType&gt;
+    &lt;subjectKeyIdentifier critical="false"&gt;C9:FC:63:0D:F0:CF:AE:78&lt;/subjectKeyIdentifier&gt;
+  &lt;/v3ext&gt;
+  &lt;version&gt;2&lt;/version&gt;
+  &lt;serialNumber&gt;BA0195369CD6B679&lt;/serialNumber&gt;
+&lt;/cert&gt;,
+"-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCrv1JxdNDniqtg
+PVzEtb9fe8si6xirg9IOQqtYhyvCR4Rc4R8A8vRaJsJh1iLcQTsSpYAUUHEHY4io
+LtXE2LchBfH1vep1w0oZKPCkEfRsjfjshlAmkXB7+fzRKvCji+m+Vgi46Ud6A6aK
+1mxF90tmr2PmxZ/jetjjhhZ5n+pJFUi5g4SicZbT+EgSx54myzrW+mQvRpZ3K1G9
+fsPzx7nwl6oDzj3wT29UcbNgxaluB/8X7ql0jCAZ2qwj7X9ULLZ7EAehIDD9pZV1
+z+pIyEDkuSVyaqwE05f/l04Od/KnivxCurbUpiihmOJvh1viJDseF65R5RGCcZK4
+t3OcImhXAgMBAAECggEAJgG91du7CzJVwINzzxhFVHUJvB14pSQTzRIV5w5qsaCv
++vnaqZQaXQTsyUfhCQrqbrLvSA+RI8h0Cnvq1Jf81rMBG5e+lfb0o+K6diR/CbLV
+XkpO3GodEWJ9/y/YdujUfkl9vqXpKmg6Z8kRxt318rBnlD8xpd6etqMKwDmSWD+f
+mkvK11gJJo+bMClalSYGiP5A5bSW2kbp87rB7mc/q0/zfUSB4orIORxZDj5TXma+
+PGeN+owxEn+m6XA1TM7m32ZKq4exTlP2Vow9KCQ+ppz7dHh2Rllmd/T9EzG8TVKD
+EoQSRwUvEtjr3Pnn5Y6v/J2F0ji8i9jk1sAqtwnjQQKBgQDdXj3G5ew4A4k2rVcM
+lFw5lGJFiPUlSttk+NkCmlyNpg5mD0HhsdSH+jK2aws1cga9LTDlNUoi/jrVHIxu
+2iuWtF2+6k2twjiD0WpSNEQTT3S976XOnspksyWeLyfGHb18lvakUn+UNUx3v05s
+G98JwrZvL/o8CXYZHrrlHMgDdwKBgQDGncbA8lMyLj0DPmuYbfj1Bv0fqBMfU0p3
+bVki0XIgXdF/vLLtG/WoEt7xedfeCh/IiuErNOSwgXp/70PbEBL1MgPHpj27GU0J
+jHyL10avDzpgh80YThar9UXXDjLvLjrcTj7gqK0DGPc8UdN+3gBTGe/K5thx8Wkv
+S315oTc6IQKBgD2iSqMBS0bBPUf69TysZg0mEkJ4AoFSmUlAu/MslU5fCK1D3D0B
+rUH62HnPzfwgdl3fojh/INgjXrANVdBbcD1ylJNeWyhg5ilVejvPD5Es0z065zhj
+H8jv1C55xKI1j5eL1Loluh3CxTqmCiixjeUC0JaejhZ/L+GIm9LEs6+7AoGBAJN3
+Q8GwagsA/7Xv241CYazzsm6VqRUCD3EalCrg3V6gqdKwtRyNPNi8oiEiOR+X3r9U
+NhiRXhabG+vvJy94AMtihiHvEThgca1cTIC7prSFlu9jBOk92WF1a5Rf63tglL1L
+ry24rzR0jeSQUHqKtCz/PeYlfaEj/9fosdHj3BBhAoGBALcCECVC5BhHMVc6CXgr
+fQuaafMNUwSnGblyKB0y5CnsexHI+f7Ax7Y/fiIHNTjijCVhjss0xpV0PKf3bJZi
+wsL2Km4FeYdfJZHbumzfkI9bDlpC8B0EbOkfG2EGOxDLEVRtiWR/QqP82gVjyQdz
+JHjg07MZ786QdyZqUTCB70cw
+-----END PRIVATE KEY-----"
+);
+==&gt;
+-----BEGIN CERTIFICATE-----
+MIID/jCCAuagAwIBAgIJALoBlTac1rZ5MA0GCSqGSIb3DQEBCwUAMIGbMQswCQYD
+VQQIDAJDQTESMBAGA1UECgwJTWFya0xvZ2ljMRMwEQYDVQQHDApTYW4gQ2FybG9z
+MSIwIAYDVQQDDBlKR0QgQ2VydGlmaWNhdGUgQXV0aG9yaXR5MQswCQYDVQQGEwJV
+UzEMMAoGA1UECwwDRW5nMSQwIgYJKoZIhvcNAQkBFhVqZG9ubmVyQG1hcmtsb2dp
+Yy5jb20wHhcNMTUwNDA5MjEyNDUwWhcNMTUxMjE1MjEyNDUwWjCBmzELMAkGA1UE
+CAwCQ0ExEjAQBgNVBAoMCU1hcmtMb2dpYzETMBEGA1UEBwwKU2FuIENhcmxvczEi
+MCAGA1UEAwwZSkdEIENlcnRpZmljYXRlIEF1dGhvcml0eTELMAkGA1UEBhMCVVMx
+DDAKBgNVBAsMA0VuZzEkMCIGCSqGSIb3DQEJARYVamRvbm5lckBtYXJrbG9naWMu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq79ScXTQ54qrYD1c
+xLW/X3vLIusYq4PSDkKrWIcrwkeEXOEfAPL0WibCYdYi3EE7EqWAFFBxB2OIqC7V
+xNi3IQXx9b3qdcNKGSjwpBH0bI347IZQJpFwe/n80Srwo4vpvlYIuOlHegOmitZs
+RfdLZq9j5sWf43rY44YWeZ/qSRVIuYOEonGW0/hIEseeJss61vpkL0aWdytRvX7D
+88e58JeqA8498E9vVHGzYMWpbgf/F+6pdIwgGdqsI+1/VCy2exAHoSAw/aWVdc/q
+SMhA5LklcmqsBNOX/5dODnfyp4r8Qrq21KYooZjib4db4iQ7HheuUeURgnGSuLdz
+nCJoVwIDAQABo0MwQTAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjARBglghkgB
+hvhCAQEEBAMCBkAwEQYDVR0OBAoECMn8Yw3wz654MA0GCSqGSIb3DQEBCwUAA4IB
+AQCm3Cm3A7OeHJco/983XgAP7k86flTgfIWhQe6t7zXoMWWy8V4Gh2s+Z67v0yDN
+Q1ig+rvTrLQ/0TuoNYCjswEC4FqYSuVNAfW8D0trtu843ZyYt5CYSdv9LxgzKDa/
+1JL03pJK1Y297Vg+6JYptyXSBrjAzBKQHK1e9VBJvrtGng4qW6XPnebQKAfdnGm0
+r7nPTGkp2es5NMSBEx+AHHQxx2XQShrkRBuKu3eUEehwfsTLIHnrf/yVE80TwklB
+/5vjiWK9UXl1zz4ifC+4Avm9Mvbn3ayz7hJkysvPFsoM62r99dEZ+QfwsBjNAH53
+7i/9HN7c7w13J5J+8cMX6r26
+-----END CERTIFICATE-----
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var cert = {
+  version: "2",
+  serialNumber: "BA0195369CD6B679",
+  issuer: {
+    countryName: "US",
+    stateOrProvinceName: "CA",
+    localityName: "San Carlos",
+    organizationName: "MarkLogic",
+    organizationalUnitName: "Eng",
+    emailAddress: "jdonner@marklogic.com",
+    commonName: "JGD Certificate Authority",
+  },
+  validity: {
+    notBefore: "2015-04-09T21:24:50Z",
+    notAfter: "2015-12-15T21:24:50Z"
+  },
+  subject: {
+    countryName: "US",
+    stateOrProvinceName: "CA",
+    localityName: "San Carlos",
+    organizationName: "MarkLogic",
+    organizationalUnitName: "Eng",
+    emailAddress: "jdonner@marklogic.com",
+    commonName: "JGD Certificate Authority",
+  },
+  publicKey: "-----BEGIN RSA PUBLIC KEY-----\n" +
+"MIIBCgKCAQEAq79ScXTQ54qrYD1cxLW/X3vLIusYq4PSDkKrWIcrwkeEXOEfAPL0\n" +
+"WibCYdYi3EE7EqWAFFBxB2OIqC7VxNi3IQXx9b3qdcNKGSjwpBH0bI347IZQJpFw\n" +
+"e/n80Srwo4vpvlYIuOlHegOmitZsRfdLZq9j5sWf43rY44YWeZ/qSRVIuYOEonGW\n" +
+"0/hIEseeJss61vpkL0aWdytRvX7D88e58JeqA8498E9vVHGzYMWpbgf/F+6pdIwg\n" +
+"GdqsI+1/VCy2exAHoSAw/aWVdc/qSMhA5LklcmqsBNOX/5dODnfyp4r8Qrq21KYo\n" +
+"oZjib4db4iQ7HheuUeURgnGSuLdznCJoVwIDAQAB\n" +
+"-----END RSA PUBLIC KEY-----",
+  v3ext: [
+    {
+      basicConstraints: "CA:TRUE",
+      critical:"false",
+    },
+    {
+      keyUsage: "Certificate Sign, CRL Sign",
+      critical: "false",
+    },
+    {
+      nsCertType:"SSL Server",
+      critical:"false",
+    },
+    {
+      subjectKeyIdentifier:"C9:FC:63:0D:F0:CF:AE:78",
+      critical:"false",
+    }
+  ]
+};
+
+var priv_key = 
+"-----BEGIN PRIVATE KEY-----\n" +
+"MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCrv1JxdNDniqtg\n" +
+"PVzEtb9fe8si6xirg9IOQqtYhyvCR4Rc4R8A8vRaJsJh1iLcQTsSpYAUUHEHY4io\n" +
+"LtXE2LchBfH1vep1w0oZKPCkEfRsjfjshlAmkXB7+fzRKvCji+m+Vgi46Ud6A6aK\n" +
+"1mxF90tmr2PmxZ/jetjjhhZ5n+pJFUi5g4SicZbT+EgSx54myzrW+mQvRpZ3K1G9\n" +
+"fsPzx7nwl6oDzj3wT29UcbNgxaluB/8X7ql0jCAZ2qwj7X9ULLZ7EAehIDD9pZV1\n" +
+"z+pIyEDkuSVyaqwE05f/l04Od/KnivxCurbUpiihmOJvh1viJDseF65R5RGCcZK4\n" +
+"t3OcImhXAgMBAAECggEAJgG91du7CzJVwINzzxhFVHUJvB14pSQTzRIV5w5qsaCv\n" +
+"+vnaqZQaXQTsyUfhCQrqbrLvSA+RI8h0Cnvq1Jf81rMBG5e+lfb0o+K6diR/CbLV\n" +
+"XkpO3GodEWJ9/y/YdujUfkl9vqXpKmg6Z8kRxt318rBnlD8xpd6etqMKwDmSWD+f\n" +
+"mkvK11gJJo+bMClalSYGiP5A5bSW2kbp87rB7mc/q0/zfUSB4orIORxZDj5TXma+\n" +
+"PGeN+owxEn+m6XA1TM7m32ZKq4exTlP2Vow9KCQ+ppz7dHh2Rllmd/T9EzG8TVKD\n" +
+"EoQSRwUvEtjr3Pnn5Y6v/J2F0ji8i9jk1sAqtwnjQQKBgQDdXj3G5ew4A4k2rVcM\n" +
+"lFw5lGJFiPUlSttk+NkCmlyNpg5mD0HhsdSH+jK2aws1cga9LTDlNUoi/jrVHIxu\n" +
+"2iuWtF2+6k2twjiD0WpSNEQTT3S976XOnspksyWeLyfGHb18lvakUn+UNUx3v05s\n" +
+"G98JwrZvL/o8CXYZHrrlHMgDdwKBgQDGncbA8lMyLj0DPmuYbfj1Bv0fqBMfU0p3\n" +
+"bVki0XIgXdF/vLLtG/WoEt7xedfeCh/IiuErNOSwgXp/70PbEBL1MgPHpj27GU0J\n" +
+"jHyL10avDzpgh80YThar9UXXDjLvLjrcTj7gqK0DGPc8UdN+3gBTGe/K5thx8Wkv\n" +
+"S315oTc6IQKBgD2iSqMBS0bBPUf69TysZg0mEkJ4AoFSmUlAu/MslU5fCK1D3D0B\n" +
+"rUH62HnPzfwgdl3fojh/INgjXrANVdBbcD1ylJNeWyhg5ilVejvPD5Es0z065zhj\n" +
+"H8jv1C55xKI1j5eL1Loluh3CxTqmCiixjeUC0JaejhZ/L+GIm9LEs6+7AoGBAJN3\n" +
+"Q8GwagsA/7Xv241CYazzsm6VqRUCD3EalCrg3V6gqdKwtRyNPNi8oiEiOR+X3r9U\n" +
+"NhiRXhabG+vvJy94AMtihiHvEThgca1cTIC7prSFlu9jBOk92WF1a5Rf63tglL1L\n" +
+"ry24rzR0jeSQUHqKtCz/PeYlfaEj/9fosdHj3BBhAoGBALcCECVC5BhHMVc6CXgr\n" +
+"fQuaafMNUwSnGblyKB0y5CnsexHI+f7Ax7Y/fiIHNTjijCVhjss0xpV0PKf3bJZi\n" +
+"wsL2Km4FeYdfJZHbumzfkI9bDlpC8B0EbOkfG2EGOxDLEVRtiWR/QqP82gVjyQdz\n" +
+"JHjg07MZ786QdyZqUTCB70cw\n" +
+"-----END PRIVATE KEY-----";
+
+xdmp.x509CertificateGenerate(cert, priv_key);
+==&gt;
+-----BEGIN CERTIFICATE-----
+MIID/jCCAuagAwIBAgIJALoBlTac1rZ5MA0GCSqGSIb3DQEBCwUAMIGbMQswCQYD
+VQQIDAJDQTESMBAGA1UECgwJTWFya0xvZ2ljMRMwEQYDVQQHDApTYW4gQ2FybG9z
+MSIwIAYDVQQDDBlKR0QgQ2VydGlmaWNhdGUgQXV0aG9yaXR5MQswCQYDVQQGEwJV
+UzEMMAoGA1UECwwDRW5nMSQwIgYJKoZIhvcNAQkBFhVqZG9ubmVyQG1hcmtsb2dp
+Yy5jb20wHhcNMTUwNDA5MjEyNDUwWhcNMTUxMjE1MjEyNDUwWjCBmzELMAkGA1UE
+CAwCQ0ExEjAQBgNVBAoMCU1hcmtMb2dpYzETMBEGA1UEBwwKU2FuIENhcmxvczEi
+MCAGA1UEAwwZSkdEIENlcnRpZmljYXRlIEF1dGhvcml0eTELMAkGA1UEBhMCVVMx
+DDAKBgNVBAsMA0VuZzEkMCIGCSqGSIb3DQEJARYVamRvbm5lckBtYXJrbG9naWMu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq79ScXTQ54qrYD1c
+xLW/X3vLIusYq4PSDkKrWIcrwkeEXOEfAPL0WibCYdYi3EE7EqWAFFBxB2OIqC7V
+xNi3IQXx9b3qdcNKGSjwpBH0bI347IZQJpFwe/n80Srwo4vpvlYIuOlHegOmitZs
+RfdLZq9j5sWf43rY44YWeZ/qSRVIuYOEonGW0/hIEseeJss61vpkL0aWdytRvX7D
+88e58JeqA8498E9vVHGzYMWpbgf/F+6pdIwgGdqsI+1/VCy2exAHoSAw/aWVdc/q
+SMhA5LklcmqsBNOX/5dODnfyp4r8Qrq21KYooZjib4db4iQ7HheuUeURgnGSuLdz
+nCJoVwIDAQABo0MwQTAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjARBglghkgB
+hvhCAQEEBAMCBkAwEQYDVR0OBAoECMn8Yw3wz654MA0GCSqGSIb3DQEBCwUAA4IB
+AQCm3Cm3A7OeHJco/983XgAP7k86flTgfIWhQe6t7zXoMWWy8V4Gh2s+Z67v0yDN
+Q1ig+rvTrLQ/0TuoNYCjswEC4FqYSuVNAfW8D0trtu843ZyYt5CYSdv9LxgzKDa/
+1JL03pJK1Y297Vg+6JYptyXSBrjAzBKQHK1e9VBJvrtGng4qW6XPnebQKAfdnGm0
+r7nPTGkp2es5NMSBEx+AHHQxx2XQShrkRBuKu3eUEehwfsTLIHnrf/yVE80TwklB
+/5vjiWK9UXl1zz4ifC+4Avm9Mvbn3ayz7hJkysvPFsoM62r99dEZ+QfwsBjNAH53
+7i/9HN7c7w13J5J+8cMX6r26
+-----END CERTIFICATE-----
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="x509-certificate-extract" type="builtin" lib="xdmp" category="Security">
+    <apidoc:summary>
+  Returns the XML representation of the specified X.509 certificate.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="cert" type="xs:string">
+    The PEM encoded certificate.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element()?</apidoc:return>
+    <apidoc:return class="javascript">Object?</apidoc:return>
+    <apidoc:usage class="javascript">
+  If a name under "issuer" or "subject" has more than one values,
+  an array is returned.
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+let $cert := "-----BEGIN CERTIFICATE-----
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn
+-----END CERTIFICATE-----"
+
+return xdmp:x509-certificate-extract($cert)
+
+=&gt;
+
+&lt;cert&gt;
+  &lt;version&gt;2&lt;/version&gt;
+  &lt;serialNumber&gt;8A7844CF3E2E4AF7&lt;/serialNumber&gt;
+  &lt;signatureType&gt;sha1WithRSAEncryption&lt;/signatureType&gt;
+  &lt;issuer&gt;
+    &lt;countryName&gt;US&lt;/countryName&gt;
+    &lt;stateOrProvinceName&gt;California&lt;/stateOrProvinceName&gt;
+    &lt;localityName&gt;San Carlos&lt;/localityName&gt;
+    &lt;organizationName&gt;MarkLogic&lt;/organizationName&gt;
+    &lt;organizationalUnitName&gt;Engineering&lt;/organizationalUnitName&gt;
+    &lt;commonName&gt;Certificate Authority&lt;/commonName&gt;
+    &lt;emailAddress&gt;me@marklogic.com&lt;/emailAddress&gt;
+  &lt;/issuer&gt;
+  &lt;validity&gt;
+    &lt;notBefore&gt;2008-12-03T01:27:49Z&lt;/notBefore&gt;
+    &lt;notAfter&gt;2009-12-03T01:27:49Z&lt;/notAfter&gt;
+  &lt;/validity&gt;
+  &lt;subject&gt;
+    &lt;countryName&gt;US&lt;/countryName&gt;
+    &lt;stateOrProvinceName&gt;California&lt;/stateOrProvinceName&gt;
+    &lt;localityName&gt;San Carlos&lt;/localityName&gt;
+    &lt;organizationName&gt;MarkLogic&lt;/organizationName&gt;
+    &lt;organizationalUnitName&gt;Engineering&lt;/organizationalUnitName&gt;
+    &lt;commonName&gt;Certificate Authority&lt;/commonName&gt;
+    &lt;emailAddress&gt;me@marklogic.com&lt;/emailAddress&gt;
+  &lt;/subject&gt;
+  &lt;publicKey&gt;-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3
+d8DU8cKbEes1dk6xX3mFfMWja56DvkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2r
+kDI35nqA9ejcuC0wg0tXuh5OSVfrUpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/
+UohTLW2TPwQ4rpynPwIDAQAB
+-----END PUBLIC KEY-----
+&lt;/publicKey&gt;
+  &lt;v3ext&gt;
+    &lt;subjectKeyIdentifier critical="false"&gt;B6:36:CF:83:D7:ED:F5:98:E3:B8:11:84:6A:55:24:12:09:A6:E7:D8&lt;/subjectKeyIdentifier&gt;
+    &lt;authorityKeyIdentifier critical="false"&gt;keyid:B6:36:CF:83:D7:ED:F5:98:E3:B8:11:84:6A:55:24:12:09:A6:E7:D8
+DirName:/C=US/ST=California/L=San Carlos/O=MarkLogic/OU=Engineering/CN=Certificate Authority/emailAddress=me@marklogic.com
+serial:8A:78:44:CF:3E:2E:4A:F7
+&lt;/authorityKeyIdentifier&gt;
+    &lt;basicConstraints critical="false"&gt;CA:TRUE&lt;/basicConstraints&gt;
+  &lt;/v3ext&gt;
+&lt;/cert&gt;
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var cert = "-----BEGIN CERTIFICATE-----\n\
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD\n\
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv\n\
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc\n\
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl\n\
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5\n\
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT\n\
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu\n\
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG\n\
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN\n\
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D\n\
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr\n\
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB\n\
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw\n\
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET\n\
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE\n\
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl\n\
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts\n\
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA\n\
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9\n\
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V\n\
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn\n\
+-----END CERTIFICATE-----";
+xdmp.x509CertificateExtract(cert);
+
+=&gt;
+
+{
+  "version":"2",
+  "serialNumber":"8A7844CF3E2E4AF7",
+  "signatureType":"sha1WithRSAEncryption",
+  "issuer":{
+    "countryName":"US",
+    "stateOrProvinceName":"California",
+    "localityName":"San Carlos",
+    "organizationName":"Mark Logic",
+    "organizationalUnitName":"Engineering",
+    "commonName":"Certificate Authority",
+    "emailAddress":"wfeick@marklogic.com"
+  },
+  "validity":{
+    "notBefore":"2008-12-03T01:27:49Z",
+    "notAfter":"2009-12-03T01:27:49Z"
+  },
+  "subject":{
+    "countryName":"US",
+    "stateOrProvinceName":"California",
+    "localityName":"San Carlos",
+    "organizationName":"Mark Logic",
+    "organizationalUnitName":"Engineering",
+    "commonName":"Certificate Authority",
+    "emailAddress":"wfeick@marklogic.com"
+  },
+  "publicKey":"-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3
+d8DU8cKbEes1dk6xX3mFfMWja56DvkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2r
+kDI35nqA9ejcuC0wg0tXuh5OSVfrUpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/
+UohTLW2TPwQ4rpynPwIDAQAB
+-----END PUBLIC KEY-----
+",
+  "v3ext":[
+    {
+      "critical":false,
+      "subjectKeyIdentifier":"B6:36:CF:83:D7:ED:F5:98:E3:B8:11:84:6A:55:24:12:09:A6:E7:D8"
+    },
+    {
+      "critical":false,
+      "authorityKeyIdentifier":"keyid:B6:36:CF:83:D7:ED:F5:98:E3:B8:11:84:6A:55:24:12:09:A6:E7:D8
+DirName:/C=US/ST=California/L=San Carlos/O=Mark Logic/OU=Engineering/CN=Certificate Authority/emailAddress=wfeick@marklogic.com
+serial:8A:78:44:CF:3E:2E:4A:F7
+"
+    },
+    {
+      "critical":false,
+      "basicConstraints":"CA:TRUE"
+    }
+  ]
+}
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="x509-certificate-issuer-name" type="builtin" lib="xdmp" category="Security">
+    <apidoc:summary>
+  Returns the issuer distinguished name for the specified X.509 certificate.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="cert" type="xs:string">
+    The PEM encoded certificate.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element()?</apidoc:return>
+    <apidoc:return class="javascript">Object?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+let $cert := "-----BEGIN CERTIFICATE-----
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn
+-----END CERTIFICATE-----"
+
+return xdmp:x509-certificate-issuer-name($cert)
+
+=&gt;
+
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var cert = "-----BEGIN CERTIFICATE-----\n\
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD\n\
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv\n\
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc\n\
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl\n\
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5\n\
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT\n\
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu\n\
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG\n\
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN\n\
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D\n\
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr\n\
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB\n\
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw\n\
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET\n\
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE\n\
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl\n\
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts\n\
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA\n\
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9\n\
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V\n\
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn\n\
+-----END CERTIFICATE-----";
+xdmp.x509CertificateIssuerName(cert);
+
+=&gt;
+
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="x509-certificate-subject-name" type="builtin" lib="xdmp" category="Security">
+    <apidoc:summary>
+  Returns the subject distinguished name for the specified X.509 certificate.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="cert" type="xs:string">
+    The PEM encoded certificate.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element()?</apidoc:return>
+    <apidoc:return class="javascript">Object?</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+let $cert := "-----BEGIN CERTIFICATE-----
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn
+-----END CERTIFICATE-----"
+
+return xdmp:x509-certificate-subject-name($cert)
+
+(: Returns output similar to the following:
+ : C=US,ST=California,L=San Carlos,O=Mark Logic,OU=Engineering,CN=Certificate Authority,emailAddress=dude@marklogic.com :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+var cert = "-----BEGIN CERTIFICATE-----\n\
+MIID4DCCA0mgAwIBAgIJAIp4RM8+Lkr3MA0GCSqGSIb3DQEBBQUAMIGnMQswCQYD\n\
+VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxv\n\
+czETMBEGA1UEChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAc\n\
+BgNVBAMTFUNlcnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2Zl\n\
+aWNrQG1hcmtsb2dpYy5jb20wHhcNMDgxMjAzMDEyNzQ5WhcNMDkxMjAzMDEyNzQ5\n\
+WjCBpzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAcT\n\
+ClNhbiBDYXJsb3MxEzARBgNVBAoTCk1hcmsgTG9naWMxFDASBgNVBAsTC0VuZ2lu\n\
+ZWVyaW5nMR4wHAYDVQQDExVDZXJ0aWZpY2F0ZSBBdXRob3JpdHkxIzAhBgkqhkiG\n\
+9w0BCQEWFHdmZWlja0BtYXJrbG9naWMuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GN\n\
+ADCBiQKBgQDnauIbA33nIH8IpiUyWA9sB/X3d8DU8cKbEes1dk6xX3mFfMWja56D\n\
+vkPFaX9/voSbeG1E92d2Y518xvjgoR8okf2rkDI35nqA9ejcuC0wg0tXuh5OSVfr\n\
+UpzVSwbCy55fweaVzkKC2TZXgOy5JeNbw+i/UohTLW2TPwQ4rpynPwIDAQABo4IB\n\
+EDCCAQwwHQYDVR0OBBYEFLY2z4PX7fWY47gRhGpVJBIJpufYMIHcBgNVHSMEgdQw\n\
+gdGAFLY2z4PX7fWY47gRhGpVJBIJpufYoYGtpIGqMIGnMQswCQYDVQQGEwJVUzET\n\
+MBEGA1UECBMKQ2FsaWZvcm5pYTETMBEGA1UEBxMKU2FuIENhcmxvczETMBEGA1UE\n\
+ChMKTWFyayBMb2dpYzEUMBIGA1UECxMLRW5naW5lZXJpbmcxHjAcBgNVBAMTFUNl\n\
+cnRpZmljYXRlIEF1dGhvcml0eTEjMCEGCSqGSIb3DQEJARYUd2ZlaWNrQG1hcmts\n\
+b2dpYy5jb22CCQCKeETPPi5K9zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA\n\
+A4GBAA8/lJQK6NmHFvP85LS3Sdfnd9D9opDeehqv4LfoFWxHMiKsxSA7hrYRs6u9\n\
+qQxCED54UfB1+kjs2GrM4H1uWeeHADdUKDRVHcivCVqWP4GUD2r0upKj8C3UD46V\n\
+aNHLW0yW7Anf4DMBsfhvKfIopBDoP6NPbDith5RtmM98N8xn\n\
+-----END CERTIFICATE-----";
+xdmp.x509CertificateSubjectName(cert);
+
+// Returns output similar to the following:
+// C=US,ST=California,L=San Carlos,O=Mark Logic,OU=Engineering,CN=Certificate Authority,emailAddress=dude@marklogic.com
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="md5" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the md5 hash of the given argument.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="data" type="item()">
+    Data to be hashed. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:md5("foo")
+  =&gt; "acbd18db4cc2f85cedef654fccc4a4d8"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:md5("foo", "base64")
+  =&gt; "rL0Y20zC+Fzt72VPzMSk2A=="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.md5("foo");
+  =&gt; "acbd18db4cc2f85cedef654fccc4a4d8"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.md5("foo", "base64");
+  =&gt; "rL0Y20zC+Fzt72VPzMSk2A=="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="hmac-md5" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the Hash-based Message Authentication Code (HMAC) using the md5 hash function of the given secret key and message arguments.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="secretkey" type="item()">
+    The secret key. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="message" type="item()">
+    Message to be authenticated. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-md5("foo", "bar")
+  =&gt; "0c7a250281315ab863549f66cd8a3a53"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-md5("foo", "bar", "base64")
+  =&gt; "DHolAoExWrhjVJ9mzYo6Uw=="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacMd5("foo", "bar");
+  =&gt; "0c7a250281315ab863549f66cd8a3a53"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacMd5("foo", "bar", "base64")
+  =&gt; "DHolAoExWrhjVJ9mzYo6Uw=="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="sha1" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the SHA1 hash of the given argument.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="data" type="item()">
+    Data to be hashed. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha1("foo")
+  =&gt; "0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha1("foo", "base64")
+  =&gt; "C+7Hteo/D9vJXQ3UfzxbwnXaijM="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha1("foo");
+  =&gt; "0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha1("foo", "base64");
+  =&gt; "C+7Hteo/D9vJXQ3UfzxbwnXaijM="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="hmac-sha1" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the Hash-based Message Authentication Code (HMAC) using the SHA1 hash function of the given secret key and message arguments.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="secretkey" type="item()">
+    The secret key. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="message" type="item()">
+    Message to be authenticated. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha1("foo", "bar")
+  =&gt; "46b4ec586117154dacd49d664e5d63fdc88efb51"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha1("foo", "bar", "base64")
+  =&gt; "RrTsWGEXFU2s1J1mTl1j/ciO+1E="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha1("foo", "bar");
+  =&gt; "46b4ec586117154dacd49d664e5d63fdc88efb51"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha1("foo", "bar", "base64");
+  =&gt; "RrTsWGEXFU2s1J1mTl1j/ciO+1E="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="sha256" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the SHA256 hash of the given argument.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="data" type="item()">
+    Data to be hashed. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha256("foo")
+  =&gt; "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha256("foo", "base64")
+  =&gt; "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha256("foo");
+  =&gt; "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha256("foo", "base64");
+  =&gt; "LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="hmac-sha256" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the Hash-based Message Authentication Code (HMAC) using the SHA256 hash function of the given secret key and message arguments.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="secretkey" type="item()">
+    The secret key. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="message" type="item()">
+    Message to be authenticated. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha256("foo", "bar")
+  =&gt; "f9320baf0249169e73850cd6156ded0106e2bb6ad8cab01b7bbbebe6d1065317"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha256("foo", "bar", "base64")
+  =&gt; "+TILrwJJFp5zhQzWFW3tAQbiu2rYyrAbe7vr5tEGUxc="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha256("foo", "bar");
+  =&gt; "f9320baf0249169e73850cd6156ded0106e2bb6ad8cab01b7bbbebe6d1065317"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha256("foo", "bar", "base64");
+  =&gt; "+TILrwJJFp5zhQzWFW3tAQbiu2rYyrAbe7vr5tEGUxc="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="sha384" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the SHA384 hash of the given argument.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="data" type="item()">
+    Data to be hashed. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha384("foo")
+  =&gt; "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e\
+      282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha384("foo", "base64")
+  =&gt; "9/u6bgY2+JDlb7vzKD5STG+jIErimDgtYkdB0NxmODJuKCxBvl5CVNiCB3LFUYos\
+      WowMf37aGVlKfrU5RT4e1w=="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha384("foo");
+  =&gt; "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e\
+      282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha384("foo", "base64");
+  =&gt; "9/u6bgY2+JDlb7vzKD5STG+jIErimDgtYkdB0NxmODJuKCxBvl5CVNiCB3LFUYos\
+      WowMf37aGVlKfrU5RT4e1w=="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="sha512" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the SHA512 hash of the given argument.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="data" type="item()">
+    Data to be hashed. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha512("foo")
+  =&gt; "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e\
+      282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:sha512("foo", "base64")
+  =&gt; "9/u6bgY2+JDlb7vzKD5STG+jIErimDgtYkdB0NxmODJuKCxBvl5CVNiCB3LFUYos\
+      WowMf37aGVlKfrU5RT4e1w=="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha512("foo");
+  =&gt; "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e\
+      282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.sha512("foo", "base64");
+  =&gt; "9/u6bgY2+JDlb7vzKD5STG+jIErimDgtYkdB0NxmODJuKCxBvl5CVNiCB3LFUYos\
+      WowMf37aGVlKfrU5RT4e1w=="
+ </pre></apidoc:example>
+  </apidoc:function><apidoc:function name="hmac-sha512" type="builtin" lib="xdmp" category="Extension" subcategory="Extension">
+    <apidoc:summary>
+  Calculates the Hash-based Message Authentication Code (HMAC) using the SHA512   hash function of the given secret key and message arguments.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="secretkey" type="item()">
+    The secret key. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="message" type="item()">
+    Message to be authenticated. Must be xs:string or a binary node.
+  </apidoc:param>
+      <apidoc:param name="encoding" type="xs:string" optional="true">
+    Encoding format for the output string, must be "hex" for hexadecimal
+    or "base64". Default is "hex".
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:string</apidoc:return>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha512("foo", "bar")
+  =&gt; "114682914c5d017dfe59fdc804118b56a3a652a0b8870759cf9e792ed7426b08197076\
+      bf7d01640b1b0684df79e4b67e37485669e8ce98dbab60445f0db94fce"
+ </pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp:hmac-sha512("foo", "bar", "base64")
+  =&gt; "EUaCkUxdAX3+Wf3IBBGLVqOmUqC4hwdZz555LtdCawgZcHa/fQFkCxsGhN955LZ\
+      +N0hWaejOmNurYERfDblPzg=="
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha512("foo", "bar");
+  =&gt; "114682914c5d017dfe59fdc804118b56a3a652a0b8870759cf9e792ed7426b08197076\
+      bf7d01640b1b0684df79e4b67e37485669e8ce98dbab60445f0db94fce"
+ </pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  xdmp.hmacSha512("foo", "bar", "base64");
+  =&gt; "EUaCkUxdAX3+Wf3IBBGLVqOmUqC4hwdZz555LtdCawgZcHa/fQFkCxsGhN955LZ\
+      +N0hWaejOmNurYERfDblPzg=="
+ </pre></apidoc:example>
+  </apidoc:function></apidoc:module>

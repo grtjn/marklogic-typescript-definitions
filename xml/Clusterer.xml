@@ -1,0 +1,285 @@
+<apidoc:module name="ClustererBuiltins" category="SearchBuiltins" subcategory="Search Clustering" lib="cts" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+<p xmlns="http://www.w3.org/1999/xhtml">The clusterer built-in functions perform dynamic clustering of nodes.
+The result clusters are represented in XML. The clusterer APIs and the XML output
+from <code><a href="#cts:cluster">cts:cluster</a></code> conform to the
+<code>clusterer.xsd</code> schema, located in the Config directory
+under the directory in which MarkLogic Server is installed.</p>
+
+</apidoc:summary><apidoc:function name="cluster" type="builtin" lib="cts" category="SearchBuiltins" subcategory="Search Clustering">
+    <apidoc:summary>
+  Produces a set of clusters from <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">a sequence</span>
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">an array</span> of nodes.  The nodes can be
+  any set of nodes, and are typically the result of a
+  <span class="xquery" xmlns="http://www.w3.org/1999/xhtml"><code>cts:search</code></span>
+  <span class="javascript" xmlns="http://www.w3.org/1999/xhtml"><code>cts.search</code></span>
+  operation.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param class="xquery" name="nodes" type="node()*">
+    The sequence of nodes to cluster.
+  </apidoc:param>
+      <apidoc:param class="javascript" name="nodes" type="Array">
+    The array of nodes to cluster.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+    An <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">XML</span>
+    <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">object</span> representation of the options 
+    for defining the clustering parameters.
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">The options node must be in the
+    <code>cts:cluster</code> namespace.</span>
+    The following is a sample options <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">node:</span>
+    <span class="javascript" xmlns="http://www.w3.org/1999/xhtml">object:</span>
+    <pre xml:space="preserve" class="xquery" xmlns="http://www.w3.org/1999/xhtml"><br/>
+    &lt;options xmlns="cts:cluster"&gt;
+      &lt;label-max-terms&gt;4&lt;/label-max-terms&gt;
+      &lt;max-clusters&gt;6&lt;/max-clusters&gt;
+      &lt;use-db-config&gt;true&lt;/use-db-config&gt;
+    &lt;/options&gt; </pre>
+    <pre xml:space="preserve" class="javascript" xmlns="http://www.w3.org/1999/xhtml"><br/>
+    {
+      labelMaxTerms: 4,
+      maxClusters: 6,
+      useDbConfig: true
+    }
+    </pre>
+
+    <!-- Not documented on purpose:
+         initialization, k-threshold, score -->
+    <p xmlns="http://www.w3.org/1999/xhtml">The <span class="xquery"><code>cts:cluster</code></span>
+    <span class="javascript"><code>cts.cluster</code></span> options include:</p>
+    <blockquote xmlns="http://www.w3.org/1999/xhtml">
+    <dl>
+    <dt><p><span class="xquery">&lt;<code>hierarchical-levels</code>&gt;</span>
+    <span class="javascript"><code>hierarchicalLevels</code></span></p></dt>
+    <dd>An integer specifying how many hierarchical cluster levels the clusterer
+    should return. The default is <code>1</code>, which means no hierarchical
+    clusters are returned.</dd>
+    <dt><p><span class="xquery">&lt;<code>label-max-terms</code>&gt;</span>
+    <span class="javascript"><code>labelMaxTerms</code></span></p></dt>
+    <dd>An integer specifying the maximum number of terms to use in constructing
+    a cluster label.  The default is <code>3</code>.</dd>
+    <dt><p><span class="xquery">&lt;<code>label-ignore-words</code>&gt;</span>
+    <span class="javascript"><code>labelIgnoreWords</code></span></p></dt>
+    <dd><span class="xquery">A space-separated list of words</span>
+    <span class="javascript">A single word or an array of words</span> 
+    that are to be excluded from cluster label.  The default is to
+    not exclude any words.</dd>
+    <dt><p><span class="xquery">&lt;<code>label-ignore-attributes</code>&gt;</span>
+    <span class="javascript"><code>labelIgnoreAttributes</code></span></p></dt>
+    <dd>A boolean that indicates whether attribute terms should be excluded
+    from the cluster label.  The default is to include terms from attributes.</dd>
+    <dt><p><span class="xquery">&lt;<code>details</code>&gt;</span>
+    <span class="javascript"><code>details</code></span></p></dt>
+    <dd>A boolean that indicates whether additional details on the terms
+    used in label generation are to be included in the output.  See the
+    documentation on cts:distinctive-terms for details on the format of the
+    terms returned.  The default <code>false</code>, meaning no such details
+    are given.</dd>
+    <dt><p><span class="xquery">&lt;<code>min-clusters</code>&gt;</span>
+    <span class="javascript"><code>minClusters</code></span></p></dt>
+    <dd>An integer specifying a minimum number of desired clusters returned
+    (at any hierarchical level).
+    However, if no satisfactory clustering can be produced at a given level,
+    only one cluster will be returned, regardless of this setting.
+    The default is <code>3</code>.
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>max-clusters</code>&gt;</span>
+    <span class="javascript"><code>maxClusters</code></span></p></dt>
+    <dd>An integer specifying a maximum number of clusters that can be returned
+    (at any hierarchical level). The default is <code>15</code>.
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>overlapping</code>&gt;</span>
+    <span class="javascript"><code>overlapping</code></span></p></dt>
+    <dd>A boolean indicating whether it is acceptable for nodes to be
+    assigned to more than one cluster.  The default is <code>false</code>.
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>max-terms</code>&gt;</span>
+    <span class="javascript"><code>maxTerms</code></span></p></dt>
+    <dd>An integer value specifying the maximum number of distinct terms to
+    use in calculating the cluster. The default is <code>200</code>.
+    Increasing the value will increase the cost (in terms of both time
+    and memory) of calculating the clusters, but may improve the quality
+    of the clusters.</dd>
+    <dt><p><span class="xquery">&lt;<code>algorithm</code>&gt;</span>
+    <span class="javascript"><code>algorithm</code></span></p></dt>
+    <dd>A value indicating which clustering algorithm to use, either
+    <code>k-means</code> or <code>lsi</code>. The default is
+    <code>k-means</code>.  The LSI algorithm is significantly more expensive
+    to compute, both in terms of time and space.
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>num-tries</code>&gt;</span>
+    <span class="javascript"><code>numTries</code></span></p></dt>
+    <dd>Specifies the number of times to run the clusterer against
+    the specified data. The default is 1.
+    Because of the way the algorithms work, running
+    the cluster multiple times will increase the number of terms, and
+    tends to improve the accuratacy of the clusters. It does so at the
+    cost of performance, as each time it runs, it has to do more work.
+    </dd>
+    <dt><p><span class="xquery">&lt;<code>use-db-config</code>&gt;</span>
+    <span class="javascript"><code>useDbConfig</code></span></p></dt>
+    <dd>A boolean value indicating whether to use the current DB configuration
+    for determining which terms to use.  The default is <code>false</code>,
+    which means that the default set of options, as well as any indexing
+    options you specify in the options node, will be used for calculating 
+    the clusters and their labels. When set to
+    <code>true</code>, any indexing options set in the context database
+    configuration (including any field settings) are used, as well as any
+    default settings that you have not explicitly turned off in the options
+    node.
+    </dd>
+    </dl>
+    </blockquote>
+    <p xmlns="http://www.w3.org/1999/xhtml">The options <span class="xquery">element</span>
+    <span class="javascript">object</span> also includes indexing
+    options in the <code>http://marklogic.com/xdmp/database</code>
+    namespace.
+    These control which terms to use. Note that the use of certain
+    options, such as <span class="xquery"><code>fast-case-sensitive-searches</code></span>
+    <span class="javascript"><code>fastCaseSensitiveSearches</code></span>, will not
+    impact final results unless the term vector size is limited with
+    the <span class="xquery"><code>max-terms</code></span>
+    <span class="javascript"><code>maxTerms</code></span> option.  
+    Other options, such as
+    <span class="xquery"><code>phrase-throughs</code></span>
+    <span class="javascript"><code>phraseThroughs</code></span>, will only 
+    generate terms if some other option is also enabled (in this case
+    <span class="xquery"><code>fast-phrase-searches</code></span>
+    <span class="javascript"><code>fastPhraseSearches</code></span>). </p>
+    <p xmlns="http://www.w3.org/1999/xhtml">The database options are the same as the database options shown for
+    <a href="cts:distinctive-terms#db-term-options">
+    <span class="xquery"><code>cts:distinctive-terms</code></span>
+    <span class="javascript"><code>cts.distinctiveTerms</code></span></a>.
+    </p>
+
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return class="xquery">element(cts:clustering)</apidoc:return>
+    <apidoc:return class="javascript">Object</apidoc:return>
+    <apidoc:example class="xquery"><a id="clusterEx1" xmlns="http://www.w3.org/1999/xhtml"></a><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+
+
+cts:cluster(
+  cts:search(//MILITARY, cts:word-query("apache"))[1 to 100],
+  &lt;options xmlns="cts:cluster" xmlns:db="http://marklogic.com/xdmp/database"&gt;
+    &lt;hierarchical-levels&gt;2&lt;/hierarchical-levels&gt;
+    &lt;overlapping&gt;false&lt;/overlapping&gt;
+    &lt;label-max-terms&gt;3&lt;/label-max-terms&gt;
+    &lt;max-clusters&gt;100&lt;/max-clusters&gt;
+    &lt;label-ignore-words&gt;of the on in at a an for from by and&lt;/label-ignore-words&gt;
+    &lt;db:stemmed-searches&gt;advanced&lt;/db:stemmed-searches&gt;
+    &lt;db:fast-phrase-searches&gt;true&lt;/db:fast-phrase-searches&gt;
+    &lt;db:fast-element-word-searches&gt;true&lt;/db:fast-element-word-searches&gt;
+    &lt;db:fast-element-phrase-searches&gt;true&lt;/db:fast-element-phrase-searches&gt;
+  &lt;/options&gt;)
+==&gt;
+ &lt;clustering xmlns="http://marklogic.com/cts"&gt;
+  &lt;cluster id="123456" label="apache helicopters" count="7" nodes="3 34 31 98 34 23 39"/&gt;
+  &lt;cluster id="374632" label="apache linux" count="6" nodes="1 378 56 23 93 6"/&gt;
+  &lt;cluster id="3452231" label="navajo codetalkers" count="8" nodes="44 87 32 77 50 12 13 15"/&gt;
+  ...
+  &lt;cluster id="2234" parent-id="123456" label="AH-64" count="2" nodes="3 39"/&gt;
+  &lt;cluster id="34321" parent-id="123456" label="air force" count="5" nodes="34 31 98 34 23"/&gt;
+  &lt;cluster id="34523" parent-id="374632" label="HTTP" count="3" nodes="1 56 23"/&gt;
+  &lt;cluster id="968" parent-id="374632" label="LAMP" count="3" nodes="378 93 6"/&gt;
+  &lt;options xmlns="cts:cluster" xmlns:db="http://marklogic.com/xdmp/database"&gt;
+    &lt;algorithm&gt;k-means&lt;/algorithm&gt;
+    &lt;db:stemmed-searches&gt;advanced&lt;/db:stemmed-searches&gt;
+    &lt;db:fast-element-word-searches&gt;true&lt;/db:fast-element-word-searches&gt;
+    &lt;db:fast-element-phrase-searches&gt;true&lt;/db:fast-element-phrase-searches&gt;
+    &lt;db:language&gt;en&lt;/db:language&gt;
+    &lt;max-clusters&gt;100&lt;/max-clusters&gt;
+    &lt;min-clusters&gt;2&lt;/min-clusters&gt;
+    &lt;hierarchical-levels&gt;2&lt;/hierarchical-levels&gt;
+    &lt;initialization&gt;smart&lt;/initialization&gt;
+    &lt;label-max-terms&gt;3&lt;/label-max-terms&gt;
+    &lt;num-tries&gt;1&lt;/num-tries&gt;
+    &lt;score&gt;logtfidf&lt;/score&gt;
+    &lt;use-db-config&gt;false&lt;/use-db-config&gt;
+  &lt;/options&gt;
+&lt;/clustering&gt;
+
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><a id="clusterEx2" xmlns="http://www.w3.org/1999/xhtml"></a><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+cts:cluster(
+   cts:search(//function, "foo"),
+   &lt;options xmlns="cts:cluster"&gt;
+     &lt;use-db-config&gt;true&lt;/use-db-config&gt;
+   &lt;/options&gt;)
+=&gt; The cts:clustering element
+
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><a id="clusterEx1" xmlns="http://www.w3.org/1999/xhtml"></a><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+
+cts.cluster(
+    cts.search(cts.wordQuery("steroids")).toArray(),
+    {
+        algorithm: "lsi",
+        hierarchicalLevels: 3,
+        minClusters: 2,
+        maxClusters: 12,
+        overlapping: false,
+        labelIgnoreWords: ["of", "the", "on", "in", "at", "a", "an", "for", "from", "by", "and"],
+        stemmedSearches: "advanced",
+        fastPhraseSearches: true,
+        fastElementWordSearches:true,
+        fastElementPhraseSearches:true
+    }
+);
+=&gt;
+{
+  "clusters":[
+    {
+      "id":"4904706095739760677",
+      "label":"neonate, cortisol, fetal",
+      "nodes":[3,4,7,9,14]
+    },
+    {
+      "id":"741204961292539384",
+      "label":"fetal, cortisol, being",
+      "nodes":[8,15]
+    },
+    {
+      "id":"9998437716377655230",
+      "label":"locus, male, fetal",
+      "nodes":[6]
+    },
+      ...
+    {
+      "id":"7956765932334497548",
+      "parentId":"14551791662219883254",
+      "label":"normal, endometrium, also",
+      "nodes":[17]
+    },
+    {
+      "id":"4427100138446341770",
+      "parentId":"14551791662219883254",
+      "label":"km, administration, do",
+      "nodes":[12]
+    }
+  ],
+  "options":{
+    "algorithm":"lsi",
+    "language":"en",
+    "stemmedSearches":"advanced",
+    "fastElementPhraseSearches":true,
+    "fastElementWordSearches":true,
+    "maxClusters":12,
+    "minClusters":2,
+    "hierarchicalLevels":3,
+    "maxTerms":200,
+    "labelMaxTerms":3,
+    "labelIgnoreWords":[
+      "a","an","and","at","by","for","from","in","of","on","the"],
+    "labelIgnoreAttributes":false,
+    "numTries":1,
+    "score":"logtfidf",
+    "useDbConfig":false,
+    "details":false,
+    "overlapping":false
+  }
+}
+
+
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,175 @@
+<apidoc:module name="DocumentFilter" category="Document Conversion" lib="xdmp" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+  <p xmlns="http://www.w3.org/1999/xhtml">Includes the document filtering functions using the ISYS
+  technology.</p>
+</apidoc:summary><apidoc:function name="document-filter" type="builtin" lib="xdmp" category="Document Conversion">
+    <apidoc:summary>
+  Filters a wide variety of document formats, extracting metadata and text,
+  and returning XHTML. The extracted text has very little formatting,
+  and is typically used for search, classification, or other text processing.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="doc" type="node()" optional="false">
+  Document to filter, as binary node().
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+
+    Options element for this extraction.
+    <span class="xquery" xmlns="http://www.w3.org/1999/xhtml">The options element must be in the
+
+    <code><span class="xquery">xdmp:document-filter</span>
+    <span class="javascript">xdmp.documentFilter</span></code> namespace.</span>
+    The default value is <code xmlns="http://www.w3.org/1999/xhtml"><span class="xquery">()</span>
+    <span class="javascript">null</span></code>.
+    <p xmlns="http://www.w3.org/1999/xhtml">Options include:</p>
+    <blockquote xmlns="http://www.w3.org/1999/xhtml"><dl>
+    <dt><p>
+    <span class="xquery">&lt;excelmode&gt;</span>
+    <span class="javascript">excelmode</span></p></dt>
+    <dd>Default value: <code>csv</code> <br/><br/>
+    A value of <code>csv</code> (the default) specifies inclusion of all
+    strings, dates, and numbers, and preserves row-by-row ordering.  A
+    value of <code>text</code> specifies text only.</dd>
+    <dt><p>
+    <span class="xquery">&lt;emailmode&gt;</span>
+    <span class="javascript">emailmode</span></p></dt>
+    <dd>Default value: <code>VisibleHeaders</code> <br/><br/>
+    A value of <code>VisibleHeaders</code> (the default) specifies
+    inclusion of only commonly displayed email headers.  A value of
+    <code>AllHeaders</code> specifies inclusion of all email headers.</dd>
+    <dt><p>
+    <span class="xquery">&lt;pdfxmpmeta&gt;</span>
+    <span class="javascript">pdfxmpmeta</span></p></dt>
+    <dd>Default value: <code>true</code><br/><br/>
+    A value of <code>true</code> (the default) specifies inclusion of XMP
+    metadata.  A value of <code>false</code> suppresses inclusion of XMP
+    metadata.
+    </dd>
+    <dt><p>
+    <span class="xquery">&lt;pdfbookmarks&gt;</span>
+    <span class="javascript">pdfbookmarks</span></p></dt>
+    <dd>Default value: <code>true</code><br/><br/>
+    A value of <code>true</code> (the default) specifies inclusion of
+    PDF bookmarks.  A value of <code>false</code> suppresses inclusion of
+    PDF bookmarks.
+    </dd>
+    <dt><p>
+    <span class="xquery">&lt;pdfannotations&gt;</span>
+    <span class="javascript">pdfannotations</span></p></dt>
+    <dd>Default value: <code>true</code><br/><br/>
+    A value of <code>true</code> (the default) specifies inclusion of
+    PDF annotations.  A value of <code>false</code> suppresses inclusion of
+    PDF annotations.
+    </dd>
+    <dt><p>
+    <span class="xquery">&lt;pdfwordorder&gt;</span>
+    <span class="javascript">pdfwordorder</span></p></dt>
+    <dd>Default value: <code>Reading</code><br/><br/>
+    A value of <code>Reading</code> (the default) specifies extraction of
+    text in an order as close as possible to that which would be read on
+    a page.  A value of <code>Document</code> specifies extraction of
+    text in the order in which it is stored in the document.
+    </dd>
+    <dt><p>
+    <span class="xquery">&lt;pdfdehyphenate&gt;</span>
+    <span class="javascript">pdfdehyphenate</span></p></dt>
+    <dd>Default value: <code>false</code><br/><br/>
+    A value of <code>true</code> specifies removal of hyphens from the
+    ends of lines so that line-broken words (for example, in a PDF file) are 
+    expressed as a single word.
+    </dd>
+    </dl></blockquote>
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>node()</apidoc:return>
+    <apidoc:usage>
+  <p xmlns="http://www.w3.org/1999/xhtml">This function requires separate converter installation package starting with release 9.0-4, see
+ <a href='#display.xqy?fname=http://pubs/6.0doc/xml/install_all/intro.xml%2334694'>MarkLogic Converters Installation Changes Starting at Release 9.0-4</a> in the <em>Installation Guide for All Platforms</em>.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">Document metadata is returned in XHTML <code>meta</code> elements.
+The document title is in the <code>title</code> element.
+The format of the document is returned as a MIME media type
+in a <code>meta</code> element with the name "content-type".
+Metadata values with recognized date formats are
+converted to ISO8601.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If the document has metadata but no text, like an audio
+or video document, the XHTML will have a <code>head</code> element but
+no <code>body</code> element.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If Microsoft Office documents (for example, xslx) are password-protected,
+they cannot be successfully filtered.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">If Microsoft Office documents (for example, xslx) are password-encrypted,
+they cannot be successfully filtered.</p>
+</apidoc:usage>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp:document-filter(doc("wordperfect.wpd"))
+
+(: Filters the wordperfect.wpd document to XHTML. :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Basic example
+xdmp.documentFilter(cts.doc('some.pdf'));
+
+// Filters the PDF file stored in the database with URI 'some.pdf'
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: Including an options node in the call :)
+xquery version "1.0-ml";
+
+xdmp:document-filter(fn:doc('some.pdf'),
+  &lt;options xmlns="xdmp:document-filter"&gt;
+    &lt;pdfbookmarks&gt;false&lt;/pdfbookmarks&gt;
+  &lt;/options&gt;
+)
+
+(: Produces filtering output with PDF bookmarks excluded. :)
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: Including an options map in the call :)
+xquery version "1.0-ml";
+
+xdmp:document-filter(
+  fn:doc('some.pdf'),
+  map:map() =&gt; map:with("pdfbookmarks", fn:false())
+)
+
+(: Produces filtering output with PDF bookmarks excluded. :)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+// Including an options object in the call
+xdmp.documentFilter(cts.doc('some.pdf'), {pdfbookmarks: false});
+
+// Produces filtering output with PDF bookmarks excluded.
+</pre></apidoc:example>
+    <apidoc:example class="xquery"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+xdmp:document-filter(
+ xdmp:http-get("http://www.marklogic.com/images/logo.gif")[2])
+
+(: Produces output similar to the following, dervied from data in
+ : the response to an HTTP GET request.
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+  &lt;head&gt;
+    &lt;meta name="content-type" content="image/gif"/&gt;
+    &lt;meta name="filter-capabilities" content="none"/&gt;
+    &lt;meta name="size" content="2199"/&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+:)
+</pre></apidoc:example>
+    <apidoc:example class="javascript"><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xdmp.documentFilter(
+ xdmp.httpGet("http://www.marklogic.com/images/logo.gif").toArray()[1])
+
+// Produces output similar to the following, derived from data in
+// the response to an HTTP GET request.
+//
+// &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+//   &lt;head&gt;
+//     &lt;meta name="content-type" content="image/gif"/&gt;
+//     &lt;meta name="filter-capabilities" content="none"/&gt;
+//     &lt;meta name="size" content="2199"/&gt;
+//   &lt;/head&gt;
+// &lt;/html&gt;
+</pre></apidoc:example>
+  </apidoc:function></apidoc:module>

@@ -1,0 +1,717 @@
+<apidoc:module name="InfoModule" category="Information Studio" lib="info" 
+	bucket="XQuery Library Modules" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:apidoc="http://marklogic.com/xdmp/apidoc" class="xquery">
+<apidoc:summary category="Information Studio" bucket="XQuery Library Modules">
+<p>The Information Studio API module contains functions that allow you to set policy, 
+   load content from a directory, configure databases, specify transformations, and 
+   check ticket status. </p>	
+<p>The Information Studio API is installed as the following file:</p>
+   <code><em>install_dir</em>/Modules/MarkLogic/appservices/infostudio/info.xqy</code> 
+ 
+<p>where <code><em>install_dir</em></code> is the directory in which 
+   MarkLogic Server is installed.</p>
+<p> To use the <code>info.xqy</code> module in your own XQuery modules, 
+    include the following line in your XQuery prolog:</p>
+<pre xml:space="preserve">
+  <code>
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+  </code></pre>
+<p>The library uses the <code>info:</code> namespace, which is 
+   <em>not</em> predefined in the server.</p>
+<p>MarkLogic recommends enabling the URI Lexicon when using 
+   Information Studio; the URI lexicon will improve performance, especially when 
+   the database grows to a large number of documents.</p>
+</apidoc:summary>
+ 
+
+<apidoc:function name="database-create" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] This function creates a database with attached forests. Forests are named sequentially using the 
+  pattern of databasename-1, databasename-2 and so on.  The API checks for database and forest name conflicts, 
+  throwing an INFO-DUPLICATENAME error if any name conflicts are encountered. The database is 
+  created with default index settings. If <code>$forests-per-host</code> is an empty sequence or 
+  omitted, only one forest (regardless of number of hosts) is created. If database creation succeeds,
+  the database id is returned.</apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-name" type="xs:string">Name of this database. </apidoc:param>
+    <apidoc:param name="forests-per-host" type="xs:positiveInteger?" optional="true">
+    The number of forests to create per host in the group.  Defaults to one forest for the database 
+    if not provided.</apidoc:param>
+    <apidoc:param name="group" type="xs:string?" optional="true">
+    The name of the group to which to add forests. 
+    The API determines which hosts are in the group and creates the 
+    specified number of forests for each host in the group.
+    If not provided, the Default group is used.
+    </apidoc:param>
+    <apidoc:param name="data-directory" type="xs:string?" optional="true">
+    A public data directory to use for forest creation.  Default is none, resulting 
+    in a private data directory (server default).
+    </apidoc:param>
+    <apidoc:param name="security-db" type="xs:string?" optional="true">
+    The name of the security database to use for database creation.  
+    Defaults to Security if not provided.
+    </apidoc:param>
+    <apidoc:param name="schemas-db" type="xs:string?" optional="true">
+    The name of the schema database to use for database creation.  Defaults to Schemas if not provided.
+    </apidoc:param>
+    <apidoc:param name="triggers-db" type="xs:string?" optional="true">
+    The name of the triggers database to use for database creation.  
+    Defaults to Triggers if not provided.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:unsignedLong</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:database-create(
+	"newDB",
+	2,
+	"Default",
+	"/foobar",
+	"Security",
+	"Schemas",
+	"Triggers")
+
+  (: Creates a new database, named "newDB," and attaches to it two forests. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="database-set-feature" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function adds or removes the related database settings for wildcarding, word positions, 
+  and/or reverse search. Not specifying a feature will leave it in its current state.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database" type="xs:string">
+    The name of the database to add or remove support of specified database feature. If a 
+    database that comes pre-configured with the server (other than the "Documents" database) 
+    is specified, then a "Restricted Database" exception will occur.
+    </apidoc:param>
+    <apidoc:param name="settings" type="element(info:settings)">
+    Settings XML representing desired database features to configure. Valid options are 
+    "wildcard", "position", "reverse". If an element is not specified, its setting remains 
+    unchanged. Note: if the incoming XML has a detail section (from a verbose call to 
+    get-feature) it is ignored.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+     at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:database-set-feature("Documents",
+    <settings xmlns="http://marklogic.com/appservices/infostudio">
+      <wildcard>true</wildcard>
+      <position>true></position>
+      <reverse>false</reverse>
+    </settings> )
+ 
+  (: Turn on 3 character wildcard, the codepoint word lexicon, word positions, 
+     and 3 character word position. It will turn off reverse search. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="database-get-feature" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns the a node representing support for database features of wildcarding, 
+  word positions, and reverse search. Returns a boolean value for each database feature 
+  based on whether its corresponding database settings are on or off.   If some settings 
+  are on for a feature but others are off, then the feature will be noted as off.  
+  A "detail" child node includes the value of each related database setting.
+  <p>
+  The optional <code>$preview-settings</code> and <code>$delta</code> arguments allow 
+  developers to pass in settings to preview the result of a given set of features.  
+  If <code>$delta</code> is set to <code>true()</code>, only values that will change 
+  are returned.  If not provided, <code>$delta</code> is <code>false()</code>.
+  </p><p>
+  This call is read-only, it does not change the state of database features supported.
+  </p>
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database" type="xs:string">
+    The name of the database for which to get support information. If a database that comes 
+    pre-configured with the server (other than the "Documents" database) is specified, 
+    then a "Restricted Database" exception will occur.
+    </apidoc:param>
+    <apidoc:param name="preview-settings" type="element(info:settings)" optional="true">
+    Settings XML representing a desired set of database features to preview. Note: if the 
+    incoming XML has a detail section, it is ignored.
+    </apidoc:param>
+    <apidoc:param name="delta" type="xs:boolean" optional="true">
+    If this parameter is set to true, then on preview the returned information will only 
+    include settings that would change on a call to <code>info:database-set-feature()</code>. 
+    Defaults to false if not specified.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:settings)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:database-get-feature("Documents")
+
+  (: Returns the current state of the supported database features. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="load" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function does a one-time scan of the named directory path (local filesystem only), and 
+  attempts to load the files, spawning multiple transactions if necessary. This collector
+  should be considered stateless; although some lightweight state information is passed
+  via an external variable to the executing module, it is not persistent.  Transactions 
+  are asynchronous, and order of insertions is not guaranteed.
+  <p>
+  This function returns a ticket URI that can be used to access status information for that ticket.
+  </p>
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="dir-path" type="xs:string">
+    Local filesystem path of a set of documents to load.
+    </apidoc:param>
+    <apidoc:param name="policy-name" type="xs:string?" optional="true">
+    The name of a stored ingestion policy.  If the name is provided but does not exist, 
+    an error is thrown.  If no name is provided, a stored default policy is used if 
+    available.  If neither exists, reasonable global defaults are used.
+    </apidoc:param>
+    <apidoc:param name="policy-deltas" type="element(info:options)?" optional="true">
+    An options node with a namespace of <code>http://marklogic.com/appservices/infostudio</code>.  
+    If it is provided, it is merged with the stored policy, providing 
+    the ability to override or supplement stored policy at runtime.  See the description
+    of the <code>info:policy-set</code> function for an example options node.
+    </apidoc:param>
+    <apidoc:param name="database" type="xs:string" optional="true">
+    Name of a database into which content should be inserted.  If not provided, 
+    defaults to the current context database.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:usage>
+	  All documents loaded with <code>info:load</code> are added to a
+	  collection with the URI corresponding to the ticket ID
+	  returned from the function.  For example, if  <code>info:load</code>
+	  returns <code>/tickets/ticket/123456</code>, then any documents loaded
+	  have the collection <code>/tickets/ticket/123456</code> (in
+	  addition to any collections added via the options
+	  node or options delta).
+  </apidoc:usage>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:load("C:\docs\mydocs", (), (), "testDB")
+
+  (: Loads the contents of the C:\docs\mydocs directory into the testBD database using
+     the default policy. :)
+     ]]></pre>
+  </apidoc:example>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  let $delta := 
+      <options xmlns="http://marklogic.com/appservices/infostudio">
+          <uri>
+              <literal>http://mydir/</literal>
+              <filename/>
+              <literal>.</literal>
+              <ext/>
+          </uri>
+      </options>
+
+  return info:load("C:\docs\mydocs", (), $delta, "testDB")
+
+  (: Loads the contents of the C:\docs\mydocs directory into the testBD database at the
+     URI http://mydir/, using the rest of the options specified by the default policy. 
+     For example, C:\docs\mydocs\mydoc.xml will be loaded into the database with the 
+     URI http://mydir/mydoc.xml. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="policy" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns the stored policy matching the specified policy.  If the 
+  policy does not exist, this function returns an empty sequence.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string">
+    Name of the policy to be returned.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:options)?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:policy("default") 
+
+  (: Returns the default policy. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="policy-names" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns the names of all stored policies.
+  </apidoc:summary>
+  <apidoc:return>xs:string*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:policy-names( )
+
+  (: Returns the names of all of the set policies. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="policy-set" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function sets an ingestion policy, which consists of a reusable 
+  <![CDATA[<options>]]> node defining parameters for content loading and 
+  transformation.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string?" optional="true">
+    The name of this ingestion policy.  If the policy already exists, it is overwritten 
+    without warning.   If no name or the empty string is provided, the new policy 
+    replaces the default policy (named 'default'). 
+    </apidoc:param>
+    <apidoc:param name="policy" type="element(info:options)?" optional="true">
+    An options node.  If provided, it will be merged with a set of global reasonable 
+    defaults and stored as the named policy.  If no $policy is provided, the content 
+    is the set of global defaults.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:policy-set(
+    "default",
+    <options name="default" xmlns="http://marklogic.com/appservices/infostudio">
+      <collection>http://marklogic.com/appservices/infostudio</collection>
+      <error-handling>continue-with-warning</error-handling>
+      <fab-retention-duration>P30D</fab-retention-duration>
+      <file-filter>^[^\.]</file-filter>
+      <max-docs-per-transaction>100</max-docs-per-transaction>
+      <overwrite>overwrite</overwrite>
+      <ticket-retention-duration>P30D</ticket-retention-duration>
+      <uri>
+        <literal>http://docs/mydocs</literal>
+        <filename/>
+        <literal>.</literal>
+        <ext/>
+      </uri>
+    </options>)
+
+  (: Defines and sets a default polcy to load all documents with the uri of 
+     http://docs/mydocs. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="policy-delete" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function deletes a named policy. If the policy is successfully deleted or does 
+  not exist, this function returns an empty sequence.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="policy-name" type="xs:string">
+    The name of a stored ingestion policy. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:policy-delete("default") 
+
+  (: Deletes the default policy. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="tickets" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns a sequence of ticket IDs, optionally narrowed by database name.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database" type="xs:string*" optional="true">
+    A database name to narrow the selection of tickets to those associated with that database.
+    </apidoc:param>
+    <apidoc:param name="status" type="xs:string*" optional="true">
+     A status name to narrow the selection of tickets to those with the 
+     specified status.  
+     The valid status values are "aborted", "active", "cancelled", 
+     "cleared", "completed", "inactive", "unloading", "unloaded", and 
+     "unload-aborted".
+    </apidoc:param>   
+    <apidoc:param name="custom-query" type="schema-element(cts:query)?" optional="true">
+    Some custom query to further narrow down the list of tickets returned.
+    </apidoc:param>        
+  </apidoc:params>
+  <apidoc:return>xs:string*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:tickets()
+
+  (: Returns the IDs of all of the tickets generated from loads into all of the databases. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket-delete" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function deletes a ticket and all associated state information. If the ticket is 
+  successfully deleted or does not exist, returns empty-sequence().  A tickets cannot 
+  be deleted if work is in progress.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket to be deleted. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  for $ticket in info:tickets("testDB") 
+     return info:ticket-delete($ticket)
+
+  (: Deletes all of the tickets associated with the testDB database. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="ticket" lib="info" category="Information Studio" bucket="XQuery Library Modules">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns a ticket element containing the status information for a 
+  long-running process.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string+">
+    The id of the ticket associated with the long-running process.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:ticket)+</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  let $ticket := info:load("C:\docs\mydocs", (), (), "testDB")
+
+  return (
+    "Loaded the testDB database with the files from",
+    fn:data(info:ticket($ticket)//directory) )
+
+  (: Returns the directory that was loaded into the testDB database. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="ticket-errors" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns any errors that may have occured when loading content.  
+  The load operation must be complete before any errors appear in the ticket.
+  You can use the
+  optional parameters, <code>start</code> and <code>page-length</code>, to paginate through a 
+  long list of errors.
+  <p/>
+  By default, errors are sorted by descending time.  You can set the <code>sort-ascending</code>
+  parameter to <code>true</code> to return errors in ascending time, which can be useful when
+  paginating on an open ticket where new errors are coming in constantly.  
+  <p/>
+  The <code>filter</code> parameter allows you to annotate errors with metadata. 
+  You can create a filter to limit results by anything in the ticket, such as time, 
+  some custom annotation, or error code.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+    The id of the ticket.
+    </apidoc:param>
+    <apidoc:param name="start" type="xs:unsignedInt?" optional="true">
+    Which error in a list from which to begin the returned list.  For example, if dealing with
+    hundreds of errors, you might want to display them in increments of 50.  So you would
+    call this function with <code>start</code> set to 1, then 50, then 100, and so on.
+    </apidoc:param>
+    <apidoc:param name="page-length" type="xs:unsignedInt?" optional="true">
+    The number of errors returned in each page.  In the example described for the 
+    <code>start</code> parameter, this would be set to 50.
+    </apidoc:param>
+    <apidoc:param name="sort-ascending" type="xs:boolean?" optional="true">
+    By default, errors are sorted by descending time.  Set to <code>true</code> to 
+    return errors in ascending time.
+    </apidoc:param>
+    <apidoc:param name="filter" type="schema-element(cts:query)?" optional="true">
+    Any customer query written to filter the list of errors.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:errors)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:ticket-errors("/tickets/ticket/8850539794189994434")
+
+  (: Returns any errors associated with the specified ticket. :)      
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+ 
+
+ 
+<apidoc:function name="database-delete" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  This function deletes the specified database and its forest.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database-name" type="xs:string">
+    The name of the database to delete.
+    </apidoc:param>
+    <apidoc:param name="delete-data" type="xs:boolean?" optional="true">
+    Determines whether to delete the database data. If set to 
+    <code>fn:true()</code>, both the configuration and the data 
+    directory containing all of the documents in the forest are deleted. 
+    If set to <code>fn:false()</code>, only the configuration information 
+    is deleted, leaving the forest data in the data directory on disk. 
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:database-delete("testDB")
+
+  (: Deletes the testDB database and forest. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="error-detail" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns the error detail associated with the specified 
+  <code>error-id</code>.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="error-id" type="xs:unsignedLong">
+    The error id from a ticket.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>element(info:error)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  for $ticket in info:tickets()
+    let $error-id := info:ticket-errors($ticket)//info:error/@id
+    return info:error-detail($error-id)
+
+  (: Returns error details for all of the tickets. :)
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="unload" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  This function deletes all of the documents associated with the specified 
+  <code>$ticket-id</code> from one or more databases.  The documents are
+  deleted from the database associated with the ticket, as 
+  well as any additional databases specified by the <code>$database</code>
+  parameter.  The ticket status is "unloading" while the delete is in 
+  progress and "unloaded" when complete.  A ticket may not be unloaded if 
+  its status is "active".
+  If errors are encountered during the unloading process, an exception is 
+  thrown and the ticket status is set to "unload-aborted".
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="ticket-id" type="xs:string">
+     The id of the ticket associated with the documents to be deleted.
+    </apidoc:param>
+    <apidoc:param name="database" type="xs:string*" optional="true">
+     One or more database names.  If no database is specified, only the 
+     documents from the database logged in the ticket are cleared.  
+     If databases are specified, documents associated with the 
+     ticket are deleted from those databases in addition to the 
+     database logged in the ticket.
+    </apidoc:param>
+    <apidoc:param name="batch-size" type="xs:positiveInteger?" optional="true">
+    The number of documents to delete in a single transaction. If not 
+    specified, the default value of 5,000 is used.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:unload("/tickets/ticket/4920103524656746726")
+
+  (: Deletes all of the documents associated with the ticket from the database
+     specified in the ticket. :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="flow-cancel" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  [DEPRECATED] This function cancels all active tickets associated with a flow.  
+  If the flow does not exist, an exception is thrown.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="flow-id" type="xs:string">
+    The ID of the flow.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:flow-cancel("6184479677280143786")
+
+  (: Cancels all active tickets for the flow.  :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="flow-policy" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>[DEPRECATED] 
+  This function returns the name of the policy associated with a flow.  If the flow 
+  does not exist, an exception is thrown.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="flow-id" type="xs:string">
+    The ID of the flow.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:flow-policy("6184479677280143786")
+
+  (: Returns the name of the policy associated with the flow  :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+<apidoc:function name="flow-start" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function starts (or "plays") the flow.  If the flow 
+  does not exist, an exception is thrown.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="flow-id" type="xs:string">
+    The ID of the flow.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:flow-start("6184479677280143786")
+
+  (: Starts the specified flow to load the database.  :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="flow-tickets" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function returns a sequence of IDs for all of the tickets started by this flow.  If the flow 
+  does not exist, an exception is thrown.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="flow-id" type="xs:string">
+    The ID of the flow.
+    </apidoc:param>
+    <apidoc:param name="include-inactive" type="xs:boolean?" optional="true">
+    Determines whether to return inactive tickets.   By default, only the active tickets 
+    are returned.  Set to <code>fn:true()</code> to return both active and inactive tickets.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string*</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:flow-tickets("6184479677280143786") 
+
+  (: Returns all active tickets associated with the flow.  :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="flow-id" lib="info" category="Information Studio" bucket="XQuery Library Modules" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+  <apidoc:summary>
+  [DEPRECATED] This function returns the id of the flow with the specified name.  
+  If no flow exists with this name, an empty sequence is returned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="flow-name" type="xs:string">
+    The name of the flow.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:string?</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml"; 
+
+  import module namespace info = "http://marklogic.com/appservices/infostudio"  
+      at "/MarkLogic/appservices/infostudio/info.xqy";
+
+  info:flow-id("myFlow")
+
+  (: Returns the id of the flow, "myFlow." :)
+     ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+</apidoc:module>

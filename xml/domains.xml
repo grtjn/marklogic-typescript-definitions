@@ -1,0 +1,677 @@
+<apidoc:module name="DomainsModule" subcategory="Domains" 
+  category="CPF Functions" 
+  bucket="XQuery Library Modules" 
+  xmlns:apidoc="http://marklogic.com/xdmp/apidoc"
+  xmlns="http://www.w3.org/1999/xhtml" lib="dom" class="xquery"
+>
+<apidoc:summary access="public">
+<p>The domains module is installed as part of the Content Processing Framework.
+These functions are used to manage domains, which define the association of
+content processing with particular collections, directories, or documents.
+</p>
+<p>To use the domains module as part of your own XQuery module, include the
+following line in your XQuery prolog:
+</p>
+<p><code>import module namespace dom = "http://marklogic.com/cpf/domains"
+         at "/MarkLogic/cpf/domains.xqy";</code></p>
+<p>The library namespace prefix <code>dom</code> is <em>not</em> predefined in
+the server.</p>
+<p>These functions should be executed in the context of the triggers database.</p></apidoc:summary>
+
+<apidoc:function name="create" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>Create a new content processing domain, along with the
+  triggers that perform work in that domain.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="name" type="xs:string">
+    The name of the domain. It must be unique.
+    </apidoc:param>
+    <apidoc:param name="description" type="xs:string">
+    A description of the domain.
+    </apidoc:param>
+    <apidoc:param name="scope" type="element(dom:domain-scope)">
+    The scope of the domain. Create using dom:domain-scope.
+    </apidoc:param>
+    <apidoc:param name="context" type="element(dom:evaluation-context)">
+    The evaluation context for processing actions. Create using
+    dom:evaluation-context.
+    </apidoc:param>
+    <apidoc:param name="pipelines" type="xs:unsignedLong*">
+    The unique identifiers of the pipelines to bind to this domain. The same
+    pipeline can be bound to different domains. Until at least one pipeline is
+    bound to the domain, no processing is defined for that domain.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">
+    Permissions. When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array 
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> xs:unsignedLong </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:create( "Incoming", "Handling incoming documents", 
+              dom:domain-scope( "directory", 
+                    "/incoming/", 
+		    "infinity" ),
+	      dom:evaluation-context( xdmp:database("Modules"), 
+		                     "/" ),
+              (), () )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+Remove the domain and any associated triggers.
+An error is raised if no such domain exists. 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to remove.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:remove( "Incoming" )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="get" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+Find a particular domain.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to get. An error is raised if no such domain exists.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> element(dom:domain) </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:get( "Incoming" )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-name" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set the name of the domain to something else. An error is raised if a domain
+  with the new name already exists or if the domain cannot be found.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain whose name will be changed.
+    </apidoc:param>
+    <apidoc:param name="new-name" type="xs:string">
+    The new name for this domain.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-name( "Test", "Incoming" )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-description" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set the description of the domain. An error is raised if 
+  the domain cannot be found.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="description" type="xs:string">
+    The new description of the domain.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-description( "Incoming", 
+		       "Incoming document processing area" )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-domain-scope" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set the scope of the domain. An error is raised if 
+  the domain cannot be found. If the domain already has triggers associated 
+  with it, the triggers will be modified to act on the new scope as well.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="scope" type="element(dom:domain-scope)">
+    The new scope of the domain. Create using dom:domain-scope.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-domain-scope( "Incoming", 
+       dom:domain-scope( "directory", "/incoming/", "0" )
+  )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-evaluation-context" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set the evaluation context of the domain. An error is raised if 
+  the domain cannot be found. If the domain already has triggers associated 
+  with it, the triggers will be modified to act in the new evaluation context.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="context" type="element(dom:evaluation-context)">
+    The new evaluation context of the domain. 
+    Create using dom:evaluation-context.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-evaluation-context( "Incoming", 
+       dom:evaluation-context( xdmp:database("Modules"), "/apps/" )
+  )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-permissions" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set the permissions of the domain. An error is raised if 
+  the domain cannot be found. If the triggers associated with the domain
+  will be modified also.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">
+    New permissions for the domain.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array 
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-permissions( "Incoming", xdmp:default-permissions() )
+  
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="add-permissions" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Add permissions to the domain. An error is raised if 
+  the domain cannot be found. The triggers associated with the domain
+  will be modified also.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">
+    Additional permissions for the domain.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array 
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:add-permissions( "Incoming", 
+		       xdmp:permission("development", "read") )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-permissions" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Remove permissions to the domain. An error is raised if 
+  the domain cannot be found. The triggers associated with the domain
+  will be modified also.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="permissions" type="item()*">
+    Permissions to remove.
+    When run in an XQuery context, the permissions are a sequence of
+    XML elements (sec:permission). When importing this module into 
+    a Server-Side JavaScript context, the permissions are an array 
+    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:remove-permissions( "Incoming", 
+		          xdmp:permission("development", "read") )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="add-pipeline" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Add another pipeline to the set of pipelines bound to the domain. 
+  An error is raised if the domain
+  cannot be found or the pipeline does not exist.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="pipeline-id" type="xs:unsignedLong">
+    The unique id of the pipeline.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+  import module namespace p = "http://marklogic.com/cpf/pipelines" 
+		  at "/MarkLogic/cpf/pipelines.xqy";
+
+  dom:add-pipeline( "Incoming", 
+		  p:get("Entity Extraction")/p:pipeline-id )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="set-pipelines" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Bind a new set of pipelines to the domain. An error is raised if the domain
+  cannot be found or any of the pipelines does not exist.
+  If the domain already has pipelines associated with it, those existing
+  pipelines will not be deleted; only the association will be broken.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="pipelines" type="xs:unsignedLong*">
+    The unique ids of the pipelines.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+  import module namespace p = "http://marklogic.com/cpf/pipelines" 
+		  at "/MarkLogic/cpf/pipelines.xqy";
+
+  dom:set-pipelines( "Incoming", (
+     p:get("Status Change Handling")/p:pipeline-id,
+     p:get("Basic Conversion")/p:pipeline-id ) )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="remove-pipeline" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Remove the association between a pipeline and the domain. An error is raised
+  if the domain cannot be found.
+  Only the association between the domain and the pipeline will be
+  broken: the existing pipeline will not be deleted and may still be active 
+  in other domains.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-name" type="xs:string">
+    The name of the domain to be changed.
+    </apidoc:param>
+    <apidoc:param name="pipeline-id" type="xs:unsignedLong">
+    The pipeline to be removed from the domain.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> empty-sequence() </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+  import module namespace p = "http://marklogic.com/cpf/pipelines" 
+		  at "/MarkLogic/cpf/pipelines.xqy";
+
+  dom:remove-pipeline("Incoming", p:get("My Pipeline")/p:pipeline-id)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="collection" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Return the name of the collection in which domains are stored.
+  </apidoc:summary>
+  <apidoc:params>
+  </apidoc:params>
+  <apidoc:return> xs:string </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:collection()
+      ==> returns "http://marklogic.com/cpf/domains"
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="domains" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Return all the domains.
+  </apidoc:summary>
+  <apidoc:params>
+  </apidoc:params>
+  <apidoc:return> element(dom:domain)* </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  for $domain in dom:domains()
+  return $domain/dom:domain-name
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="domain-scope" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Create a domain scope element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="document-scope" type="xs:string">
+    The way in which this domain scope is defined: "collection", 
+    "directory", or "document".
+    </apidoc:param>
+    <apidoc:param name="uri" type="xs:string">
+    The URI defining the scoping. For a "collection" scope this will
+  be the collection URI; for a "directory" scope this will be the URI
+  of the directory (and must therefore end with a trailing slash); for a
+  "document" scope this will be the URI of the document.
+    </apidoc:param>
+    <apidoc:param name="depth" type="xs:string?">
+    This parameter applies only to "directory" scopes and defines
+  whether the scope is recursive ("infinity") or not ("0").
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> element(dom:domain-scope) </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-domain-scope( "Test", 
+                       dom:domain-scope( "document", 
+                          "http://example.com/test.xml", 
+		          () )
+  )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="evaluation-context" type="domain" lib="dom" 
+                 subcategory="Domains" category="CPF Functions" 
+                 bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Create an evaluation context element.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="database" type="xs:unsignedLong">
+    The unique identifier of the database in which the content processing 
+    actions will be executed. All the modules used in the content processing
+    application must be in this database.
+    </apidoc:param>
+    <apidoc:param name="root" type="xs:string">
+    A root path under which modules are located.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return> element(dom:evaluation-context) </apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+  xquery version "1.0-ml";
+  import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+  dom:set-evaluation-context( "Test", 
+     dom:evaluation-context( xdmp:database("Modules"), "/" )
+  )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-set-evaluation-context" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set a new context for the CPF configuration. This will ripple down to 
+  the restart trigger as well.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="context" type="element(dom:evaluation-context)">
+	    An evaluation-context element (for example, from the output of
+	    <code>dom:evaluation-context</code>.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-set-evaluation-context( 
+     dom:evaluation-context( xdmp:database("Modules"), "/" ) )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-set-restart-user" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set a new restart user for the CPF configuration. This will ripple down 
+  to the restart trigger as well.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="restart-user" type="xs:string">
+	    The username for the restart user.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-set-restart-user( "admin" )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-set-default-domain" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Set a new default domain for the CPF configuration.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="domain-id" type="xs:unsignedLong">
+	    The domain ID of the default domain.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-set-default-domain( 
+   fn:data(dom:get("my-domain")/dom:domain-id) )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-set-permissions" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+	  Set new permissions for the CPF configuration. This will ripple down
+	  to the restart trigger as well.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="permissions" type="item()*">
+	    The permissions for the configuration.
+            When run in an XQuery context, the permissions are a sequence of
+	    XML elements (sec:permission). When importing this module into 
+	    a Server-Side JavaScript context, the permissions are an array
+	    of Objects.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>empty-sequence()</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-set-permissions( (xdmp:permission('my-role', 'read'), 
+   xdmp:permission('my-role', 'execute') ) )
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-create" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Create a new CPF configuration.
+  </apidoc:summary>
+  <apidoc:params>
+	  <apidoc:param name="restart-user" type="xs:string">
+		  The username for the user who runs the restart trigger.
+    </apidoc:param>
+    <apidoc:param name="evaluation-context" 
+	    type="element(dom:evaluation-context)">
+	    The evaluation-context element (for example, from the output of
+	    <code>dom:evaluation-context</code> for the domain.
+    </apidoc:param>
+	  <apidoc:param name="default-domain" type="xs:unsignedLong">
+		  The ID of the default domain.
+    </apidoc:param>
+	  <apidoc:param name="permissions" type="element(sec:permission)*">
+		  Zero or more permissions elements.
+    </apidoc:param>
+  </apidoc:params>
+  <apidoc:return>xs:unsignedLong</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-create( "admin", 
+   dom:evaluation-context( xdmp:database("Modules"), "/" ),
+   fn:data(dom:get("my-domain")/dom:domain-id), 
+   (xdmp:permission('my-role', 'read'), 
+   xdmp:permission('my-role', 'execute') )
+)
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="configuration-get" type="domain" 
+	lib="dom" subcategory="Domains" category="CPF Functions" 
+  bucket="XQuery Library Modules">
+  <apidoc:summary>
+  Returns the CPF configuration.
+  </apidoc:summary>
+ 
+  <apidoc:return>element(dom:configuration)</apidoc:return>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+xquery version "1.0-ml";
+import module namespace dom = "http://marklogic.com/cpf/domains" 
+		  at "/MarkLogic/cpf/domains.xqy";
+
+dom:configuration-get()
+  ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

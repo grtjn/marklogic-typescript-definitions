@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/user/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/user/properties" xmlns:http="xdmp:http" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:import namespace="xdmp:http" schemaLocation="http.xsd"/>
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:metadata" schemaLocation="saml-schema-metadata-2.0.xsd"/>
+  <xs:simpleType name="capability">
+    <xs:annotation>
+      <xs:documentation>
+        The action permitted on an object.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="read"/>
+      <xs:enumeration value="update"/>
+      <xs:enumeration value="insert"/>
+      <xs:enumeration value="execute"/>
+      <xs:enumeration value="node-update"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="password">
+    <xs:annotation>
+      <xs:documentation>
+        Password.
+ </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="description">
+    <xs:annotation>
+      <xs:documentation>
+        An object's description.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="external-name">
+    <xs:annotation>
+      <xs:documentation>
+        An External Name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="user-name">
+    <xs:annotation>
+      <xs:documentation/>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-zA-Z0-9._@-]+"/>
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="id">
+    <xs:annotation>
+      <xs:documentation>
+        An object's unique id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:simpleType name="uri">
+    <xs:annotation>
+      <xs:documentation>
+        The uri for the collection.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI">
+      <xs:minLength value="1" fixed="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="permission" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A permission.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="role-name" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="capability" minOccurs="1" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="permissions" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of permissions
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="permission" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="collections" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of collection uri's
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="collection" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="role-ids" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+	A set of role-ids
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="role" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="external-names" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The name contains names that match external group names.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="external-name" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="user-properties" abstract="false" mixed="false">
+    <xs:annotation>
+      <xs:documentation>
+        The user object
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+    <xs:all minOccurs="1" maxOccurs="1">
+      <xs:element ref="user-name" minOccurs="0"/>
+      <xs:element ref="description" minOccurs="0"/>
+      <xs:element ref="password" minOccurs="0"/>
+      <xs:element ref="external-names" minOccurs="0"/>
+      <xs:element ref="roles" minOccurs="0"/>
+      <xs:element ref="permissions" minOccurs="0"/>
+      <xs:element ref="collections" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:element name="capability" type="capability" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The action/task permitted by a permission
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permission" type="permission" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	Permission representation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="permissions" type="permissions" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The default set of permissions used in document creation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="collections" type="collections" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The default set of collections used in document creation.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="role" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	A role identifier (unique key).
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="role-name" type="xs:NMTOKEN" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	A role name.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="roles" type="role-ids" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+	The roles assigned.
+        <admin:user>The roles assigned to the user.</admin:user></xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="password" type="password" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Password.
+ </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="description" type="description" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	An object's description.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="external-name" type="external-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The name used to match external group name.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="external-names" type="external-names" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The external names specifications.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="user-name" type="user-name" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	User/login name (unique)
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="user-properties" type="user-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	A database user.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="collection" type="uri" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+  	The collection uri.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <?xdmp-annotations?>
+</xs:schema>

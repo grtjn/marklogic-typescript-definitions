@@ -1,0 +1,861 @@
+<apidoc:module name="Management" category="Packaging API" lib="manage" 
+bucket="REST Resources API" xmlns:apidoc="http://marklogic.com/xdmp/apidoc">
+
+<apidoc:summary category="Packaging API" bucket="REST Resources API">
+<p>
+The Packaging API is a REST-based API that allows you to export and import MarkLogic Server 
+App Server and database configurations.  
+</p>	
+</apidoc:summary>
+
+
+<apidoc:function name="/manage/v2/packages" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+	  This resource address returns a list of packages exported for this cluster.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="start" type="string">
+      The start position of the list.  For example, if there are a total of 50 packages and 
+      the <code>pageLength</code> is set to 5, then <code>start=2</code> returns a list of 
+      5 packages, starting with the sixth package (packages 6-10).
+    </apidoc:param>
+    <apidoc:param name="pageLength" type="string">
+      The number of packages to return in each list.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The format of the output.  This can be either <code>xml</code> or <code>json</code>.
+    </apidoc:param>    
+  </apidoc:params>
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+   http:/localhost:8002/manage/v2/packages?pageLength=5&start=2
+
+   ==> Returns a list of the second set of 5 packages (packages 6-10). 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address creates a new package and returns the URI of the
+    created package.  
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="pkgname" type="string">
+      The name of the new package to be created.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The format of the output.  This can be either <code>xml</code> or <code>json</code>.
+    </apidoc:param>    
+  </apidoc:params>
+  <apidoc:headers>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/zip</code>, <code>application/xml</code>, or <code>application/json</code>.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+    <apidoc:header name="Location" type="response">
+      A header that identifies the URI of the created package.
+    </apidoc:header>    
+  </apidoc:headers>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+     The following is an example of how to package the configuration of the 
+     "Documents" database.
+
+     curl -o Documents.xml --digest -u admin:admin \
+     http://localhost:8002/manage/v2/databases/Documents?view=package
+
+     ==> Download the configuration of the Documents database to the Documents.xml file. 
+
+     curl -X POST --digest -u admin:admin -H "Content-type: application/xml" \
+     -d @Documents.xml "http://localhost:8002/manage/v2/packages?pkgname=test-package" 
+
+     ==> Insert the configuration file into a new package, named "test-package". 
+
+     (: If you have a package ZIP file, you can use it to create a whole package
+        as shown below. :)
+ 
+     curl -X POST --digest -u admin:admin -H "Content-type: application/zip" \
+     --data-binary @mypackage.zip \
+     "http://localhost:8002/manage/v2/packages?pkgname=mypackage"
+ 
+     ==> Insert the package saved in "mypackage.zip" into a new package, named "mypackage"
+    
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}" http-verb="HEAD"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address tests for an existing package, named <code>pkgname</code>. 
+    <code>200 OK</code>
+    is returned if the package exists.  Otherwise <code>404 Not Found</code>
+    is returned.
+  </apidoc:summary>
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     curl -i -X HEAD --digest -u admin:admin -H "Content-type: application/xml" \
+     "http://localhost:8002/manage/v2/packages/test-package" 
+
+     ==> Checks for the existence of a package named "test-package". 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address returns the named package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="view" type="string">
+      The view of the package.  The view can be either 
+      <code>package</code>, <code>differences</code>, <code>errors</code>,
+      or <code>valid</code>.  A view of <code>differences</code> returns a 
+      description of how the package content differs from the current configuration.
+      A view of <code>errors</code> returns a list of errors in the package.
+      A view of <code>valid</code> returns the validity of the package,
+      which can be either <code>true</code> (valid) or <code>false</code> (not valid).  
+      By default, the view is <code>package</code>, which means to return the package.  
+      If the view is something other than <code>package</code>, it is an error to 
+      specify <code>format=zip</code> and a <code>filename</code>.
+    </apidoc:param>
+    <apidoc:param name="filename" type="string">
+      The name of the returned package.  By default the returned package is the
+      same as <code>pkgname</code>.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The format of the output.  This can be either <code>xml</code>,
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+  </apidoc:params> 
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/zip</code>, <code>application/xml</code> or 
+      <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response>  
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     http://localhost:8002/manage/v2/packages/test-package
+
+     ==> Returns the package, named "test-package," as a zip file. 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address allows you to add a packaged configuration to the
+    named package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="format" type="string">
+     The format of the output.  This can be either <code>xml</code>
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+  </apidoc:params>  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body, either
+      <code>application/zip</code>, <code>application/xml</code>, or <code>application/json</code>.
+    </apidoc:header>    
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the payload body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+     If a specified database or server name already exists in the package, 
+     it is replaced by the new version.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+      curl -o SQLdata.xml --digest -u admin:admin \
+      http://localhost:8002/manage/v2/databases/SQLdata?view=package
+
+      ==> Download the configuration of the 'SQLdata' database to the 
+          SQLdata.xml file.
+
+      curl -X POST --digest -u admin:admin -H "Content-type: application/xml" \
+      -d @SQLdata.xml "http://localhost:8002/manage/v2/packages/test-package" 
+
+      ==> Add the SQLdata configuration to the "test-package" package.
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}" http-verb="DELETE"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address deletes the named package (<code>pkgname</code>). 
+  </apidoc:summary>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 204 (No Content). 
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     curl -X DELETE --digest -u admin:admin -H "Content-type: application/xml" \
+     "http://localhost:8002/manage/v2/packages/test-package" 
+
+     ==> Deletes the package named "test-package". 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/databases" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+      This resource address returns a list of the databases in the named 
+      package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="start" type="string">
+      The start position of the list.  For example, if there are a total of 50 databases
+      in the package and 
+      the <code>pageLength</code> is set to 5, then <code>start=2</code> returns a list of 
+      5 databases, starting with the sixth database (databases 6-10).
+    </apidoc:param>
+    <apidoc:param name="pageLength" type="string">
+      The number of databases to return in each list.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The format of the output.  This can be either <code>xml</code> or <code>json</code>.
+    </apidoc:param>    
+  </apidoc:params>
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/zip</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+    http:/localhost:8002/manage/v2/packages/test-package/databases?pageLength=5&start=2
+
+    ==> Returns a list of the second set of 5 databases in the'test-package' package.  
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/databases/{name}" http-verb="HEAD"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address tests to see if the named database (<code>name</code>) is in the
+    named package (<code>pkgname</code>).  <code>200 OK</code> is returned if the named 
+    database is in the package. Otherwise <code>404 Not Found</code> is returned.
+  </apidoc:summary>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response> 
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>   
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     curl -i -X HEAD --digest -u admin:admin \
+     "http://localhost:8002/manage/v2/packages/test-package/databases/Documents" 
+
+     ==> Checks for the existence of the 'Documents' database in the package, 
+         "test-package."  
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/databases/{name}" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address returns configuration for the named database 
+    (<code>name</code>) in the named package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="format" type="string">
+     The format of the returned database configuration.  This can be either <code>xml</code> 
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+  </apidoc:params> 
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/zip</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns the configuration of the database.
+  </apidoc:response>  
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+    http://localhost:8002/manage/v2/packages/test-package/databases/Documents
+
+    ==> Returns the XML configuration of the 'Documents' database from the
+        package, "test-package." 
+ 
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/databases/{name}" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address adds a database configuration to the named package (<code>pkgname</code>).
+    The name of the database in the payload body is ignored and <code>name</code> 
+    is used as the name.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="format" type="string">
+     The format of the output.  This can be either <code>xml</code>
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+  </apidoc:params>  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body, either
+      <code>application/zip</code>, <code>application/xml</code>, or <code>application/json</code>.
+    </apidoc:header>  
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the payload data. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK).
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+      curl -o MyData.xml --digest -u admin:admin \
+      http://localhost:8002/manage/v2/databases/MyData?view=package
+
+      ==> Download the configuration of the 'MyData' database to the MyData.xml file.
+ 
+      curl -X POST --digest -u admin:admin -H "Content-type: application/xml" -d @MyData.xml \
+      "http://localhost:8002/manage/v2/packages/test-package/databases/NewData" 
+
+      ==> Add the 'MyData' database configuration, as 'NewData.xml', to the "test-package" package.
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/databases/{name}" http-verb="DELETE"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address deletes the named database 
+    (<code>name</code>) from the named package (<code>pkgname</code>). 
+  </apidoc:summary>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 204 (No Content). 
+  </apidoc:response> 
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege> 
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     curl -X DELETE --digest -u admin:admin -H "Content-type: application/xml" \
+     "http://localhost:8002/manage/v2/packages/test-package/databases/Documents" 
+
+     ==> Deletes the 'Documents' database from the "test-package" package. 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/servers" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+      This resource address returns a list of the servers in the named 
+      package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="start" type="string">
+      The start position of the list.  For example, if there are a total of 50 servers
+      in the package and 
+      the <code>pageLength</code> is set to 5, then <code>start=2</code> returns a list of 
+      5 servers, starting with the sixth server (servers 6-10).
+    </apidoc:param>
+    <apidoc:param name="pageLength" type="string">
+      The number of servers to return in each list.
+    </apidoc:param>
+    <apidoc:param name="format" type="string">
+      The format of the output.  This can be either <code>xml</code> or <code>json</code>.
+    </apidoc:param>    
+  </apidoc:params>
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+    http:/localhost:8002/manage/v2/packages/test-package/servers?pageLength=5&start=2
+
+    ==> Returns a list of the second set of 5 servers in the'test-package' package.  
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/servers/{name}" http-verb="HEAD"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address tests to see if the named server (<code>name</code>) is in the
+    named package (<code>pkgname</code>).  <code>200 OK</code> is returned if the named 
+    server is in the package. Otherwise <code>404 Not Found</code> is returned.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="group-id={group-id}" type="string">
+     The name or ID of the group containing the named server.  
+    </apidoc:param>    
+  </apidoc:params> 
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+      curl -i -X HEAD --digest -u admin:admin \
+     "http://localhost:8002/manage/v2/packages/test-package/servers/Oscars?group-id=Default" 
+
+     ==> Checks for the existence of the 'Oscars' server in the 'Default' group in the package, 
+         "test-package."  
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/servers/{name}" http-verb="GET"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address returns configuration for the named server 
+    (<code>name</code>) in the named package (<code>pkgname</code>).
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="group-id={group-id}" type="string">
+     The name or ID of the group containing the named server.  This parameter
+     is required.
+    </apidoc:param> 
+    <apidoc:param name="format" type="string">
+     The format of the returned server configuration.  This can be either <code>xml</code> 
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+    <apidoc:param name="modules" type="string">
+     Whether or not the modules associated with the server are stored in
+     the package.  Set to <code>true</code> to package the server modules, or  
+     <code>false</code> not to package the modules.
+    </apidoc:param> 
+  </apidoc:params> 
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the response body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested server configuration.
+  </apidoc:response>  
+  <apidoc:privilege>
+    This operation requires the <code>manage-user</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     http://localhost:8002/manage/v2/packages/test-package/servers/Oscars
+
+     ==> Returns the XML configuration of the 'Oscars' server from the
+         package, "test-package." 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/servers/{name}" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address adds a server configuration to the named package (<code>pkgname</code>).
+    The name of the server in the payload body is ignored and <code>name</code> 
+    is used as the name.
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="group-id={group-id}" type="string">
+     The name or ID of the group to contain the named server. This parameter
+     is required. (The group named in the payload body is ignored.) 
+    </apidoc:param> 
+    <apidoc:param name="format" type="string">
+     The format of the output.  This can be either <code>xml</code>
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+    <apidoc:param name="modules" type="string">
+     Whether or not the modules associated with the server are added along with
+     the server configuration to
+     the package.  Set to <code>true</code> to add the server modules, or  
+     <code>false</code> not to add the modules.
+    </apidoc:param> 
+  </apidoc:params>  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body, either
+      <code>application/zip</code>, <code>application/xml</code>, or <code>application/json</code>.
+    </apidoc:header>  
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the payload body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the requested data.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+      curl -o Oscars.xml --digest -u admin:admin \
+      http://localhost:8002/manage/v2/servers/Oscars?view=package
+
+      ==> Download the configuration of the 'Oscars' server to the Oscars.xml file.
+
+      curl -X POST --digest -u admin:admin -H "Content-type: application/xml" -d @Oscars.xml \
+      "http://localhost:8002/manage/v2/packages/test-package/servers/NewServer" 
+
+      ==> Add the 'Oscars' server configuration, as 'NewServer.xml,' to the 
+          "test-package" package.
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/servers/{name}" http-verb="DELETE"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address deletes the named server 
+    (<code>name</code>) from the named package (<code>pkgname</code>). 
+  </apidoc:summary>
+  <apidoc:params>
+    <apidoc:param name="group-id={group-id}" type="string">
+     The name or ID of the group from which to delete the named server. This parameter
+     is required. (The group named in the payload body is ignored.) 
+    </apidoc:param> 
+    <apidoc:param name="modules" type="string">
+     Whether or not the modules associated with the server are to be deleted along with
+     the server configuration to
+     the package.  Set to <code>true</code> to delete the server modules, or  
+     <code>false</code> keep the modules.
+    </apidoc:param> 
+  </apidoc:params>  
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+ 
+     curl -X DELETE --digest -u admin:admin -H "Content-type: application/xml" \
+     "http://localhost:8002/manage/v2/packages/test-package/servers/Oscars" 
+
+     ==> Deletes the 'Oscars' server from the "test-package" package. 
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/packages/{pkgname}/install" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+     This resource address installs the named package (<code>pkgname</code>).
+     The URI of the ticket is returned that provides the status of the install
+     operation, along with the details of the installed resources. You can view this 
+     ticket by entering the URI in a browser.
+  </apidoc:summary>
+  <apidoc:params> 
+    <apidoc:param name="format" type="string">
+     The format of the output.  This can be either <code>xml</code>
+     or <code>json</code>.  By default, the format is <code>xml</code>.
+    </apidoc:param>    
+  </apidoc:params>  
+  <apidoc:headers>
+    <apidoc:header name="Accept" type="request">
+      The expected MIME type of the response. If the <code>format</code>
+      parameter is present, it takes precedence over the Accept header.
+    </apidoc:header>
+    <apidoc:header name="Content-type" type="request">
+      The MIME type of the data in the request body, either
+      <code>application/zip</code>, <code>application/xml</code>, or <code>application/json</code>.
+    </apidoc:header>  
+    <apidoc:header name="Content-type" type="response">
+      The MIME type of the data in the payload body. Depending upon the
+      value of the <code>format</code> parameter or Accept header, either
+      <code>application/xml</code> or <code>application/json</code>.
+    </apidoc:header>
+  </apidoc:headers>
+  <apidoc:response>
+    Upon success, MarkLogic Server returns status code 200 (OK). The
+    response body contains the URI of the ticket.
+  </apidoc:response>
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+      curl -i -X POST --data-binary @/dev/null --digest -u admin:admin \
+      -H "Content-type: application/xml" \
+      "http://localhost:8002/manage/v2/packages/test-package/install"
+
+      ==> Installs the configurations in the "test-package" package onto the 
+          localhost.
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+<apidoc:function name="/manage/v2/tickets/{ticketnumber}/revert" http-verb="POST"
+       	lib="manage" category="Packaging API" bucket="REST Resources API">
+  <apidoc:summary> 
+    <p>
+      [DEPRECATED: use <code><a href="/REST/GET/manage/v3">GET /manage/v3</a></code> and
+      <code><a href="/REST/POST/manage/v3">POST /manage/v3</a></code> instead.]
+    </p>  
+    This resource address reverts to the configuration that existed before installing
+    the package associated with the specified ticket (<code>ticketnumber</code>). The
+    <code>ticketnumber</code> is in the ticket URI returned by the install operation.
+    <p>
+    Reverting an installed package does not remove any imported forests.
+    </p>
+  </apidoc:summary> 
+  <apidoc:privilege>
+    This operation requires the <code>manage-admin</code> role, or the 
+    following privilege:
+    <p><code>http://marklogic.com/xdmp/privileges/manage</code></p>
+  </apidoc:privilege>  
+  <apidoc:example><pre xml:space="preserve"><![CDATA[
+
+      curl -X POST --digest -u admin:admin -H "Content-type: application/xml" \
+      "http://localhost:8002/manage/v2/tickets/12345687/revert" 
+
+      ==> Restores the configuration on localhost to that which existed before 
+          installing the package identified by ticket 12345687.
+
+    ]]></pre>
+  </apidoc:example>
+</apidoc:function>
+
+</apidoc:module>

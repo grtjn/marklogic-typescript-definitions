@@ -1,0 +1,654 @@
+<apidoc:module name="DebugBuiltins" category="DebugBuiltins" lib="dbg" xmlns:apidoc="http://marklogic.com/xdmp/apidoc"><apidoc:summary access="public">
+Implements a library of functions which allow developers to build an IDE
+which will allow runtime debugging of query requests against MarkLogic Server.
+The debug functions allow you to build an application that does things
+like attach to a running server, set breakpoints in a query, examine the
+value of variables at a point in query execution, and so on.  Note that the
+debug function library is not a debugger, but provides server-side support
+to build an application that can debug queries against MarkLogic Server.
+</apidoc:summary><apidoc:function name="invoke" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Invoke a module for debugging.  Module evaluation will be
+  stopped at the start of the first expression. Returns the
+  request-id after creating the request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="uri" type="xs:string" optional="false">
+    The path of the module to be executed.  The path is resolved against
+    the root of the request server evaluating the query.  The path must
+    resolve to a main module (not a library module).
+  </apidoc:param>
+      <apidoc:param name="vars" type="item()*" optional="true">
+    The external variable values for this evaluation.
+    This must be a sequence of even length, alternating QNames and items.
+    Each QName and item pair specify a variable name and value.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+    The options node.  The default value is (). 
+    The node for the <code xmlns="http://www.w3.org/1999/xhtml">dbg:eval</code> options must be in the
+    <code xmlns="http://www.w3.org/1999/xhtml">xdmp:eval</code> namespace.  See the
+    <a href="#xdmp:eval" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp:eval</code></a> section for a list of
+    options.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:invoke("http://example.com/modules/foo.xqy")
+  =&gt; 6423840
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="eval" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Evaluate a string as an XQuery for debugging.  Module evaluation will be
+  stopped at the start of the first expression. Returns the
+  request ID after creating the request.  Requests evaluated for debugging
+  with <code xmlns="http://www.w3.org/1999/xhtml">dbg:eval</code> are evaluated on the task server, not on the
+  App Server in which they are initiated.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="xquery" type="xs:string">
+    The XQuery string to be evaluated.  If the XQuery string contains
+    double quotes ("), surround the string with single quotes (').
+  </apidoc:param>
+      <apidoc:param name="vars" type="item()*" optional="true">
+    The external variable values for this evaluation.
+    This must be a sequence of even length, alternating QNames and items.
+    Each QName and item pair specify a variable name and value.
+  </apidoc:param>
+      <apidoc:param name="options" type="(element()|map:map)?" optional="true">
+    The options node.  The default value is (). 
+    The node for the <code xmlns="http://www.w3.org/1999/xhtml">dbg:eval</code> options must be in the
+    <code xmlns="http://www.w3.org/1999/xhtml">xdmp:eval</code> namespace.  See the
+    <a href="#xdmp:eval" xmlns="http://www.w3.org/1999/xhtml"><code>xdmp:eval</code></a> section for a list of
+    options.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:eval("1+1")
+
+=&gt; The ID of the request stopped for debugging
+   (for example, 1767394036047154157).  The
+   request is evaluated on the task server, and
+   you can use the ID to pass into one of the other
+   debug functions (for example, dbg:continue or
+   dbg:step) to debug the request.
+  </pre>
+</apidoc:example>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+xquery version "1.0-ml";
+
+dbg:eval("xdmp:log(xs:string(xdmp:estimate(doc())))", (),
+  &lt;options xmlns="xdmp:eval"&gt;
+    &lt;database&gt;{xdmp:database("Documents")}&lt;/database&gt;
+  &lt;/options&gt;
+)
+
+=&gt; The ID of the request stopped for debugging
+   (for example, 13942194686892174312).  The
+   request is evaluated on the task server, and
+   this request will use the "Documents" database
+   as its context database.  You can use the ID to
+   pass into one of the other debug functions
+   (for example, dbg:continue or dbg:step) to
+   debug the request.
+
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="attach" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Attach to a request and stop it for debugging.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request-id" type="xs:unsignedLong">
+    A request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:attach(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="detach" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Detach from a stopped request.  All breakpoints set will be
+  cancelled and the request will continue evaluating.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request-id" type="xs:unsignedLong">
+    A request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:detach(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="connect" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Connect to a Server (http, xdbc, or task) for debugging. 
+  Any running requests will be stopped and new requests will
+  stop at the first expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="server" type="xs:unsignedLong" optional="false">
+    A server ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:connect(4928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="connected" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Return the ID's of servers that are connected by the debugger.
+</apidoc:summary>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:connected()
+  =&gt; (2298273928472, 20384203948)
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="disconnect" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  End the debugging of a server.  Already stopped requests will remain
+  stopped.  New requests will evaluate without stopping at first expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="server" type="xs:unsignedLong" optional="false">
+    A server ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:disconnect(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="status" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Return the debugging status of given requests.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request-id" type="xs:unsignedLong*">
+    Request id's.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(dbg:requests)?</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:status(14096214104959794818)
+  =&gt;
+   &lt;requests xmlns="http://marklogic.com/xdmp/debug"&gt;
+     &lt;request&gt;
+       &lt;request-id&gt;14096214104959794818&lt;/request-id&gt;
+       &lt;server-id&gt;13141894694259521076&lt;/server-id&gt;
+       &lt;request-status&gt;stopped&lt;/request-status&gt;
+       &lt;debugging-status&gt;attached&lt;/debugging-status&gt;
+       &lt;expr-id&gt;16429173930674134530&lt;/expr-id&gt;
+       &lt;where-stopped&gt;begin&lt;/where-stopped&gt;
+     &lt;/request&gt;
+   &lt;/requests&gt;
+   </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="stopped" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Return the request ID's of stopped requests in a given server. 
+  If server isn't supplied, returns a list of all stopped requests
+  on host.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="server" type="xs:unsignedLong" optional="true">
+    Server ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:stopped(204928402983)
+  =&gt; (2298273928472, 20384203948)
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="attached" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Return the request ID's of attached requests in a given server. 
+  If server isn't supplied, returns a list of all attached requests
+  on host.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="server" type="xs:unsignedLong" optional="true">
+    Server ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:attached(204928402983)
+  =&gt; (2298273928472, 20384203948)
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="stack" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Return the stack trace for a given request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(dbg:stack)</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:stack(204928402983)
+  =&gt;
+    &lt;stack xmlns="http://marklogic.com/xdmp/debug"&gt;
+      &lt;expr&gt;
+        &lt;expr-id&gt;16429173930674134530&lt;/expr-id&gt;
+        &lt;expr-source&gt;xdmp:sleep(1000)&lt;/expr-source&gt;
+        &lt;uri&gt;/long.xqy&lt;/uri&gt;
+        &lt;line&gt;11&lt;/line&gt;
+      &lt;/expr&gt;
+      &lt;frame&gt;
+        &lt;uri&gt;/long.xqy&lt;/uri&gt;
+        &lt;line&gt;11&lt;/line&gt;
+        &lt;operation&gt;fn:sleep(18)&lt;/operation&gt;
+        &lt;variables&gt;
+          &lt;variable&gt;
+            &lt;name xmlns=""&gt;x&lt;/name&gt;
+            &lt;value&gt;18&lt;/value&gt;
+          &lt;/variable&gt;
+        &lt;/variables&gt;
+      &lt;/frame&gt;
+      &lt;frame&gt;
+        &lt;uri&gt;/long.xqy&lt;/uri&gt;
+        &lt;line&gt;18&lt;/line&gt;
+        &lt;operation&gt;fn:foo(18)&lt;/operation&gt;
+        &lt;variables&gt;
+          &lt;variable&gt;
+            &lt;name xmlns=""&gt;x&lt;/name&gt;
+            &lt;value&gt;18&lt;/value&gt;
+            &lt;/variable&gt;&lt;/variables&gt;
+            &lt;/frame&gt;&lt;frame&gt;
+            &lt;uri&gt;/long.xqy&lt;/uri&gt;
+            &lt;line&gt;26&lt;/line&gt;
+            &lt;operation&gt;fn:bar()&lt;/operation&gt;
+            &lt;variables&gt;&lt;variable&gt;
+            &lt;name xmlns=""&gt;x&lt;/name&gt;
+            &lt;value&gt;18&lt;/value&gt;
+          &lt;/variable&gt;
+        &lt;/variables&gt;
+      &lt;/frame&gt;
+      &lt;frame&gt;
+        &lt;uri&gt;/long.xqy&lt;/uri&gt;
+        &lt;line&gt;29&lt;/line&gt;
+      &lt;/frame&gt;
+    &lt;/stack&gt;
+    </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="out" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Continue evaluation of the request until the end of the
+  current expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:out(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="finish" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Continue evaluation of the request until the end of the
+  current function.  If evaluation is not inside of a function,
+  this request is equivalent to continue().
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:finish(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="step" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Continue evaluation of the request until the beginning or end
+  of an expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:step(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="next" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Continue evaluation of the request until the beginning or end
+  of an expression that is not a descendant of the current expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:next(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="continue" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Continue evaluation of the request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:continue(204928402983)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="wait" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Wait until at least one of the given requests stops or all
+  complete evaluating.  Wait will return the empty sequence after a
+  requested timeout if none of the requests have stopped.  Otherwise, it
+  returns the request-id of a stopped (or finished) request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request-id" type="xs:unsignedLong*">
+    Request id's.
+  </apidoc:param>
+      <apidoc:param name="timeout" type="xs:unsignedLong">
+    Requested timeout (in seconds).
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong?</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:wait((23424324342, 843285285))
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="break" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Set a breakpoint at the given expression ID.  If no expression ID is given,
+  then the identified request is stopped.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="expression" type="xs:unsignedLong" optional="true">
+    Expression ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:break(204928402983, 28042309)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="clear" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Clear a breakpoint at the given expression ID.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="expression" type="xs:unsignedLong" optional="false">
+    Expression ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:clear(204928402983, 28042309)
+  =&gt; ()
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="breakpoints" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Returns a sequence of expression ID's representing existing
+  breakpoints for the given request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:breakpoints(204928402983)
+  =&gt; 28042309
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="stop" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Placing this call in XQuery will instruct the evaluator to stop
+  a request for debugging.
+</apidoc:summary>
+    <apidoc:params/>
+    <apidoc:return>empty-sequence()</apidoc:return>
+    <apidoc:privilege>
+</apidoc:privilege>
+    <apidoc:usage>
+  Calling <code xmlns="http://www.w3.org/1999/xhtml">dbg:stop</code> stops the request immediately, and therefore
+  if there are any expressions after the call they will not be evaluated until
+  you call another debug function that accesses the stopped query and makes
+  the debuging commence (<code xmlns="http://www.w3.org/1999/xhtml">dbg:continue</code> or <code xmlns="http://www.w3.org/1999/xhtml">dbg:step</code>,
+  for example).  Before you commence debugging a stopped query, it will
+  appear to be hung (because it is stopped).
+</apidoc:usage>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:stop()
+  =&gt; ()
+  </pre>
+</apidoc:example>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+(: first run this in one request :)
+"hello", dbg:stop(), xdmp:log("look in app error log")
+(:
+   It will stop at the dbg:stop. 
+   Next run the following (in another request, from another instance
+   of Query Console if you are using Query Console).  
+:)
+dbg:continue(dbg:stopped()[1])
+(:
+   Look in app error log for the log message, and look at the original
+   query to see it returned "hello".
+:)
+</pre></apidoc:example>
+  </apidoc:function><apidoc:function name="value" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Evaluate an expression in the context of the identified stopped request.
+  If no expression is given and the request is stopped at the end of an expression,
+  then the expression's value is returned.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="expr" type="xs:string" optional="true">
+    Expression string.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>item()*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:value(13334971433974783708, "$var")
+  =&gt; 5
+  where 5 is the value of the $var variable for the stopped request
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="line" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Returns a sequence of expression ID's found on a given line of a
+  stopped request.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="uri" type="xs:string" optional="false">
+    Module URI.
+  </apidoc:param>
+      <apidoc:param name="line" type="xs:unsignedInt" optional="false">
+    Line number.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong*</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:line(20293482, "/security.xqy", 512)
+  =&gt; (5032942, 9103982, 30802938)
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="function" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Returns the expression ID representing the function
+  defined in a module with a given name.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="uri" type="xs:string" optional="false">
+    Module URI.
+  </apidoc:param>
+      <apidoc:param name="function" type="xs:QName" optional="false">
+    function name.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>xs:unsignedLong</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:function(20293482, "/security.xqy", $function)
+  =&gt; 5032942
+  </pre>
+</apidoc:example>
+  </apidoc:function><apidoc:function name="expr" type="builtin" lib="dbg" category="DebugBuiltins" class="xquery">
+    <apidoc:summary>
+  Returns a description/representation of a given expression.
+</apidoc:summary>
+    <apidoc:params>
+      <apidoc:param name="request" type="xs:unsignedLong" optional="false">
+    Request ID.
+  </apidoc:param>
+      <apidoc:param name="expression" type="xs:unsignedLong" optional="false">
+    Expression ID.
+  </apidoc:param>
+    </apidoc:params>
+    <apidoc:return>element(dbg:expression)</apidoc:return>
+    <apidoc:privilege>
+  http://marklogic.com/xdmp/privileges/debug-my-requests or
+  http://marklogic.com/xdmp/privileges/debug-any-requests
+</apidoc:privilege>
+    <apidoc:example><pre xml:space="preserve" xmlns="http://www.w3.org/1999/xhtml">
+  dbg:expr(20293482, 2348239487)
+  =&gt; the dbg:expression element for this expression
+  </pre>
+</apidoc:example>
+  </apidoc:function></apidoc:module>

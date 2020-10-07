@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2012-2018 MarkLogic Corporation.  All Rights Reserved.-->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://marklogic.com/manage/flexrep-config/properties" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:admin="http://marklogic.com/xdmp/admin" xmlns:manage="http://marklogic.com/xdmp/manage" xmlns="http://marklogic.com/manage/flexrep-config/properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpf="http://marklogic.com/cpf" xmlns:dom="http://marklogic.com/cpf/domains" xmlns:doc="xdmp:document-load" xmlns:prop="http://marklogic.com/xdmp/property" xmlns:error="http://marklogic.com/xdmp/error" xmlns:http="xdmp:http" xmlns:eval="xdmp:eval" xmlns:extusr="http://marklogic.com/xdmp/external/user">
+  <xs:import namespace="http://marklogic.com/cpf" schemaLocation="cpf.xsd"/>
+  <xs:import namespace="http://marklogic.com/cpf/domains" schemaLocation="domains.xsd"/>
+  <xs:import namespace="http://marklogic.com/xdmp/error" schemaLocation="error.xsd"/>
+  <xs:import namespace="xdmp:document-load" schemaLocation="document-load.xsd"/>
+  <xs:import namespace="http://marklogic.com/xdmp/property" schemaLocation="property.xsd"/>
+  <xs:import namespace="http://marklogic.com/xdmp/security" schemaLocation="security.xsd"/>
+  <xs:import namespace="xdmp:http" schemaLocation="http.xsd"/>
+  <xs:import namespace="xdmp:eval" schemaLocation="eval.xsd"/>
+  <xs:import namespace="http://marklogic.com/xdmp/external/user" schemaLocation="external-user.xsd"/>
+  <xs:simpleType name="domain-id">
+    <xs:restriction base="xs:unsignedLong"/>
+  </xs:simpleType>
+  <xs:complexType name="flexrep-config-properties" abstract="false" mixed="false">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element ref="domain-name" minOccurs="0"/>
+      <xs:element ref="alerting-uri" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="flexrep-config-properties" type="flexrep-config-properties" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        Flexible Replication Configuration
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="domain-name" type="xs:string" abstract="false" nillable="false">
+    <xs:annotation>
+      <xs:documentation>
+        The domain id.
+      </xs:documentation>
+      <xs:appinfo/>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="alerting-uri" type="xs:string" abstract="false" nillable="false"/>
+  <?xdmp-annotations?>
+</xs:schema>
