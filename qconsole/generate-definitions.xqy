@@ -29,7 +29,25 @@ let $definition := xdmp:xslt-eval(
       <xsl:if test="$use-function-keyword">
         <xsl:text>function </xsl:text>
       </xsl:if>
-      <xsl:value-of select="local:fixName(@name)"/>
+
+      <!--
+      The function name can usually be derived by convetion. But in some cases (well, one case - toJSON), an override
+      is provided in the documentation. In those cases, the override should be used. This is also how this is handled
+      in RunDMC in api:javascript-name
+      (https://github.com/marklogic-community/RunDMC/blob/master/src/apidoc/model/data-access.xqy#L407).
+      -->
+      <xsl:variable name="name-override" select="apidoc:name[@class eq 'javascript']/text()"/>
+      <xsl:choose>
+        <xsl:when test="exists($name-override)">
+          <!-- an override exists, use it -->
+          <xsl:value-of select="$name-override"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- no override exists, follow convention in local:fixName -->
+          <xsl:value-of select="local:fixName(@name)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+
       <xsl:text>(</xsl:text>
       <xsl:for-each select="apidoc:params/apidoc:param">
         <xsl:variable name="is-multi" select="matches(@type, ',\.\.\.$')"/>
