@@ -8,7 +8,7 @@ var argv = require('yargs').argv;
 var fs = require('fs');
 var request = require('request');
 var through = require('through2');
-var typescript = require('gulp-tsc');
+var typescript = require('gulp-typescript');
 var concat = require('gulp-concat');
 var File = require('vinyl');
 
@@ -128,7 +128,7 @@ function generate(){
 
 function validate(){
   return gulp.src(['ts/**/*.ts'])
-  .pipe(typescript({emitError: false}));
+  .pipe(typescript({noEmitOnError: false}));
 };
 
 // Default Task
