@@ -1,4 +1,4 @@
-FROM node:10-buster
+FROM node:12-buster
 WORKDIR /usr/src/app
 RUN mkdir xml && mkdir ts
 COPY . .
