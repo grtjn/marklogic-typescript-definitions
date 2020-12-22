@@ -277,6 +277,12 @@ declare namespace cts {
   interface PeriodCompareQuery extends Query {
     __$cts_PeriodCompareQuery
   }
+  interface AfterQuery extends Query {
+    __$cts_AfterQuery
+  }
+  interface BeforeQuery extends Query {
+    __$cts_BeforeQuery
+  }
   interface AndQuery extends Query {
     __$cts_AndQuery
   }
@@ -448,9 +454,27 @@ interface SchemaRoot extends SchemaComponent {
   __$SchemaRoot
 }
 
+declare namespace ort {
+  interface Session{
+    __$ort_Session
+  }
+  interface Value{
+    __$ort_Value
+  }
+}
+
 declare namespace rdf {
   interface LangString {
     __$rdf_LangString
+  }
+}
+
+declare namespace sec {
+  interface LdapServer{
+    __$sec_LdapServer
+  }
+  interface SamlServer{
+    __$sec_SamlServer
   }
 }
 
@@ -476,7 +500,16 @@ declare namespace xs {
   interface ID{
     __$xs_ID
   }
+  interface NMTOKEN{
+    __$xs_NMTOKEN
+  }
   interface QName{
     __$xs_QName
+  }
+  interface UnsignedInt{
+    __$xs_UnsignedInt
+  }
+  interface UnsignedLong{
+    __$xs_UnsignedLong
   }
 }
